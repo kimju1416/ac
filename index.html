@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kimju.zip - 바이브코딩</title>
+<meta name="description" content="@kimju.zip이 만든 선생님을 위한 GAS 웹앱 모음">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0c0c;
+  --surface:#141414;
+  --surface2:#1c1c1c;
+  --border:rgba(255,255,255,0.07);
+  --border-hover:rgba(255,255,255,0.18);
+  --text:#f0f0ee;
+  --sub:#999;
+  --muted:#565656;
+  --accent:#b8f03c;
+  --accent-glow:rgba(184,240,60,0.12);
+  --accent-text:#0c0c0c;
+  --max:1200px;
+  --px:2.5rem;
+}
+html,body{min-height:100%;overflow-x:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:16px;line-height:1.65;}
+
+/* ─── HEADER ─── */
+.header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(12,12,12,0.93);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.header-inner{
+  max-width:var(--max);margin:0 auto;padding:0 var(--px);
+  display:flex;align-items:center;justify-content:space-between;
+  height:58px;gap:1.5rem;
+}
+.logo{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:700;letter-spacing:-.03em;flex-shrink:0;text-decoration:none;color:var(--text);}
+.logo span{color:var(--accent);}
+.search-wrap{flex:1;max-width:360px;position:relative;}
+.search-icon{position:absolute;left:.85rem;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px;pointer-events:none;}
+.search-input{
+  width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;
+  padding:.55rem 1rem .55rem 2.4rem;outline:none;transition:border-color .2s,background .2s;
+}
+.search-input::placeholder{color:var(--muted);}
+.search-input:focus{border-color:rgba(184,240,60,.35);background:#181818;}
+.header-btns{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+.insta-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:50%;
+  border:1px solid var(--border);background:transparent;
+  cursor:pointer;text-decoration:none;transition:all .18s;flex-shrink:0;
+}
+.insta-btn:hover{border-color:var(--border-hover);background:var(--surface2);}
+.insta-btn svg{width:17px;height:17px;}
+.threads-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.02em;
+  color:var(--sub);background:transparent;
+  border:1px solid var(--border);border-radius:20px;padding:.4rem 1.1rem;
+  cursor:pointer;text-decoration:none;white-space:nowrap;transition:all .18s;
+}
+.threads-btn:hover{border-color:var(--border-hover);color:var(--text);}
+
+/* ─── HERO ─── */
+.hero{max-width:var(--max);margin:0 auto;padding:2.5rem var(--px) 2rem;}
+.hero-inner{display:grid;grid-template-columns:1fr 200px;gap:3rem;align-items:center;}
+.hero-title{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(2.2rem,4.5vw,3.6rem);font-weight:700;letter-spacing:-.05em;line-height:1.05;margin-bottom:.9rem;
+}
+.hero-title em{color:var(--accent);font-style:normal;}
+.hero-desc{font-size:15px;color:var(--sub);line-height:1.85;}
+
+/* ─── HERO CHAR ─── */
+.hero-char{
+  display:flex;flex-direction:column;align-items:stretch;
+  border:1px solid var(--border);border-radius:14px;
+  background:#fff;overflow:hidden;
+  transition:border-color .2s;
+  align-self:flex-start;
+}
+.hero-char:hover{border-color:rgba(184,240,60,.3);}
+.hero-char img{
+  width:100%;aspect-ratio:1;
+  object-fit:cover;object-position:center top;
+  display:block;image-rendering:auto;
+}
+.hero-char-info{
+  width:100%;padding:.7rem .9rem .85rem;
+  background:#0d0d0d;border-top:1px solid rgba(255,255,255,.06);
+}
+.hero-char-name{
+  font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;
+  color:#fff;line-height:1.2;margin-bottom:2px;
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+}
+.hero-char-handle{font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);}
+.hero-char-bio{font-size:12px;color:rgba(255,255,255,.6);line-height:1.55;font-family:'Noto Sans KR',sans-serif;margin-top:4px;}
+
+/* ─── TICKER ─── */
+.ticker-wrap{
+  overflow:hidden;
+  border-top:1px solid rgba(184,240,60,.15);
+  border-bottom:1px solid rgba(184,240,60,.15);
+  background:#0a0a0a;
+  padding:0;
+}
+.ticker-inner{
+  display:flex;white-space:nowrap;
+  animation:ticker 16s linear infinite;
+}
+.ticker-inner:hover{animation-play-state:paused;}
+.ticker-text{
+  display:inline-block;padding:.6rem 0;
+  font-family:'DM Mono',monospace;font-size:12px;
+  letter-spacing:.08em;color:var(--accent);
+  padding-right:5rem;flex-shrink:0;
+}
+.ticker-sep{color:rgba(184,240,60,.3);margin:0 .75rem;}
+@keyframes ticker{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
+}
+.filter-wrap{
+  max-width:var(--max);margin:0 auto;padding:1rem var(--px);
+  display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);
+}
+.chip{
+  font-family:'Noto Sans KR',sans-serif;font-size:13px;padding:.42rem 1.1rem;border-radius:20px;
+  border:1px solid var(--border);background:transparent;color:var(--sub);
+  cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:6px;
+}
+.chip:hover{border-color:var(--border-hover);color:var(--text);background:var(--surface2);}
+.chip.on{background:var(--accent);color:var(--accent-text);border-color:var(--accent);font-weight:700;}
+.chip-count{font-family:'DM Mono',monospace;font-size:12px;opacity:.7;}
+.chip.on .chip-count{opacity:.65;}
+
+/* ─── LIST ─── */
+.list-wrap{max-width:var(--max);margin:0 auto;padding:0 var(--px) 5rem;}
+.list-col-header{
+  display:grid;grid-template-columns:44px minmax(180px,240px) minmax(0,1fr) 115px 76px 24px;
+  gap:1.25rem;align-items:center;
+  padding:.65rem 0;border-bottom:1px solid var(--border);margin-top:1.25rem;
+}
+.list-col-header span{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.06em;color:var(--sub);text-transform:uppercase;}
+
+.app-row{
+  display:grid;grid-template-columns:44px minmax(180px,240px) minmax(0,1fr) 115px 76px 24px;
+  gap:1.25rem;align-items:center;
+  padding:1rem 0;border-bottom:1px solid var(--border);
+  cursor:pointer;text-decoration:none;color:inherit;position:relative;
+}
+.app-row::before{
+  content:'';position:absolute;left:calc(-1 * var(--px));right:calc(-1 * var(--px));top:0;bottom:0;
+  background:var(--surface2);opacity:0;transition:opacity .18s;z-index:0;border-radius:0;
+}
+.app-row:hover::before{opacity:1;}
+.app-row>*{position:relative;z-index:1;}
+.app-row:hover .row-arrow{opacity:1;transform:translateX(0);}
+.app-row:hover .row-num{color:var(--accent);}
+.app-row:hover .row-name{color:var(--accent);}
+
+.row-num{font-family:'DM Mono',monospace;font-size:13px;color:var(--sub);text-align:right;transition:color .15s;padding-top:2px;}
+.row-main{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.row-name{font-size:15px;font-weight:500;white-space:normal;word-break:keep-all;line-height:1.4;display:flex;align-items:flex-start;gap:.5rem;flex-wrap:wrap;transition:color .15s;}
+.row-sub{font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);letter-spacing:.02em;margin-top:1px;}
+.row-desc-col{font-size:13px;color:var(--sub);white-space:normal;word-break:keep-all;line-height:1.6;min-width:0;max-width:100%;}
+.row-cat{font-family:'DM Mono',monospace;font-size:12px;color:var(--sub);white-space:nowrap;}
+.row-date{font-family:'DM Mono',monospace;font-size:12px;color:var(--sub);white-space:nowrap;}
+.row-arrow{font-size:14px;color:var(--accent);opacity:0;transform:translateX(-6px);transition:all .18s;text-align:right;padding-top:2px;}
+.row-card-foot{display:none;}
+
+/* 행 높이 자동 (설명 줄바꿈 허용) */
+.app-row{align-items:start;}
+
+/* 배지 */
+.badge{font-family:'DM Mono',monospace;font-size:10px;font-weight:500;padding:2px 7px;border-radius:3px;flex-shrink:0;}
+.badge-as{background:rgba(255,77,77,.13);color:#ff6b6b;border:1px solid rgba(255,77,77,.2);}
+.badge-doc{background:rgba(99,179,255,.1);color:#63b3ff;border:1px solid rgba(99,179,255,.2);}
+.badge-prompt{background:var(--accent-glow);color:var(--accent);border:1px solid rgba(184,240,60,.2);}
+.badge-new{background:rgba(184,240,60,.15);color:var(--accent);border:1px solid rgba(184,240,60,.35);font-weight:700;letter-spacing:.04em;}
+
+.no-result{padding:4rem 0;text-align:center;font-size:15px;color:var(--muted);}
+
+/* 최근 업데이트 강조 (데스크탑) */
+.app-row.is-new{border-bottom-color:rgba(184,240,60,.15);}
+.app-row.is-new .row-date{color:var(--accent);}
+
+/* ─── FOOTER ─── */
+.footer-wrap{border-top:1px solid var(--border);margin-top:2rem;}
+footer{
+  max-width:var(--max);margin:0 auto;
+  padding:1.5rem var(--px) 2.5rem;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;
+}
+.ft-brand{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;}
+.ft-brand span{color:var(--accent);}
+.ft-links{display:flex;gap:1rem;align-items:center;flex-wrap:wrap;}
+.ft-link{font-size:14px;color:var(--sub);text-decoration:none;transition:color .15s;}
+.ft-link:hover{color:var(--text);}
+
+
+/* ─── 설치방법 모달 ─── */
+.install-btn{
+  font-size:14px;color:#63b3ff;text-decoration:none;cursor:pointer;
+  border:1px solid rgba(99,179,255,.25);border-radius:20px;
+  padding:.3rem .9rem;background:rgba(99,179,255,.07);
+  transition:all .15s;white-space:nowrap;
+}
+.install-btn:hover{background:rgba(99,179,255,.15);border-color:rgba(99,179,255,.45);}
+.jaryosil-btn{
+  font-size:14px;color:#ff6b6b;text-decoration:none;cursor:pointer;
+  border:1px solid rgba(255,77,77,.25);border-radius:20px;
+  padding:.3rem .9rem;background:rgba(255,77,77,.07);
+  transition:all .15s;white-space:nowrap;
+}
+.jaryosil-btn:hover{background:rgba(255,77,77,.15);border-color:rgba(255,77,77,.45);}
+.modal-bg{
+  display:none;position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.75);
+  align-items:center;justify-content:center;padding:1.5rem;
+}
+.modal-bg.open{display:flex;}
+.modal{
+  background:#141414;border:1px solid rgba(255,255,255,.1);border-radius:16px;
+  width:100%;max-width:660px;max-height:88vh;overflow-y:auto;
+  padding:2rem 2rem 2.5rem;position:relative;
+}
+.modal-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.75rem;padding-bottom:1rem;border-bottom:1px solid rgba(255,255,255,.07);
+}
+.modal-title{
+  font-family:'Space Grotesk',sans-serif;font-size:1.1rem;font-weight:700;color:#f0f0ee;
+}
+.modal-close{
+  width:30px;height:30px;border-radius:50%;
+  background:rgba(255,255,255,.06);border:none;color:#888;
+  cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;
+  transition:background .15s;flex-shrink:0;
+}
+.modal-close:hover{background:rgba(255,255,255,.12);color:#f0f0ee;}
+.modal-intro{
+  font-size:13.5px;color:#888;line-height:1.7;margin-bottom:1.75rem;
+  padding:.85rem 1rem;background:rgba(184,240,60,.05);
+  border-left:2px solid var(--accent);border-radius:0 8px 8px 0;
+}
+.step{display:flex;gap:1rem;margin-bottom:1.5rem;}
+.step:last-child{margin-bottom:0;}
+.step-num{
+  font-family:'DM Mono',monospace;font-size:11px;font-weight:500;
+  background:var(--accent);color:#0c0c0c;
+  width:24px;height:24px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;
+}
+.step-body{}
+.step-title{font-size:15px;font-weight:500;color:#f0f0ee;margin-bottom:.4rem;line-height:1.3;}
+.step-desc{font-size:13px;color:#888;line-height:1.75;}
+.step-desc b{color:#c8c8c6;font-weight:500;}
+.step-warn{
+  display:flex;align-items:flex-start;gap:.5rem;
+  margin-top:.6rem;padding:.6rem .8rem;
+  background:rgba(255,180,0,.07);border:1px solid rgba(255,180,0,.2);border-radius:8px;
+  font-size:12.5px;color:#f5c842;line-height:1.6;word-break:keep-all;
+}
+.step-tip{
+  margin-top:.6rem;padding:.6rem .8rem;
+  background:rgba(99,179,255,.06);border:1px solid rgba(99,179,255,.15);border-radius:8px;
+  font-size:12.5px;color:#63b3ff;line-height:1.6;
+}
+
+
+/* ─── 토스트 ─── */
+.toast{
+  position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#1e1e1e;border:1px solid rgba(255,255,255,.12);border-radius:10px;
+  padding:.7rem 1.25rem;font-size:13px;color:#f0f0ee;
+  opacity:0;transition:all .25s;z-index:999;white-space:nowrap;pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast-icon{color:var(--accent);margin-right:6px;}
+
+/* ─── 반응형 ─── */
+@media(max-width:900px){
+  :root{--px:1.5rem;}
+  .list-col-header,.app-row{grid-template-columns:36px 1fr 100px 28px;}
+  .list-col-header .col-desc,.list-col-header .col-date,.app-row .row-desc-col,.app-row .row-date{display:none;}
+  .hero-inner{grid-template-columns:1fr 170px;gap:2rem;}
+}
+
+@media(max-width:640px){
+  :root{--px:1rem;}
+  .search-wrap{display:block;max-width:none;flex:1;}
+  .threads-btn{display:none;}
+
+  /* 히어로: 2컬럼 유지하되 이미지 작게 */
+  .hero{padding:1.25rem var(--px) 1rem;}
+  .hero-inner{grid-template-columns:1fr 100px;gap:1rem;align-items:start;}
+  .hero-char{border-radius:10px;}
+  .hero-title{font-size:clamp(1.4rem,6vw,1.9rem);letter-spacing:-.03em;word-break:keep-all;line-height:1.1;margin-bottom:.5rem;}
+  .hero-desc{font-size:12.5px;word-break:keep-all;}
+  .hero-char-info{padding:.5rem .65rem .6rem;}
+  .hero-char-name{font-size:12px;}
+  .hero-char-handle{font-size:10px;}
+  .hero-char-bio{font-size:11px;}
+
+  /* 푸터 모바일 */
+  footer{padding:1.25rem var(--px) 2rem;gap:.5rem;}
+  .ft-brand{font-size:14px;}
+  .ft-links{gap:.6rem;flex-wrap:wrap;}
+  .ft-link{font-size:12px;}
+  .install-btn,.jaryosil-btn{font-size:12px;padding:.25rem .75rem;}
+
+  .filter-wrap{
+    padding:.6rem var(--px);
+    flex-wrap:nowrap;overflow-x:auto;gap:6px;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  }
+  .filter-wrap::-webkit-scrollbar{display:none;}
+  .chip{white-space:nowrap;flex-shrink:0;font-size:12px;padding:.32rem .8rem;}
+  .list-wrap{padding:.75rem var(--px) 4rem;}
+  .list-col-header{display:none;}
+  .app-row{
+    display:flex;flex-direction:column;gap:0;
+    padding:.85rem 1rem;margin-bottom:8px;
+    border:1px solid var(--border);border-radius:12px;
+    background:var(--surface);
+  }
+  .app-row.is-new{border-color:rgba(184,240,60,.3);background:linear-gradient(135deg,rgba(184,240,60,.04) 0%,var(--surface) 60%);}
+  .app-row::before{left:0;right:0;border-radius:12px;}
+  .app-row:hover::before{opacity:1;}
+  .app-row>*{position:relative;z-index:1;}
+  .row-num{display:none;}
+  .row-main{margin-bottom:6px;}
+  .row-name{font-size:14px;font-weight:500;white-space:normal;word-break:keep-all;line-height:1.4;flex-wrap:wrap;}
+  .row-sub{font-size:11px;margin-top:2px;}
+  .row-desc-col{font-size:12px;color:var(--sub);white-space:normal;word-break:keep-all;line-height:1.6;margin-bottom:8px;display:block;}
+  .row-card-foot{display:flex;align-items:center;justify-content:space-between;gap:6px;padding-top:7px;border-top:1px solid var(--border);flex-wrap:wrap;}
+  .row-cat{font-size:11px;padding:2px 8px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);}
+  .row-date{font-size:11px;color:var(--muted);}
+  .row-arrow{display:none;}
+  .row-arrow-m{font-size:12px;color:var(--accent);background:var(--accent-glow);border-radius:6px;padding:3px 10px;flex-shrink:0;}
+}
+
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <a class="logo" href="#">kimju<span>.zip</span></a>
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input class="search-input" type="text" id="searchInput" placeholder="앱 이름 또는 설명 검색...">
+    </div>
+    <div class="header-btns">
+      <a class="threads-btn" href="https://www.threads.net/@kimju.zip" target="_blank">Threads</a>
+      <a class="insta-btn" href="https://instagram.com/kimju.zip" target="_blank" title="Instagram @kimju.zip">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#f0f0ee" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="0.8" fill="#f0f0ee" stroke="none"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <h1 class="hero-title">선생님을 위한<br><em>바이브 코딩</em></h1>
+      <p class="hero-desc">구글 앱스 스크립트로 만든 교육용 웹앱들을 모아두었습니다.<br>수업·생활지도·행정 업무를 조금 더 편하게.</p>
+    </div>
+    <div class="hero-char">
+      <img src="30020.webp" alt="kimju.zip 캐릭터" style="width:100%;aspect-ratio:1;object-fit:cover;object-position:center top;display:block;">
+      <div class="hero-char-info">
+        <div class="hero-char-name">김주현 <span class="hero-char-handle">@kimju.zip</span></div>
+        <div class="hero-char-bio">불편함을 코딩으로 해결하는 15년차<br>체육교사</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ticker-wrap">
+  <div class="ticker-inner">
+    <span class="ticker-text">★ 34개 앱 무료 공개 중 <span class="ticker-sep">|</span> 선생님의 칼퇴 도우미 — @kimju.zip <span class="ticker-sep">|</span> NEW 게임 모음 · 생기부 · 서명 기능 추가 <span class="ticker-sep">|</span> 선생님을 위한 바이브코딩 <span class="ticker-sep">|</span></span>
+    <span class="ticker-text">★ 34개 앱 무료 공개 중 <span class="ticker-sep">|</span> 선생님의 칼퇴 도우미 — @kimju.zip <span class="ticker-sep">|</span> NEW 게임 모음 · 생기부 · 서명 기능 추가 <span class="ticker-sep">|</span> 선생님을 위한 바이브코딩 <span class="ticker-sep">|</span></span>
+  </div>
+</div>
+
+<div class="filter-wrap" id="filterWrap"></div>
+
+<div class="list-wrap">
+  <div class="list-col-header">
+    <span>#</span><span>앱 이름</span><span class="col-desc">설명</span><span class="col-cat">분류</span><span class="col-date">업데이트</span><span></span>
+  </div>
+  <div id="appList"></div>
+</div>
+
+
+<div class="modal-bg" id="installModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">앱 설치 방법</div>
+      <button class="modal-close" onclick="document.getElementById('installModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-intro">
+      kimju.zip의 앱은 Google Apps Script로 만들어진 웹앱이에요.<br>
+      아래 순서대로 따라하시면 누구나 5분 안에 설치하실 수 있어요!
+    </div>
+
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <div class="step-title">공유 링크에서 내 드라이브로 사본 만들기</div>
+        <div class="step-desc">
+          위 목록에서 원하는 앱 링크를 클릭하면 구글 드라이브 사본 만들기 화면이 열려요.<br>
+          <b>'사본 만들기'</b> 버튼을 눌러 선생님 계정의 드라이브로 가져오세요.
+        </div>
+        <div class="step-warn">⚠ 이 단계가 가장 중요해요! 사본이 있어야 직접 수정·배포 권한이 생깁니다.</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <div class="step-title">Apps Script 에디터 열기</div>
+        <div class="step-desc">
+          사본 스프레드시트를 열고 상단 메뉴에서<br>
+          <b>'확장 프로그램' → 'Apps Script'</b> 를 클릭해 스크립트 에디터를 여세요.
+        </div>
+        <div class="step-tip">💡 '스크립트 편집기'로 표시되는 경우도 있어요. 같은 기능이니 걱정 마세요!</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <div class="step-title">새 배포 시작하기</div>
+        <div class="step-desc">
+          에디터 오른쪽 위 <b>'배포' 버튼(✈️)</b>을 클릭하고<br>
+          드롭다운에서 <b>'새 배포'</b>를 선택하세요.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <div class="step-title">배포 설정하기</div>
+        <div class="step-desc">
+          '새 배포' 창에서 아래와 같이 설정해 주세요.<br>
+          <b>유형:</b> 톱니바퀴(⚙️) 클릭 → <b>'웹 앱'</b> 선택<br>
+          <b>실행 계정:</b> <b>'나(내 계정)'</b> 선택<br>
+          <b>액세스 권한:</b> <b>'모든 사용자'</b> 선택<br><br>
+          설정 완료 후 오른쪽 아래 <b>'배포'</b> 버튼을 클릭하세요.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">권한 승인하기 <span style="font-size:12px;font-weight:400;color:#888;">(처음 배포할 때만)</span></div>
+        <div class="step-desc">
+          구글 권한 승인 화면이 나타나면 <b>'권한 검토' → 계정 선택</b>을 진행하세요.<br>
+          <b>'Google에서 확인하지 않은 앱'</b> 경고가 뜰 수 있는데 정상이에요.
+        </div>
+        <div class="step-warn">⚠ <b>'고급'</b> 클릭 → <b>'(앱 이름)으로 이동(안전하지 않음)'</b> 클릭 → <b>'허용'</b><br>kimju.zip 앱은 개인 정보를 수집하지 않으니 안심하세요!</div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <div class="step-title">웹 앱 URL 복사해서 사용하기</div>
+        <div class="step-desc">
+          권한 승인이 완료되면 <b>웹 앱 URL</b>이 표시돼요.<br>
+          옆의 <b>'복사' 버튼(📄)</b>을 눌러 URL을 복사하고 즐겨찾기나 필요한 곳에 붙여넣으세요.<br><br>
+          설치 완료! 이제 선생님만의 앱이 준비됐어요 🎉
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer-wrap">
+  <footer>
+    <div class="ft-brand">kimju<span>.zip</span></div>
+    <div class="ft-links">
+      <a class="ft-link" href="https://instagram.com/kimju.zip" target="_blank">Instagram</a>
+      <a class="ft-link" href="https://www.threads.net/@kimju.zip" target="_blank">Threads</a>
+      <a class="ft-link" href="https://kimju1416.github.io/kimju.zip" target="_blank">A/S 챗봇</a>
+      <a class="jaryosil-btn" href="https://script.google.com/macros/s/AKfycbyeNW6uxZXl7gskMF6xojX27UoMhvTcHXogql-wvyMmQeIf8xo1zEKU-GbcqIPA1jrz9w/exec" target="_blank">자료실</a>
+      <button class="install-btn" onclick="document.getElementById('installModal').classList.add('open')">설치방법</button>
+    </div>
+  </footer>
+</div>
+
+<script>
+const apps = [
+  // 1. 학생부 업무
+  { name:'학교문화책임규약',          desc:'학생 생활 규약을 디지털로 안내하고 확인·서명까지 한 번에 처리하는 앱',            cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1x8RXHnQxjPmR8qpkGJvZfGhBGxT7vRpt0XpUaVu-QvQ/copy' },
+  { name:'분실물 센터',                desc:'학교 내 분실물을 사진과 함께 등록하고 학생이 직접 조회·신청할 수 있는 관리 앱',    cat:'학생부 업무', badge:'',       date:'26.05.15', url:'https://docs.google.com/spreadsheets/d/1XjSXO-MI-P3T_Q68FTwC5xjtkFDQf3J2ER70PdoILmg/copy' },
+  { name:'학교폭력 사안처리 조회',     desc:'학폭 사안의 접수부터 처리 완료까지 9단계 흐름을 한눈에 추적·관리하는 앱',         cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/177BdGTaJXkCHZsVMGcnUfSIOfVNR2i38BiFfX7YJ6g8/copy' },
+  { name:'학교폭력 24시간 신고센터',   desc:'학생이 익명으로 학폭을 신고하고 담당자가 실시간으로 접수·처리할 수 있는 앱',       cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1Jnwp8xcOpamNZsL6EsoQy9ZxfwIrPCsNOXLRmtvQVTM/copy' },
+  // 2. 담임 업무
+  { name:'학부모 상담 시간 예약',      desc:'학부모가 원하는 시간을 직접 선택하고 담임이 일정을 자동으로 관리하는 상담 예약 앱', cat:'담임 업무',  badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/10XYHaRcIQk1o5Ywl_uJokqlBMjG-6S4xDcEhJE9mLHQ/copy' },
+  { name:'가정통신문 및 서류제출 (중등)', desc:'가정통신문 배부와 서류 제출 여부를 실시간으로 확인하고 미제출자에게 알림을 보내는 앱', cat:'담임 업무', badge:'',      date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/17ZNXzv-99ZjQUMP5Oh993ojycZt4ZzfZ-d2t63rFH90/copy' },
+  { name:'가정통신문 수거 및 서류제출 (초등)', desc:'가정통신문 배부와 서류 제출 여부를 실시간으로 확인하고 미제출자에게 알림을 보내는 앱 (초등용)', cat:'담임 업무', badge:'', date:'26.04.17', url:'https://docs.google.com/spreadsheets/d/1pAHudim6rCjA--XAqALq0F5q2xSzEfcuY0xhS3mUipY/copy' },
+  { name:'스마트 자리 교체',           desc:'강제 지정·분리 조건을 반영해 클릭 한 번으로 최적의 자리 배치를 자동 생성하는 앱',   cat:'담임 업무',  badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1bhvUKNeQxGIh9DUNtKgIe4OANKq_okw127pgYi8SutY/copy' },
+  // 3. 체육과 업무
+  { name:'팝스 조회 및 처방 (중학교)', desc:'중학생 PAPS 체력 측정 결과를 조회하고 개인별 맞춤 운동 처방까지 제공하는 앱',      cat:'체육과 업무', badge:'',      date:'26.04.12', url:'https://m.site.naver.com/1Zkwn' },
+  { name:'팝스 조회 및 처방 (고등학교)',desc:'고등학생 PAPS 체력 측정 결과를 조회하고 개인별 맞춤 운동 처방까지 제공하는 앱',    cat:'체육과 업무', badge:'',      date:'26.04.12', url:'https://m.site.naver.com/1Zkwo' },
+  // 4. 마음지도
+  { name:'우리반 마음지도 (중등)',      desc:'중학교 학급에서 소시오메트리 설문을 실시하고 관계망을 시각화해 또래 관계를 분석하는 앱', cat:'마음지도', badge:'',      date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1esAQ8hrUv-Rir10twCPOSw3C4OW104binVCRKfalXzc/copy' },
+  { name:'우리반 마음지도 (초등)',      desc:'초등학교 학급에서 소시오메트리 설문을 실시하고 관계망을 시각화해 또래 관계를 분석하는 앱', cat:'마음지도', badge:'',     date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1Q_Prj3FloW-l_Qqt61D5JvMybmagwYyB0o7VHZJfpSI/copy' },
+  { name:'학교운동부 마음지도',         desc:'운동부 선수들의 팀 내 관계를 소시오그램으로 분석해 갈등 예방과 팀워크 향상을 돕는 앱', cat:'마음지도',  badge:'',      date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1IRXB-nxwnUW_39XhcJpK6nad8pUNTNUU7jZXKyJEROs/copy' },
+  // 5. 공통업무
+  { name:'스마트 팀믹스',              desc:'성별·성적·친밀도 등 균형·분리 조건을 설정해 공정하고 자동화된 모둠 편성을 돕는 앱',   cat:'공통 업무',  badge:'',      date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1ZNgZUFfmVlPm6MuMQPWJ8TOHn5SzwByswDNep5ebyq0/copy' },
+  { name:'클래스 메모',                sub:'↳ 생기부 작성 기능 추가',desc:'교과별 수업 메모·할일·학생 연락처를 한 앱에서 체계적으로 관리하는 교사용 노트 앱',    cat:'공통 업무',  badge:'',      date:'26.05.20', url:'https://docs.google.com/spreadsheets/d/1Pyct0GCmGSpZEEZ_J-pvZzu_4ywu_cHyIHsNtBie3TQ/copy' },
+  { name:'연수 이수증 수거앱',          sub:'↳ 교내연수 모바일 서명 기능 추가', desc:'Gemini AI 이수번호 자동 추출 + 모바일 서명받기 기능으로 교사별 이수 현황을 한눈에 관리하는 앱', cat:'공통 업무', badge:'',     date:'26.06.16', url:'https://docs.google.com/spreadsheets/d/17qM84zIOBnMvc-3teT7eDIGFNNnA74wM0QMwBOFpQbk/copy' },
+  { name:'스마트 수업교체 시간표',      sub:'↳ 수업교체원 출력 기능 추가', desc:'수업 교체 신청부터 최종 시간표 자동 생성·수업교체원 출력까지 복잡한 교체 과정을 간단하게 처리하는 앱',  cat:'공통 업무',  badge:'',      date:'26.06.16', url:'https://docs.google.com/spreadsheets/d/1QNNFqSsd-8OPfFCtiqZ0vZz4tHdCOLFhAY-8wYDbh0s/copy' },
+  { name:'쌤콜 (SAEMCALL)',             desc:'시험기간 학생이 교무실에 있는 선생님을 호출할 수 있는 키오스크앱', cat:'공통 업무', badge:'', date:'26.04.15', url:'https://docs.google.com/spreadsheets/d/175PZsO3JGiS1RWMIw_bO--pmY0JTB2rYbeZIHzkmU1g/copy' },
+  { name:'유콜 (YOUCALL)',              desc:'교무실에서 선생님이 학생을 직접 호출할 수 있는 앱', cat:'공통 업무', badge:'', date:'26.04.17', url:'https://docs.google.com/spreadsheets/d/1SuVIKk24zmZaBfa8Yg74tQas9Xk2ryjE0xQKc_n3oMw/copy' },
+  // 6. 프롬프트 앱
+  { name:'교육용 자료 프롬프트',        desc:'학습지·루브릭·수업 계획서 등 다양한 교육 자료를 AI로 빠르게 만들어주는 프롬프트 앱', cat:'프롬프트',   badge:'prompt', date:'26.04.28', url:'https://kimju1416.github.io/edu1/' },
+  { name:'Suno 프롬프트 앱',            desc:'Suno AI로 수업용 노래·배경음악을 쉽게 만들 수 있도록 최적화된 프롬프트를 제공하는 앱', cat:'프롬프트',  badge:'prompt', date:'26.04.12', url:'https://kimju1416.github.io/sono/' },
+  { name:'카드뉴스 & 인포그래픽 생성',  desc:'AI 프롬프트로 교육용 카드뉴스와 인포그래픽을 빠르고 쉽게 제작할 수 있는 앱',        cat:'프롬프트',   badge:'prompt', date:'26.04.12', url:'https://kimju1416.github.io/card/' },
+  { name:'특수교육 AI 프롬프트',         desc:'특수교육 수업 자료·개별화교육계획(IEP) 작성을 AI로 지원하는 특수교사 전용 프롬프트 앱', cat:'프롬프트',  badge:'prompt', date:'26.04.28', url:'https://kimju1416.github.io/uni1/' },
+  { name:'초등교육 AI 자료 프롬프트',    desc:'초등 교과 특성에 맞는 수업 자료·활동지를 AI로 손쉽게 제작하는 초등 전용 프롬프트 앱', cat:'프롬프트',  badge:'prompt', date:'26.04.12', url:'https://kimju1416.github.io/cho/' },
+  { name:'GPT 학교 포스터 예시 100선',   desc:'GPT로 만든 학교 포스터 예시 100선과 활용 프롬프트를 제공하는 앱', cat:'프롬프트',  badge:'prompt', date:'26.04.28', url:'https://kimju1416.github.io/gpt2' },
+  // 7. 기타자료
+  { name:'바이브코딩 용어사전',         desc:'바이브코딩을 처음 접하는 선생님을 위한 AI·코딩 핵심 용어를 쉽게 풀어쓴 웹 사전',         cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://vibev.netlify.app/' },
+  { name:'씨마스 에듀테크 활용북',      desc:'씨마스 출판사에서 제작한 에듀테크 도구 활용 수업 사례와 실습 가이드가 담긴 PDF 자료',  cat:'기타 자료',  badge:'doc',    date:'26.04.12', url:'https://drive.google.com/file/d/13wYDpywBiRpLGHCTJvmaXVqzV5-PJRci/view?usp=drivesdk' },
+  { name:'운동부 종합 자료',            desc:'학교 운동부 운영에 필요한 서식·지침·참고 자료를 한 곳에 모아둔 패들렛 자료집',           cat:'기타 자료',  badge:'doc',    date:'26.04.12', url:'https://padlet.com/dakkang27/ver-02-ynpu74jky3a9mqrm' },
+  { name:'디자인 예시 갤러리',          desc:'kimju.zip이 제작한 PPT·카드뉴스 디자인 예시 254종을 한눈에 모아볼 수 있는 갤러리',         cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://kimju1416.github.io/design/' },
+  { name:'AI 도구 가이드',              desc:'2026년 선생님을 위한 AI 도구 38선을 5개 카테고리로 정리한 활용 가이드',                    cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://kimju1416.github.io/codex/' },
+  { name:'체육대회 모바일 안내문',      desc:'체육대회 일정·종목·주의사항을 담은 모바일 최적화 안내문을 쉽고 빠르게 만드는 도구',        cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://guide11.netlify.app/' },
+  { name:'현장체험학습 모바일 안내문',  desc:'현장체험학습 안내 내용을 모바일 친화적 안내문으로 빠르게 제작하는 도구',                   cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://su333.netlify.app/' },
+  { name:'모바일 게임 모음',            desc:'수업·쉬는시간에 바로 활용할 수 있는 kimju.zip 모바일 게임 모음',                          cat:'기타 자료',  badge:'doc',    date:'26.06.17', url:'https://orak11.netlify.app/' },
+  // 8. A/S 챗봇
+  { name:'kimju.zip A/S 챗봇',          desc:'kimju.zip 앱 사용 중 오류나 궁금한 점을 AI 챗봇에게 바로 물어볼 수 있는 지원 창구',   cat:'A/S',        badge:'as',     date:'26.04.12', url:'https://kimju1416.github.io/kimju.zip' },
+];
+
+const catOrder = ['전체','학생부 업무','담임 업무','체육과 업무','마음지도','공통 업무','프롬프트','기타 자료','A/S'];
+let currentCat = '전체';
+let searchQuery = '';
+
+function countByCat(cat){ return cat==='전체' ? apps.length : apps.filter(a=>a.cat===cat).length; }
+
+function renderFilter(){
+  document.getElementById('filterWrap').innerHTML = catOrder.map(c=>`
+    <button class="chip ${c===currentCat?'on':''}" data-cat="${c}">
+      ${c}<span class="chip-count">${countByCat(c)}</span>
+    </button>`).join('');
+  document.querySelectorAll('.chip').forEach(b=>{
+    b.addEventListener('click',()=>{ currentCat=b.dataset.cat; renderFilter(); renderList(); });
+  });
+}
+
+function isNew(date){
+  // 26.05 이후 업데이트된 앱 강조
+  if(!date) return false;
+  const [y,m] = date.split('.').map(Number);
+  return (y > 26) || (y === 26 && m >= 5);
+}
+
+function renderList(){
+  let f = currentCat==='전체' ? apps : apps.filter(a=>a.cat===currentCat);
+  if(searchQuery){
+    const q=searchQuery.toLowerCase();
+    f=f.filter(a=>a.name.toLowerCase().includes(q)||a.desc.toLowerCase().includes(q)||a.cat.includes(q));
+  }
+  const ht = document.getElementById('heroTotal');
+  if(ht) ht.textContent = f.length;
+  const el = document.getElementById('appList');
+  if(!f.length){ el.innerHTML=`<div class="no-result">검색 결과가 없습니다.</div>`; return; }
+  el.innerHTML = f.map((a,i)=>{
+    const badgeHTML = a.badge==='as' ? '<span class="badge badge-as">A/S</span>'
+      : a.badge==='doc' ? '<span class="badge badge-doc">자료</span>'
+      : a.badge==='prompt' ? '<span class="badge badge-prompt">AI</span>' : '';
+    const subHTML = a.sub ? `<div class="row-sub">${a.sub}</div>` : '';
+    const newBadge = isNew(a.date) ? '<span class="badge badge-new">NEW</span>' : '';
+    const newClass = isNew(a.date) ? ' is-new' : '';
+    return `<a class="app-row${newClass}" href="${a.url}" target="_blank" onclick="showToast()">
+      <span class="row-num">${String(i+1).padStart(2,'0')}</span>
+      <div class="row-main">
+        <div class="row-name">${a.name}${badgeHTML}${newBadge}</div>
+        ${subHTML}
+      </div>
+      <span class="row-desc-col">${a.desc}</span>
+      <span class="row-cat">${a.cat}</span>
+      <span class="row-date">${a.date}</span>
+      <span class="row-arrow">→</span>
+      <div class="row-card-foot">
+        <span class="row-cat">${a.cat}</span>
+        <span class="row-date">${a.date}</span>
+        <span class="row-arrow-m">열기 →</span>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+document.getElementById('searchInput').addEventListener('input',e=>{
+  searchQuery=e.target.value.trim(); renderList();
+});
+
+renderFilter();
+renderList();
+
+function showToast(){
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2000);
+}
+
+</script>
+<div class="toast" id="toast"><span class="toast-icon">📋</span>구글 시트로 이동합니다</div>
+</body>
+</html>
