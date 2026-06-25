@@ -377,7 +377,7 @@ footer{
   <div class="hero-inner">
     <div class="hero-left">
       <h1 class="hero-title">선생님을 위한<br><em>바이브 코딩</em></h1>
-      <p class="hero-desc">구글 앱스 스크립트로 만든 교육용 웹앱 34개.<br>수업·생활지도·행정 업무 자동화부터 AI 프롬프트까지.<br>코딩 몰라도 OK — @kimju.zip</p>
+      <p class="hero-desc">구글 앱스 스크립트로 만든 교육용 웹앱 38개.<br>수업·생활지도·행정 업무 자동화부터 AI 프롬프트까지.<br>코딩 몰라도 OK — @kimju.zip</p>
       <div class="hero-tags">#바이브코딩 &nbsp;#체육교사 &nbsp;#GAS &nbsp;#무료</div>
     </div>
     <div class="hero-char">
@@ -392,8 +392,8 @@ footer{
 
 <div class="ticker-wrap">
   <div class="ticker-inner">
-    <span class="ticker-text">★ 34개 앱 무료 공개 중 <span class="ticker-sep">|</span> 선생님의 칼퇴 도우미 — @kimju.zip <span class="ticker-sep">|</span> NEW 게임 모음 · 생기부 · 서명 기능 추가 <span class="ticker-sep">|</span> 선생님을 위한 바이브코딩 <span class="ticker-sep">|</span></span>
-    <span class="ticker-text">★ 34개 앱 무료 공개 중 <span class="ticker-sep">|</span> 선생님의 칼퇴 도우미 — @kimju.zip <span class="ticker-sep">|</span> NEW 게임 모음 · 생기부 · 서명 기능 추가 <span class="ticker-sep">|</span> 선생님을 위한 바이브코딩 <span class="ticker-sep">|</span></span>
+    <span class="ticker-text">★ 38개 앱 무료 공개 중 <span class="ticker-sep">|</span> 선생님의 칼퇴 도우미 — @kimju.zip <span class="ticker-sep">|</span> NEW 게임 모음 · 생기부 · 서명 기능 추가 <span class="ticker-sep">|</span> 선생님을 위한 바이브코딩 <span class="ticker-sep">|</span></span>
+    <span class="ticker-text">★ 38개 앱 무료 공개 중 <span class="ticker-sep">|</span> 선생님의 칼퇴 도우미 — @kimju.zip <span class="ticker-sep">|</span> NEW 게임 모음 · 생기부 · 서명 기능 추가 <span class="ticker-sep">|</span> 선생님을 위한 바이브코딩 <span class="ticker-sep">|</span></span>
   </div>
 </div>
 
@@ -534,6 +534,8 @@ const apps = [
   { name:'쌤콜 (SAEMCALL)',             desc:'시험기간 학생이 교무실에 있는 선생님을 호출할 수 있는 키오스크앱', cat:'공통 업무', badge:'', date:'26.04.15', url:'https://docs.google.com/spreadsheets/d/175PZsO3JGiS1RWMIw_bO--pmY0JTB2rYbeZIHzkmU1g/copy' },
   { name:'유콜 (YOUCALL)',              desc:'교무실에서 선생님이 학생을 직접 호출할 수 있는 앱', cat:'공통 업무', badge:'', date:'26.04.17', url:'https://docs.google.com/spreadsheets/d/1SuVIKk24zmZaBfa8Yg74tQas9Xk2ryjE0xQKc_n3oMw/copy' },
   { name:'특별실 예약 시스템',          desc:'과학실·체육관·시청각실 등 학교 특별실을 온라인으로 간편하게 예약하고 현황을 관리하는 앱', cat:'공통 업무', badge:'', date:'26.06.20', url:'https://m.site.naver.com/2aRsK' },
+  { name:'스마트 반편성',              desc:'성적·성별·교우관계 등 여러 조건을 균형 있게 반영해 새 학년 반편성을 클릭 한 번으로 자동 처리하는 앱', cat:'공통 업무', badge:'', date:'26.06.26', url:'https://docs.google.com/spreadsheets/d/1pJu-jYx3qLP2d8EPvnpAUuGVsj0IibmjkgDbC7ZYlpI/copy' },
+  { name:'개인용 자료실 생성',         desc:'선생님만의 수업·업무 자료를 업로드·분류해 나만의 온라인 자료실을 손쉽게 만드는 앱', cat:'공통 업무', badge:'', date:'26.06.26', url:'https://docs.google.com/spreadsheets/d/1ekCgo3ir3PgNTrCulltH7gy59GnldPcmgA7Pu3kn6e4/copy' },
   // 6. 프롬프트 앱
   { name:'교육용 자료 프롬프트',        desc:'학습지·루브릭·수업 계획서 등 다양한 교육 자료를 AI로 빠르게 만들어주는 프롬프트 앱', cat:'프롬프트',   badge:'prompt', date:'26.04.28', url:'https://kimju1416.github.io/edu1/' },
   { name:'Suno 프롬프트 앱',            desc:'Suno AI로 수업용 노래·배경음악을 쉽게 만들 수 있도록 최적화된 프롬프트를 제공하는 앱', cat:'프롬프트',  badge:'prompt', date:'26.04.12', url:'https://kimju1416.github.io/sono/' },
@@ -585,7 +587,7 @@ function renderList(){
     f=f.filter(a=>a.name.toLowerCase().includes(q)||a.desc.toLowerCase().includes(q)||a.cat.includes(q));
   }
   const ht = document.getElementById('heroTotal');
-  if(ht) ht.textContent = f.length === apps.length ? 36 : f.length;
+  if(ht) ht.textContent = f.length === apps.length ? apps.length : f.length;
   const el = document.getElementById('appList');
   if(!f.length){ el.innerHTML=`<div class="no-result">검색 결과가 없습니다.</div>`; return; }
   el.innerHTML = f.map((a,i)=>{
