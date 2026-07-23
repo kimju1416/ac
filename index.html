@@ -6,6 +6,7 @@
 <title>kimju.zip - 바이브코딩</title>
 <meta name="description" content="@kimju.zip이 만든 선생님을 위한 GAS 웹앱 모음">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -193,6 +194,31 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .app-row.is-new{border-bottom-color:rgba(184,240,60,.15);}
 .app-row.is-new .row-date{color:var(--accent);}
 
+/* ─── 피드백 게시판 ─── */
+.fb-section{max-width:var(--max);margin:0 auto;padding:3rem var(--px) 5rem;}
+.fb-title{font-family:'Space Grotesk',sans-serif;font-size:1.05rem;font-weight:700;letter-spacing:-.02em;margin-bottom:1.25rem;color:var(--text);display:flex;align-items:center;gap:.5rem;}
+.fb-title span{font-family:'DM Mono',monospace;font-size:11px;color:var(--accent);background:var(--accent-glow);border:1px solid rgba(184,240,60,.2);border-radius:4px;padding:2px 8px;font-weight:500;}
+.fb-form{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.25rem;margin-bottom:1.75rem;display:flex;flex-direction:column;gap:.75rem;}
+.fb-input{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;padding:.6rem 1rem;outline:none;transition:border-color .2s;width:100%;}
+.fb-input::placeholder{color:var(--muted);}
+.fb-input:focus{border-color:rgba(184,240,60,.35);background:#181818;}
+.fb-textarea{background:var(--surface2);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;padding:.6rem 1rem;outline:none;resize:vertical;min-height:90px;transition:border-color .2s;width:100%;}
+.fb-textarea::placeholder{color:var(--muted);}
+.fb-textarea:focus{border-color:rgba(184,240,60,.35);background:#181818;}
+.fb-submit{background:var(--accent);color:var(--accent-text);border:none;border-radius:8px;padding:.6rem 1.4rem;font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:700;cursor:pointer;align-self:flex-end;transition:opacity .15s;}
+.fb-submit:hover{opacity:.85;}
+.fb-submit:disabled{opacity:.35;cursor:not-allowed;}
+.fb-cards{display:flex;flex-direction:column;gap:10px;}
+.fb-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;transition:border-color .18s;}
+.fb-card:hover{border-color:rgba(255,255,255,.13);}
+.fb-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem;}
+.fb-card-name{font-size:13px;font-weight:700;color:var(--text);}
+.fb-card-date{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+.fb-card-body{font-size:14px;color:var(--sub);line-height:1.65;word-break:keep-all;white-space:pre-wrap;}
+.fb-empty{text-align:center;padding:3rem 0;font-size:14px;color:var(--muted);}
+.fb-loading{text-align:center;padding:2rem 0;font-size:13px;color:var(--muted);}
+@media(max-width:640px){.fb-section{padding:2rem var(--px) 4rem;}.fb-submit{align-self:stretch;text-align:center;}}
+
 /* ─── FOOTER ─── */
 .footer-wrap{border-top:1px solid var(--border);margin-top:2rem;}
 footer{
@@ -215,6 +241,20 @@ footer{
   transition:all .15s;white-space:nowrap;
 }
 .install-btn:hover{background:rgba(99,179,255,.15);border-color:rgba(99,179,255,.45);}
+.board-btn{
+  font-size:14px;color:var(--accent);text-decoration:none;cursor:pointer;
+  border:1px solid rgba(184,240,60,.35);border-radius:20px;
+  padding:.3rem .9rem;background:rgba(184,240,60,.07);
+  transition:all .15s;white-space:nowrap;
+}
+.board-btn:hover{background:rgba(184,240,60,.15);border-color:rgba(184,240,60,.6);}
+.hero-char{position:relative;cursor:pointer;}
+.hero-char-overlay{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,.5);opacity:0;transition:opacity .2s;border-radius:14px;
+  font-size:13px;font-weight:700;color:#fff;gap:5px;
+}
+.hero-char:hover .hero-char-overlay{opacity:1;}
 .jaryosil-btn{
   font-size:14px;color:#ff6b6b;text-decoration:none;cursor:pointer;
   border:1px solid rgba(255,77,77,.25);border-radius:20px;
@@ -361,6 +401,7 @@ footer{
       <input class="search-input" type="text" id="searchInput" placeholder="앱 이름 또는 설명 검색...">
     </div>
     <div class="header-btns">
+      <button class="threads-btn" onclick="openFeedback()" style="border-color:rgba(184,240,60,.35);color:var(--accent);">게시판</button>
       <a class="threads-btn" href="https://www.threads.net/@kimju.zip" target="_blank">Threads</a>
       <a class="insta-btn" href="https://instagram.com/kimju.zip" target="_blank" title="Instagram @kimju.zip">
         <svg viewBox="0 0 24 24" fill="none" stroke="#f0f0ee" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -380,13 +421,14 @@ footer{
       <p class="hero-desc">구글 앱스 스크립트로 만든 교육용 웹앱 40개.<br>수업·생활지도·행정 업무 자동화부터 AI 프롬프트까지.<br>코딩 몰라도 OK — @kimju.zip</p>
       <div class="hero-tags">#바이브코딩 &nbsp;#체육교사 &nbsp;#GAS &nbsp;#무료</div>
     </div>
-    <div class="hero-char">
+    <a class="hero-char" href="https://kimju1416.github.io/about" target="_blank">
+      <div class="hero-char-overlay">👤 소개 보기</div>
       <img src="30020.webp" alt="kimju.zip 캐릭터" style="width:100%;aspect-ratio:1;object-fit:cover;object-position:center top;display:block;">
       <div class="hero-char-info">
         <div class="hero-char-name">김주현 <span class="hero-char-handle">@kimju.zip</span></div>
         <div class="hero-char-bio">불편함을 코딩으로 해결하는<br>15년차 체육교사</div>
       </div>
-    </div>
+    </a>
   </div>
 </div>
 
@@ -406,6 +448,24 @@ footer{
   <div id="appList"></div>
 </div>
 
+
+<!-- ─── 게시판 모달 ─── -->
+<div class="modal-bg" id="feedbackModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">💬 방문자 후기</div>
+      <button class="modal-close" onclick="document.getElementById('feedbackModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="fb-form">
+      <input class="fb-input" type="text" id="fbName" placeholder="이름 (선택, 최대 20자)" maxlength="20">
+      <textarea class="fb-textarea" id="fbContent" placeholder="앱을 사용해보신 후기나 피드백을 남겨주세요 :)" maxlength="500"></textarea>
+      <button class="fb-submit" id="fbSubmit" onclick="submitFeedback()">등록하기</button>
+    </div>
+    <div id="fbCards" class="fb-cards">
+      <div class="fb-loading">후기를 불러오는 중...</div>
+    </div>
+  </div>
+</div>
 
 <div class="modal-bg" id="installModal" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal">
@@ -501,6 +561,7 @@ footer{
       <a class="ft-link" href="https://instagram.com/kimju.zip" target="_blank">Instagram</a>
       <a class="ft-link" href="https://www.threads.net/@kimju.zip" target="_blank">Threads</a>
       <a class="ft-link" href="https://kimju1416.github.io/kimju.zip" target="_blank">A/S 챗봇</a>
+      <button class="board-btn" onclick="openFeedback()">게시판</button>
       <a class="jaryosil-btn" href="https://script.google.com/macros/s/AKfycbyeNW6uxZXl7gskMF6xojX27UoMhvTcHXogql-wvyMmQeIf8xo1zEKU-GbcqIPA1jrz9w/exec" target="_blank">자료실</a>
       <button class="install-btn" onclick="document.getElementById('installModal').classList.add('open')">설치방법</button>
     </div>
@@ -633,5 +694,60 @@ function showToast(){
 
 </script>
 <div class="toast" id="toast"><span class="toast-icon">📋</span>구글 시트로 이동합니다</div>
+
+<script>
+const SB_URL = 'https://mkntbkvzxofggauxmyde.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rbnRia3Z6eG9mZ2dhdXhteWRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4MTg3OTIsImV4cCI6MjEwMDM5NDc5Mn0.kr7d9CXyMebCShd9hzv87X80W71yG2Az9tstQDYhdWU';
+const sb = supabase.createClient(SB_URL, SB_KEY);
+
+function openFeedback() {
+  document.getElementById('feedbackModal').classList.add('open');
+  loadFeedbacks();
+}
+
+async function loadFeedbacks() {
+  const container = document.getElementById('fbCards');
+  const { data, error } = await sb
+    .from('feedback')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(50);
+  if (error || !data || data.length === 0) {
+    container.innerHTML = '<div class="fb-empty">아직 후기가 없어요. 첫 번째 후기를 남겨보세요!</div>';
+    return;
+  }
+  container.innerHTML = data.map(f => {
+    const name = f.name || '익명';
+    const date = new Date(f.created_at).toLocaleDateString('ko-KR', {year:'2-digit',month:'2-digit',day:'2-digit'});
+    const body = (f.content||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return `<div class="fb-card">
+      <div class="fb-card-header">
+        <span class="fb-card-name">${name}</span>
+        <span class="fb-card-date">${date}</span>
+      </div>
+      <div class="fb-card-body">${body}</div>
+    </div>`;
+  }).join('');
+}
+
+async function submitFeedback() {
+  const name = document.getElementById('fbName').value.trim();
+  const content = document.getElementById('fbContent').value.trim();
+  if (!content) { alert('후기 내용을 입력해주세요.'); return; }
+  const btn = document.getElementById('fbSubmit');
+  btn.disabled = true; btn.textContent = '등록 중...';
+  const { error } = await sb.from('feedback').insert([{ name: name || null, content }]);
+  if (error) {
+    alert('등록 중 오류가 발생했어요. 다시 시도해주세요.');
+  } else {
+    document.getElementById('fbName').value = '';
+    document.getElementById('fbContent').value = '';
+    loadFeedbacks();
+  }
+  btn.disabled = false; btn.textContent = '등록하기';
+}
+
+loadFeedbacks();
+</script>
 </body>
 </html>
