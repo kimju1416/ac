@@ -226,6 +226,16 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .fb-write-btn{background:var(--accent);color:#0c0c0c;border:none;border-radius:20px;padding:.28rem .9rem;font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s;}
 .fb-write-btn:hover{opacity:.85;}
 .fb-write-btn.open{background:var(--surface2);color:var(--muted);border:1px solid var(--border);}
+.fb-admin-btn{font-size:11px;font-weight:700;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:.22rem .7rem;cursor:pointer;font-family:'Noto Sans KR',sans-serif;transition:all .18s;}
+.fb-admin-btn.active{color:var(--accent);border-color:rgba(184,240,60,.4);background:rgba(184,240,60,.08);}
+.fb-reply{margin-top:.55rem;padding:.55rem .75rem;background:rgba(184,240,60,.05);border-left:2px solid var(--accent);border-radius:0 6px 6px 0;}
+.fb-reply-label{font-size:10px;font-weight:700;color:var(--accent);letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px;}
+.fb-reply-text{font-size:13px;color:var(--sub);line-height:1.6;white-space:pre-wrap;}
+.fb-reply-form{margin-top:.5rem;display:flex;gap:.4rem;}
+.fb-reply-input{flex:1;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:13px;padding:.38rem .7rem;outline:none;font-family:'Noto Sans KR',sans-serif;transition:border-color .18s;}
+.fb-reply-input:focus{border-color:rgba(184,240,60,.35);}
+.fb-reply-save{background:var(--accent);color:#0c0c0c;border:none;border-radius:6px;padding:.38rem .75rem;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;font-family:'Noto Sans KR',sans-serif;}
+.fb-delete-btn{background:rgba(255,70,70,.1);color:#ff5050;border:1px solid rgba(255,70,70,.2);border-radius:6px;padding:.28rem .6rem;font-size:11px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR',sans-serif;margin-top:.3rem;}
 
 /* ─── FOOTER ─── */
 .footer-wrap{border-top:1px solid var(--border);margin-top:2rem;}
@@ -463,6 +473,7 @@ footer{
     <div class="modal-head">
       <div class="modal-title">💬 방문자 후기</div>
       <div style="display:flex;align-items:center;gap:.5rem">
+        <button class="fb-admin-btn" id="fbAdminBtn" onclick="toggleAdminMode()">🔒 관리자</button>
         <button class="fb-write-btn" id="fbWriteBtn" onclick="toggleWriteForm()">✏ 글쓰기</button>
         <button class="modal-close" onclick="document.getElementById('feedbackModal').classList.remove('open')">✕</button>
       </div>
@@ -719,6 +730,44 @@ const SB_URL = 'https://mkntbkvzxofggauxmyde.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rbnRia3Z6eG9mZ2dhdXhteWRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4MTg3OTIsImV4cCI6MjEwMDM5NDc5Mn0.kr7d9CXyMebCShd9hzv87X80W71yG2Az9tstQDYhdWU';
 const sb = supabase.createClient(SB_URL, SB_KEY);
 
+const ADMIN_PIN = '1234';
+let isAdmin = false;
+
+function toggleAdminMode() {
+  if (isAdmin) {
+    isAdmin = false;
+    const btn = document.getElementById('fbAdminBtn');
+    btn.textContent = '🔒 관리자';
+    btn.classList.remove('active');
+    loadFeedbacks();
+    return;
+  }
+  const pin = prompt('관리자 PIN을 입력하세요:');
+  if (pin === null) return;
+  if (pin === ADMIN_PIN) {
+    isAdmin = true;
+    const btn = document.getElementById('fbAdminBtn');
+    btn.textContent = '🔓 관리자 모드';
+    btn.classList.add('active');
+    loadFeedbacks();
+  } else {
+    alert('PIN이 틀렸습니다.');
+  }
+}
+
+async function saveReply(id) {
+  const input = document.getElementById('reply-' + id);
+  const reply = input.value.trim();
+  const { error } = await sb.from('feedback').update({ reply: reply || null }).eq('id', id);
+  if (!error) loadFeedbacks();
+}
+
+async function deletePost(id) {
+  if (!confirm('이 글을 삭제하시겠습니까?')) return;
+  await sb.from('feedback').delete().eq('id', id);
+  loadFeedbacks();
+}
+
 let selectedTag = '';
 function selectTag(btn, tag) {
   if (selectedTag === tag) {
@@ -776,12 +825,22 @@ async function loadFeedbacks() {
     const date = new Date(f.created_at).toLocaleDateString('ko-KR', {year:'2-digit',month:'2-digit',day:'2-digit'});
     const body = (f.content||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     const badge = f.tag ? `<span class="fb-badge">${f.tag}</span>` : '';
+    const replyHtml = f.reply
+      ? `<div class="fb-reply"><div class="fb-reply-label">관리자 답글</div><div class="fb-reply-text">${(f.reply).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div></div>`
+      : '';
+    const adminHtml = isAdmin ? `<div class="fb-reply-form">
+        <input class="fb-reply-input" id="reply-${f.id}" placeholder="답글 작성..." value="${(f.reply||'').replace(/"/g,'&quot;').replace(/</g,'&lt;')}">
+        <button class="fb-reply-save" onclick="saveReply(${f.id})">저장</button>
+      </div>
+      <button class="fb-delete-btn" onclick="deletePost(${f.id})">글 삭제</button>` : '';
     return `<div class="fb-card">
       <div class="fb-card-header">
         <span class="fb-card-name">${badge}${name}</span>
         <span class="fb-card-date">${date}</span>
       </div>
       <div class="fb-card-body">${body}</div>
+      ${replyHtml}
+      ${adminHtml}
     </div>`;
   }).join('');
 }
