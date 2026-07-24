@@ -218,6 +218,11 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .fb-empty{text-align:center;padding:3rem 0;font-size:14px;color:var(--muted);}
 .fb-loading{text-align:center;padding:2rem 0;font-size:13px;color:var(--muted);}
 @media(max-width:640px){.fb-section{padding:2rem var(--px) 4rem;}.fb-submit{align-self:stretch;text-align:center;}}
+.fb-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.1rem;}
+.fb-tag{background:var(--surface2);border:1px solid var(--border);border-radius:20px;color:var(--muted);font-size:12px;font-weight:600;padding:.28rem .72rem;cursor:pointer;transition:all .18s;font-family:'Noto Sans KR',sans-serif;}
+.fb-tag:hover{border-color:rgba(184,240,60,.35);color:var(--text);}
+.fb-tag.active{background:rgba(184,240,60,.12);border-color:rgba(184,240,60,.5);color:var(--accent);}
+.fb-badge{display:inline-block;font-size:11px;font-weight:700;background:rgba(184,240,60,.1);border:1px solid rgba(184,240,60,.25);color:var(--accent);border-radius:12px;padding:1px 7px;margin-right:5px;vertical-align:middle;}
 
 /* ─── FOOTER ─── */
 .footer-wrap{border-top:1px solid var(--border);margin-top:2rem;}
@@ -457,6 +462,14 @@ footer{
       <button class="modal-close" onclick="document.getElementById('feedbackModal').classList.remove('open')">✕</button>
     </div>
     <div class="fb-form">
+      <div class="fb-tags">
+        <button type="button" class="fb-tag" onclick="selectTag(this,'후기')">후기</button>
+        <button type="button" class="fb-tag" onclick="selectTag(this,'피드백')">피드백</button>
+        <button type="button" class="fb-tag" onclick="selectTag(this,'버그제보')">버그제보</button>
+        <button type="button" class="fb-tag" onclick="selectTag(this,'감사')">감사</button>
+        <button type="button" class="fb-tag" onclick="selectTag(this,'건의')">건의</button>
+        <button type="button" class="fb-tag" onclick="selectTag(this,'질문')">질문</button>
+      </div>
       <input class="fb-input" type="text" id="fbName" placeholder="이름 (선택, 최대 20자)" maxlength="20">
       <textarea class="fb-textarea" id="fbContent" placeholder="앱을 사용해보신 후기나 피드백을 남겨주세요 :)" maxlength="500"></textarea>
       <button class="fb-submit" id="fbSubmit" onclick="submitFeedback()">등록하기</button>
@@ -700,6 +713,18 @@ const SB_URL = 'https://mkntbkvzxofggauxmyde.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rbnRia3Z6eG9mZ2dhdXhteWRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4MTg3OTIsImV4cCI6MjEwMDM5NDc5Mn0.kr7d9CXyMebCShd9hzv87X80W71yG2Az9tstQDYhdWU';
 const sb = supabase.createClient(SB_URL, SB_KEY);
 
+let selectedTag = '';
+function selectTag(btn, tag) {
+  if (selectedTag === tag) {
+    btn.classList.remove('active');
+    selectedTag = '';
+  } else {
+    document.querySelectorAll('.fb-tag').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedTag = tag;
+  }
+}
+
 function openFeedback() {
   document.getElementById('feedbackModal').classList.add('open');
   loadFeedbacks();
@@ -720,9 +745,10 @@ async function loadFeedbacks() {
     const name = f.name || '익명';
     const date = new Date(f.created_at).toLocaleDateString('ko-KR', {year:'2-digit',month:'2-digit',day:'2-digit'});
     const body = (f.content||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const badge = f.tag ? `<span class="fb-badge">${f.tag}</span>` : '';
     return `<div class="fb-card">
       <div class="fb-card-header">
-        <span class="fb-card-name">${name}</span>
+        <span class="fb-card-name">${badge}${name}</span>
         <span class="fb-card-date">${date}</span>
       </div>
       <div class="fb-card-body">${body}</div>
@@ -736,12 +762,14 @@ async function submitFeedback() {
   if (!content) { alert('후기 내용을 입력해주세요.'); return; }
   const btn = document.getElementById('fbSubmit');
   btn.disabled = true; btn.textContent = '등록 중...';
-  const { error } = await sb.from('feedback').insert([{ name: name || null, content }]);
+  const { error } = await sb.from('feedback').insert([{ name: name || null, content, tag: selectedTag || null }]);
   if (error) {
     alert('등록 중 오류가 발생했어요. 다시 시도해주세요.');
   } else {
     document.getElementById('fbName').value = '';
     document.getElementById('fbContent').value = '';
+    document.querySelectorAll('.fb-tag').forEach(b => b.classList.remove('active'));
+    selectedTag = '';
     loadFeedbacks();
   }
   btn.disabled = false; btn.textContent = '등록하기';
