@@ -223,6 +223,9 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .fb-tag:hover{border-color:rgba(184,240,60,.35);color:var(--text);}
 .fb-tag.active{background:rgba(184,240,60,.12);border-color:rgba(184,240,60,.5);color:var(--accent);}
 .fb-badge{display:inline-block;font-size:11px;font-weight:700;background:rgba(184,240,60,.1);border:1px solid rgba(184,240,60,.25);color:var(--accent);border-radius:12px;padding:1px 7px;margin-right:5px;vertical-align:middle;}
+.fb-write-btn{background:var(--accent);color:#0c0c0c;border:none;border-radius:20px;padding:.28rem .9rem;font-family:'Noto Sans KR',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s;}
+.fb-write-btn:hover{opacity:.85;}
+.fb-write-btn.open{background:var(--surface2);color:var(--muted);border:1px solid var(--border);}
 
 /* ─── FOOTER ─── */
 .footer-wrap{border-top:1px solid var(--border);margin-top:2rem;}
@@ -459,9 +462,12 @@ footer{
   <div class="modal">
     <div class="modal-head">
       <div class="modal-title">💬 방문자 후기</div>
-      <button class="modal-close" onclick="document.getElementById('feedbackModal').classList.remove('open')">✕</button>
+      <div style="display:flex;align-items:center;gap:.5rem">
+        <button class="fb-write-btn" id="fbWriteBtn" onclick="toggleWriteForm()">✏ 글쓰기</button>
+        <button class="modal-close" onclick="document.getElementById('feedbackModal').classList.remove('open')">✕</button>
+      </div>
     </div>
-    <div class="fb-form">
+    <div class="fb-form" id="fbForm" style="display:none;max-height:0;overflow:hidden;transition:max-height .3s ease">
       <div class="fb-tags">
         <button type="button" class="fb-tag" onclick="selectTag(this,'후기')">후기</button>
         <button type="button" class="fb-tag" onclick="selectTag(this,'피드백')">피드백</button>
@@ -725,6 +731,30 @@ function selectTag(btn, tag) {
   }
 }
 
+function toggleWriteForm() {
+  const form = document.getElementById('fbForm');
+  const btn = document.getElementById('fbWriteBtn');
+  const isOpen = form.style.display !== 'none';
+  if (isOpen) {
+    form.style.display = 'none';
+    btn.textContent = '✏ 글쓰기';
+    btn.classList.remove('open');
+  } else {
+    form.style.display = 'flex';
+    btn.textContent = '✕ 닫기';
+    btn.classList.add('open');
+    form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+function closeWriteForm() {
+  const form = document.getElementById('fbForm');
+  const btn = document.getElementById('fbWriteBtn');
+  form.style.display = 'none';
+  btn.textContent = '✏ 글쓰기';
+  btn.classList.remove('open');
+}
+
 function openFeedback() {
   document.getElementById('feedbackModal').classList.add('open');
   loadFeedbacks();
@@ -770,6 +800,7 @@ async function submitFeedback() {
     document.getElementById('fbContent').value = '';
     document.querySelectorAll('.fb-tag').forEach(b => b.classList.remove('active'));
     selectedTag = '';
+    closeWriteForm();
     loadFeedbacks();
   }
   btn.disabled = false; btn.textContent = '등록하기';
