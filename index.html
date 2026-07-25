@@ -187,6 +187,7 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .badge-doc{background:rgba(99,179,255,.1);color:#63b3ff;border:1px solid rgba(99,179,255,.2);}
 .badge-prompt{background:var(--accent-glow);color:var(--accent);border:1px solid rgba(184,240,60,.2);}
 .badge-new{background:rgba(184,240,60,.15);color:var(--accent);border:1px solid rgba(184,240,60,.35);font-weight:700;letter-spacing:.04em;}
+.badge-exe{background:rgba(255,165,0,.12);color:#ffa040;border:1px solid rgba(255,165,0,.25);}
 
 .no-result{padding:4rem 0;text-align:center;font-size:15px;color:var(--muted);}
 
@@ -689,6 +690,8 @@ const apps = [
   { name:'현장체험학습 모바일 안내문',  desc:'현장체험학습 안내 내용을 모바일 친화적 안내문으로 빠르게 제작하는 도구',                   cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://su333.netlify.app/' },
   { name:'모바일 게임 모음',            desc:'수업·쉬는시간에 바로 활용할 수 있는 kimju.zip 모바일 게임 모음',                          cat:'기타 자료',  badge:'doc',    date:'26.06.17', url:'https://orak11.netlify.app/' },
   { name:'ClassTube (교실TV)',          sub:'↳ 초·중등 교육 영상 1,853편 아카이브', desc:'공강·자율활동·의무교육 수업에 바로 쓸 수 있는 교육 유튜브 영상 1,853편을 재생시간·학년별로 필터링해 빠르게 찾는 영상 아카이브', cat:'기타 자료', badge:'doc', date:'26.07.04', url:'https://kimju1416.github.io/classtube/' },
+  { name:'AI 사용량 위젯',              desc:'Claude·Codex·Gemini 세 가지 AI 서비스의 사용량을 바탕화면에서 한눈에 확인하는 윈도우 전용 데스크톱 위젯. exe 설치 후 바로 사용 가능', cat:'기타 자료', badge:'exe',    date:'26.07.26', url:'https://github.com/kimju1416/ai-usage-widget/releases' },
+  { name:'공무원·교사 연금 비교 시뮬레이터', desc:'공무원연금과 국민연금을 조건별로 비교해 예상 수령액·납입액을 시뮬레이션하는 교사 전용 계산기', cat:'기타 자료', badge:'doc',    date:'26.07.26', url:'https://kimju1416.github.io/pension/' },
   // 8. A/S 챗봇
   { name:'kimju.zip A/S 챗봇',          desc:'kimju.zip 앱 사용 중 오류나 궁금한 점을 AI 챗봇에게 바로 물어볼 수 있는 지원 창구',   cat:'A/S',        badge:'as',     date:'26.04.12', url:'https://kimju1416.github.io/kimju.zip' },
 ];
@@ -729,7 +732,8 @@ function renderList(){
   el.innerHTML = f.map((a,i)=>{
     const badgeHTML = a.badge==='as' ? '<span class="badge badge-as">A/S</span>'
       : a.badge==='doc' ? '<span class="badge badge-doc">자료</span>'
-      : a.badge==='prompt' ? '<span class="badge badge-prompt">AI</span>' : '';
+      : a.badge==='prompt' ? '<span class="badge badge-prompt">AI</span>'
+      : a.badge==='exe' ? '<span class="badge badge-exe">EXE</span>' : '';
     const subHTML = a.sub ? `<div class="row-sub">${a.sub}</div>` : '';
     const newBadge = isNew(a.date) ? '<span class="badge badge-new">NEW</span>' : '';
     const newClass = isNew(a.date) ? ' is-new' : '';
