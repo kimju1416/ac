@@ -229,13 +229,13 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .board-badge{position:absolute;top:-6px;right:-8px;background:#ff4040;color:#fff;font-size:9px;font-weight:800;border-radius:10px;padding:1px 5px;min-width:16px;text-align:center;display:none;line-height:1.4;}
 /* ─── 인기 앱 ─── */
 .hot-section{max-width:var(--max);margin:0 auto 1.5rem;padding:0 var(--px);}
-.hot-head{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);letter-spacing:.07em;text-transform:uppercase;margin-bottom:.65rem;display:flex;align-items:center;gap:8px;}
-.hot-head::after{content:'';flex:1;height:1px;background:var(--border);}
-.hot-list{display:flex;gap:.45rem;flex-wrap:wrap;}
-.hot-chip{display:inline-flex;align-items:center;gap:.45rem;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:.3rem .9rem;font-size:12px;color:var(--sub);text-decoration:none;cursor:pointer;transition:all .18s;}
-.hot-chip:hover{border-color:rgba(184,240,60,.35);color:var(--text);}
-.hot-chip-rank{font-family:'DM Mono',monospace;font-size:10px;color:var(--accent);font-weight:700;}
-.hot-chip-cnt{font-size:10px;color:var(--muted);}
+.hot-bar{display:flex;align-items:center;gap:.75rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:.55rem 1rem;overflow:hidden;}
+.hot-label{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.12em;color:var(--accent);white-space:nowrap;flex-shrink:0;text-transform:uppercase;border-right:1px solid var(--border);padding-right:.75rem;}
+.hot-list{display:flex;align-items:center;gap:0;flex-wrap:nowrap;overflow:hidden;min-width:0;}
+.hot-item{display:inline-flex;align-items:center;gap:.3rem;font-size:12px;color:var(--sub);text-decoration:none;white-space:nowrap;padding:.1rem .45rem;border-radius:4px;transition:color .15s;flex-shrink:0;}
+.hot-item:hover{color:var(--text);}
+.hot-item-rank{font-family:'DM Mono',monospace;font-size:9px;color:var(--accent);font-weight:700;opacity:.7;}
+.hot-sep{color:var(--border);font-size:11px;flex-shrink:0;padding:0 .1rem;user-select:none;}
 .about-btn{display:inline-flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.02em;color:var(--accent);background:var(--accent-glow);border:1px solid rgba(184,240,60,.35);border-radius:20px;padding:.4rem 1.1rem;cursor:pointer;text-decoration:none;white-space:nowrap;transition:all .18s;}
 .about-btn:hover{background:rgba(184,240,60,.2);border-color:rgba(184,240,60,.6);}
 .fb-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.1rem;}
@@ -385,7 +385,8 @@ footer{
   .visit-stat{font-size:11px;}
   /* 인기 앱 모바일 */
   .hot-section{margin-bottom:1rem;}
-  .hot-chip{font-size:11px;padding:.25rem .7rem;}
+  .hot-item{font-size:11px;padding:.1rem .3rem;}
+  .hot-bar{padding:.45rem .75rem;gap:.55rem;}
 
   /* 히어로: 2컬럼 유지하되 이미지 작게 */
   .hero{padding:1.25rem var(--px) 1rem;}
@@ -496,8 +497,10 @@ footer{
 </div>
 
 <div class="hot-section" id="hotSection" style="display:none">
-  <div class="hot-head">🔥 많이 쓴 앱</div>
-  <div class="hot-list" id="hotList"></div>
+  <div class="hot-bar">
+    <span class="hot-label">POPULAR</span>
+    <div class="hot-list" id="hotList"></div>
+  </div>
 </div>
 
 <div class="filter-wrap" id="filterWrap"></div>
@@ -938,14 +941,13 @@ async function loadHotApps() {
   const section = document.getElementById('hotSection');
   const list = document.getElementById('hotList');
   section.style.display = 'block';
-  list.innerHTML = data.map((item, i) => {
+  const items = data.map((item, i) => {
     const app = apps.find(a => a.name === item.app_name);
     if (!app) return '';
     const name = item.app_name.replace(/"/g, '&quot;');
-    return `<a class="hot-chip" href="${app.url}" target="_blank" data-appname="${name}" onclick="showToast();trackClick(this.getAttribute('data-appname'))">
-      <span class="hot-chip-rank">${i + 1}</span>${item.app_name}<span class="hot-chip-cnt">${item.count}회</span>
-    </a>`;
-  }).join('');
+    return `<a class="hot-item" href="${app.url}" target="_blank" data-appname="${name}" onclick="showToast();trackClick(this.getAttribute('data-appname'))"><span class="hot-item-rank">0${i + 1}</span>${item.app_name}</a>`;
+  }).filter(Boolean);
+  list.innerHTML = items.join('<span class="hot-sep">/</span>');
 }
 
 // ─── 방문자 카운터 ───
