@@ -788,14 +788,39 @@ const SB_URL = 'https://mkntbkvzxofggauxmyde.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rbnRia3Z6eG9mZ2dhdXhteWRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4MTg3OTIsImV4cCI6MjEwMDM5NDc5Mn0.kr7d9CXyMebCShd9hzv87X80W71yG2Az9tstQDYhdWU';
 const sb = supabase.createClient(SB_URL, SB_KEY);
 
+// 비밀번호는 평문으로 두지 않는다. 아래는 (고정문구 + 비밀번호)의 SHA-256 해시값이다.
+// 비밀번호를 바꾸려면 브라우저 콘솔에서 아래를 실행해 나온 값으로 교체한다.
+//   const s='kimju.zip-ac-admin', p='새비밀번호';
+//   crypto.subtle.digest('SHA-256', new TextEncoder().encode(s+p))
+//     .then(h=>console.log([...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('')));
+const ADMIN_SALT = 'kimju.zip-ac-admin';
+const ADMIN_PW_HASH = '51bd2153efca2aaa42f181aed499d1d6fc31e67d28e0040bb2b649a4d11730b2';
 let isAdmin = false;
 
-function toggleAdminMode() {
+async function sha256Hex(text) {
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function toggleAdminMode() {
   const btn = document.getElementById('fbAdminBtn');
-  isAdmin = !isAdmin;
-  btn.textContent = isAdmin ? '🔓 관리자 모드' : '🔒 관리자';
-  btn.classList.toggle('active', isAdmin);
-  loadFeedbacks();
+  if (isAdmin) {
+    isAdmin = false;
+    btn.textContent = '🔒 관리자';
+    btn.classList.remove('active');
+    loadFeedbacks();
+    return;
+  }
+  const pw = prompt('관리자 비밀번호를 입력하세요:');
+  if (pw === null) return;
+  if (await sha256Hex(ADMIN_SALT + pw) === ADMIN_PW_HASH) {
+    isAdmin = true;
+    btn.textContent = '🔓 관리자 모드';
+    btn.classList.add('active');
+    loadFeedbacks();
+  } else {
+    alert('비밀번호가 틀렸습니다.');
+  }
 }
 
 async function saveReply(id) {
