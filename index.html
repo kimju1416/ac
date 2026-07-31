@@ -788,29 +788,14 @@ const SB_URL = 'https://mkntbkvzxofggauxmyde.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rbnRia3Z6eG9mZ2dhdXhteWRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4MTg3OTIsImV4cCI6MjEwMDM5NDc5Mn0.kr7d9CXyMebCShd9hzv87X80W71yG2Az9tstQDYhdWU';
 const sb = supabase.createClient(SB_URL, SB_KEY);
 
-const ADMIN_PIN = '1234';
 let isAdmin = false;
 
 function toggleAdminMode() {
-  if (isAdmin) {
-    isAdmin = false;
-    const btn = document.getElementById('fbAdminBtn');
-    btn.textContent = '🔒 관리자';
-    btn.classList.remove('active');
-    loadFeedbacks();
-    return;
-  }
-  const pin = prompt('관리자 PIN을 입력하세요:');
-  if (pin === null) return;
-  if (pin === ADMIN_PIN) {
-    isAdmin = true;
-    const btn = document.getElementById('fbAdminBtn');
-    btn.textContent = '🔓 관리자 모드';
-    btn.classList.add('active');
-    loadFeedbacks();
-  } else {
-    alert('PIN이 틀렸습니다.');
-  }
+  const btn = document.getElementById('fbAdminBtn');
+  isAdmin = !isAdmin;
+  btn.textContent = isAdmin ? '🔓 관리자 모드' : '🔒 관리자';
+  btn.classList.toggle('active', isAdmin);
+  loadFeedbacks();
 }
 
 async function saveReply(id) {
