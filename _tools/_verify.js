@@ -9,7 +9,7 @@ const OUT = 'C:/Users/USER/AppData/Local/Temp/claude/C--Users-USER-Downloads/20b
   const p1 = await c1.newPage();
   await p1.goto('http://localhost:8791/', { waitUntil:'domcontentloaded' });
   await p1.waitForTimeout(1500);
-  const row = p1.locator('.app-row[data-shot]').filter({ hasText:'체육교과 플레이북' }).first();
+  const row = p1.locator('.app-row[data-shot]').filter({ hasText:'쌤콜' }).first();
   await row.scrollIntoViewIfNeeded();
   await p1.waitForTimeout(400);
   await row.hover();
