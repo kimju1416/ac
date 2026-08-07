@@ -706,16 +706,16 @@ footer{
 <script>
 const apps = [
   // 1. 학생부 업무
-  { name:'학교문화책임규약',          desc:'학생 생활 규약을 디지털로 안내하고 확인·서명까지 한 번에 처리하는 앱',            cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1x8RXHnQxjPmR8qpkGJvZfGhBGxT7vRpt0XpUaVu-QvQ/copy' },
-  { name:'분실물 센터',                desc:'학교 내 분실물을 사진과 함께 등록하고 학생이 직접 조회·신청할 수 있는 관리 앱',    cat:'학생부 업무', badge:'',       date:'26.05.15', url:'https://docs.google.com/spreadsheets/d/1XjSXO-MI-P3T_Q68FTwC5xjtkFDQf3J2ER70PdoILmg/copy' },
-  { name:'학교폭력 사안처리 조회',     desc:'학폭 사안의 접수부터 처리 완료까지 9단계 흐름을 한눈에 추적·관리하는 앱',         cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/177BdGTaJXkCHZsVMGcnUfSIOfVNR2i38BiFfX7YJ6g8/copy' },
-  { name:'학교폭력 24시간 신고센터',   desc:'학생이 익명으로 학폭을 신고하고 담당자가 실시간으로 접수·처리할 수 있는 앱',       cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1Jnwp8xcOpamNZsL6EsoQy9ZxfwIrPCsNOXLRmtvQVTM/copy' },
-  { name:'학교규칙 제·개정 공동체 의견수렴', desc:'학교규칙 제·개정 시 학생·학부모·교사의 의견을 온라인으로 수렴하고 결과를 한눈에 정리하는 앱', cat:'학생부 업무', badge:'', date:'26.06.26', url:'https://docs.google.com/spreadsheets/d/1Apefsjt75E83Vjc-UnMZztLHgnFv2oUegiVPu4HtJns/copy' },
+  { name:'학교문화책임규약', shot:'chekim',          desc:'학생 생활 규약을 디지털로 안내하고 확인·서명까지 한 번에 처리하는 앱',            cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1x8RXHnQxjPmR8qpkGJvZfGhBGxT7vRpt0XpUaVu-QvQ/copy' },
+  { name:'분실물 센터', shot:'lostfound',                desc:'학교 내 분실물을 사진과 함께 등록하고 학생이 직접 조회·신청할 수 있는 관리 앱',    cat:'학생부 업무', badge:'',       date:'26.05.15', url:'https://docs.google.com/spreadsheets/d/1XjSXO-MI-P3T_Q68FTwC5xjtkFDQf3J2ER70PdoILmg/copy' },
+  { name:'학교폭력 사안처리 조회', shot:'hakpok-case',     desc:'학폭 사안의 접수부터 처리 완료까지 9단계 흐름을 한눈에 추적·관리하는 앱',         cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/177BdGTaJXkCHZsVMGcnUfSIOfVNR2i38BiFfX7YJ6g8/copy' },
+  { name:'학교폭력 24시간 신고센터', shot:'hakpok-report',   desc:'학생이 익명으로 학폭을 신고하고 담당자가 실시간으로 접수·처리할 수 있는 앱',       cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1Jnwp8xcOpamNZsL6EsoQy9ZxfwIrPCsNOXLRmtvQVTM/copy' },
+  { name:'학교규칙 제·개정 공동체 의견수렴', shot:'schoolrule', desc:'학교규칙 제·개정 시 학생·학부모·교사의 의견을 온라인으로 수렴하고 결과를 한눈에 정리하는 앱', cat:'학생부 업무', badge:'', date:'26.06.26', url:'https://docs.google.com/spreadsheets/d/1Apefsjt75E83Vjc-UnMZztLHgnFv2oUegiVPu4HtJns/copy' },
   // 2. 담임 업무
-  { name:'학부모 상담 시간 예약',      desc:'학부모가 원하는 시간을 직접 선택하고 담임이 일정을 자동으로 관리하는 상담 예약 앱', cat:'담임 업무',  badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/10XYHaRcIQk1o5Ywl_uJokqlBMjG-6S4xDcEhJE9mLHQ/copy' },
-  { name:'가정통신문 및 서류제출 (중등)', desc:'가정통신문 배부와 서류 제출 여부를 실시간으로 확인하고 미제출자에게 알림을 보내는 앱', cat:'담임 업무', badge:'',      date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/17ZNXzv-99ZjQUMP5Oh993ojycZt4ZzfZ-d2t63rFH90/copy' },
-  { name:'가정통신문 수거 및 서류제출 (초등)', desc:'가정통신문 배부와 서류 제출 여부를 실시간으로 확인하고 미제출자에게 알림을 보내는 앱 (초등용)', cat:'담임 업무', badge:'', date:'26.04.17', url:'https://docs.google.com/spreadsheets/d/1pAHudim6rCjA--XAqALq0F5q2xSzEfcuY0xhS3mUipY/copy' },
-  { name:'스마트 자리 교체',           desc:'강제 지정·분리 조건을 반영해 클릭 한 번으로 최적의 자리 배치를 자동 생성하는 앱',   cat:'담임 업무',  badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1bhvUKNeQxGIh9DUNtKgIe4OANKq_okw127pgYi8SutY/copy' },
+  { name:'학부모 상담 시간 예약', shot:'consult',      desc:'학부모가 원하는 시간을 직접 선택하고 담임이 일정을 자동으로 관리하는 상담 예약 앱', cat:'담임 업무',  badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/10XYHaRcIQk1o5Ywl_uJokqlBMjG-6S4xDcEhJE9mLHQ/copy' },
+  { name:'가정통신문 및 서류제출 (중등)', shot:'notice-jung', desc:'가정통신문 배부와 서류 제출 여부를 실시간으로 확인하고 미제출자에게 알림을 보내는 앱', cat:'담임 업무', badge:'',      date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/17ZNXzv-99ZjQUMP5Oh993ojycZt4ZzfZ-d2t63rFH90/copy' },
+  { name:'가정통신문 수거 및 서류제출 (초등)', shot:'notice-cho', desc:'가정통신문 배부와 서류 제출 여부를 실시간으로 확인하고 미제출자에게 알림을 보내는 앱 (초등용)', cat:'담임 업무', badge:'', date:'26.04.17', url:'https://docs.google.com/spreadsheets/d/1pAHudim6rCjA--XAqALq0F5q2xSzEfcuY0xhS3mUipY/copy' },
+  { name:'스마트 자리 교체', shot:'seat',           desc:'강제 지정·분리 조건을 반영해 클릭 한 번으로 최적의 자리 배치를 자동 생성하는 앱',   cat:'담임 업무',  badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1bhvUKNeQxGIh9DUNtKgIe4OANKq_okw127pgYi8SutY/copy' },
   // 3. 체육과 업무
   { name:'팝스 조회 및 처방 (중학교)', shot:'paps', desc:'중학생 PAPS 체력 측정 결과를 조회하고 개인별 맞춤 운동 처방까지 제공하는 앱',      cat:'체육과 업무', badge:'',      date:'26.04.12', url:'https://m.site.naver.com/1Zkwn' },
   { name:'팝스 조회 및 처방 (고등학교)', shot:'paps',desc:'고등학생 PAPS 체력 측정 결과를 조회하고 개인별 맞춤 운동 처방까지 제공하는 앱',    cat:'체육과 업무', badge:'',      date:'26.04.12', url:'https://m.site.naver.com/1Zkwo' },
@@ -723,16 +723,16 @@ const apps = [
   // 4. 마음지도
   { name:'우리반 마음지도 (중등)', shot:'maeumjido-jung',      sub:'↳ 모바일 뷰어 · 커스텀 질문 · 회차 분석 추가', desc:'중학교 학급에서 소시오메트리 설문을 실시하고 관계망을 시각화해 또래 관계를 분석하는 앱. 모바일 뷰어기능 추가, 커스텀 질문 기능 추가, 회차 분석 추가.', cat:'마음지도', badge:'',      date:'26.06.29', url:'https://docs.google.com/spreadsheets/d/1Hbw39kB1ITTGbu--KE_cRdnFFdIW4-FPgC0dEjpeCKU/copy' },
   { name:'우리반 마음지도 (초등)', shot:'maeumjido-cho',      sub:'↳ 모바일 뷰어 · 커스텀 질문 · 회차 분석 추가', desc:'초등학교 학급에서 소시오메트리 설문을 실시하고 관계망을 시각화해 또래 관계를 분석하는 앱. 모바일 뷰어기능 추가, 커스텀 질문 기능 추가, 회차 분석 추가.', cat:'마음지도', badge:'',     date:'26.06.29', url:'https://docs.google.com/spreadsheets/d/1Q_Prj3FloW-l_Qqt61D5JvMybmagwYyB0o7VHZJfpSI/copy' },
-  { name:'학교운동부 마음지도',         desc:'운동부 선수들의 팀 내 관계를 소시오그램으로 분석해 갈등 예방과 팀워크 향상을 돕는 앱', cat:'마음지도',  badge:'',      date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1IRXB-nxwnUW_39XhcJpK6nad8pUNTNUU7jZXKyJEROs/copy' },
+  { name:'학교운동부 마음지도', shot:'sportsmap',         desc:'운동부 선수들의 팀 내 관계를 소시오그램으로 분석해 갈등 예방과 팀워크 향상을 돕는 앱', cat:'마음지도',  badge:'',      date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1IRXB-nxwnUW_39XhcJpK6nad8pUNTNUU7jZXKyJEROs/copy' },
   // 5. 공통업무
   { name:'스마트 팀믹스', shot:'teammix',              desc:'성별·성적·친밀도 등 균형·분리 조건을 설정해 공정하고 자동화된 모둠 편성을 돕는 앱',   cat:'공통 업무',  badge:'',      date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1ZNgZUFfmVlPm6MuMQPWJ8TOHn5SzwByswDNep5ebyq0/copy' },
-  { name:'클래스 메모',                sub:'↳ 생기부 작성 기능 추가',desc:'교과별 수업 메모·할일·학생 연락처를 한 앱에서 체계적으로 관리하는 교사용 노트 앱',    cat:'공통 업무',  badge:'',      date:'26.05.20', url:'https://docs.google.com/spreadsheets/d/1Pyct0GCmGSpZEEZ_J-pvZzu_4ywu_cHyIHsNtBie3TQ/copy' },
-  { name:'연수 이수증 수거앱',          sub:'↳ 교내연수 모바일 서명 기능 추가', desc:'Gemini AI 이수번호 자동 추출 + 모바일 서명받기 기능으로 교사별 이수 현황을 한눈에 관리하는 앱', cat:'공통 업무', badge:'',     date:'26.06.16', url:'https://docs.google.com/spreadsheets/d/17qM84zIOBnMvc-3teT7eDIGFNNnA74wM0QMwBOFpQbk/copy' },
+  { name:'클래스 메모', shot:'classmemo',                sub:'↳ 생기부 작성 기능 추가',desc:'교과별 수업 메모·할일·학생 연락처를 한 앱에서 체계적으로 관리하는 교사용 노트 앱',    cat:'공통 업무',  badge:'',      date:'26.05.20', url:'https://docs.google.com/spreadsheets/d/1Pyct0GCmGSpZEEZ_J-pvZzu_4ywu_cHyIHsNtBie3TQ/copy' },
+  { name:'연수 이수증 수거앱', shot:'training',          sub:'↳ 교내연수 모바일 서명 기능 추가', desc:'Gemini AI 이수번호 자동 추출 + 모바일 서명받기 기능으로 교사별 이수 현황을 한눈에 관리하는 앱', cat:'공통 업무', badge:'',     date:'26.06.16', url:'https://docs.google.com/spreadsheets/d/17qM84zIOBnMvc-3teT7eDIGFNNnA74wM0QMwBOFpQbk/copy' },
   { name:'스마트 수업교체 시간표', shot:'timetable-swap',      sub:'↳ 수업교체원 출력 기능 추가', desc:'수업 교체 신청부터 최종 시간표 자동 생성·수업교체원 출력까지 복잡한 교체 과정을 간단하게 처리하는 앱',  cat:'공통 업무',  badge:'',      date:'26.06.16', url:'https://docs.google.com/spreadsheets/d/1QNNFqSsd-8OPfFCtiqZ0vZz4tHdCOLFhAY-8wYDbh0s/copy' },
   { name:'쌤콜 (SAEMCALL)', shot:'saemcall',             desc:'시험기간 학생이 교무실에 있는 선생님을 호출할 수 있는 키오스크앱', cat:'공통 업무', badge:'', date:'26.04.15', url:'https://docs.google.com/spreadsheets/d/175PZsO3JGiS1RWMIw_bO--pmY0JTB2rYbeZIHzkmU1g/copy' },
   { name:'유콜 (YOUCALL)', shot:'youcall',              desc:'교무실에서 선생님이 학생을 직접 호출할 수 있는 앱', cat:'공통 업무', badge:'', date:'26.04.17', url:'https://docs.google.com/spreadsheets/d/1SuVIKk24zmZaBfa8Yg74tQas9Xk2ryjE0xQKc_n3oMw/copy' },
   { name:'특별실 예약 시스템',          desc:'과학실·체육관·시청각실 등 학교 특별실을 온라인으로 간편하게 예약하고 현황을 관리하는 앱', cat:'공통 업무', badge:'', date:'26.06.20', url:'https://m.site.naver.com/2aRsK' },
-  { name:'스마트 반편성',              desc:'성적·성별·교우관계 등 여러 조건을 균형 있게 반영해 새 학년 반편성을 클릭 한 번으로 자동 처리하는 앱', cat:'공통 업무', badge:'', date:'26.06.26', url:'https://docs.google.com/spreadsheets/d/1pJu-jYx3qLP2d8EPvnpAUuGVsj0IibmjkgDbC7ZYlpI/copy' },
+  { name:'스마트 반편성', shot:'classassign',              desc:'성적·성별·교우관계 등 여러 조건을 균형 있게 반영해 새 학년 반편성을 클릭 한 번으로 자동 처리하는 앱', cat:'공통 업무', badge:'', date:'26.06.26', url:'https://docs.google.com/spreadsheets/d/1pJu-jYx3qLP2d8EPvnpAUuGVsj0IibmjkgDbC7ZYlpI/copy' },
   { name:'개인용 자료실 생성', shot:'archive',         desc:'선생님만의 수업·업무 자료를 업로드·분류해 나만의 온라인 자료실을 손쉽게 만드는 앱', cat:'공통 업무', badge:'', date:'26.06.26', url:'https://docs.google.com/spreadsheets/d/1ekCgo3ir3PgNTrCulltH7gy59GnldPcmgA7Pu3kn6e4/copy' },
   // 6. 프롬프트 앱
   { name:'교육용 자료 프롬프트',        desc:'학습지·루브릭·수업 계획서 등 다양한 교육 자료를 AI로 빠르게 만들어주는 프롬프트 앱', cat:'프롬프트',   badge:'prompt', date:'26.04.28', url:'https://kimju1416.github.io/edu1/' },
@@ -753,7 +753,7 @@ const apps = [
   { name:'모바일 게임 모음',            desc:'수업·쉬는시간에 바로 활용할 수 있는 kimju.zip 모바일 게임 모음',                          cat:'기타 자료',  badge:'doc',    date:'26.06.17', url:'https://orak11.netlify.app/' },
   { name:'ClassTube (교실TV)',          sub:'↳ 초·중등 교육 영상 1,853편 아카이브', desc:'공강·자율활동·의무교육 수업에 바로 쓸 수 있는 교육 유튜브 영상 1,853편을 재생시간·학년별로 필터링해 빠르게 찾는 영상 아카이브', cat:'기타 자료', badge:'doc', date:'26.07.04', url:'https://kimju1416.github.io/classtube/' },
   { name:'경북교육청 서식 꾸러미',        desc:'경북교육청 행정 서식 1,175종을 검색·미리보기·다운로드할 수 있는 서식 아카이브',            cat:'기타 자료',  badge:'doc',    date:'26.07.26', url:'https://kimju1416.github.io/gbe-seosik' },
-  { name:'AI 사용량 위젯',              desc:'Claude·Codex·Gemini 세 가지 AI 서비스의 사용량을 바탕화면에서 한눈에 확인하는 윈도우 전용 데스크톱 위젯. exe 설치 후 바로 사용 가능', cat:'기타 자료', badge:'exe',    date:'26.07.26', url:'https://github.com/kimju1416/ai-usage-widget/releases' },
+  { name:'AI 사용량 위젯', shot:'aiwidget',              desc:'Claude·Codex·Gemini 세 가지 AI 서비스의 사용량을 바탕화면에서 한눈에 확인하는 윈도우 전용 데스크톱 위젯. exe 설치 후 바로 사용 가능', cat:'기타 자료', badge:'exe',    date:'26.07.26', url:'https://github.com/kimju1416/ai-usage-widget/releases' },
   { name:'공무원·교사 연금 비교 시뮬레이터', desc:'공무원연금과 국민연금을 조건별로 비교해 예상 수령액·납입액을 시뮬레이션하는 교사 전용 계산기', cat:'기타 자료', badge:'doc',    date:'26.07.26', url:'https://kimju1416.github.io/pension/' },
   // 8. A/S 챗봇
   { name:'kimju.zip A/S 챗봇',          desc:'kimju.zip 앱 사용 중 오류나 궁금한 점을 AI 챗봇에게 바로 물어볼 수 있는 지원 창구',   cat:'A/S',        badge:'as',     date:'26.04.12', url:'https://kimju1416.github.io/kimju.zip' },
@@ -785,7 +785,7 @@ function isNew(date){
 /* ─── 앱 미리보기 ───
    shots/ 폴더에 있는 스크린샷 파일명 목록. _shot.js 실행 후 이 목록만 갱신하면 된다.
    URL에서 파일명을 규칙으로 만들어 내므로 앱 항목을 따로 고칠 필요는 없다. */
-const SHOTS = new Set(['archive','card','cho','classtube','codex','cowork','design','edu1','gbe-seosik','gpt2','guide11','kimjuzip','maeumjido-cho','maeumjido-jung','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','paps','pe-textbook','pension','saemcall','sono','su333','teammix','timetable-swap','uni1','vibev','youcall']);
+const SHOTS = new Set(['aiwidget','archive','card','chekim','cho','classassign','classmemo','classtube','codex','consult','cowork','design','edu1','gbe-seosik','gpt2','guide11','hakpok-case','hakpok-report','kimjuzip','lostfound','maeumjido-cho','maeumjido-jung','notice-cho','notice-jung','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','paps','pe-textbook','pension','saemcall','schoolrule','seat','sono','sportsmap','su333','teammix','timetable-swap','training','uni1','vibev','youcall']);
 
 function shotSlug(url){
   try{
