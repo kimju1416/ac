@@ -189,6 +189,39 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .badge-new{background:rgba(184,240,60,.15);color:var(--accent);border:1px solid rgba(184,240,60,.35);font-weight:700;letter-spacing:.04em;}
 .badge-exe{background:rgba(255,165,0,.12);color:#ffa040;border:1px solid rgba(255,165,0,.25);}
 
+/* ─── 앱 미리보기 ─── */
+.shot-pop{
+  position:fixed;z-index:120;pointer-events:none;opacity:0;transform:translateY(5px);
+  transition:opacity .16s ease,transform .16s ease;width:400px;max-width:40vw;
+  border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface);
+  box-shadow:0 18px 48px rgba(0,0,0,.55);
+}
+.shot-pop.on{opacity:1;transform:translateY(0);}
+.shot-pop img{display:block;width:100%;aspect-ratio:1024/640;object-fit:cover;object-position:top center;background:var(--surface2);}
+.shot-pop .shot-cap{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.06em;color:var(--muted);padding:6px 10px;border-top:1px solid var(--border);}
+
+.shot-btn{
+  font-family:'DM Mono',monospace;font-size:11px;color:var(--sub);background:transparent;
+  border:1px solid var(--border);border-radius:5px;padding:4px 10px;cursor:pointer;flex-shrink:0;
+  position:relative;
+}
+/* 보이는 크기는 유지하고 탭 영역만 44px로 넓힌다 */
+.shot-btn::after{content:'';position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);height:44px;}
+.shot-btn:active{border-color:rgba(184,240,60,.5);color:var(--accent);}
+
+.shot-lb{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.87);display:none;align-items:center;justify-content:center;padding:1.25rem;}
+.shot-lb.open{display:flex;}
+.shot-lb-inner{width:100%;max-width:720px;}
+.shot-lb img{width:100%;border:1px solid var(--border);border-radius:10px;display:block;background:var(--surface2);}
+.shot-lb-bar{display:flex;align-items:center;gap:.6rem;margin-top:.8rem;}
+.shot-lb-name{font-size:13px;color:var(--text);flex:1;min-width:0;line-height:1.4;}
+.shot-lb-bar button,.shot-lb-bar a{
+  font-family:'DM Mono',monospace;font-size:12px;padding:.42rem .9rem;border-radius:6px;
+  border:1px solid var(--border);background:transparent;color:var(--sub);cursor:pointer;
+  text-decoration:none;white-space:nowrap;
+}
+.shot-lb-bar a{border-color:rgba(184,240,60,.35);color:var(--accent);background:var(--accent-glow);}
+
 .no-result{padding:4rem 0;text-align:center;font-size:15px;color:var(--muted);}
 
 /* 최근 업데이트 강조 (데스크탑) */
@@ -429,9 +462,12 @@ footer{
   .row-main{margin-bottom:6px;}
   .row-name{font-size:14px;font-weight:500;white-space:normal;word-break:keep-all;line-height:1.4;flex-wrap:wrap;}
   .row-sub{font-size:11px;margin-top:2px;}
-  .row-desc-col{font-size:12px;color:var(--sub);white-space:normal;word-break:keep-all;line-height:1.6;margin-bottom:8px;display:block;}
+  /* 900px 규칙(.app-row .row-desc-col)이 특이도가 높아 여기서도 같은 특이도로 되살린다 */
+  .app-row .row-desc-col{font-size:12px;color:var(--sub);white-space:normal;word-break:keep-all;line-height:1.6;margin-bottom:8px;display:block;}
   .row-card-foot{display:flex;align-items:center;justify-content:space-between;gap:6px;padding-top:7px;border-top:1px solid var(--border);flex-wrap:wrap;}
   .row-cat{font-size:11px;padding:2px 8px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);}
+  /* 분류는 카드 푸터에만 — 행 직계의 중복 분류는 숨긴다 */
+  .app-row > .row-cat{display:none;}
   .row-date{font-size:11px;color:var(--muted);}
   .row-arrow{display:none;}
   .row-arrow-m{font-size:12px;color:var(--accent);background:var(--accent-glow);border-radius:6px;padding:3px 10px;flex-shrink:0;}
@@ -723,6 +759,26 @@ function isNew(date){
   return (Date.now() - appDate) / 86400000 <= 30;
 }
 
+/* ─── 앱 미리보기 ───
+   shots/ 폴더에 있는 스크린샷 파일명 목록. _shot.js 실행 후 이 목록만 갱신하면 된다.
+   URL에서 파일명을 규칙으로 만들어 내므로 앱 항목을 따로 고칠 필요는 없다. */
+const SHOTS = new Set(['card','cho','classtube','codex','cowork','design','edu1','gbe-seosik','gpt2','guide11','kimjuzip','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','pe-textbook','pension','sono','su333','uni1','vibev']);
+
+function shotSlug(url){
+  try{
+    const u = new URL(url);
+    let s = u.hostname.replace(/^www\./,'').replace(/\.(github\.io|netlify\.app|com|net|kr)$/g,'');
+    const p = u.pathname.replace(/^\/|\/$/g,'');
+    if(p) s = (s==='kimju1416' ? '' : s+'-') + p.replace(/\//g,'-');
+    return s.replace(/[^a-zA-Z0-9-]/g,'').toLowerCase() || 'index';
+  }catch(e){ return ''; }
+}
+
+function shotOf(app){
+  const s = shotSlug(app.url);
+  return SHOTS.has(s) ? 'shots/'+s+'.jpg' : '';
+}
+
 function renderList(){
   let f = currentCat==='전체' ? apps : apps.filter(a=>a.cat===currentCat);
   if(searchQuery){
@@ -741,7 +797,10 @@ function renderList(){
     const subHTML = a.sub ? `<div class="row-sub">${a.sub}</div>` : '';
     const newBadge = isNew(a.date) ? '<span class="badge badge-new">NEW</span>' : '';
     const newClass = isNew(a.date) ? ' is-new' : '';
-    return `<a class="app-row${newClass}" href="${a.url}" target="_blank" data-appname="${a.name.replace(/"/g,'&quot;')}" onclick="showToast();trackClick(this.getAttribute('data-appname'))">
+    const shot = shotOf(a);
+    const shotAttr = shot ? ` data-shot="${shot}"` : '';
+    const shotBtn = shot ? `<button class="shot-btn" type="button" onclick="openShot(event,this)">미리보기</button>` : '';
+    return `<a class="app-row${newClass}" href="${a.url}"${shotAttr} target="_blank" data-appname="${a.name.replace(/"/g,'&quot;')}" onclick="showToast();trackClick(this.getAttribute('data-appname'))">
       <span class="row-num">${String(i+1).padStart(2,'0')}</span>
       <div class="row-main">
         <div class="row-name">${a.name}${badgeHTML}${newBadge}</div>
@@ -754,11 +813,65 @@ function renderList(){
       <div class="row-card-foot">
         <span class="row-cat">${a.cat}</span>
         <span class="row-date">${a.date}</span>
+        ${shotBtn}
         <span class="row-arrow-m">열기 →</span>
       </div>
     </a>`;
   }).join('');
+  bindShotHover();
 }
+
+/* ─── 미리보기: 데스크탑 hover ─── */
+const canHover = window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+/* 팝업 요소는 이 스크립트보다 문서 아래에 있으므로 처음 쓸 때 찾아 캐시한다 */
+let _pop = null, _popImg = null;
+function popEls(){
+  if(!_pop){
+    _pop = document.getElementById('shotPop');
+    _popImg = document.getElementById('shotPopImg');
+  }
+  return _pop;
+}
+
+function bindShotHover(){
+  if(!canHover) return;
+  document.querySelectorAll('.app-row[data-shot]').forEach(row=>{
+    row.addEventListener('mouseenter',()=>{
+      if(!popEls()) return;
+      _popImg.src = row.dataset.shot;
+      _pop.classList.add('on');
+    });
+    row.addEventListener('mousemove',e=>{
+      if(!popEls()) return;
+      const w = _pop.offsetWidth || 400, h = _pop.offsetHeight || 280;
+      let x = e.clientX + 26;
+      if(x + w > window.innerWidth - 12) x = e.clientX - w - 26;
+      let y = e.clientY - h/2;
+      y = Math.max(12, Math.min(y, window.innerHeight - h - 12));
+      _pop.style.left = x+'px';
+      _pop.style.top = y+'px';
+    });
+    row.addEventListener('mouseleave',()=>{ if(popEls()) _pop.classList.remove('on'); });
+  });
+}
+
+/* ─── 미리보기: 모바일 라이트박스 ─── */
+function openShot(e, btn){
+  e.preventDefault();
+  e.stopPropagation();
+  const row = btn.closest('.app-row');
+  document.getElementById('shotLbImg').src = row.dataset.shot;
+  document.getElementById('shotLbName').textContent = row.getAttribute('data-appname');
+  document.getElementById('shotLbOpen').href = row.getAttribute('href');
+  document.getElementById('shotLb').classList.add('open');
+}
+
+function closeShot(){ document.getElementById('shotLb').classList.remove('open'); }
+
+/* 라이트박스 요소는 이 스크립트보다 아래에 있으므로 위임으로 처리한다 */
+document.addEventListener('click',e=>{ if(e.target.id === 'shotLb') closeShot(); });
+document.addEventListener('keydown',e=>{ if(e.key === 'Escape') closeShot(); });
 
 document.getElementById('searchInput').addEventListener('input',e=>{
   searchQuery=e.target.value.trim(); renderList();
@@ -782,6 +895,24 @@ function showToast(){
 
 </script>
 <div class="toast" id="toast"><span class="toast-icon">📋</span>구글 시트로 이동합니다</div>
+
+<!-- 앱 미리보기: 데스크탑 hover 팝업 -->
+<div class="shot-pop" id="shotPop">
+  <img id="shotPopImg" alt="">
+  <div class="shot-cap">실제 화면</div>
+</div>
+
+<!-- 앱 미리보기: 모바일 라이트박스 -->
+<div class="shot-lb" id="shotLb">
+  <div class="shot-lb-inner">
+    <img id="shotLbImg" alt="">
+    <div class="shot-lb-bar">
+      <span class="shot-lb-name" id="shotLbName"></span>
+      <button onclick="closeShot()">닫기</button>
+      <a id="shotLbOpen" href="#" target="_blank">열기 →</a>
+    </div>
+  </div>
+</div>
 
 <script>
 const SB_URL = 'https://mkntbkvzxofggauxmyde.supabase.co';
