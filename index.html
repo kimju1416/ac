@@ -3,8 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>kimju.zip - 바이브코딩</title>
-<meta name="description" content="@kimju.zip이 만든 선생님을 위한 GAS 웹앱 모음">
+<title>선생님을 위한 바이브 코딩 | kimju.zip</title>
+<meta name="description" content="구글 앱스 스크립트로 만든 교육용 웹앱 44개. 수업·생활지도·행정 업무 자동화부터 AI 프롬프트까지, 코딩 몰라도 바로 씁니다.">
+<link rel="canonical" href="https://kimju.kr/">
+<meta name="theme-color" content="#0c0c0c">
+
+<!-- Open Graph (카카오톡·페이스북·스레드) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="kimju.zip">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://kimju.kr/">
+<meta property="og:title" content="선생님을 위한 바이브 코딩 | kimju.zip">
+<meta property="og:description" content="구글 앱스 스크립트로 만든 교육용 웹앱 44개. 수업·생활지도·행정 업무 자동화부터 AI 프롬프트까지, 코딩 몰라도 바로 씁니다.">
+<meta property="og:image" content="https://kimju.kr/og.jpg">
+<meta property="og:image:secure_url" content="https://kimju.kr/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="선생님을 위한 바이브 코딩 — kimju.zip">
+
+<!-- X(트위터) -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="선생님을 위한 바이브 코딩 | kimju.zip">
+<meta name="twitter:description" content="구글 앱스 스크립트로 만든 교육용 웹앱 44개. 코딩 몰라도 바로 씁니다.">
+<meta name="twitter:image" content="https://kimju.kr/og.jpg">
+
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Space+Grotesk:wght@500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -506,7 +529,7 @@ footer{
   <div class="hero-inner">
     <div class="hero-left">
       <h1 class="hero-title">선생님을 위한<br><em>바이브 코딩</em></h1>
-      <p class="hero-desc">구글 앱스 스크립트로 만든 교육용 웹앱 40개.<br>수업·생활지도·행정 업무 자동화부터 AI 프롬프트까지.<br>코딩 몰라도 OK — @kimju.zip</p>
+      <p class="hero-desc">구글 앱스 스크립트로 만든 교육용 웹앱 <span id="heroDescCount">44</span>개.<br>수업·생활지도·행정 업무 자동화부터 AI 프롬프트까지.<br>코딩 몰라도 OK — @kimju.zip</p>
       <div class="hero-tags">#바이브코딩 &nbsp;#체육교사 &nbsp;#GAS &nbsp;#무료</div>
       <div class="visit-bar">
         <div class="visit-stat">TODAY <b id="visitToday">—</b></div>
@@ -787,6 +810,8 @@ function renderList(){
   }
   const ht = document.getElementById('heroTotal');
   if(ht) ht.textContent = f.length === apps.length ? apps.length : f.length;
+  const hdc = document.getElementById('heroDescCount');
+  if(hdc) hdc.textContent = apps.length;   // 소개 문구의 앱 수는 항상 전체 기준
   const el = document.getElementById('appList');
   if(!f.length){ el.innerHTML=`<div class="no-result">검색 결과가 없습니다.</div>`; return; }
   el.innerHTML = f.map((a,i)=>{
