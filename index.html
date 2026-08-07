@@ -952,7 +952,7 @@ const sb = supabase.createClient(SB_URL, SB_KEY);
 //   crypto.subtle.digest('SHA-256', new TextEncoder().encode(s+p))
 //     .then(h=>console.log([...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join('')));
 const ADMIN_SALT = 'kimju.zip-ac-admin';
-const ADMIN_PW_HASH = '51bd2153efca2aaa42f181aed499d1d6fc31e67d28e0040bb2b649a4d11730b2';
+const ADMIN_PW_HASH = 'fa466e86e0df810c40f54da87ddd804cff4cf0424ffce8e29acb2e9bdae864bf';
 let isAdmin = false;
 
 async function sha256Hex(text) {
