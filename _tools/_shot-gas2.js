@@ -2,6 +2,7 @@ const { chromium } = require('C:/Users/USER/Downloads/프로젝트/youcall-promo
 const path=require('path'), fs=require('fs');
 const OUT='C:/Users/USER/Downloads/프로젝트/ac/shots';
 const T=[
+ ['specialroom','AKfycbzIEZggqeRdV33p3e_QNbrYC87YoVVmeUOCSFTgpQaWgRSgAGNjsPJb3A4O2u9BIX6ToA'],
  ['chekim','AKfycbzdB3NCoQrqB-EmIgeqGdu9hN9rsjx0SboDYMQZVZdicHHZYgJMv3UQwIeGXd3Xwcet2w'],
  ['lostfound','AKfycbzs_v0LXNEYdtrVP4YpLyrrMXY6MxFcBAz3KKSjb-yxzlLlMEW9PSpJTnaP8Wzk7irq2w'],
  ['hakpok-case','AKfycbyqUaIBoYZfeNvEyNgqEbsk5B7GueRhyUjhHBYiwgRaZW8QijgTnysz7Cp3mFO-IC3dKg'],
@@ -24,7 +25,7 @@ const T=[
     const p=await c.newPage();
     try{
       await p.goto(`https://script.google.com/macros/s/${dep}/exec`,{waitUntil:'domcontentloaded',timeout:35000});
-      await p.waitForTimeout(6500);
+      await p.waitForTimeout(12000);  // 데이터 로딩이 느린 앱(특별실 예약 등) 대비
       if(p.url().includes('accounts.google.com')){ console.log('  로그인벽 '+name); fail++; await p.close(); continue; }
       const BANNER=await p.evaluate(()=>{const b=document.querySelector('#sandboxFrame')||document.querySelector('iframe');return b?Math.round(b.getBoundingClientRect().top):44;}).catch(()=>44);
       const f=path.join(OUT,name+'.jpg');
