@@ -286,7 +286,27 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 }
 .shot-lb-bar a{border-color:rgba(184,240,60,.35);color:var(--accent);background:var(--accent-glow);}
 
-.no-result{padding:4rem 0;text-align:center;font-size:15px;color:var(--muted);}
+/* ─── 게시판 섹션 (앱 목록 뒤) ─── */
+.board-outro{border-top:1px solid var(--border);padding-top:2.25rem;margin-bottom:2.5rem;text-align:center;}
+.board-outro-t{font-size:1.15rem;font-weight:700;letter-spacing:-.03em;color:var(--text);margin-bottom:.5rem;}
+.board-outro-t b{color:var(--accent);font-family:'DM Mono',monospace;}
+.board-outro-s{font-size:13.5px;color:var(--sub);line-height:1.65;word-break:keep-all;}
+.fb-title .fb-admin-btn{margin-left:auto;}
+
+/* ─── 검색 결과 없음 → 앱 요청 유도 ─── */
+.no-result{padding:3.5rem 0 4rem;text-align:center;}
+.nr-msg{font-size:15px;color:var(--text);margin-bottom:.6rem;}
+.nr-msg b{color:var(--accent);}
+.nr-sub{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:1.4rem;}
+.nr-btn{background:var(--accent-glow);color:var(--accent);border:1px solid rgba(184,240,60,.35);
+  border-radius:8px;padding:.6rem 1.3rem;font-family:'Noto Sans KR',sans-serif;font-size:13px;
+  font-weight:600;cursor:pointer;transition:all .15s;}
+.nr-btn:hover{background:rgba(184,240,60,.2);border-color:rgba(184,240,60,.6);}
+@media(max-width:640px){
+  .board-outro{padding-top:1.75rem;margin-bottom:2rem;}
+  .board-outro-t{font-size:1.02rem;}
+  .nr-btn{width:100%;}
+}
 
 /* 최근 업데이트 강조 (데스크탑) */
 .app-row.is-new{border-bottom-color:rgba(184,240,60,.15);}
@@ -635,36 +655,38 @@ footer{
   <div id="appList"></div>
 </div>
 
+<!-- ─── 게시판 (페이지 내 섹션) ─── -->
+<div class="fb-section" id="boardSection">
+  <div class="board-outro">
+    <div class="board-outro-t">앱 <b id="outroCount">—</b>개, 여기까지입니다.</div>
+    <div class="board-outro-s">필요한 앱이 없었나요? 한 줄만 남겨주시면 만들어볼게요.</div>
+  </div>
 
-<!-- ─── 게시판 모달 ─── -->
-<div class="modal-bg" id="feedbackModal" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="modal">
-    <div class="modal-head">
-      <div class="modal-title">💬 방문자 후기</div>
-      <div style="display:flex;align-items:center;gap:.5rem">
-        <button class="fb-admin-btn" id="fbAdminBtn" onclick="toggleAdminMode()">🔒 관리자</button>
-        <button class="fb-write-btn" id="fbWriteBtn" onclick="toggleWriteForm()">✏ 글쓰기</button>
-        <button class="modal-close" onclick="document.getElementById('feedbackModal').classList.remove('open')">✕</button>
-      </div>
+  <div class="fb-title">
+    방문자 게시판 <span id="fbCount"></span>
+    <button class="fb-admin-btn" id="fbAdminBtn" onclick="toggleAdminMode()">🔒 관리자</button>
+  </div>
+
+  <div class="fb-form" id="fbForm">
+    <div class="fb-tags">
+      <button type="button" class="fb-tag" onclick="selectTag(this,'후기')">후기</button>
+      <button type="button" class="fb-tag" onclick="selectTag(this,'피드백')">피드백</button>
+      <button type="button" class="fb-tag" onclick="selectTag(this,'버그제보')">버그제보</button>
+      <button type="button" class="fb-tag" onclick="selectTag(this,'감사')">감사</button>
+      <button type="button" class="fb-tag" onclick="selectTag(this,'건의')">건의</button>
+      <button type="button" class="fb-tag" onclick="selectTag(this,'질문')">질문</button>
     </div>
-    <div class="fb-form" id="fbForm" style="display:none">
-      <div class="fb-tags">
-        <button type="button" class="fb-tag" onclick="selectTag(this,'후기')">후기</button>
-        <button type="button" class="fb-tag" onclick="selectTag(this,'피드백')">피드백</button>
-        <button type="button" class="fb-tag" onclick="selectTag(this,'버그제보')">버그제보</button>
-        <button type="button" class="fb-tag" onclick="selectTag(this,'감사')">감사</button>
-        <button type="button" class="fb-tag" onclick="selectTag(this,'건의')">건의</button>
-        <button type="button" class="fb-tag" onclick="selectTag(this,'질문')">질문</button>
-      </div>
-      <input class="fb-input" type="text" id="fbName" placeholder="이름 (선택, 최대 20자)" maxlength="20">
-      <textarea class="fb-textarea" id="fbContent" placeholder="앱을 사용해보신 후기나 피드백을 남겨주세요 :)" maxlength="500"></textarea>
-      <button class="fb-submit" id="fbSubmit" onclick="submitFeedback()">등록하기</button>
-    </div>
-    <div id="fbCards" class="fb-cards">
-      <div class="fb-loading">후기를 불러오는 중...</div>
-    </div>
+    <input class="fb-input" type="text" id="fbName" placeholder="이름 (선택 · 비우면 '익명의 선생님'으로 올라갑니다)" maxlength="20">
+    <textarea class="fb-textarea" id="fbContent" placeholder="한 줄이어도 좋습니다. 어떤 앱이 필요하신가요?" maxlength="500"></textarea>
+    <button class="fb-submit" id="fbSubmit" onclick="submitFeedback()">등록하기</button>
+  </div>
+
+  <div id="fbCards" class="fb-cards">
+    <div class="fb-loading">불러오는 중...</div>
   </div>
 </div>
+
+
 
 <div class="modal-bg" id="installModal" onclick="if(event.target===this)this.classList.remove('open')">
   <div class="modal">
@@ -882,8 +904,18 @@ function renderList(){
   if(ht) ht.textContent = f.length === apps.length ? apps.length : f.length;
   const hdc = document.getElementById('heroDescCount');
   if(hdc) hdc.textContent = apps.length;   // 소개 문구의 앱 수는 항상 전체 기준
+  const oc = document.getElementById('outroCount');
+  if(oc) oc.textContent = apps.length;
   const el = document.getElementById('appList');
-  if(!f.length){ el.innerHTML=`<div class="no-result">검색 결과가 없습니다.</div>`; return; }
+  if(!f.length){
+    const q = searchQuery.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    el.innerHTML = `<div class="no-result">
+      <div class="nr-msg">「<b>${q}</b>」 검색 결과가 없습니다.</div>
+      <div class="nr-sub">혹시 이런 앱이 필요하세요?<br>요청을 남겨주시면 만들어볼게요.</div>
+      <button class="nr-btn" onclick="requestApp()">＋ 「${q}」 앱 요청하기</button>
+    </div>`;
+    return;
+  }
   el.innerHTML = f.map((a,i)=>{
     const badgeHTML = a.badge==='as' ? '<span class="badge badge-as">A/S</span>'
       : a.badge==='doc' ? '<span class="badge badge-doc">자료</span>'
@@ -1074,35 +1106,30 @@ function selectTag(btn, tag) {
   }
 }
 
-function toggleWriteForm() {
-  const form = document.getElementById('fbForm');
-  const btn = document.getElementById('fbWriteBtn');
-  const isOpen = form.style.display !== 'none';
-  if (isOpen) {
-    form.style.display = 'none';
-    btn.textContent = '✏ 글쓰기';
-    btn.classList.remove('open');
-  } else {
-    form.style.display = 'flex';
-    btn.textContent = '✕ 닫기';
-    btn.classList.add('open');
-    form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
+/* 폼이 섹션에 항상 열려 있으므로, 등록 후엔 입력만 비운다 */
+function closeWriteForm() {
+  const ta = document.getElementById('fbContent');
+  if (ta) ta.blur();
 }
 
-function closeWriteForm() {
-  const form = document.getElementById('fbForm');
-  const btn = document.getElementById('fbWriteBtn');
-  form.style.display = 'none';
-  btn.textContent = '✏ 글쓰기';
-  btn.classList.remove('open');
+/* 검색 실패 → 게시판으로 데려가서 '건의'로 미리 채워준다 */
+function requestApp() {
+  const q = searchQuery;
+  document.getElementById('boardSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const tagBtn = [...document.querySelectorAll('.fb-tag')].find(b => b.textContent.trim() === '건의');
+  if (tagBtn) selectTag(tagBtn, '건의');
+  const ta = document.getElementById('fbContent');
+  if (ta) {
+    ta.value = '「' + q + '」 관련 앱이 있으면 좋겠어요.';
+    setTimeout(() => { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }, 650);
+  }
 }
 
 function openFeedback() {
   localStorage.setItem('fb_last_seen', new Date().toISOString());
   const badge = document.getElementById('boardBadge');
   if (badge) badge.style.display = 'none';
-  document.getElementById('feedbackModal').classList.add('open');
+  document.getElementById('boardSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
   loadFeedbacks();
 }
 
@@ -1113,12 +1140,15 @@ async function loadFeedbacks() {
     .select('*')
     .order('created_at', { ascending: false })
     .limit(50);
+  const cnt = document.getElementById('fbCount');
   if (error || !data || data.length === 0) {
-    container.innerHTML = '<div class="fb-empty">아직 후기가 없어요. 첫 번째 후기를 남겨보세요!</div>';
+    container.innerHTML = '<div class="fb-empty">아직 글이 없어요. 첫 글을 남겨보세요!</div>';
+    if (cnt) cnt.textContent = '0';
     return;
   }
+  if (cnt) cnt.textContent = data.length;
   container.innerHTML = data.map(f => {
-    const name = f.name || '익명';
+    const name = f.name || '익명의 선생님';
     const date = new Date(f.created_at).toLocaleDateString('ko-KR', {year:'2-digit',month:'2-digit',day:'2-digit'});
     const body = (f.content||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     const badge = f.tag ? `<span class="fb-badge">${f.tag}</span>` : '';
