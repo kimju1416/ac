@@ -837,6 +837,7 @@ const apps = [
   { name:'운동부 종합 자료',            desc:'학교 운동부 운영에 필요한 서식·지침·참고 자료를 한 곳에 모아둔 패들렛 자료집',           cat:'기타 자료',  badge:'doc',    date:'26.04.12', url:'https://padlet.com/dakkang27/ver-02-ynpu74jky3a9mqrm' },
   { name:'디자인 예시 갤러리',          desc:'kimju.zip이 제작한 PPT·카드뉴스 디자인 예시 254종을 한눈에 모아볼 수 있는 갤러리',         cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://kimju1416.github.io/design/' },
   { name:'AI 도구 가이드',              desc:'2026년 선생님을 위한 AI 도구 38선을 5개 카테고리로 정리한 활용 가이드',                    cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://kimju1416.github.io/codex/' },
+  { name:'경북에듀잡',                  shot:'gb-edujob', desc:'경북 지역 학교 채용공고를 직종·지역별로 모아 마감임박순으로 보여주는 구인 정보 사이트. 기간제교원·교육공무직·방과후강사 등 매일 자동 수집', cat:'기타 자료', badge:'doc', date:'26.08.10', url:'https://kimju1416.github.io/gb-edujob/' },
   { name:'체육대회 모바일 안내문',      desc:'체육대회 일정·종목·주의사항을 담은 모바일 최적화 안내문을 쉽고 빠르게 만드는 도구',        cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://guide11.netlify.app/' },
   { name:'현장체험학습 모바일 안내문',  desc:'현장체험학습 안내 내용을 모바일 친화적 안내문으로 빠르게 제작하는 도구',                   cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://su333.netlify.app/' },
   { name:'모바일 게임 모음',            desc:'수업·쉬는시간에 바로 활용할 수 있는 kimju.zip 모바일 게임 모음',                          cat:'기타 자료',  badge:'doc',    date:'26.06.17', url:'https://orak11.netlify.app/' },
@@ -875,7 +876,7 @@ function isNew(date){
 /* ─── 앱 미리보기 ───
    shots/ 폴더에 있는 스크린샷 파일명 목록. _shot.js 실행 후 이 목록만 갱신하면 된다.
    URL에서 파일명을 규칙으로 만들어 내므로 앱 항목을 따로 고칠 필요는 없다. */
-const SHOTS = new Set(['aiwidget','arcade','archive','baseball','card','chekim','cho','classassign','classmemo','classtube','cmass','codex','consult','cowork','design','edu1','gbe-seosik','gpt2','guide11','hakpok-case','hakpok-report','kimjuzip','lostfound','maeumjido-cho','maeumjido-jung','notice-cho','notice-jung','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','paps','pe-textbook','pension','saemcall','schoolrule','seat','sono','specialroom','sportsmap','ssamzip','su333','teammix','timetable-swap','training','uni1','vibev','youcall']);
+const SHOTS = new Set(['aiwidget','arcade','archive','baseball','card','chekim','cho','classassign','classmemo','classtube','cmass','codex','consult','cowork','design','edu1','gb-edujob','gbe-seosik','gpt2','guide11','hakpok-case','hakpok-report','kimjuzip','lostfound','maeumjido-cho','maeumjido-jung','notice-cho','notice-jung','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','paps','pe-textbook','pension','saemcall','schoolrule','seat','sono','specialroom','sportsmap','ssamzip','su333','teammix','timetable-swap','training','uni1','vibev','youcall']);
 
 function shotSlug(url){
   try{
