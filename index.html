@@ -785,6 +785,7 @@ const apps = [
   { name:'팝스 조회 및 처방 (중학교)', shot:'paps', desc:'중학생 PAPS 체력 측정 결과를 조회하고 개인별 맞춤 운동 처방까지 제공하는 앱',      cat:'체육과 업무', badge:'',      date:'26.04.12', url:'https://m.site.naver.com/1Zkwn' },
   { name:'팝스 조회 및 처방 (고등학교)', shot:'paps',desc:'고등학생 PAPS 체력 측정 결과를 조회하고 개인별 맞춤 운동 처방까지 제공하는 앱',    cat:'체육과 업무', badge:'',      date:'26.04.12', url:'https://m.site.naver.com/1Zkwo' },
   { name:'체육교과 플레이북',           desc:'체육 수업에서 활용할 수 있는 교과서 형식의 디지털 플레이북. 수업 아이디어·활동 자료를 한눈에 정리한 체육교사 전용 자료',  cat:'체육과 업무', badge:'doc',   date:'26.07.25', url:'https://kimju1416.github.io/pe-textbook/' },
+  { name:'야구 수업 DJ 턴테이블', shot:'baseball', desc:'타자 등장곡·홈런·안타 효과음·KBO 구단 응원가를 버튼 하나로 트는 야구 수업용 음향 조작판', cat:'체육과 업무', badge:'', date:'26.08.08', url:'https://kimju1416.github.io/baseball/' },
   // 4. 마음지도
   { name:'우리반 마음지도 (중등)', shot:'maeumjido-jung',      sub:'↳ 모바일 뷰어 · 커스텀 질문 · 회차 분석 추가', desc:'중학교 학급에서 소시오메트리 설문을 실시하고 관계망을 시각화해 또래 관계를 분석하는 앱. 모바일 뷰어기능 추가, 커스텀 질문 기능 추가, 회차 분석 추가.', cat:'마음지도', badge:'',      date:'26.06.29', url:'https://docs.google.com/spreadsheets/d/1Hbw39kB1ITTGbu--KE_cRdnFFdIW4-FPgC0dEjpeCKU/copy' },
   { name:'우리반 마음지도 (초등)', shot:'maeumjido-cho',      sub:'↳ 모바일 뷰어 · 커스텀 질문 · 회차 분석 추가', desc:'초등학교 학급에서 소시오메트리 설문을 실시하고 관계망을 시각화해 또래 관계를 분석하는 앱. 모바일 뷰어기능 추가, 커스텀 질문 기능 추가, 회차 분석 추가.', cat:'마음지도', badge:'',     date:'26.06.29', url:'https://docs.google.com/spreadsheets/d/1Q_Prj3FloW-l_Qqt61D5JvMybmagwYyB0o7VHZJfpSI/copy' },
@@ -852,7 +853,7 @@ function isNew(date){
 /* ─── 앱 미리보기 ───
    shots/ 폴더에 있는 스크린샷 파일명 목록. _shot.js 실행 후 이 목록만 갱신하면 된다.
    URL에서 파일명을 규칙으로 만들어 내므로 앱 항목을 따로 고칠 필요는 없다. */
-const SHOTS = new Set(['aiwidget','arcade','archive','ssamzip','card','chekim','cho','classassign','classmemo','classtube','codex','consult','cowork','design','edu1','gbe-seosik','gpt2','guide11','hakpok-case','hakpok-report','kimjuzip','lostfound','maeumjido-cho','maeumjido-jung','notice-cho','notice-jung','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','paps','pe-textbook','pension','saemcall','schoolrule','seat','sono','sportsmap','su333','teammix','timetable-swap','training','uni1','vibev','youcall']);
+const SHOTS = new Set(['aiwidget','arcade','archive','baseball','card','chekim','cho','classassign','classmemo','classtube','codex','consult','cowork','design','edu1','gbe-seosik','gpt2','guide11','hakpok-case','hakpok-report','kimjuzip','lostfound','maeumjido-cho','maeumjido-jung','notice-cho','notice-jung','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','paps','pe-textbook','pension','saemcall','schoolrule','seat','sono','sportsmap','ssamzip','su333','teammix','timetable-swap','training','uni1','vibev','youcall']);
 
 function shotSlug(url){
   try{
