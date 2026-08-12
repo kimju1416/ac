@@ -208,7 +208,7 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .chip.on .chip-count{opacity:.65;}
 /* 오락실 탭은 놀이용이라 색으로 구분한다 */
 .chip[data-cat="오락실"]{border-color:rgba(215,120,255,.35);color:#d778ff;}
-.chip[data-cat="오락실"]::before{content:'🕹';font-size:12px;}
+.chip-ico{width:15px;height:15px;flex-shrink:0;fill:currentColor;}
 .chip[data-cat="오락실"]:hover{border-color:#d778ff;color:#d778ff;background:rgba(215,120,255,.08);}
 .chip[data-cat="오락실"].on{background:#d778ff;border-color:#d778ff;color:var(--accent-text);}
 
@@ -871,10 +871,20 @@ let searchQuery = '';
 
 function countByCat(cat){ return cat==='전체' ? apps.length : apps.filter(a=>a.cat===cat).length; }
 
+/* 이모지는 기기마다 흑백/컬러가 갈려서 직접 그린 아이콘을 쓴다 (게임패드) */
+const CAT_ICON = {
+  '오락실': '<svg class="chip-ico" viewBox="0 0 24 24" aria-hidden="true">'
+    + '<path fill-rule="evenodd" d="M7.6 5.6h8.8a6.6 6.6 0 0 1 6.6 6.6v2.1c0 2.6-3.1 3.9-5 2.1L16.4 15H7.6l-1.6 1.4c-1.9 1.8-5 .5-5-2.1v-2.1a6.6 6.6 0 0 1 6.6-6.6Z'
+    + 'M6.6 8.3h1.9v1.9h1.9v1.9H8.5v1.9H6.6v-1.9H4.7v-1.9h1.9z'
+    + 'M17.5 10.2a1.35 1.35 0 1 1-2.7 0 1.35 1.35 0 0 1 2.7 0Z'
+    + 'M20.2 13a1.35 1.35 0 1 1-2.7 0 1.35 1.35 0 0 1 2.7 0Z"/>'
+    + '</svg>',
+};
+
 function renderFilter(){
   document.getElementById('filterWrap').innerHTML = catOrder.map(c=>`
     <button class="chip ${c===currentCat?'on':''}" data-cat="${c}">
-      ${c}<span class="chip-count">${countByCat(c)}</span>
+      ${CAT_ICON[c]||''}${c}<span class="chip-count">${countByCat(c)}</span>
     </button>`).join('');
   document.querySelectorAll('.chip').forEach(b=>{
     b.addEventListener('click',()=>{ currentCat=b.dataset.cat; renderFilter(); renderList(); });
@@ -1026,7 +1036,7 @@ renderList();
 
 (function initTicker(){
   const sep = ' <span class="ticker-sep">|</span> ';
-  const msg = `★ ${apps.length}개 앱 무료 공개 중${sep}선생님의 칼퇴 도우미 — @kimju.zip${sep}🕹 오락실 탭 신설 — 수업·쉬는시간 게임 9종 모음${sep}선생님을 위한 바이브코딩${sep}`;
+  const msg = `★ ${apps.length}개 앱 무료 공개 중${sep}선생님의 칼퇴 도우미 — @kimju.zip${sep}오락실 탭 신설 — 수업·쉬는시간 게임 9종 모음${sep}선생님을 위한 바이브코딩${sep}`;
   document.getElementById('ticker1').innerHTML = msg;
   document.getElementById('ticker2').innerHTML = msg;
 })();
