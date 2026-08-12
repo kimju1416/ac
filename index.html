@@ -206,6 +206,11 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .chip.on{background:var(--accent);color:var(--accent-text);border-color:var(--accent);font-weight:700;}
 .chip-count{font-family:'DM Mono',monospace;font-size:12px;opacity:.7;}
 .chip.on .chip-count{opacity:.65;}
+/* 오락실 탭은 놀이용이라 색으로 구분한다 */
+.chip[data-cat="오락실"]{border-color:rgba(215,120,255,.35);color:#d778ff;}
+.chip[data-cat="오락실"]::before{content:'🕹';font-size:12px;}
+.chip[data-cat="오락실"]:hover{border-color:#d778ff;color:#d778ff;background:rgba(215,120,255,.08);}
+.chip[data-cat="오락실"].on{background:#d778ff;border-color:#d778ff;color:var(--accent-text);}
 
 /* ─── LIST ─── */
 .list-wrap{max-width:var(--max);margin:0 auto;padding:0 var(--px) 5rem;}
@@ -252,6 +257,7 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .badge-prompt{background:var(--accent-glow);color:var(--accent);border:1px solid rgba(184,240,60,.2);}
 .badge-new{background:rgba(184,240,60,.15);color:var(--accent);border:1px solid rgba(184,240,60,.35);font-weight:700;letter-spacing:.04em;}
 .badge-exe{background:rgba(255,165,0,.12);color:#ffa040;border:1px solid rgba(255,165,0,.25);}
+.badge-game{background:rgba(215,120,255,.12);color:#d778ff;border:1px solid rgba(215,120,255,.25);}
 
 /* ─── 앱 미리보기 ─── */
 .shot-pop{
@@ -840,18 +846,26 @@ const apps = [
   { name:'AI 도구 가이드',              desc:'2026년 선생님을 위한 AI 도구 38선을 5개 카테고리로 정리한 활용 가이드',                    cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://kimju1416.github.io/codex/' },
   { name:'체육대회 모바일 안내문',      desc:'체육대회 일정·종목·주의사항을 담은 모바일 최적화 안내문을 쉽고 빠르게 만드는 도구',        cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://guide11.netlify.app/' },
   { name:'현장체험학습 모바일 안내문',  desc:'현장체험학습 안내 내용을 모바일 친화적 안내문으로 빠르게 제작하는 도구',                   cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://su333.netlify.app/' },
-  { name:'모바일 게임 모음',            desc:'수업·쉬는시간에 바로 활용할 수 있는 kimju.zip 모바일 게임 모음',                          cat:'기타 자료',  badge:'doc',    date:'26.06.17', url:'https://orak11.netlify.app/' },
   { name:'ClassTube (교실TV)',          sub:'↳ 초·중등 교육 영상 1,853편 아카이브', desc:'공강·자율활동·의무교육 수업에 바로 쓸 수 있는 교육 유튜브 영상 1,853편을 재생시간·학년별로 필터링해 빠르게 찾는 영상 아카이브', cat:'기타 자료', badge:'doc', date:'26.07.04', url:'https://kimju1416.github.io/classtube/' },
   { name:'경북교육청 서식 꾸러미',        desc:'경북교육청 행정 서식 1,175종을 검색·미리보기·다운로드할 수 있는 서식 아카이브',            cat:'기타 자료',  badge:'doc',    date:'26.07.26', url:'https://kimju1416.github.io/gbe-seosik' },
   { name:'경북에듀잡',                  shot:'gb-edujob', desc:'경북 지역 학교 채용공고를 직종·지역별로 모아 마감임박순으로 보여주는 구인 정보 사이트. 기간제교원·교육공무직·방과후강사 등 매일 자동 수집', cat:'기타 자료', badge:'doc', date:'26.08.10', url:'https://kimju1416.github.io/gb-edujob/' },
   { name:'AI 사용량 위젯', shot:'aiwidget',              desc:'Claude·Codex·Gemini 세 가지 AI 서비스의 사용량을 바탕화면에서 한눈에 확인하는 윈도우 전용 데스크톱 위젯. exe 설치 후 바로 사용 가능', cat:'기타 자료', badge:'exe',    date:'26.07.26', url:'https://github.com/kimju1416/ai-usage-widget/releases' },
   { name:'공무원·교사 연금 비교 시뮬레이터', desc:'공무원연금과 국민연금을 조건별로 비교해 예상 수령액·납입액을 시뮬레이션하는 교사 전용 계산기', cat:'기타 자료', badge:'doc',    date:'26.07.26', url:'https://kimju1416.github.io/pension/' },
-  { name:'Class Arcade (교실 아케이드)', shot:'arcade', sub:'↳ 신규 · 실시간 멀티플레이 게임 10종', desc:'TV에 뜬 QR을 학생들이 폰으로 찍고 한 방에 모여 다 같이 즐기는 실시간 학급 게임. 폭탄 피하기·감염 술래잡기·동전 줍기·모기 잡기·인형 뽑기·레이싱·갤러그·탄막 피하기·낱말 빨리치기·초성 퀴즈 10종, 한 반 30명까지 동시 참여. 설치·로그인 없이 접속만 하면 시작', cat:'기타 자료', badge:'doc', date:'26.08.10', url:'https://game.kimju.kr/' },
-  // 8. A/S 챗봇
+  // 8. 오락실 — 수업·쉬는시간에 바로 켜는 게임
+  { name:'Class Arcade (교실 아케이드)', shot:'arcade', sub:'↳ 실시간 멀티플레이 게임 10종', desc:'TV에 뜬 QR을 학생들이 폰으로 찍고 한 방에 모여 다 같이 즐기는 실시간 학급 게임. 폭탄 피하기·감염 술래잡기·동전 줍기·모기 잡기·인형 뽑기·레이싱·갤러그·탄막 피하기·낱말 빨리치기·초성 퀴즈 10종, 한 반 30명까지 동시 참여. 설치·로그인 없이 접속만 하면 시작', cat:'오락실', badge:'game', date:'26.08.10', url:'https://game.kimju.kr/' },
+  { name:'AI 모션 트레이닝 센터', sub:'↳ 카메라 자세인식 · 활동 15종', desc:'폰 카메라가 관절을 인식해 스쿼트·팔벌려뛰기를 자동으로 세어 주고, 두더지 잡기·풍선 팡팡·구름 계단 오르기 등 온몸으로 하는 미니게임 12종과 반응속도 훈련·자세 분석 처방까지 담은 체육 수업용 모션 아케이드. 영상은 기기 안에서만 처리', cat:'오락실', badge:'game', date:'26.07.16', url:'https://kimju1416.github.io/squat-coach/' },
+  { name:'말랑잉글리시 (몸으로 배우는 영어)', sub:'↳ 카메라 동작인식 영어 놀이 4종', desc:'카메라 앞에서 몸을 움직여 영어를 익히는 초등 저학년·유아용 놀이터. 철자 톡톡·그림 단어 찾기·영어 동작 미션·컬러 팝 4종으로 단어와 색깔을 몸으로 익히고, 영상은 기기 밖으로 나가지 않음', cat:'오락실', badge:'game', date:'26.07.17', url:'https://kimju1416.github.io/motion-pulse-arcade/' },
+  { name:'학교 화재 탈출 판단훈련', sub:'↳ 학교 모의 대피훈련 ① 화재', desc:'수업 중 화재경보가 울린 교실에서 운동장까지, 4초 안에 여섯 번을 판단하는 대피 시뮬레이션. 오답·머뭇거림마다 산소 게이지가 깎이고 왜 틀렸는지 그 자리에서 확인. AI 실사 영상 8컷', cat:'오락실', badge:'game', date:'26.07.29', url:'https://kimju1416.github.io/school-fire-drill/' },
+  { name:'학교 지진 대피 판단훈련', sub:'↳ 학교 모의 대피훈련 ② 지진', desc:'땅이 흔들리는 교실에서 운동장까지, 4초 제한의 여섯 갈림길을 통과하는 지진 대피 시뮬레이션. 책상 밑 대피부터 계단 이동까지 실제 훈련 전 판단력을 미리 점검. AI 실사 영상 8컷', cat:'오락실', badge:'game', date:'26.07.29', url:'https://kimju1416.github.io/school-earthquake-drill/' },
+  { name:'학교 민방위 대피 판단훈련', sub:'↳ 학교 모의 대피훈련 ③ 민방위', desc:'수업 중 공습경보 사이렌이 울리면 대피소까지 여섯 번을 판단하는 민방위 대피 시뮬레이션. 교육부 학교현장 재난유형별 교육·훈련매뉴얼 기준, AI 실사 영상 8컷', cat:'오락실', badge:'game', date:'26.07.29', url:'https://kimju1416.github.io/school-civildefense-drill/' },
+  { name:'현장체험학습 안전 대탈출 (초등)', sub:'↳ 안전 배지 6개 · 수료증 발급', desc:'버스·휴게소·놀이공원·박물관·숙소·한밤 대피 6곳을 돌며 숨은 위험을 직접 찾아내는 안전교육 방탈출 게임. 손전등 대피, 119 신고 순서 맞추기까지 통과하면 안전 지킴이 수료증을 이미지로 저장', cat:'오락실', badge:'game', date:'26.07.31', url:'https://kimju1416.github.io/trip-escape/' },
+  { name:'현장체험학습 안전 대탈출 (중·고)', sub:'↳ 수학여행판 · 안전 리더 인증서', desc:'2박 3일 수학여행을 배경으로 전세버스·휴게소·경복궁·아쿠아리움·숙소·새벽 화재 6곳의 위험을 판단하는 중고생용 안전 방탈출. 심폐소생술 순서까지 통과하면 안전 리더 인증서 발급', cat:'오락실', badge:'game', date:'26.07.29', url:'https://kimju1416.github.io/trip-escape-teen/' },
+  { name:'모바일 게임 모음',            desc:'수업·쉬는시간에 바로 활용할 수 있는 kimju.zip 모바일 게임 모음',                          cat:'오락실',  badge:'game',    date:'26.06.17', url:'https://orak11.netlify.app/' },
+  // 9. A/S 챗봇
   { name:'kimju.zip A/S 챗봇',          desc:'kimju.zip 앱 사용 중 오류나 궁금한 점을 AI 챗봇에게 바로 물어볼 수 있는 지원 창구',   cat:'A/S',        badge:'as',     date:'26.04.12', url:'https://kimju1416.github.io/kimju.zip' },
 ];
 
-const catOrder = ['전체','학생부 업무','담임 업무','체육과 업무','마음지도','공통 업무','프롬프트','기타 자료','A/S'];
+const catOrder = ['전체','오락실','학생부 업무','담임 업무','체육과 업무','마음지도','공통 업무','프롬프트','기타 자료','A/S'];
 let currentCat = '전체';
 let searchQuery = '';
 
@@ -877,7 +891,7 @@ function isNew(date){
 /* ─── 앱 미리보기 ───
    shots/ 폴더에 있는 스크린샷 파일명 목록. _shot.js 실행 후 이 목록만 갱신하면 된다.
    URL에서 파일명을 규칙으로 만들어 내므로 앱 항목을 따로 고칠 필요는 없다. */
-const SHOTS = new Set(['aiwidget','arcade','archive','baseball','card','chekim','cho','classassign','classmemo','classtube','cmass','codex','consult','cowork','design','edu1','gb-edujob','gbe-seosik','gpt2','guide11','hakpok-case','hakpok-report','kimjuzip','lostfound','maeumjido-cho','maeumjido-jung','notice-cho','notice-jung','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','paps','pe-textbook','pension','saemcall','schoolrule','seat','sono','specialroom','sportsmap','ssamzip','su333','teammix','timetable-swap','training','uni1','vibev','youcall','youcall-board']);
+const SHOTS = new Set(['aiwidget','arcade','archive','baseball','card','chekim','cho','classassign','classmemo','classtube','cmass','codex','consult','cowork','design','edu1','gb-edujob','gbe-seosik','gpt2','guide11','hakpok-case','hakpok-report','kimjuzip','lostfound','maeumjido-cho','maeumjido-jung','motion-pulse-arcade','notice-cho','notice-jung','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','paps','pe-textbook','pension','saemcall','school-civildefense-drill','school-earthquake-drill','school-fire-drill','schoolrule','seat','sono','specialroom','sportsmap','squat-coach','ssamzip','su333','teammix','timetable-swap','training','trip-escape','trip-escape-teen','uni1','vibev','youcall','youcall-board']);
 
 function shotSlug(url){
   try{
@@ -922,7 +936,8 @@ function renderList(){
     const badgeHTML = a.badge==='as' ? '<span class="badge badge-as">A/S</span>'
       : a.badge==='doc' ? '<span class="badge badge-doc">자료</span>'
       : a.badge==='prompt' ? '<span class="badge badge-prompt">AI</span>'
-      : a.badge==='exe' ? '<span class="badge badge-exe">EXE</span>' : '';
+      : a.badge==='exe' ? '<span class="badge badge-exe">EXE</span>'
+      : a.badge==='game' ? '<span class="badge badge-game">게임</span>' : '';
     const subHTML = a.sub ? `<div class="row-sub">${a.sub}</div>` : '';
     const newBadge = isNew(a.date) ? '<span class="badge badge-new">NEW</span>' : '';
     const newClass = isNew(a.date) ? ' is-new' : '';
@@ -1011,7 +1026,7 @@ renderList();
 
 (function initTicker(){
   const sep = ' <span class="ticker-sep">|</span> ';
-  const msg = `★ ${apps.length}개 앱 무료 공개 중${sep}선생님의 칼퇴 도우미 — @kimju.zip${sep}체육교과 플레이북 · 마음지도 · 클래스메모 신규 추가${sep}선생님을 위한 바이브코딩${sep}`;
+  const msg = `★ ${apps.length}개 앱 무료 공개 중${sep}선생님의 칼퇴 도우미 — @kimju.zip${sep}🕹 오락실 탭 신설 — 수업·쉬는시간 게임 9종 모음${sep}선생님을 위한 바이브코딩${sep}`;
   document.getElementById('ticker1').innerHTML = msg;
   document.getElementById('ticker2').innerHTML = msg;
 })();
