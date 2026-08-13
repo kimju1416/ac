@@ -184,6 +184,14 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
   padding:.72rem 1.5rem;border-radius:10px;transition:transform .15s,box-shadow .15s;
 }
 .featured-dl:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(184,240,60,.28);}
+.featured-guide{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:transparent;color:var(--accent);text-decoration:none;
+  font-family:'Noto Sans KR',sans-serif;font-size:14.5px;font-weight:700;
+  padding:.72rem 1.4rem;border-radius:10px;border:1.5px solid var(--accent);
+  transition:transform .15s,background .15s;
+}
+.featured-guide:hover{transform:translateY(-1px);background:rgba(184,240,60,.12);}
 .featured-meta{font-family:'DM Mono',monospace;font-size:11.5px;color:var(--muted);letter-spacing:.02em;}
 .featured-media{border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#000;align-self:stretch;display:flex;}
 .featured-media video{width:100%;height:100%;object-fit:cover;display:block;}
@@ -642,6 +650,7 @@ footer{
       </ul>
       <div class="featured-btns">
         <a class="featured-dl" href="https://github.com/kimju1416/ssam-zip-app/releases/latest/download/SSAM-Setup.exe" onclick="showToast();trackClick('쌤집 (SSAM.zip)')">⬇ 윈도우용 바로 다운로드</a>
+        <a class="featured-guide" href="https://kimju1416.github.io/ssam-zip-guide/" target="_blank" rel="noopener" onclick="trackClick('쌤집 가이드')">📖 설치·사용 가이드</a>
         <span class="featured-meta">Windows 10/11 · 클릭 즉시 최신 버전 다운로드</span>
       </div>
     </div>
