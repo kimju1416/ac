@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>마누스 인스타 분석 가이드 — 8월 25일까지 무료</title>
+<meta name="description" content="마누스(Manus)로 인스타 계정을 분석하는 법. @아이디만 적으면 바로 되고, 계정을 연결하면 도달·저장까지 읽어줍니다. 8월 25일까지 무료." />
+<meta property="og:title" content="마누스 인스타 분석 가이드 — 8월 25일까지 무료" />
+<meta property="og:description" content="@아이디만 적어도 분석돼요. 연결하면 팔로워 증감·도달·저장까지. 코딩 없이 무료 플랜에서 가능합니다." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://kimju.kr/manus/" />
+<meta property="og:image" content="https://kimju.kr/manus/og.jpg" />
+<meta name="twitter:card" content="summary_large_image" />
+<!-- Pretendard 웹폰트: 이 줄이 있어야 의도한 글씨체로 보입니다. 절대 지우지 마세요. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  /* ===== 디자인 토큰 (색·둥근모서리·그림자) — 보통 그대로 둡니다 =====
+     다른 테마를 원하면 --clay 계열 3개만 바꾸세요. 예) 파랑 테마:
+       --clay:#3B7DD8; --clay-dark:#2C5FA8; --clay-soft:#E5EEFB;            */
+  :root{
+    --clay:#D97757; --clay-dark:#C45D3A; --clay-soft:#F6E9E2;
+    --ink:#2B2622; --ink-soft:#5C544D; --line:#E8E1DA;
+    --bg:#FAF7F4; --card:#FFFFFF; --good:#3F8F6B; --good-soft:#E6F2EC;
+    --code-bg:#2B2622; --code-ink:#F3EDE7; --warn:#B8742A; --warn-soft:#FBEFDD;
+    --blue:#2F6FB0; --blue-soft:#E7F0F8;
+    --radius:18px; --shadow:0 1px 2px rgba(43,38,34,.04),0 8px 28px rgba(43,38,34,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Pretendard",system-ui,sans-serif;background:var(--bg);color:var(--ink);
+    line-height:1.7;-webkit-font-smoothing:antialiased;letter-spacing:-.01em;
+    /* 한국어는 단어 중간에서 끊기지 않게 (없으면 "신용카드/도" 처럼 잘림) */
+    word-break:keep-all;overflow-wrap:break-word}
+  a{color:inherit;text-decoration:none}
+
+  /* Layout */
+  .wrap{display:grid;grid-template-columns:264px 1fr;max-width:1240px;margin:0 auto;gap:0}
+  .sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;padding:30px 20px 60px;
+    border-right:1px solid var(--line);background:rgba(250,247,244,.85);backdrop-filter:blur(6px)}
+  .brand{display:flex;align-items:center;gap:11px;margin-bottom:24px}
+  .brand .logo{width:38px;height:38px;border-radius:11px;background:var(--clay);
+    display:grid;place-items:center;flex-shrink:0;box-shadow:var(--shadow)}
+  .brand .logo svg{width:22px;height:22px}
+  .brand b{font-size:15.5px;font-weight:800;display:block;line-height:1.25}
+  .brand span{display:block;font-size:11px;color:var(--ink-soft);font-weight:500;margin-top:1px}
+  .toc a{display:block;padding:8px 12px;border-radius:10px;font-size:13.5px;color:var(--ink-soft);
+    font-weight:500;transition:.15s;margin-bottom:2px}
+  .toc a:hover{background:var(--clay-soft);color:var(--clay-dark)}
+  .toc a.active{background:var(--clay);color:#fff;font-weight:700}
+  .toc .num{display:inline-block;width:22px;font-weight:800;opacity:.6}
+  .toc .sub{margin-top:16px;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-soft);font-weight:700;padding:0 12px;margin-bottom:6px}
+  .legend{margin-top:22px;padding:14px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:11.5px;line-height:1.9;color:var(--ink-soft)}
+  .legend b{display:block;color:var(--ink);margin-bottom:6px;font-size:12px}
+  .legend .e{display:inline-block;width:18px}
+
+  .main{padding:0 0 110px;min-width:0}
+  .inner{max-width:780px;padding:0 44px}
+
+  /* Hero */
+  .hero{padding:64px 44px 52px;border-bottom:1px solid var(--line);margin-bottom:48px;background:
+      radial-gradient(120% 130% at 100% 0%, #F4DACB 0%, rgba(244,218,203,0) 55%),
+      radial-gradient(120% 130% at 0% 0%, #EFE7DF 0%, rgba(239,231,223,0) 50%)}
+  .hero .inner{padding:0;max-width:780px}
+  .kicker{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);
+    padding:6px 13px;border-radius:999px;font-size:12.5px;font-weight:700;color:var(--clay-dark);margin-bottom:20px}
+  .kicker .pulse{width:7px;height:7px;border-radius:50%;background:var(--clay);box-shadow:0 0 0 0 rgba(217,119,87,.5);animation:p 2s infinite}
+  @keyframes p{0%{box-shadow:0 0 0 0 rgba(217,119,87,.5)}70%{box-shadow:0 0 0 7px rgba(217,119,87,0)}100%{box-shadow:0 0 0 0 rgba(217,119,87,0)}}
+  h1{font-size:42px;font-weight:800;line-height:1.18;letter-spacing:-.03em;margin-bottom:16px}
+  h1 .hl{color:var(--clay)}
+  .lede{font-size:17px;color:var(--ink-soft);max-width:620px}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-size:13px;font-weight:600;display:flex;gap:8px;align-items:center}
+
+  /* Sections */
+  section{scroll-margin-top:24px;margin-bottom:60px}
+  .sec-head{display:flex;align-items:flex-start;gap:16px;margin-bottom:22px}
+  .sec-num{flex-shrink:0;width:42px;height:42px;border-radius:12px;background:var(--clay);color:#fff;
+    font-weight:800;font-size:18px;display:grid;place-items:center;box-shadow:var(--shadow)}
+  .sec-head h2{font-size:25px;font-weight:800;letter-spacing:-.02em;line-height:1.3}
+  .sec-head p{font-size:14px;color:var(--ink-soft);margin-top:4px}
+  h3{font-size:18px;font-weight:800;margin:30px 0 12px;letter-spacing:-.02em}
+  h3 .e{margin-right:7px}
+  p.body{margin-bottom:14px;color:var(--ink-soft)}
+  p.body strong{color:var(--ink);font-weight:700}
+  ul.body,ol.body{margin:0 0 16px;padding-left:6px;list-style:none}
+  ul.body li,ol.body li{position:relative;padding-left:26px;margin-bottom:9px;color:var(--ink-soft)}
+  ul.body li::before{content:"";position:absolute;left:6px;top:11px;width:7px;height:7px;border-radius:50%;background:var(--clay)}
+  ul.body li strong,ol.body li strong{color:var(--ink);font-weight:700}
+  ol.body{counter-reset:s}
+  ol.body li{counter-increment:s}
+  ol.body li::before{content:counter(s);position:absolute;left:0;top:1px;width:20px;height:20px;border-radius:7px;
+    background:var(--clay-soft);color:var(--clay-dark);font-size:12px;font-weight:800;display:grid;place-items:center}
+  strong{font-weight:700}
+  a.link{color:var(--blue);border-bottom:1px solid rgba(47,111,176,.45);font-weight:600;transition:.15s}
+  a.link:hover{background:var(--blue-soft);border-radius:3px}
+
+  /* Compare table */
+  .compare{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;font-size:13.5px;background:#fff;margin:8px 0 16px}
+  .compare th,.compare td{padding:13px 15px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+  .compare thead th{background:var(--ink);color:#fff;font-weight:700;font-size:13px}
+  .compare tbody th{font-weight:700;background:var(--clay-soft);color:var(--clay-dark);white-space:nowrap;width:118px}
+  .compare tbody tr:last-child td,.compare tbody tr:last-child th{border-bottom:0}
+  .compare td b{color:var(--ink)}
+  .compare .yes{color:var(--good);font-weight:700}
+
+  /* Code / copyable block */
+  .code{position:relative;background:var(--code-bg);border-radius:14px;margin:14px 0;overflow:hidden;box-shadow:var(--shadow)}
+  .code-top{display:flex;align-items:center;justify-content:space-between;padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .code-top .label{font-size:11.5px;color:#B9AFA6;font-weight:600;display:flex;align-items:center;gap:9px}
+  .code-top .dots{display:flex;gap:5px}
+  .code-top .dots i{width:10px;height:10px;border-radius:50%;display:block}
+  .code-top .dots i:nth-child(1){background:#ff5f57}.code-top .dots i:nth-child(2){background:#febc2e}.code-top .dots i:nth-child(3){background:#28c840}
+  .copy{background:rgba(255,255,255,.1);border:0;color:#F3EDE7;font-size:11.5px;font-weight:600;padding:5px 11px;border-radius:7px;cursor:pointer;transition:.15s;font-family:inherit}
+  .copy:hover{background:var(--clay)}
+  .copy.done{background:var(--good)}
+  .code pre{margin:0;padding:15px 16px;overflow-x:auto}
+  .code code{font-family:"Pretendard","SF Mono",ui-monospace,Consolas,monospace;font-size:13.5px;color:var(--code-ink);line-height:1.8;white-space:pre-wrap}
+
+  /* Callouts */
+  .note{display:flex;gap:13px;border-radius:14px;padding:16px 18px;margin:16px 0;font-size:14px;line-height:1.65}
+  .note .ic{flex-shrink:0;font-size:19px;line-height:1.5}
+  .note.tip{background:var(--good-soft);border:1px solid #CDE6D9}
+  .note.tip b{color:var(--good)}
+  .note.warn{background:var(--warn-soft);border:1px solid #F0DCBE}
+  .note.warn b{color:var(--warn)}
+  .note.info{background:var(--clay-soft);border:1px solid #EDD5C7}
+  .note.info b{color:var(--clay-dark)}
+  .note.lock{background:var(--blue-soft);border:1px solid #CCDFF0}
+  .note.lock b{color:var(--blue)}
+  .note b{display:block;margin-bottom:2px}
+  .note p{color:var(--ink-soft)}
+  .note strong{color:var(--ink)}
+
+  /* Steps (세로 타임라인) */
+  .steps{counter-reset:st;margin:10px 0 4px}
+  .step{position:relative;padding:0 0 22px 44px;border-left:2px solid var(--line);margin-left:15px}
+  .step:last-child{border-left-color:transparent;padding-bottom:2px}
+  .step::before{counter-increment:st;content:counter(st);position:absolute;left:-16px;top:-2px;width:30px;height:30px;
+    border-radius:50%;background:var(--clay);color:#fff;font-weight:800;font-size:14px;display:grid;place-items:center;box-shadow:0 0 0 4px var(--bg)}
+  .step h4{font-size:15px;font-weight:800;margin-bottom:5px}
+  .step p{font-size:13.5px;color:var(--ink-soft)}
+  .step code{background:var(--clay-soft);color:var(--clay-dark);padding:2px 7px;border-radius:5px;font-size:12.5px;font-weight:600}
+
+  /* Tip / feature cards (2열) */
+  .tips{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:8px 0}
+  .tipcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow);transition:.18s}
+  .tipcard:hover{transform:translateY(-3px);border-color:var(--clay)}
+  .tipcard .te{font-size:24px;margin-bottom:9px;display:block}
+  .tipcard h4{font-size:15px;font-weight:800;margin-bottom:6px}
+  .tipcard p{font-size:13px;color:var(--ink-soft);line-height:1.6}
+  .tipcard code{background:var(--clay-soft);color:var(--clay-dark);padding:2px 6px;border-radius:5px;font-size:12px;font-weight:600}
+
+  kbd{background:#fff;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:2px 7px;font-size:12.5px;font-weight:700;font-family:inherit;box-shadow:0 1px 0 rgba(0,0,0,.03)}
+  footer{border-top:1px solid var(--line);padding:34px 44px;text-align:center;color:var(--ink-soft);font-size:13px;line-height:1.8}
+  footer b{color:var(--clay-dark)}
+  footer a{color:var(--blue);border-bottom:1px solid rgba(47,111,176,.4)}
+
+  #prog{position:fixed;top:0;left:0;height:3px;background:var(--clay);width:0;z-index:99;transition:width .1s}
+  #toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;
+    padding:11px 20px;border-radius:12px;font-size:13.5px;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.2);opacity:0;pointer-events:none;transition:.25s;z-index:100}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .m-toc{display:none}
+
+  @media(max-width:920px){
+    .wrap{grid-template-columns:1fr}
+    .sidebar{display:none}
+    .hero{padding:46px 22px 38px}
+    h1{font-size:30px}
+    .inner{padding:0 22px}
+    .tips{grid-template-columns:1fr}
+    .compare{font-size:12.5px;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .compare tbody th{width:auto}
+    .m-toc{display:block;margin:0 22px 26px}
+    .m-toc summary{cursor:pointer;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 16px;font-weight:800;list-style:none;box-shadow:var(--shadow)}
+    .m-toc summary::-webkit-details-marker{display:none}
+    .m-toc summary::after{content:"▾";float:right;color:var(--clay)}
+    .m-toc[open] summary::after{content:"▴"}
+    .m-toc .toc{margin-top:8px;padding:6px}
+    .m-toc .toc a{display:block;padding:8px 12px;border-radius:9px;font-size:14px;color:var(--ink-soft);font-weight:600}
+    .m-toc .toc a:hover{background:var(--clay-soft)}
+  }
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<div id="toast"></div>
+
+<div class="wrap">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9" stroke-linecap="round">
+          <path d="M12 2.8v6.4 M12 14.8v6.4 M2.8 12h6.4 M14.8 12h6.4
+                   M6.1 6.1l4.5 4.5 M13.4 13.4l4.5 4.5 M17.9 6.1l-4.5 4.5 M10.6 13.4l-4.5 4.5"/>
+        </svg>
+      </span>
+      <div><b>마누스 인스타 분석</b><span>8월 25일까지 무료</span></div>
+    </div>
+    <nav class="toc" id="toc">
+      <a href="#s1"><span class="num">01</span>지금 왜 서둘러야 하나</a>
+      <a href="#s2"><span class="num">02</span>마누스 시작하기</a>
+      <a href="#s3"><span class="num">03</span>제일 쉬운 길 · @만 적기</a>
+      <a href="#s4"><span class="num">04</span>더 깊이 보고 싶다면</a>
+      <a href="#s5"><span class="num">05</span>계정 연결하기</a>
+      <a href="#s6"><span class="num">06</span>바로 쓰는 프롬프트 8</a>
+      <a href="#s7"><span class="num">07</span>다른 AI와 뭐가 다를까</a>
+      <div class="sub">더 보기</div>
+      <a href="#extra"><span class="num">＋</span>다른 커넥터 · 주의사항</a>
+    </nav>
+    <div class="legend">
+      <b>📌 박스 색 안내</b>
+      <span class="e">💡</span> 꿀팁 &nbsp;·&nbsp; <span class="e">✅</span> 체크<br/>
+      <span class="e">⚠️</span> 주의 &nbsp;·&nbsp; <span class="e">🔐</span> 중요<br/>
+      검은 예시 상자는 <b style="display:inline;color:var(--clay-dark)">복사</b> 버튼으로 바로 복사돼요.
+    </div>
+  </aside>
+
+  <main class="main">
+
+    <header class="hero">
+      <div class="inner">
+        <span class="kicker"><span class="pulse"></span> 8월 25일까지 크레딧 무료</span>
+        <h1>인스타 분석, <span class="hl">@만 적어도 돼요</span></h1>
+        <p class="lede">마누스(Manus)는 아이디만 적어 주면 그 계정을 직접 둘러보고 분석해 줍니다. 복잡한 연결 과정 없이요. 내 계정의 도달·저장까지 보고 싶다면 그때 연결하면 됩니다. 지금은 크레딧까지 무료예요.</p>
+        <div class="hero-meta">
+          <span class="chip">⚡ 준비물 없이 30초</span>
+          <span class="chip">💳 무료 플랜에서도 가능</span>
+          <span class="chip">🔰 코딩 필요 없음</span>
+        </div>
+      </div>
+    </header>
+
+    <details class="m-toc">
+      <summary>📑 목차 펼치기</summary>
+      <nav class="toc">
+        <a href="#s1">01 · 지금 왜 서둘러야 하나</a>
+        <a href="#s2">02 · 마누스 시작하기</a>
+        <a href="#s3">03 · 제일 쉬운 길 · @만 적기</a>
+        <a href="#s4">04 · 더 깊이 보고 싶다면</a>
+        <a href="#s5">05 · 계정 연결하기</a>
+        <a href="#s6">06 · 바로 쓰는 프롬프트 8</a>
+        <a href="#s7">07 · 다른 AI와 뭐가 다를까</a>
+        <a href="#extra">＋ 다른 커넥터 · 주의사항</a>
+      </nav>
+    </details>
+
+    <div class="inner">
+
+      <section id="s1">
+        <div class="sec-head">
+          <div class="sec-num">1</div>
+          <div><h2>지금 왜 서둘러야 하나</h2><p>무료 기간과, 그 사이에 껴 있는 중요한 날짜</p></div>
+        </div>
+
+        <p class="body">마누스가 <strong>2026년 8월 25일까지</strong> 마누스 1.6과 1.6 라이트를 크레딧 차감 없이 쓸 수 있게 열어 뒀어요. 신용카드도 필요 없습니다.</p>
+
+        <p class="body">그런데 이게 <strong>할인 이벤트가 아니에요.</strong> 메타(Meta)가 2025년 12월에 약 20억 달러로 마누스를 인수했는데, 중국 당국의 외국인 투자 안보 심사에서 이 거래가 막혔어요. 그래서 마누스는 2026년 8월 11일에 다시 독립 회사로 돌아간다고 발표했고, 그 과정에서 사용자 데이터를 옮겨야 해서 그 기간 동안 요금을 받지 않는 겁니다.</p>
+
+        <p class="body">이 사정 때문에 <strong>중간에 데이터가 지워지는 구간</strong>이 있어요. 이것만은 꼭 기억하세요.</p>
+
+        <table class="compare">
+          <thead><tr><th>날짜</th><th>무슨 일이 일어나나</th><th>내가 할 일</th></tr></thead>
+          <tbody>
+            <tr><th>~8월 23일</th><td>백업 가능 기간 (한국시간 오전 10시 마감)</td><td><b>내 작업물 직접 내려받기</b></td></tr>
+            <tr><th>8월 23~24일</th><td>데이터 삭제 진행</td><td>중요한 작업 시작하지 않기</td></tr>
+            <tr><th>8월 25일~</th><td>데이터 복원 가능 + 보너스 지급</td><td>복원하고 이어서 사용</td></tr>
+          </tbody>
+        </table>
+
+        <div class="note warn"><span class="ic">⚠️</span><div><b>백업 마감은 한국시간 8월 23일 오전 10시</b><p>공지 기준은 싱가포르 시간 오전 9시예요. 한국이 1시간 빠르니까 <strong>우리 시간으로는 오전 10시</strong>가 됩니다. 이때까지 안 받아 두면 만들어 둔 결과물이 삭제 구간에 들어가요.</p></div></div>
+
+        <div class="note tip"><span class="ic">💡</span><div><b>그래서 이렇게 쓰는 걸 추천해요</b><p>지금부터 8월 22일까지 마음껏 써 보고, <strong>결과물은 그때그때 내려받아 두세요.</strong> 23~24일은 쉬고, 25일부터 다시 이어서 쓰면 됩니다.</p></div></div>
+      </section>
+
+      <section id="s2">
+        <div class="sec-head">
+          <div class="sec-num">2</div>
+          <div><h2>마누스 시작하기</h2><p>가입 1분, 준비물은 없어요</p></div>
+        </div>
+
+        <p class="body">마누스는 채팅으로 지시하면 <strong>스스로 브라우저를 열고 작업까지 해 주는 AI 에이전트</strong>예요. 답만 해 주는 챗봇과 달리, 자료를 찾아 정리하고 문서나 슬라이드 같은 결과물까지 만들어 냅니다. 인스타 분석이 되는 것도 이 성격 덕분이에요.</p>
+
+        <div class="steps">
+          <div class="step"><h4>마누스 홈페이지 접속</h4><p>아래 주소로 들어가요. 한국어 화면이 기본으로 나와요.</p></div>
+          <div class="step"><h4>구글 계정으로 가입</h4><p>이메일로도 되지만 구글 로그인이 제일 빨라요. <strong>신용카드는 넣지 않아도 됩니다.</strong></p></div>
+          <div class="step"><h4>첫 화면 확인</h4><p>가운데 입력창이 있고, 여기에 하고 싶은 일을 한국어로 그냥 적으면 돼요.</p></div>
+        </div>
+
+        <div class="code">
+          <div class="code-top"><span class="label"><span class="dots"><i></i><i></i><i></i></span> 마누스 주소</span><button class="copy">복사</button></div>
+          <pre><code>https://manus.im/ko</code></pre>
+        </div>
+
+        <div class="note tip"><span class="ic">💡</span><div><b>무료 기간이 끝나도 매일 조금씩은 써요</b><p>무료 플랜은 원래 <strong>매일 300 크레딧이 자동 충전</strong>되고, 가입할 때 보너스 크레딧도 한 번 들어와요. 8월 25일 이후에도 가벼운 작업은 계속 무료로 할 수 있습니다.</p></div></div>
+      </section>
+
+      <section id="s3">
+        <div class="sec-head">
+          <div class="sec-num">3</div>
+          <div><h2>제일 쉬운 길 · @만 적기</h2><p>연결이고 설정이고 다 건너뛰는 방법</p></div>
+        </div>
+
+        <p class="body">사실 <strong>아무것도 연결하지 않아도 됩니다.</strong> 마누스는 에이전트라서 스스로 브라우저를 열고 인스타를 직접 둘러볼 수 있어요. 그래서 <strong>@아이디만 적어 주면 그 계정을 분석해 줍니다.</strong></p>
+
+        <p class="body">내 계정이든 남의 계정이든 상관없어요. 가입하고 30초 만에 이렇게만 적으면 됩니다.</p>
+
+        <div class="code">
+          <div class="code-top"><span class="label"><span class="dots"><i></i><i></i><i></i></span> 이게 전부예요</span><button class="copy">복사</button></div>
+          <pre><code>인스타그램 @분석할계정 을 분석해 줘.
+최근 게시물들을 살펴보고 어떤 콘텐츠가 반응이 좋았는지,
+어떤 패턴이 보이는지 정리해 줘.</code></pre>
+        </div>
+
+        <div class="note tip"><span class="ic">💡</span><div><b>연결이 귀찮으면 그냥 이걸로 쓰세요</b><p>계정 전환도, 권한 승인도 필요 없어요. <strong>준비물이 아예 없는 게 이 방법의 최대 장점</strong>입니다. 일단 이걸로 써 보고, 더 깊이 보고 싶어지면 그때 연결해도 늦지 않아요.</p></div></div>
+
+        <h3><span class="e">🔍</span>이 방법이 특히 좋은 경우</h3>
+        <div class="tips">
+          <div class="tipcard"><span class="te">👀</span><h4>경쟁 계정 훔쳐보기</h4><p>잘 나가는 계정을 던져 두면 왜 잘 되는지 분석해 줘요. 연결로는 절대 못 하는 일이에요.</p></div>
+          <div class="tipcard"><span class="te">⚡</span><h4>일단 맛만 보기</h4><p>마누스가 쓸 만한지 확인하고 싶을 때. 30초면 결과가 나와요.</p></div>
+          <div class="tipcard"><span class="te">🙅</span><h4>개인 계정인 경우</h4><p>프로페셔널 계정으로 바꾸기 싫다면 이 방법뿐이에요.</p></div>
+          <div class="tipcard"><span class="te">📋</span><h4>여러 계정 비교</h4><p>@를 여러 개 적으면 한 번에 비교해서 표로 만들어 줘요.</p></div>
+        </div>
+
+        <div class="note warn"><span class="ic">⚠️</span><div><b>다만 한계도 분명해요</b><p>브라우저로 겉에서 보는 방식이라 <strong>공개된 정보만 볼 수 있어요.</strong> 도달·저장 같은 인사이트 지표는 계정 주인만 볼 수 있는 값이라 이 방법으로는 안 나옵니다. 비공개 계정도 당연히 안 돼요.</p></div></div>
+
+        <div class="note info"><span class="ic">ℹ️</span><div><b>한 번에 3~5개 정도만</b><p>수십 개 계정을 한꺼번에 훑게 시키면 <strong>스크래핑으로 감지돼 제한이 걸릴 수 있어요.</strong> 필요한 만큼만 가볍게 쓰세요.</p></div></div>
+      </section>
+
+      <section id="s4">
+        <div class="sec-head">
+          <div class="sec-num">4</div>
+          <div><h2>더 깊이 보고 싶다면</h2><p>연결하면 뭐가 달라지는지, 준비물은 뭔지</p></div>
+        </div>
+
+        <p class="body">@만 적는 방법으로 부족해지는 순간이 와요. <strong>"이 게시물이 팔로워 밖으로 얼마나 퍼졌지?", "저장은 몇 번 됐지?"</strong> 같은 질문이 그렇습니다. 이건 계정 주인만 볼 수 있는 값이라 연결이 필요해요.</p>
+
+        <table class="compare">
+          <thead><tr><th>구분</th><th>@아이디만 입력</th><th>계정 연결 (커넥터)</th></tr></thead>
+          <tbody>
+            <tr><th>준비물</th><td><span class="yes">없음</span></td><td>프로페셔널 계정 + 권한 승인</td></tr>
+            <tr><th>대상</th><td><b>아무 공개 계정이나</b></td><td>내 계정만</td></tr>
+            <tr><th>보는 데이터</th><td>게시물·좋아요·댓글 등 공개 정보</td><td><b>도달·저장·조회 등 비공개 인사이트</b></td></tr>
+            <tr><th>이럴 때</th><td>경쟁 계정 벤치마킹, 빠른 확인</td><td>내 콘텐츠 성과 정밀 진단</td></tr>
+          </tbody>
+        </table>
+
+        <p class="body">둘은 <strong>대체 관계가 아니라 보완 관계</strong>예요. 둘 다 쓰면 "내 계정 속살 + 남의 계정 훑기"가 한 도구에서 됩니다.</p>
+
+        <h3><span class="e">🔄</span>준비물: 프로페셔널 계정으로 바꾸기</h3>
+
+        <p class="body">연결하려면 <strong>프로페셔널 계정(크리에이터 또는 비즈니스)</strong>이어야 해요. 인스타가 인사이트 지표를 프로페셔널 계정에만 열어 주기 때문입니다. 이미 프로페셔널이라면 건너뛰세요. 아직이라면 <strong>1분이면 바꿔요.</strong></p>
+
+        <div class="steps">
+          <div class="step"><h4>인스타 앱에서 내 프로필로</h4><p>오른쪽 아래 내 프로필 사진을 눌러요.</p></div>
+          <div class="step"><h4>오른쪽 위 메뉴 → 설정</h4><p>줄 세 개 아이콘을 누르고 <code>설정 및 개인정보</code>로 들어가요.</p></div>
+          <div class="step"><h4>계정 유형 및 도구</h4><p>메뉴에서 <code>계정 유형 및 도구</code>를 찾아 눌러요.</p></div>
+          <div class="step"><h4>프로페셔널 계정으로 전환</h4><p><code>크리에이터</code> 또는 <code>비즈니스</code> 중 하나를 고르면 끝이에요. 개인 브랜드나 콘텐츠 계정이면 크리에이터, 가게나 회사면 비즈니스가 어울려요.</p></div>
+        </div>
+
+        <div class="note info"><span class="ic">ℹ️</span><div><b>바꾸면 뭐가 달라지나요?</b><p>프로필에 카테고리와 연락처 버튼이 생기고, <strong>인사이트(통계) 메뉴가 열려요.</strong> 언제든 다시 개인 계정으로 되돌릴 수 있으니 부담 갖지 않아도 됩니다. 다만 프로페셔널 계정은 공개 계정이어야 제 기능을 해요.</p></div></div>
+      </section>
+
+      <section id="s5">
+        <div class="sec-head">
+          <div class="sec-num">5</div>
+          <div><h2>계정 연결하기</h2><p>클릭 네 번이면 끝나요</p></div>
+        </div>
+
+        <p class="body">마누스에는 <strong>커넥터</strong>라는 기능이 있어요. 내 다른 서비스 계정을 마누스에 연결해 주는 통로인데, 여기에 <strong>인스타그램이 공식으로 들어가 있습니다.</strong> 다른 데서 API 키를 발급받거나 중개 서비스를 결제할 필요가 없어요.</p>
+
+        <div class="steps">
+          <div class="step"><h4>워크스페이스 설정 열기</h4><p>마누스 화면에서 설정으로 들어가요.</p></div>
+          <div class="step"><h4>커넥터(Connectors) 탭</h4><p>연결할 수 있는 서비스 목록이 쭉 나와요.</p></div>
+          <div class="step"><h4>Add Connector → Instagram</h4><p>추가 버튼을 누르고 목록에서 인스타그램을 골라요.</p></div>
+          <div class="step"><h4>인스타 계정으로 로그인해서 권한 승인</h4><p>인스타 로그인 창이 뜨고, 마누스가 무엇을 볼 수 있는지 보여 줘요. 확인하고 승인하면 연결 완료입니다.</p></div>
+        </div>
+
+        <div class="note lock"><span class="ic">🔐</span><div><b>권한 화면은 꼭 읽고 넘어가세요</b><p>OAuth라는 표준 방식이라 <strong>마누스에 인스타 비밀번호가 저장되지는 않아요.</strong> 대신 어떤 권한을 주는지는 승인 화면에 나오니, 발행 권한까지 줄지 읽기만 허용할지 확인하고 넘어가면 좋아요. 연결은 나중에 언제든 해제할 수 있습니다.</p></div></div>
+
+        <h3><span class="e">📊</span>연결하면 볼 수 있는 것</h3>
+        <div class="tips">
+          <div class="tipcard"><span class="te">📈</span><h4>팔로워 증감</h4><p>언제 늘고 언제 빠졌는지. 어떤 게시물 뒤에 움직였는지까지 짚어 줘요.</p></div>
+          <div class="tipcard"><span class="te">👀</span><h4>조회 · 도달</h4><p>몇 명에게 닿았는지. 팔로워 밖으로 얼마나 퍼졌는지 알 수 있어요.</p></div>
+          <div class="tipcard"><span class="te">🔖</span><h4>저장 · 공유</h4><p>좋아요보다 훨씬 중요한 지표예요. 저장이 많으면 노출이 늘어납니다.</p></div>
+          <div class="tipcard"><span class="te">💬</span><h4>좋아요 · 댓글</h4><p>반응이 어느 게시물에 몰렸는지 한눈에 비교돼요.</p></div>
+          <div class="tipcard"><span class="te">⏰</span><h4>반응 시간대</h4><p>어느 요일 몇 시에 올린 게 잘 먹혔는지 뽑아낼 수 있어요.</p></div>
+          <div class="tipcard"><span class="te">📤</span><h4>게시물 발행</h4><p>피드·캐러셀·스토리·릴스를 마누스에서 바로 올릴 수도 있어요.</p></div>
+        </div>
+
+        <div class="note warn"><span class="ic">⚠️</span><div><b>인스타 커넥터는 아직 베타예요</b><p>모든 사용자에게 열려 있지만 <strong>초기 버전</strong>이라, 지원하는 형식이나 지표가 예고 없이 바뀔 수 있어요. 연결이 잘 안 되면 잠시 뒤 다시 시도하거나, <a class="link" href="#s3">3번의 @ 방법</a>으로 우회하면 됩니다.</p></div></div>
+      </section>
+
+      <section id="s6">
+        <div class="sec-head">
+          <div class="sec-num">6</div>
+          <div><h2>바로 쓰는 프롬프트 8</h2><p>복사해서 그대로 붙여 넣으세요</p></div>
+        </div>
+
+        <p class="body">아래 상자는 <strong>복사 버튼을 누르면 통째로 복사돼요.</strong> 마누스 입력창에 붙여 넣고 <kbd>Enter</kbd>만 치면 됩니다. <code>@내계정</code> 같은 부분만 본인 것으로 바꿔 주세요.</p>
+
+        <h3><span class="e">⚡</span>연결 없이 바로 (1~4번)</h3>
+
+        <div class="code">
+          <div class="code-top"><span class="label"><span class="dots"><i></i><i></i><i></i></span> 1. 경쟁 계정 벤치마킹</span><button class="copy">복사</button></div>
+          <pre><code>인스타그램 @분석할계정 을 분석해 줘.
+최근 게시물 20개를 살펴보고
+① 주로 다루는 주제 ② 콘텐츠 형식 비중 ③ 첫 장 스타일
+④ 캡션 말투 ⑤ 반응이 특히 좋았던 게시물과 그 이유
+를 정리해서 보고서로 만들어 줘.</code></pre>
+        </div>
+
+        <div class="code">
+          <div class="code-top"><span class="label"><span class="dots"><i></i><i></i><i></i></span> 2. 내 계정과 나란히 비교</span><button class="copy">복사</button></div>
+          <pre><code>@경쟁계정1 @경쟁계정2 @경쟁계정3 과 내 계정 @내계정 을 비교해 줘.
+게시 주기, 콘텐츠 형식, 주제 범위, 반응 수준을 표 하나로 정리하고
+내 계정에 없는데 저들에게 있는 강점 3가지,
+반대로 내가 더 잘하고 있는 점 2가지를 짚어 줘.</code></pre>
+        </div>
+
+        <div class="code">
+          <div class="code-top"><span class="label"><span class="dots"><i></i><i></i><i></i></span> 3. 잘 되는 계정의 후킹 문구 뜯어보기</span><button class="copy">복사</button></div>
+          <pre><code>@분석할계정 의 게시물 첫 장 문구만 20개 모아서 정리해 줘.
+어떤 표현 패턴이 반복되는지 유형별로 묶고,
+그중 반응이 좋았던 유형을 골라
+내 주제(여기에 내 계정 주제 적기)에 맞게 10개로 바꿔 써 줘.</code></pre>
+        </div>
+
+        <div class="code">
+          <div class="code-top"><span class="label"><span class="dots"><i></i><i></i><i></i></span> 4. 한 달 콘텐츠 캘린더 만들기</span><button class="copy">복사</button></div>
+          <pre><code>지금까지 분석한 내용을 바탕으로
+다음 4주치 인스타 콘텐츠 캘린더를 만들어 줘.
+주 3회 기준으로, 날짜별로 주제 · 형식(릴스/캐러셀/단일) ·
+후킹 문구 · 캡션 초안까지 채워 줘.
+표로 정리하고 엑셀 파일로도 내려받게 해 줘.</code></pre>
+        </div>
+
+        <h3><span class="e">🩺</span>계정을 연결했다면 (5~8번)</h3>
+
+        <div class="code">
+          <div class="code-top"><span class="label"><span class="dots"><i></i><i></i><i></i></span> 5. 계정 종합 진단</span><button class="copy">복사</button></div>
+          <pre><code>연결된 내 인스타그램 계정을 종합 진단해 줘.
+최근 30일 게시물의 도달, 저장, 공유, 좋아요, 댓글을 표로 정리하고
+성과가 좋은 게시물 3개와 나쁜 게시물 3개를 뽑아서
+각각 무엇이 달랐는지 이유를 분석해 줘.
+마지막에 다음에 뭘 바꿔야 할지 3가지로 정리해 줘.</code></pre>
+        </div>
+
+        <div class="code">
+          <div class="code-top"><span class="label"><span class="dots"><i></i><i></i><i></i></span> 6. 저장이 많이 된 콘텐츠의 공통점</span><button class="copy">복사</button></div>
+          <pre><code>내 인스타 게시물 중에서 저장(save) 수가 많은 상위 10개를 찾아 줘.
+그 게시물들의 공통점을 주제, 첫 장 구성, 캡션 길이, 말투 기준으로 분석하고
+저장을 부르는 패턴을 정리해 줘.
+그 패턴대로 다음에 올릴 게시물 아이디어 5개도 제안해 줘.</code></pre>
+        </div>
+
+        <div class="code">
+          <div class="code-top"><span class="label"><span class="dots"><i></i><i></i><i></i></span> 7. 팔로워는 언제 늘었나</span><button class="copy">복사</button></div>
+          <pre><code>최근 3개월 팔로워 증감 흐름을 분석해 줘.
+팔로워가 눈에 띄게 늘어난 시점과 빠진 시점을 찾아내고
+그 전후에 올린 게시물이 무엇이었는지 연결해서
+어떤 콘텐츠가 팔로워를 데려오고 어떤 게 떠나게 했는지 정리해 줘.
+업로드 요일·시간대별 성과도 함께 뽑아서
+앞으로 언제 올리는 게 좋을지 추천 시간표까지 만들어 줘.</code></pre>
+        </div>
+
+        <div class="code">
+          <div class="code-top"><span class="label"><span class="dots"><i></i><i></i><i></i></span> 8. 결과를 보고서로 받기</span><button class="copy">복사</button></div>
+          <pre><code>지금까지 분석한 내용을 하나의 보고서로 정리해 줘.
+표지 · 현황 요약 · 데이터 분석 · 문제점 · 개선안 · 실행 계획 순서로
+슬라이드 형태로 만들고, 파일로 내려받을 수 있게 해 줘.</code></pre>
+        </div>
+
+        <div class="note tip"><span class="ic">💡</span><div><b>8번을 꼭 마지막에 돌려 보세요</b><p>마누스는 분석에서 끝나지 않고 <strong>슬라이드·문서·엑셀 파일까지 만들어 줘요.</strong> 그리고 이렇게 만든 파일은 8월 23일 전에 꼭 내려받아 두세요.</p></div></div>
+      </section>
+
+      <section id="s7">
+        <div class="sec-head">
+          <div class="sec-num">7</div>
+          <div><h2>다른 AI와 뭐가 다를까</h2><p>솔직하게 — "여기서만 된다"는 아니에요</p></div>
+        </div>
+
+        <p class="body">인스타 데이터를 AI로 분석하는 건 <strong>챗지피티나 제미나이, 클로드로도 됩니다.</strong> 다만 조건이 꽤 달라요. 차이는 "되냐 안 되냐"가 아니라 <strong>"돈과 세팅이 얼마나 드느냐"</strong>입니다.</p>
+
+        <table class="compare">
+          <thead><tr><th>도구</th><th>인스타 연결 방법</th><th>걸림돌</th></tr></thead>
+          <tbody>
+            <tr><th>ChatGPT</th><td>개발자 모드에서 커스텀 커넥터 등록</td><td><b>무료·Plus는 커넥터 자체가 막힘</b> (Pro 이상 필요)</td></tr>
+            <tr><th>Gemini</th><td>외부 연동 서비스 경유</td><td>대부분 <b>유료 중개 서비스</b> 결제 필요</td></tr>
+            <tr><th>Claude</th><td>인스타 MCP 서버를 따로 붙임</td><td>서버를 직접 구해 설정해야 함</td></tr>
+            <tr><th>Manus</th><td><b>@만 적거나, 앱 안의 공식 커넥터</b></td><td><span class="yes">무료 플랜 포함 · 준비물 없이 시작</span></td></tr>
+          </tbody>
+        </table>
+
+        <p class="body">정리하면 마누스의 강점은 이 세 가지예요.</p>
+
+        <ul class="body">
+          <li><strong>@만 적어도 시작돼요</strong> — 연결이라는 단계 자체를 건너뛸 수 있는 건 에이전트라서 가능한 일이에요. 다른 도구는 대부분 이 단계부터 막힙니다.</li>
+          <li><strong>중개 서비스가 필요 없어요</strong> — 연결하기로 마음먹어도 API 키 발급이나 외부 결제 없이 앱 안에서 바로 돼요.</li>
+          <li><strong>무료 플랜에서도 커넥터가 열려 있어요</strong> — 챗지피티는 무료·Plus에서 이 기능이 아예 막혀 있습니다.</li>
+        </ul>
+
+        <div class="note info"><span class="ic">ℹ️</span><div><b>그럼 다른 걸 버려야 하나요?</b><p>아니요. 긴 글쓰기나 코딩은 다른 도구가 더 나을 수 있어요. <strong>"인스타 데이터를 붙여서 결과물까지 뽑는 일"에 한해</strong> 지금 마누스가 가장 편하고 싸다는 뜻입니다.</p></div></div>
+      </section>
+
+      <section id="extra">
+        <div class="sec-head">
+          <div class="sec-num">＋</div>
+          <div><h2>다른 커넥터 · 주의사항</h2><p>인스타 말고도 붙일 수 있는 것들</p></div>
+        </div>
+
+        <p class="body">커넥터는 인스타만 있는 게 아니에요. 아래 서비스도 같은 방식으로 연결됩니다. 여러 개를 동시에 붙여 두면, 예를 들어 <strong>"인스타 성과를 분석해서 구글 드라이브에 보고서로 저장해 줘"</strong> 같은 일이 한 번에 돼요.</p>
+
+        <ul class="body">
+          <li><strong>생산성</strong> — Gmail, 구글 캘린더, 구글 드라이브, Notion</li>
+          <li><strong>비즈니스</strong> — HubSpot, Stripe</li>
+          <li><strong>개발</strong> — GitHub, Hugging Face</li>
+        </ul>
+
+        <div class="note tip"><span class="ic">💡</span><div><b>커넥터는 모든 플랜에 포함돼요</b><p>유료 결제를 해야 열리는 기능이 아니에요. <strong>무료 플랜에서도 그대로 쓸 수 있습니다.</strong></p></div></div>
+
+        <h3><span class="e">🔐</span>이것만은 지켜 주세요</h3>
+
+        <div class="note lock"><span class="ic">🔐</span><div><b>민감한 정보는 올리지 마세요</b><p>지금 마누스는 회사 소유 구조가 바뀌면서 <strong>데이터가 지역 규제에 맞춰 이전되는 중</strong>이에요. 상업적 이용 조건이나 데이터 취급 방침이 공지에 완전히 정리되지 않았으니, 이 기간에는 개인정보나 회사 기밀이 담긴 자료는 올리지 않는 편이 안전해요.</p></div></div>
+
+        <div class="note warn"><span class="ic">⚠️</span><div><b>자동 발행은 한 번 더 확인하고</b><p>마누스는 인스타에 <strong>직접 게시물을 올릴 수도 있어요.</strong> 편하지만, 내용을 확인하기 전에 바로 발행하게 두면 실수가 그대로 올라갑니다. 처음에는 "올리지 말고 초안만 보여 줘"라고 덧붙이는 걸 권해요.</p></div></div>
+
+        <div class="note info"><span class="ic">ℹ️</span><div><b>연결 해제도 언제든 가능해요</b><p>커넥터 탭에서 인스타 연결을 끊으면 마누스는 더 이상 내 계정 데이터에 접근하지 못해요. 다 쓰고 나서 끊어 두는 것도 방법입니다.</p></div></div>
+      </section>
+
+    </div><!-- /.inner -->
+
+    <footer>
+      <p><b>마누스 인스타 분석 가이드</b> · 무료 기간은 2026년 8월 25일까지예요</p>
+      <p style="margin-top:6px;font-size:12.5px">백업 마감은 한국시간 8월 23일 오전 10시입니다. 만든 결과물은 미리 내려받아 두세요.</p>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  // 진행 막대
+  const prog=document.getElementById('prog');
+  addEventListener('scroll',()=>{const h=document.documentElement;const max=h.scrollHeight-h.clientHeight;
+    prog.style.width=(max>0?(h.scrollTop/max*100):0)+'%';},{passive:true});
+
+  // 현재 섹션 목차 하이라이트
+  const links=[...document.querySelectorAll('#toc a')];
+  const map={}; links.forEach(a=>map[a.getAttribute('href').slice(1)]=a);
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){
+    links.forEach(l=>l.classList.remove('active'));
+    if(map[e.target.id])map[e.target.id].classList.add('active');}});},{rootMargin:'-25% 0px -65% 0px'});
+  document.querySelectorAll('section[id]').forEach(s=>io.observe(s));
+
+  // 토스트 + 복사 버튼
+  const toastEl=document.getElementById('toast'); let tT;
+  function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>toastEl.classList.remove('show'),1600);}
+  document.querySelectorAll('.code').forEach(box=>{
+    const btn=box.querySelector('.copy'); if(!btn)return;
+    const text=box.querySelector('pre').innerText;
+    btn.addEventListener('click',()=>{navigator.clipboard.writeText(text).then(()=>{
+      btn.textContent='복사됨!';btn.classList.add('done');toast('클립보드에 복사했어요 ✨');
+      setTimeout(()=>{btn.textContent='복사';btn.classList.remove('done');},1500);
+    }).catch(()=>toast('복사 실패 — 직접 선택해 주세요'));});
+  });
+
+  // 모바일 목차 클릭 시 닫기
+  document.querySelectorAll('.m-toc a').forEach(a=>a.addEventListener('click',()=>{
+    const d=document.querySelector('.m-toc'); if(d)d.open=false;}));
+</script>
+</body>
+</html>
