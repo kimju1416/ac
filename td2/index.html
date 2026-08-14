@@ -252,7 +252,7 @@
         <h1>바탕화면이 곧 <span class="hl">교무 비서</span>가 됩니다</h1>
         <p class="lede">TeacherDesk 2는 시계·날씨·급식·시간표·학사일정·할 일·D-Day에 AI 도우미와 생기부 초안까지, 선생님에게 필요한 것들을 바탕화면 위젯으로 펼쳐 두는 프로그램이에요. 브라우저를 열 필요 없이, 컴퓨터를 켜면 바로 보입니다.</p>
         <div class="dl-row">
-          <a class="dl js-dl" href="https://github.com/kimju1416/teacherdesk2/releases/download/v2.2.17/TeacherDesk-Setup-2.2.17.exe">
+          <a class="dl js-dl" href="https://github.com/kimju1416/teacherdesk2/releases/latest/download/TeacherDesk-Setup.exe">
             <svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
             <span>지금 다운로드<small>설치 파일(.exe) 바로 받기 · Windows</small></span>
           </a>
@@ -318,7 +318,7 @@
         </div>
 
         <div class="dl-row">
-          <a class="dl js-dl" href="https://github.com/kimju1416/teacherdesk2/releases/download/v2.2.17/TeacherDesk-Setup-2.2.17.exe">
+          <a class="dl js-dl" href="https://github.com/kimju1416/teacherdesk2/releases/latest/download/TeacherDesk-Setup.exe">
             <svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
             <span>설치 파일 바로 받기<small>최신 버전 .exe 다운로드</small></span>
           </a>
@@ -452,7 +452,7 @@
         </ul>
         <div class="note info"><span class="ic"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.6h.01"/></svg></span><div><b>이 알림 기능은 v2.2.14부터예요</b><p>그 이전 버전을 쓰고 계셨다면, 최신 버전을 <strong>한 번은 직접 받아</strong> 설치해 주세요. 그다음부터는 새 버전이 나올 때 자동으로 알림이 뜹니다.</p></div></div>
         <div class="dl-row">
-          <a class="dl js-dl" href="https://github.com/kimju1416/teacherdesk2/releases/download/v2.2.17/TeacherDesk-Setup-2.2.17.exe">
+          <a class="dl js-dl" href="https://github.com/kimju1416/teacherdesk2/releases/latest/download/TeacherDesk-Setup.exe">
             <svg class="ic" viewBox="0 0 24 24"><path d="M12 3v12"/><path d="M7 11l5 5 5-5"/><path d="M5 20h14"/></svg>
             <span>최신 버전 바로 받기<small>누르면 설치 파일이 내려받아져요</small></span>
           </a>
@@ -518,8 +518,9 @@
   document.querySelectorAll('.m-toc a').forEach(a=>a.addEventListener('click',()=>{
     const d=document.querySelector('.m-toc'); if(d)d.open=false;}));
 
-  // 다운로드 버튼은 설치 파일(.exe) 직링크. 새 릴리스가 나오면 최신 exe로 자동 교체하고,
-  // 조회에 실패하면 HTML에 적힌 고정 링크를 그대로 쓴다.
+  // 다운로드 버튼은 버전이 안 들어간 고정 주소(releases/latest/download/TeacherDesk-Setup.exe)라
+  // 새 릴리스가 나와도 이 파일은 손댈 필요가 없다. 릴리스에 버전 없는 사본을 올리는 걸 빠뜨렸을 때를
+  // 대비해, 릴리스 API로 실제 최신 exe 주소를 받아 덮어쓴다(조회 실패 시 위 고정 주소 그대로).
   fetch('https://api.github.com/repos/kimju1416/teacherdesk2/releases/latest')
     .then(r=>r.ok?r.json():Promise.reject())
     .then(d=>{
