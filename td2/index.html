@@ -555,16 +555,18 @@
   document.querySelectorAll('.m-toc a').forEach(a=>a.addEventListener('click',()=>{
     const d=document.querySelector('.m-toc'); if(d)d.open=false;}));
 
-  // 다운로드 버튼은 버전이 안 들어간 고정 주소(releases/latest/download/TeacherDesk-Setup.exe)라
-  // 새 릴리스가 나와도 이 파일은 손댈 필요가 없다. 릴리스에 버전 없는 사본을 올리는 걸 빠뜨렸을 때를
-  // 대비해, 릴리스 API로 실제 최신 exe 주소를 받아 덮어쓴다(조회 실패 시 위 고정 주소 그대로).
+  // 다운로드 버튼은 버전이 안 들어간 고정 주소(releases/latest/download/TeacherDesk-Setup.exe)다.
+  // 여기서는 버전 표시만 붙이고 주소는 그대로 둔다 — 주소를 최신 exe로 덮어쓰면 버전이 박힌 주소가 되어,
+  // 그 링크를 복사·즐겨찾기 해 두면 나중에 옛 버전을 받게 된다(고정 주소를 쓰는 이유가 사라진다).
+  // 버전 없는 사본을 올리는 걸 빠뜨린 릴리스에서만 최신 exe 주소로 물러선다.
   fetch('https://api.github.com/repos/kimju1416/teacherdesk2/releases/latest')
     .then(r=>r.ok?r.json():Promise.reject())
     .then(d=>{
-      const asset=(d.assets||[]).find(a=>/\.exe$/i.test(a.name));
-      if(!asset)return;
+      const assets=d.assets||[];
+      const plain=assets.some(a=>a.name==='TeacherDesk-Setup.exe');
+      const newest=assets.find(a=>/\.exe$/i.test(a.name)&&a.name!=='TeacherDesk-Setup.exe');
       document.querySelectorAll('.js-dl').forEach(el=>{
-        el.href=asset.browser_download_url;
+        if(!plain&&newest)el.href=newest.browser_download_url;   // 사본이 없을 때만 물러선다
         const s=el.querySelector('small');
         if(s&&d.tag_name)s.textContent=s.textContent+' · '+d.tag_name;
       });
