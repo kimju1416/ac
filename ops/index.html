@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>앱 운영</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* 담백하게. 자료를 보는 화면이라 장식이 숫자를 이기면 안 된다. */
+:root{
+  --bg:#f6f7f9; --card:#fff; --line:#e5e7eb; --tx:#1a1d21; --tx2:#5b6169; --tx3:#9aa1a9;
+  --ac:#2563eb; --warn:#c2410c; --ok:#15803d; --soft:#f1f3f5;
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#15171a; --card:#1d2024; --line:#2c3036; --tx:#e8eaed; --tx2:#a8afb7; --tx3:#6f767e;
+         --ac:#60a5fa; --warn:#fb923c; --ok:#4ade80; --soft:#23272c; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);word-break:keep-all;
+  font-family:"Pretendard Variable",Pretendard,-apple-system,system-ui,sans-serif;
+  font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 16px 64px}
+h1{font-size:19px;font-weight:700;margin:0;letter-spacing:-.02em}
+h2{font-size:13px;font-weight:600;color:var(--tx2);margin:28px 0 10px;letter-spacing:-.01em}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding-bottom:14px;border-bottom:1px solid var(--line)}
+.top .sub{font-size:11.5px;color:var(--tx3)}
+button{font-family:inherit;font-size:12.5px;padding:7px 13px;border-radius:8px;
+  border:1px solid var(--line);background:var(--card);color:var(--tx);cursor:pointer}
+button:hover{border-color:var(--ac);color:var(--ac)}
+button.p{background:var(--ac);color:#fff;border-color:var(--ac)}
+button.p:hover{filter:brightness(1.08);color:#fff}
+button:disabled{opacity:.5;cursor:default}
+input{font-family:inherit;font-size:13px;padding:9px 11px;border-radius:8px;width:100%;
+  border:1px solid var(--line);background:var(--card);color:var(--tx);outline:none}
+input:focus{border-color:var(--ac)}
+code{font-size:11.5px;background:var(--soft);padding:1px 5px;border-radius:4px}
+
+/* 로그인 */
+#login{max-width:320px;margin:16vh auto;padding:24px;background:var(--card);
+  border:1px solid var(--line);border-radius:14px}
+#login h1{font-size:16px;margin-bottom:4px}
+#login p{font-size:12px;color:var(--tx3);margin:0 0 18px}
+#login input{margin-bottom:9px}
+#login button{width:100%;padding:10px}
+#lmsg{font-size:11.5px;color:var(--tx3);margin-top:11px;min-height:18px;line-height:1.55}
+
+/* 앱 카드 */
+.apps{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.app{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:15px 17px}
+.app .nm{font-size:12.5px;color:var(--tx2);font-weight:600;margin-bottom:10px}
+.nums{display:flex;gap:20px}
+.n b{display:block;font-size:24px;font-weight:700;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums;line-height:1.25}
+.n span{font-size:11px;color:var(--tx3)}
+.app .foot{font-size:11px;color:var(--tx3);margin-top:11px;padding-top:9px;border-top:1px solid var(--line)}
+
+/* 막대그래프 — 라이브러리 없이 div로. 30일이면 이걸로 충분하다 */
+.chart{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+.bars{display:flex;align-items:flex-end;gap:3px;height:110px}
+.bar{flex:1;min-width:3px;background:var(--ac);border-radius:2px 2px 0 0;opacity:.75;position:relative}
+.bar:hover{opacity:1}
+.bar i{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;
+  font-size:10.5px;font-style:normal;color:var(--tx2);background:var(--card);padding:2px 5px;
+  border:1px solid var(--line);border-radius:5px;display:none;margin-bottom:4px;z-index:2}
+.bar:hover i{display:block}
+.axis{display:flex;justify-content:space-between;font-size:10.5px;color:var(--tx3);margin-top:7px}
+
+/* 표 */
+.tw{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;font-weight:600;color:var(--tx3);font-size:11px;padding:10px 14px;
+  border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tag{display:inline-block;font-size:10.5px;padding:2px 7px;border-radius:5px;
+  background:var(--soft);color:var(--tx2);white-space:nowrap}
+.tag.bug{background:rgba(194,65,12,.12);color:var(--warn)}
+.tag.idea{background:rgba(37,99,235,.12);color:var(--ac)}
+.tag.thanks{background:rgba(21,128,61,.12);color:var(--ok)}
+.done td{opacity:.45}
+.empty{padding:22px 14px;font-size:12.5px;color:var(--tx3);text-align:center}
+.mut{color:var(--tx3);font-size:11.5px}
+@media(max-width:560px){ .wrap{padding:16px 12px 48px} .n b{font-size:21px} }
+</style>
+</head>
+<body>
+
+<div id="login">
+  <h1>앱 운영</h1>
+  <p>TeacherDesk 2 · SSAM.zip</p>
+  <input id="em" type="email" placeholder="이메일" autocomplete="username">
+  <button class="p" id="go">링크 받기</button>
+  <div id="lmsg">비밀번호는 없습니다. 메일로 온 링크를 누르면 들어와집니다.</div>
+</div>
+
+<div class="wrap" id="main" hidden>
+  <div class="top">
+    <div><h1>앱 운영</h1><div class="sub" id="asof"></div></div>
+    <div style="display:flex;gap:7px"><button id="reload">새로고침</button><button id="out">나가기</button></div>
+  </div>
+
+  <h2>지금</h2>
+  <div class="apps" id="cards"></div>
+
+  <h2>날마다 쓰신 분 (30일)</h2>
+  <div class="chart" id="chart"></div>
+
+  <h2>받은 의견</h2>
+  <div class="tw" id="fb"></div>
+
+  <h2>버전</h2>
+  <div class="tw" id="ver"></div>
+
+  <h2>계속 쓰시는가</h2>
+  <div class="tw" id="ret"></div>
+
+  <h2>오류</h2>
+  <div class="tw" id="err"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+/* 이 페이지는 공개돼 있어도 자료는 안 보인다 — 표에 RLS가 걸려 있어
+   로그인(authenticated)해야만 읽힌다. anon 키는 브라우저용으로 설계된 키다. */
+const SB_URL = 'https://mkntbkvzxofggauxmyde.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1rbnRia3Z6eG9mZ2dhdXhteWRlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4MTg3OTIsImV4cCI6MjEwMDM5NDc5Mn0.kr7d9CXyMebCShd9hzv87X80W71yG2Az9tstQDYhdWU';
+const sb = supabase.createClient(SB_URL, SB_KEY);
+
+const APPS = { td2: 'TeacherDesk 2', ssam: 'SSAM.zip' };
+const KIND = { bug: '오류', idea: '제안', thanks: '응원' };
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const nm = a => APPS[a] || a;
+const pct = (a, b) => b ? Math.round(a / b * 100) + '%' : '—';
+const when = t => {
+  if (!t) return '';
+  const d = new Date(t), now = new Date();
+  const mm = String(d.getMonth() + 1) + '/' + String(d.getDate());
+  const hm = String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0');
+  return d.toDateString() === now.toDateString() ? hm : mm + ' ' + hm;
+};
+
+/* ─── 로그인 — 메일 링크만 쓴다 ───
+   비밀번호를 안 만드는 쪽이 낫다. 만들면 어딘가에 적어 두게 되고, 공용 PC에서 새어 나간다.
+   🔴 남이 이 주소를 알아내 자기 메일로 링크를 받아도 **아무것도 못 본다** —
+      표를 읽는 것은 is_owner() 가 정한 메일 하나뿐이다(db/telemetry.sql). */
+async function enter() {
+  const em = $('#em').value.trim();
+  if (!em) { $('#lmsg').textContent = '이메일을 적어 주세요.'; return; }
+  const b = $('#go'); b.disabled = true; $('#lmsg').textContent = '보내는 중…';
+  const { error } = await sb.auth.signInWithOtp({ email: em, options: { emailRedirectTo: location.href } });
+  b.disabled = false;
+  $('#lmsg').textContent = error ? ('보내지 못했습니다 — ' + error.message)
+    : '메일을 보냈습니다. 받은 편지함의 링크를 눌러 주세요.';
+}
+$('#go').addEventListener('click', enter);
+$('#em').addEventListener('keydown', e => { if (e.key === 'Enter') enter(); });
+// 링크를 누르고 돌아오면 주소 뒤에 토큰이 붙는다 — 지워서 남에게 안 보이게 한다
+sb.auth.onAuthStateChange((ev, s) => {
+  if (!s) return;
+  if (location.hash) history.replaceState(null, '', location.pathname);
+  if ($('#main').hidden) show();
+});
+$('#out').addEventListener('click', async () => { await sb.auth.signOut(); location.reload(); });
+$('#reload').addEventListener('click', () => load());
+
+async function show() { $('#login').hidden = true; $('#main').hidden = false; await load(); }
+sb.auth.getSession().then(({ data }) => { if (data.session) show(); });
+
+/* ─── 자료 읽기 ─── */
+async function load() {
+  $('#asof').textContent = '불러오는 중…';
+  const q = (v, o) => sb.from(v).select('*').then(r => (o && o(r.data || []), r.data || []));
+  const [sum, daily, fb, ver, ret, err] = await Promise.all([
+    sb.from('v_app_summary').select('*').then(r => r.data || []),
+    sb.from('v_app_daily').select('*').then(r => r.data || []),
+    sb.from('app_feedback').select('*').order('created_at', { ascending: false }).limit(60).then(r => r.data || []),
+    sb.from('v_app_versions').select('*').then(r => r.data || []),
+    sb.from('v_app_retention').select('*').then(r => r.data || []),
+    sb.from('v_app_errors').select('*').limit(30).then(r => r.data || [])
+  ]);
+  drawCards(sum); drawChart(daily); drawFeedback(fb); drawVersions(ver); drawRetention(ret); drawErrors(err);
+  $('#asof').textContent = new Date().toLocaleString('ko-KR') + ' 기준';
+}
+
+function drawCards(rows) {
+  const by = Object.fromEntries(rows.map(r => [r.app, r]));
+  $('#cards').innerHTML = Object.keys(APPS).map(a => {
+    const r = by[a] || {};
+    return `<div class="app"><div class="nm">${esc(nm(a))}</div>
+      <div class="nums">
+        <div class="n"><b>${r.installs || 0}</b><span>설치</span></div>
+        <div class="n"><b>${r.week || 0}</b><span>최근 7일</span></div>
+        <div class="n"><b>${r.today || 0}</b><span>오늘</span></div>
+      </div>
+      <div class="foot">${r.last_day ? '마지막 신호 ' + esc(r.last_day) : '아직 신호가 없습니다'}</div></div>`;
+  }).join('');
+}
+
+function drawChart(rows) {
+  if (!rows.length) { $('#chart').innerHTML = '<div class="empty">아직 자료가 없습니다.</div>'; return; }
+  // 두 앱을 합쳐 날짜별로 — 총량 흐름만 보면 되는 화면이다
+  const by = {};
+  rows.forEach(r => { by[r.day] = (by[r.day] || 0) + (r.users || 0); });
+  const days = Object.keys(by).sort();
+  const max = Math.max(1, ...days.map(d => by[d]));
+  $('#chart').innerHTML =
+    `<div class="bars">${days.map(d =>
+      `<div class="bar" style="height:${Math.max(3, by[d] / max * 100)}%"><i>${esc(d.slice(5))} · ${by[d]}명</i></div>`).join('')}</div>
+     <div class="axis"><span>${esc(days[0])}</span><span>최대 ${max}명</span><span>${esc(days[days.length - 1])}</span></div>`;
+}
+
+function drawFeedback(rows) {
+  if (!rows.length) { $('#fb').innerHTML = '<div class="empty">아직 받은 의견이 없습니다.</div>'; return; }
+  $('#fb').innerHTML = `<table><thead><tr>
+    <th>언제</th><th>종류</th><th>내용</th><th>앱</th><th class="num">읽음</th></tr></thead><tbody>${rows.map(r => `
+    <tr class="${r.handled ? 'done' : ''}" data-id="${r.id}">
+      <td class="mut">${esc(when(r.created_at))}</td>
+      <td><span class="tag ${esc(r.kind)}">${esc(KIND[r.kind] || r.kind)}</span></td>
+      <td>${esc(r.body)}</td>
+      <td class="mut">${esc(nm(r.app))} ${esc(r.version || '')}<br>${esc(r.os || '')}</td>
+      <td class="num"><input type="checkbox" style="width:auto" ${r.handled ? 'checked' : ''}></td>
+    </tr>`).join('')}</tbody></table>`;
+  $('#fb').querySelectorAll('tr[data-id] input').forEach(c => c.addEventListener('change', async e => {
+    const tr = e.target.closest('tr');
+    const { error } = await sb.from('app_feedback').update({ handled: e.target.checked }).eq('id', +tr.dataset.id);
+    if (error) { e.target.checked = !e.target.checked; alert('바꾸지 못했습니다: ' + error.message); return; }
+    tr.classList.toggle('done', e.target.checked);
+  }));
+}
+
+function drawVersions(rows) {
+  if (!rows.length) { $('#ver').innerHTML = '<div class="empty">아직 자료가 없습니다.</div>'; return; }
+  const tot = {};
+  rows.forEach(r => { tot[r.app] = (tot[r.app] || 0) + r.machines; });
+  $('#ver').innerHTML = `<table><thead><tr>
+    <th>앱</th><th>버전</th><th class="num">대수</th><th class="num">비율</th></tr></thead><tbody>${rows.map((r, i) => `
+    <tr><td class="mut">${i && rows[i - 1].app === r.app ? '' : esc(nm(r.app))}</td>
+      <td>${esc(r.version)}</td>
+      <td class="num">${r.machines}</td>
+      <td class="num mut">${pct(r.machines, tot[r.app])}</td></tr>`).join('')}</tbody></table>
+    <div class="empty" style="text-align:left;padding-top:0">최근 14일에 신호가 있던 컴퓨터 기준입니다. 옛 버전이 많으면 알릴 때가 된 것입니다.</div>`;
+}
+
+function drawRetention(rows) {
+  if (!rows.length) { $('#ret').innerHTML = '<div class="empty">아직 자료가 없습니다.</div>'; return; }
+  $('#ret').innerHTML = `<table><thead><tr>
+    <th>앱</th><th class="num">7일 뒤에도</th><th class="num">30일 뒤에도</th></tr></thead><tbody>${rows.map(r => `
+    <tr><td>${esc(nm(r.app))}</td>
+      <td class="num">${pct(r.kept7, r.cohort7)} <span class="mut">(${r.kept7}/${r.cohort7})</span></td>
+      <td class="num">${pct(r.kept30, r.cohort30)} <span class="mut">(${r.kept30}/${r.cohort30})</span></td>
+    </tr>`).join('')}</tbody></table>
+    <div class="empty" style="text-align:left;padding-top:0">설치한 지 그만큼 지난 분만 셉니다 — 어제 설치한 분을 넣으면 숫자가 늘 나빠 보입니다.</div>`;
+}
+
+function drawErrors(rows) {
+  if (!rows.length) { $('#err').innerHTML = '<div class="empty">최근 30일 동안 들어온 오류가 없습니다.</div>'; return; }
+  $('#err').innerHTML = `<table><thead><tr>
+    <th>마지막</th><th>내용</th><th>앱</th><th class="num">횟수</th><th class="num">대수</th></tr></thead><tbody>${rows.map(r => `
+    <tr><td class="mut">${esc(when(r.last_at))}</td>
+      <td>${esc(r.sample)}</td>
+      <td class="mut">${esc(nm(r.app))} ${esc(r.version || '')}</td>
+      <td class="num">${r.hits}</td><td class="num">${r.machines}</td></tr>`).join('')}</tbody></table>
+    <div class="empty" style="text-align:left;padding-top:0">파일 경로는 앱에서 이미 버리고 보냅니다. <b>대수</b>가 많을수록 급한 것입니다 — 한 대에서만 나면 그 컴퓨터 사정일 수 있습니다.</div>`;
+}
+</script>
+</body>
+</html>

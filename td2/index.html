@@ -299,7 +299,7 @@
             <tr><th>지원 환경</th><td><b>Windows 10 · 11</b> (맥·모바일은 지원하지 않아요)</td></tr>
             <tr><th>설치 크기</th><td>약 100MB · 설치 후 자동 실행 &amp; 트레이 상주</td></tr>
             <tr><th>비용</th><td><b>완전 무료</b> · 계정 가입 없음</td></tr>
-            <tr><th>데이터 저장</th><td>모든 기록은 <b>내 컴퓨터에만</b> 저장 (외부 서버로 안 보냄)</td></tr>
+            <tr><th>데이터 저장</th><td>명렬 · 생기부 초안 · 메모 · 일정은 <b>내 컴퓨터에만</b> 저장 (외부 서버로 안 보냄)</td></tr>
           </tbody>
         </table>
       </section>
@@ -484,7 +484,12 @@
           <li><strong>급식·학사일정(NEIS)</strong> — 학교 코드만 보냅니다. 학생 정보는 나가지 않습니다.</li>
           <li><strong>날씨·미세먼지</strong> — 지역 이름(좌표)만 보냅니다.</li>
           <li><strong>새 버전 확인</strong> — 버전 번호만 확인합니다.</li>
+          <li><strong>사용 집계</strong> — 하루에 한 번, <strong>무작위 번호 하나 · 앱 이름 · 앱 버전 · 윈도우 버전</strong>만 보냅니다. 몇 분이 쓰고 계신지, 옛 버전에 몇 분이 남아 계신지를 알기 위한 것입니다. 무작위 번호는 그 컴퓨터에서 만든 것이라 <strong>누구인지 되짚을 수 없습니다.</strong> 설정 → <strong>의견</strong> 탭에서 끌 수 있고, 꺼도 모든 기능이 그대로 동작합니다. (v2.2.56부터)</li>
+          <li><strong>의견 보내기</strong> — <strong>[보내기]를 누르셨을 때만</strong> 적으신 내용과 앱 버전이 갑니다. <strong>모두 익명</strong>이라 누가 보내셨는지는 알 수 없습니다.</li>
+          <li><strong>오류 기록</strong> — 앱이 예상 못 한 오류로 꺼지면, <strong>다음에 켤 때</strong> 그 기록을 보냅니다. <strong>파일 경로는 통째로 버리고 확장자만 남깁니다</strong>(파일 이름이 곧 학생 이름인 경우가 많아서입니다). 하루 5건까지, 같은 오류는 한 번만. 무엇이 나갔는지는 <strong>설정 → 도움말</strong>에서 직접 보실 수 있습니다.</li>
+          <li><strong>공지</strong> — 받아만 옵니다. 이 길로 나가는 것은 없습니다.</li>
         </ul>
+        <p class="body">사용 집계와 오류 기록은 설정 → <strong>의견</strong> 탭의 <strong>체크 하나로 함께 꺼집니다.</strong> 꺼도 모든 기능이 그대로 동작합니다.</p>
 
         <div class="note warn"><span class="ic"><svg class="ic" viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span><div><b>AI 입력창에 학생 실명을 적지 마세요</b><p>적으면 그대로 구글로 전송됩니다. 생기부 초안은 <strong>이름 없이 관찰 내용만</strong> 적어도 충분히 나옵니다. 주민등록번호·연락처·가정환경 같은 민감정보도 마찬가지입니다.</p></div></div>
 
@@ -516,8 +521,9 @@
           <li><strong>위젯이 바탕화면 아이콘을 가려요</strong> — 설정 → <strong>화면</strong> 탭에서 <strong>위젯 모드</strong>를 쓰면 빈 곳 아이콘이 그대로 클릭돼요. <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>D</kbd>로 앞뒤 전환도 됩니다.</li>
           <li><strong>다른 컴퓨터로 옮기고 싶어요</strong> — 설정 → <strong>데이터</strong> 탭의 <strong>설정 내보내기</strong>로 저장한 파일을, 새 PC에서 <strong>설정 가져오기</strong>로 불러오면 돼요.</li>
           <li><strong>맥에서도 되나요?</strong> — 지금은 <strong>Windows 전용</strong>이에요.</li>
+          <li><strong>여기에 없는 문제가 생겼어요</strong> — 설정 → <strong>의견</strong> 탭에서 바로 알려 주세요. 어떤 상황에서 그랬는지 한 줄이면 충분합니다. 익명으로 가고, 하나하나 다 읽습니다. 고친 내용은 같은 탭 <strong>공지</strong>에 올라와요. (v2.2.56부터)</li>
         </ul>
-        <div class="note lock"><span class="ic"><svg class="ic" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/><circle cx="12" cy="15" r="1.2"/></svg></span><div><b>내 정보는 안전한가요?</b><p>할 일·메모·명렬·API 키 등 모든 기록은 <strong>이 컴퓨터에만</strong> 저장돼요. 학교 조회(급식·학사일정)와 AI 호출을 위해 필요한 순간에만 인터넷을 씁니다.</p></div></div>
+        <div class="note lock"><span class="ic"><svg class="ic" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/><circle cx="12" cy="15" r="1.2"/></svg></span><div><b>내 정보는 안전한가요?</b><p>할 일·메모·명렬·API 키 등 모든 기록은 <strong>이 컴퓨터에만</strong> 저장돼요. 학교 조회(급식·학사일정)와 AI 호출을 위해 필요한 순간에만 인터넷을 씁니다.</p><p>여기에 더해 하루 한 번 <strong>무작위 번호와 버전</strong>만 만든 사람에게 보냅니다 — 몇 분이 쓰고 계신지 세기 위한 것이고, 그것으로 누구인지는 알 수 없어요. 설정 → <strong>의견</strong> 탭에서 끌 수 있습니다.</p></div></div>
       </section>
 
     </div><!-- /.inner -->
