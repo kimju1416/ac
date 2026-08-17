@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TeacherDesk 2 — 개인정보 처리방침</title>
+<meta name="description" content="TeacherDesk 2가 무엇을 저장하고 무엇을 밖으로 보내는지, 어떻게 끄고 지우는지 밝힌 문서입니다." />
+<link rel="canonical" href="https://kimju.kr/td2/privacy/" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/NanumSquareRound/NanumSquareRound.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+  :root{
+    --clay:#3B7DD8; --clay-dark:#2C5FA8; --clay-soft:#E5EEFB;
+    --ink:#232A33; --ink-soft:#57616E; --line:#E4E9EF;
+    --bg:#F6F8FB; --card:#FFFFFF; --good:#2E9E6B; --good-soft:#E4F4EC;
+    --warn:#C07A2B; --warn-soft:#FBEFDD; --stop:#C0392B; --stop-soft:#FBE7E4;
+    --radius:18px; --shadow:0 1px 2px rgba(30,40,55,.04),0 8px 28px rgba(30,40,55,.07);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Nanum Square Round","Pretendard Variable",Pretendard,system-ui,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.85;word-break:keep-all;
+    -webkit-font-smoothing:antialiased}
+  a{color:var(--clay-dark);text-decoration:none;font-weight:800}
+  a:hover{text-decoration:underline}
+  svg.ic{display:inline-block;vertical-align:middle;fill:none;stroke:currentColor;
+    stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;width:19px;height:19px}
+
+  .wrap{max-width:760px;margin:0 auto;padding:0 22px 100px}
+  header{padding:52px 0 30px;border-bottom:1px solid var(--line);margin-bottom:34px}
+  .back{font-size:13px;color:var(--ink-soft);font-weight:800;display:inline-flex;align-items:center;gap:6px;margin-bottom:20px}
+  h1{font-size:27px;font-weight:800;letter-spacing:-.02em;line-height:1.35}
+  header p{margin-top:12px;color:var(--ink-soft);font-size:14.5px}
+  .stamp{margin-top:16px;font-size:12.5px;color:var(--ink-soft);font-weight:700}
+
+  section{margin-bottom:40px}
+  h2{font-size:18.5px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px;
+    display:flex;align-items:center;gap:10px}
+  h2 .n{width:27px;height:27px;border-radius:9px;background:var(--clay);color:#fff;
+    font-size:13px;display:grid;place-items:center;flex:none}
+  h3{font-size:15px;font-weight:800;margin:22px 0 8px}
+  p,li{font-size:14.5px;color:var(--ink)}
+  p{margin-bottom:10px}
+  ul{margin:0 0 12px 2px;list-style:none}
+  li{padding-left:16px;position:relative;margin-bottom:7px}
+  li::before{content:"";position:absolute;left:2px;top:12px;width:5px;height:5px;
+    border-radius:50%;background:var(--clay);opacity:.5}
+  .lead{color:var(--ink-soft)}
+  code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;
+    background:#EDF1F6;padding:2px 7px;border-radius:6px;word-break:break-all}
+
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px 24px;box-shadow:var(--shadow);margin:16px 0}
+  .note{display:flex;gap:13px;border-radius:14px;padding:16px 18px;margin:16px 0;
+    font-size:14px;line-height:1.75}
+  .note b{display:block;margin-bottom:4px}
+  .note.good{background:var(--good-soft);color:#1E6B48}
+  .note.warn{background:var(--warn-soft);color:#8A5417}
+  .note.stop{background:var(--stop-soft);color:#8E2B20}
+  .note .ic{flex:none;margin-top:3px}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:800;font-size:12.5px;color:var(--ink-soft);background:#F1F5F9;white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  td b{font-weight:800}
+
+  .tag{display:inline-block;font-size:11.5px;font-weight:800;padding:2px 9px;border-radius:7px;white-space:nowrap}
+  .tag.off{background:var(--good-soft);color:#1E6B48}
+  .tag.on{background:#EDF1F6;color:var(--ink-soft)}
+
+  footer{border-top:1px solid var(--line);padding-top:26px;margin-top:50px;
+    font-size:13px;color:var(--ink-soft);line-height:1.9}
+  @media(max-width:600px){
+    .wrap{padding:0 16px 70px} h1{font-size:22px} header{padding:34px 0 24px}
+    th,td{padding:9px 8px;font-size:12.5px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <a class="back" href="/td2/"><svg class="ic" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> TeacherDesk 2 설명서로</a>
+  <h1>개인정보 처리방침</h1>
+  <p>이 프로그램이 <b>무엇을 저장하고, 무엇을 밖으로 보내는지</b> 빠짐없이 밝힌 문서입니다.
+     학교에 설명하셔야 할 때 이 주소를 그대로 보여 주시면 됩니다.</p>
+  <div class="stamp">TeacherDesk 2 · 시행일 2026년 8월 17일 · 만든 사람 김주현(광평중학교)</div>
+</header>
+
+<section>
+  <h2><span class="n">1</span>한 줄로 말하면</h2>
+  <div class="note good"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+    <div><b>학생 정보는 선생님 컴퓨터를 벗어나지 않습니다.</b>
+      명렬·생기부 초안·메모·일정은 <b>이 프로그램을 만든 사람도 볼 수 없습니다.</b>
+      서버에 올리지 않기 때문입니다.</div></div>
+  <p>다만 <b>딱 두 가지는 인터넷을 씁니다.</b> 그래야 되는 기능이라서입니다.</p>
+  <ul>
+    <li><b>AI 기능</b> — 선생님이 적은 글이 구글로 갑니다 (3번 항목)</li>
+    <li><b>급식·학사일정·날씨</b> — 학교 코드와 지역 이름만 나갑니다 (3번 항목)</li>
+  </ul>
+  <p>여기에 더해, 몇 분이 쓰시는지 세는 <b>익명 집계</b>가 하루 한 번 있습니다.
+     이건 <b>설정에서 끌 수 있고</b>, 꺼도 모든 기능이 그대로 동작합니다 (4번 항목).</p>
+</section>
+
+<section>
+  <h2><span class="n">2</span>컴퓨터에 저장되는 것</h2>
+  <p class="lead">전부 <code>%APPDATA%\TeacherDesk2</code> 폴더에 저장됩니다. 서버로 보내지 않습니다.</p>
+  <table>
+    <tr><th>무엇</th><th>예</th></tr>
+    <tr><td><b>명렬</b></td><td>학생 번호·이름·비고</td></tr>
+    <tr><td><b>생기부 초안</b></td><td>작성한 글, 그때 적어둔 학반·이름, 저장한 글 목록</td></tr>
+    <tr><td><b>학교 업무</b></td><td>할 일, D-Day, 일정, 메모, 시간표, 내선번호</td></tr>
+    <tr><td><b>설정</b></td><td>학교 정보, 화면 배치, API 키</td></tr>
+    <tr><td><b>서랍</b></td><td>바탕화면의 실제 폴더입니다. 프로그램은 위치만 기억합니다</td></tr>
+  </table>
+  <div class="note warn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+    <div><b>파일 자체는 암호로 잠겨 있지 않습니다.</b>
+      컴퓨터 로그인 암호가 1차 보호막입니다. 학교 공용 PC라면 <b>윈도우 계정을 나눠 쓰시길</b> 권합니다.
+      다만 <b>API 키만은 예외로 암호화</b>해 둡니다 — 파일을 복사해 다른 계정·다른 컴퓨터로 옮기면 풀리지 않습니다.</div></div>
+</section>
+
+<section>
+  <h2><span class="n">3</span>밖으로 나가는 것 (전부)</h2>
+  <p class="lead">여기 적힌 것이 전부입니다. 이 밖에 나가는 것은 없습니다.</p>
+
+  <h3>가. AI 기능 — 구글 Gemini</h3>
+  <p>AI 도우미·생기부 초안·파일 불러오기를 쓰실 때, <b>입력창에 적은 글과 고르신 파일의 내용</b>이
+     구글로 전송됩니다. 생기부의 <b>학반·이름은 빼고 보냅니다</b>(그건 컴퓨터에만 남는 표시입니다).</p>
+  <div class="note stop"><svg class="ic" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><circle cx="12" cy="12" r="9"/></svg>
+    <div><b>무료 키를 쓰시면 구글이 그 내용을 학습에 사용할 수 있습니다.</b>
+      구글 약관에 이렇게 적혀 있습니다 — 무료 등급에서는 <b>제출한 내용과 응답을 구글 제품 개선에 사용</b>하며,
+      <b>사람 검토자가 읽고 주석을 달 수 있습니다.</b> 유료 등급에서는 그러지 않습니다.
+      선생님들 대부분이 무료 키를 쓰시므로, 이 점은 알고 계셔야 합니다.
+      (<a href="https://ai.google.dev/gemini-api/terms" target="_blank" rel="noopener">구글 약관 원문</a>)</div></div>
+  <p><b>국외로 나갑니다.</b> 구글 서버는 국내에 있지 않습니다. 학생 이름을 빼고 보내더라도
+     <b>관찰 내용 자체는 국외로 이전</b>됩니다.</p>
+  <p><b>그래서 이렇게 쓰시길 권합니다</b> — 입력창에 <b>학생 실명·주민등록번호·연락처·가정환경을 적지 마세요.</b>
+     생기부 초안은 이름 없이 관찰 내용만 적어도 충분히 나옵니다.
+     AI 기능을 아예 안 쓰실 수도 있습니다. 키를 안 넣으시면 됩니다.</p>
+
+  <h3>나. 급식 · 학사일정 (NEIS)</h3>
+  <p><b>학교 코드만</b> 나갑니다. 학생 정보는 나가지 않습니다.</p>
+
+  <h3>다. 날씨 · 미세먼지</h3>
+  <p><b>지역 이름(좌표)만</b> 나갑니다. 학교 주소로 한 번 찾아둔 지역입니다.</p>
+
+  <h3>라. 익명 사용 집계</h3>
+  <p>하루에 한 번, <b>아래 네 가지만</b> 보냅니다.</p>
+  <div class="card"><code>무작위 번호 · 앱 이름 · 앱 버전 · 윈도우 버전</code></div>
+  <p>무작위 번호는 그 컴퓨터에서 만든 난수라 <b>누구인지 되짚을 수 없습니다.</b>
+     몇 분이 쓰고 계신지, 옛 버전에 몇 분이 남아 계신지를 알아야 고친 내용을 제때 전할 수 있어 두었습니다.</p>
+
+  <h3>마. 오류 기록</h3>
+  <p>프로그램이 예상 못 한 오류로 꺼지면, <b>다음에 켤 때</b> 그 기록을 보냅니다.
+     어디서 왜 꺼졌는지 알아야 고칠 수 있어서입니다.</p>
+  <div class="note good"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+    <div><b>파일 경로는 통째로 버리고 확장자만 남깁니다.</b>
+      파일 이름이 곧 학생 이름인 경우가 많기 때문입니다. 실제로 이렇게 바뀝니다.
+      <div class="card" style="margin:10px 0 0;padding:12px 14px">
+        <code>… open 'C:\Users\…\3학년 2반 김○○ 관찰기록.hwp'</code><br>
+        <span style="font-size:12px">↓ 이렇게만 나갑니다</span><br>
+        <code>… open '&lt;파일&gt;.hwp'</code>
+      </div></div></div>
+  <p>하루 5건까지만 보내고 같은 오류는 한 번만 셉니다.
+     <b>무엇이 나갔는지 직접 보실 수 있습니다</b> — 설정 → <b>도움말</b> → <b>[내 오류 기록 보기]</b>.</p>
+
+  <h3>바. 의견 보내기</h3>
+  <p><b>[보내기]를 누르셨을 때만</b> 나갑니다. 적으신 내용과 앱 버전·윈도우 버전이 갑니다.
+     <b>전부 익명</b>이라 누가 보내셨는지 알 수 없고, 그래서 답장도 드릴 수 없습니다.</p>
+
+  <h3>사. 공지 · 새 버전 확인</h3>
+  <p><b>받아만 옵니다.</b> 이 길로 나가는 것은 없습니다.</p>
+
+  <h3>한눈에</h3>
+  <table>
+    <tr><th>무엇</th><th>언제</th><th>끌 수 있나</th></tr>
+    <tr><td><b>AI 기능</b></td><td>쓰실 때만</td><td><span class="tag off">키를 안 넣으면 안 나감</span></td></tr>
+    <tr><td><b>급식·학사일정</b></td><td>자동</td><td><span class="tag off">학교를 안 넣으면 안 나감</span></td></tr>
+    <tr><td><b>날씨</b></td><td>자동</td><td><span class="tag off">위젯을 끄면 안 나감</span></td></tr>
+    <tr><td><b>사용 집계</b></td><td>하루 1회</td><td><span class="tag off">[의견] 탭에서 끔</span></td></tr>
+    <tr><td><b>오류 기록</b></td><td>오류 난 다음 실행 때</td><td><span class="tag off">위와 같은 체크로 함께 꺼짐</span></td></tr>
+    <tr><td><b>의견</b></td><td>누르셨을 때만</td><td><span class="tag on">안 누르면 안 나감</span></td></tr>
+    <tr><td><b>공지·버전</b></td><td>켤 때</td><td><span class="tag on">받기만 함</span></td></tr>
+  </table>
+</section>
+
+<section>
+  <h2><span class="n">4</span>끄는 방법</h2>
+  <p>설정 → <b>[의견]</b> 탭 → <b>「이 컴퓨터가 쓰고 있다고 알리기」</b> 체크를 끄시면 됩니다.
+     <b>사용 집계와 오류 기록이 함께 꺼집니다.</b></p>
+  <div class="note good"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+    <div><b>꺼도 모든 기능이 그대로 동작합니다.</b> 기능을 담보로 잡지 않습니다.
+      끄면 보내고 나서 숨기는 것이 아니라, 보내는 동작 자체가 일어나지 않습니다.</div></div>
+</section>
+
+<section>
+  <h2><span class="n">5</span>얼마나 보관하나요</h2>
+  <table>
+    <tr><th>어디</th><th>무엇</th><th>언제까지</th></tr>
+    <tr><td><b>선생님 컴퓨터</b></td><td>명렬·생기부·메모 등 모든 기록</td><td>선생님이 지우실 때까지</td></tr>
+    <tr><td rowspan="3"><b>집계 서버</b></td><td>사용 집계(무작위 번호·버전)</td><td>2년</td></tr>
+    <tr><td>오류 기록</td><td><b>90일</b> 뒤 자동 삭제</td></tr>
+    <tr><td>보내주신 의견</td><td>2년</td></tr>
+  </table>
+  <p><b>컴퓨터에 있는 것을 지우려면</b> — 설정 → <b>데이터</b> 탭 → <b>[처음 상태로 되돌리기]</b>.
+     컴퓨터를 반납하거나 업무를 인계하실 때 한 번 눌러 주세요.
+     이미 내보낸 백업·엑셀 파일은 따로 지우셔야 하고,
+     프로그램을 삭제해도 설정 폴더는 남으니 <code>%APPDATA%\TeacherDesk2</code>를 함께 지우시면 됩니다.</p>
+</section>
+
+<section>
+  <h2><span class="n">6</span>파일로 내보낼 때</h2>
+  <div class="note warn"><svg class="ic" viewBox="0 0 24 24"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+    <div><b>내보낸 파일은 개인정보 파일입니다.</b>
+      설정 백업(.tdbk)에는 <b>명렬과 생기부 저장글이 함께</b> 들어가고,
+      생기부 엑셀·한글·CSV에도 학반·이름이 들어갑니다.
+      USB·메신저로 옮기실 때는 그렇게 다루시고, 옮긴 뒤에는 지워 주세요.</div></div>
+</section>
+
+<section>
+  <h2><span class="n">7</span>이 프로그램이 지키는 것</h2>
+  <ul>
+    <li><b>API 키는 암호화해 저장합니다</b> — 윈도우 계정에 묶인 방식이라, 파일만 복사해 가도 풀 수 없습니다.</li>
+    <li><b>오류 기록의 파일 경로는 지우는 게 아니라 통째로 버립니다</b> — 골라 지우면 무엇을 빠뜨렸는지 알 수 없기 때문입니다.</li>
+    <li><b>집계 서버는 넣기만 되고 읽기는 막혀 있습니다</b> — 프로그램 안에 든 열쇠로는 남의 기록을 볼 수 없습니다.</li>
+    <li><b>말로만 하지 않고 검사로 확인합니다</b> — 배포 전마다 학생 이름이 든 가짜 자료를 심어놓고,
+        실제로 나가는 문자열을 가로채 <b>한 글자라도 섞이면 배포를 막습니다.</b></li>
+  </ul>
+</section>
+
+<section>
+  <h2><span class="n">8</span>학교에 설명하실 때</h2>
+  <div class="card">
+    <p style="margin:0">“교사 개인 PC에 설치해 쓰는 프로그램이며, <b>학생 정보는 이 컴퓨터에만 저장되고 외부 서버로 전송되지 않습니다.</b>
+      AI 기능을 쓸 때만 입력한 문장이 구글 Gemini로 전송되며 <b>학생 이름은 포함하지 않습니다.</b>
+      급식·학사일정은 학교 코드만, 날씨는 지역명만 조회합니다.
+      사용 집계는 무작위 번호와 버전뿐이며 설정에서 끌 수 있습니다.”</p>
+  </div>
+  <div class="note warn"><svg class="ic" viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.8 10.7c.6.5.8 1 .8 1.8v.5h6v-.5c0-.8.2-1.3.8-1.8A6 6 0 0 0 12 3z"/></svg>
+    <div><b>학교마다 규정이 다릅니다.</b>
+      업무용 컴퓨터에 프로그램을 설치하는 기준, 그리고 <b>생활기록부 작성에 AI를 쓰는 것</b>에 대한
+      교육청·학교의 지침이 따로 있을 수 있습니다. 이 문서는 <b>“무엇이 어디로 가는지”</b>를 정확히 알려드리는 것까지고,
+      쓰셔도 되는지는 소속 학교의 정보 담당 선생님께 확인해 주세요.</div></div>
+</section>
+
+<section>
+  <h2><span class="n">9</span>만 14세 미만</h2>
+  <p>이 프로그램은 <b>교사가 쓰는 업무 도구</b>입니다. 학생이 직접 설치해 쓰거나
+     학생에게서 정보를 직접 수집하지 않습니다.</p>
+</section>
+
+<section>
+  <h2><span class="n">10</span>물어보실 곳</h2>
+  <p>프로그램 안에서 바로 보내실 수 있습니다 — 설정 → <b>[의견]</b> 탭.
+     또는 인스타그램 <a href="https://instagram.com/kimju.zip" target="_blank" rel="noopener">@kimju.zip</a>으로 알려 주세요.</p>
+  <p class="lead">이 처리방침이 바뀌면 이 쪽에 새 시행일을 적고, 프로그램 안 <b>[의견] 탭 공지</b>로도 알려드립니다.</p>
+</section>
+
+<footer>
+  <b>TeacherDesk 2</b> · 선생님 바탕화면 위젯 대시보드<br>
+  <a href="/td2/">설치 · 사용 설명서</a> · <a href="https://kimju.kr">kimju.zip</a><br>
+  코드를 직접 열어보실 수 있습니다 — <a href="https://github.com/kimju1416/teacherdesk2" target="_blank" rel="noopener">github.com/kimju1416/teacherdesk2</a>
+</footer>
+
+</div>
+</body>
+</html>
