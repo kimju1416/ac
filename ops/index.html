@@ -56,10 +56,16 @@ code{font-size:11.5px;background:var(--soft);padding:1px 5px;border-radius:4px}
 .n span{font-size:11px;color:var(--tx3)}
 .app .foot{font-size:11px;color:var(--tx3);margin-top:11px;padding-top:9px;border-top:1px solid var(--line)}
 
+/* 앱 고르기 — 아래 표·그래프는 고른 앱 하나만 본다 */
+.pick{display:flex;gap:7px;margin:22px 0 0;flex-wrap:wrap}
+.pick button{font-weight:600}
+.pick button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+
 /* 막대그래프 — 라이브러리 없이 div로. 30일이면 이걸로 충분하다 */
 .chart{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
 .bars{display:flex;align-items:flex-end;gap:3px;height:110px}
-.bar{flex:1;min-width:3px;background:var(--ac);border-radius:2px 2px 0 0;opacity:.75;position:relative}
+/* max-width가 없으면 자료가 하루뿐일 때 막대 하나가 화면을 가득 채워 고장난 것처럼 보인다 */
+.bar{flex:1;min-width:3px;max-width:34px;background:var(--ac);border-radius:2px 2px 0 0;opacity:.75;position:relative}
 .bar:hover{opacity:1}
 .bar i{position:absolute;bottom:100%;left:50%;transform:translateX(-50%);white-space:nowrap;
   font-size:10.5px;font-style:normal;color:var(--tx2);background:var(--card);padding:2px 5px;
@@ -83,6 +89,24 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
 .done td{opacity:.45}
 .empty{padding:22px 14px;font-size:12.5px;color:var(--tx3);text-align:center}
 .mut{color:var(--tx3);font-size:11.5px}
+
+/* 공지 쓰기 */
+textarea{width:100%;box-sizing:border-box;resize:vertical;font-family:inherit;font-size:13px;
+  padding:10px 12px;border-radius:8px;border:1px solid var(--line);background:var(--card);
+  color:var(--tx);line-height:1.6;outline:none;word-break:keep-all}
+textarea:focus{border-color:var(--ac)}
+.ntrow2{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:9px;flex-wrap:wrap}
+.chk{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--tx2);cursor:pointer}
+.chk input{width:auto}
+#ntHint{margin:9px 0 0;line-height:1.6}
+.nt{display:flex;align-items:flex-start;gap:10px;padding:11px 0;border-top:1px solid var(--line);font-size:12.5px}
+.nt:first-child{margin-top:14px}
+.nt .d{color:var(--tx3);font-size:11.5px;white-space:nowrap;font-variant-numeric:tabular-nums;padding-top:2px}
+.nt .b{flex:1;min-width:0}
+.nt .act{display:flex;gap:6px;flex-none}
+.nt button{padding:4px 9px;font-size:11.5px}
+.nt .on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.nt .del:hover{border-color:var(--warn);color:var(--warn)}
 @media(max-width:560px){ .wrap{padding:16px 12px 48px} .n b{font-size:21px} }
 </style>
 </head>
@@ -104,6 +128,21 @@ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:now
 
   <h2>지금</h2>
   <div class="apps" id="cards"></div>
+
+  <!-- 두 앱을 섞으면 어느 쪽 숫자인지 알 수 없다 — 아래는 고른 앱 하나만 본다.
+       공지도 여기서 고른 앱으로만 나간다(쌤집 공지가 TD2에 뜨면 안 된다). -->
+  <div class="pick" id="pick"></div>
+
+  <h2>공지 <span class="mut" id="ntFor"></span></h2>
+  <div class="chart">
+    <textarea id="ntBody" rows="2" placeholder="예) 급식이 월요일에 안 나오던 것을 고쳤습니다."></textarea>
+    <div class="ntrow2">
+      <label class="chk"><input type="checkbox" id="ntBanner"> 앱 켤 때 띠로 보이기</label>
+      <button class="p" id="ntAdd">올리기</button>
+    </div>
+    <p class="mut" id="ntHint">체크를 안 하면 설정 <b>[의견]</b> 탭에만 조용히 올라갑니다. 체크하면 앱을 켤 때 화면 위에 한 줄 뜨고, ✕를 누르거나 3번 보이면 그칩니다.</p>
+    <div id="ntList"></div>
+  </div>
 
   <h2>날마다 쓰신 분 (30일)</h2>
   <div class="chart" id="chart"></div>
@@ -170,21 +209,90 @@ $('#reload').addEventListener('click', () => load());
 async function show() { $('#login').hidden = true; $('#main').hidden = false; await load(); }
 sb.auth.getSession().then(({ data }) => { if (data.session) show(); });
 
+/* 지금 보고 있는 앱. 두 앱을 섞어 보여주면 어느 쪽 숫자인지 알 수 없다 —
+   카드만 나란히 두고, 그 아래는 고른 앱 하나만 본다. */
+let cur = localStorage.getItem('ops.app') || 'td2';
+let DATA = null;
+function drawPick() {
+  $('#pick').innerHTML = Object.entries(APPS).map(([k, n]) =>
+    `<button data-a="${k}" class="${cur === k ? 'on' : ''}">${esc(n)}</button>`).join('');
+  $('#pick').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    cur = b.dataset.a; localStorage.setItem('ops.app', cur); drawPick(); drawAll();
+  }));
+}
+
 /* ─── 자료 읽기 ─── */
 async function load() {
   $('#asof').textContent = '불러오는 중…';
-  const q = (v, o) => sb.from(v).select('*').then(r => (o && o(r.data || []), r.data || []));
-  const [sum, daily, fb, ver, ret, err] = await Promise.all([
+  const [sum, daily, fb, ver, ret, err, nt] = await Promise.all([
     sb.from('v_app_summary').select('*').then(r => r.data || []),
     sb.from('v_app_daily').select('*').then(r => r.data || []),
     sb.from('app_feedback').select('*').order('created_at', { ascending: false }).limit(60).then(r => r.data || []),
     sb.from('v_app_versions').select('*').then(r => r.data || []),
     sb.from('v_app_retention').select('*').then(r => r.data || []),
-    sb.from('v_app_errors').select('*').limit(30).then(r => r.data || [])
+    sb.from('v_app_errors').select('*').limit(30).then(r => r.data || []),
+    sb.from('app_notice').select('*').order('created_at', { ascending: false }).limit(40).then(r => r.data || [])
   ]);
-  drawCards(sum); drawChart(daily); drawFeedback(fb); drawVersions(ver); drawRetention(ret); drawErrors(err);
+  DATA = { sum, daily, fb, ver, ret, err, nt };
+  drawPick(); drawAll();
   $('#asof').textContent = new Date().toLocaleString('ko-KR') + ' 기준';
 }
+
+/* 카드는 두 앱 모두, 나머지는 고른 앱만 */
+function drawAll() {
+  const only = rows => rows.filter(r => r.app === cur);
+  drawCards(DATA.sum);
+  drawNotices(only(DATA.nt || []));
+  drawChart(only(DATA.daily));
+  drawFeedback(only(DATA.fb));
+  drawVersions(only(DATA.ver));
+  drawRetention(only(DATA.ret));
+  drawErrors(only(DATA.err));
+}
+
+/* ─── 공지 쓰기 ───
+   예전에는 GitHub의 JSON 파일을 고쳐야 했다. 공지 한 줄 쓰려고 저장소를 여는 건
+   번거로우니 여기서 쓰고 여기서 지운다. 앱은 켤 때 이 표를 읽어 간다. */
+function drawNotices(rows) {
+  $('#ntFor').textContent = '· ' + nm(cur) + '에만 나갑니다';
+  $('#ntList').innerHTML = rows.length ? rows.map(r => `
+    <div class="nt" data-id="${r.id}">
+      <span class="d">${esc(String(r.created_at).slice(5, 10).replace('-', '/'))}</span>
+      <span class="b">${esc(r.body)}</span>
+      <span class="act">
+        <button class="bn ${r.banner ? 'on' : ''}">${r.banner ? '띠 켜짐' : '띠 꺼짐'}</button>
+        <button class="del">지우기</button>
+      </span>
+    </div>`).join('') : '<p class="mut" style="margin:14px 0 0">아직 올린 공지가 없습니다.</p>';
+
+  $('#ntList').querySelectorAll('.nt').forEach(el => {
+    const id = +el.dataset.id;
+    el.querySelector('.bn').addEventListener('click', async e => {
+      const on = !e.target.classList.contains('on');
+      const { error } = await sb.from('app_notice').update({ banner: on }).eq('id', id);
+      if (error) return alert('바꾸지 못했습니다: ' + error.message);
+      await load();
+    });
+    el.querySelector('.del').addEventListener('click', async () => {
+      if (!confirm('이 공지를 지울까요? 앱에서도 사라집니다.')) return;
+      const { error } = await sb.from('app_notice').delete().eq('id', id);
+      if (error) return alert('지우지 못했습니다: ' + error.message);
+      await load();
+    });
+  });
+}
+
+$('#ntAdd').addEventListener('click', async () => {
+  const body = $('#ntBody').value.trim();
+  if (!body) { $('#ntBody').focus(); return; }
+  const b = $('#ntAdd'); b.disabled = true; b.textContent = '올리는 중…';
+  const { error } = await sb.from('app_notice')
+    .insert({ app: cur, body: body.slice(0, 300), banner: $('#ntBanner').checked });
+  b.disabled = false; b.textContent = '올리기';
+  if (error) return alert('올리지 못했습니다: ' + error.message);
+  $('#ntBody').value = ''; $('#ntBanner').checked = false;
+  await load();
+});
 
 function drawCards(rows) {
   const by = Object.fromEntries(rows.map(r => [r.app, r]));
@@ -201,8 +309,7 @@ function drawCards(rows) {
 }
 
 function drawChart(rows) {
-  if (!rows.length) { $('#chart').innerHTML = '<div class="empty">아직 자료가 없습니다.</div>'; return; }
-  // 두 앱을 합쳐 날짜별로 — 총량 흐름만 보면 되는 화면이다
+  if (!rows.length) { $('#chart').innerHTML = `<div class="empty">${esc(nm(cur))} — 아직 자료가 없습니다.</div>`; return; }
   const by = {};
   rows.forEach(r => { by[r.day] = (by[r.day] || 0) + (r.users || 0); });
   const days = Object.keys(by).sort();
@@ -210,18 +317,19 @@ function drawChart(rows) {
   $('#chart').innerHTML =
     `<div class="bars">${days.map(d =>
       `<div class="bar" style="height:${Math.max(3, by[d] / max * 100)}%"><i>${esc(d.slice(5))} · ${by[d]}명</i></div>`).join('')}</div>
-     <div class="axis"><span>${esc(days[0])}</span><span>최대 ${max}명</span><span>${esc(days[days.length - 1])}</span></div>`;
+     <div class="axis"><span>${esc(days[0])}</span><span>최대 ${max}명</span><span>${esc(days[days.length - 1])}</span></div>`
+     + (days.length < 3 ? '<div class="empty" style="text-align:left;padding:10px 0 0">아직 하루이틀치뿐입니다 — 며칠 지나야 흐름이 보입니다.</div>' : '');
 }
 
 function drawFeedback(rows) {
-  if (!rows.length) { $('#fb').innerHTML = '<div class="empty">아직 받은 의견이 없습니다.</div>'; return; }
+  if (!rows.length) { $('#fb').innerHTML = `<div class="empty">${esc(nm(cur))} — 아직 받은 의견이 없습니다.</div>`; return; }
   $('#fb').innerHTML = `<table><thead><tr>
-    <th>언제</th><th>종류</th><th>내용</th><th>앱</th><th class="num">읽음</th></tr></thead><tbody>${rows.map(r => `
+    <th>언제</th><th>종류</th><th>내용</th><th>어디서</th><th class="num">읽음</th></tr></thead><tbody>${rows.map(r => `
     <tr class="${r.handled ? 'done' : ''}" data-id="${r.id}">
       <td class="mut">${esc(when(r.created_at))}</td>
       <td><span class="tag ${esc(r.kind)}">${esc(KIND[r.kind] || r.kind)}</span></td>
       <td>${esc(r.body)}</td>
-      <td class="mut">${esc(nm(r.app))} ${esc(r.version || '')}<br>${esc(r.os || '')}</td>
+      <td class="mut">v${esc(r.version || '?')}<br>${esc(r.os || '')}</td>
       <td class="num"><input type="checkbox" style="width:auto" ${r.handled ? 'checked' : ''}></td>
     </tr>`).join('')}</tbody></table>`;
   $('#fb').querySelectorAll('tr[data-id] input').forEach(c => c.addEventListener('change', async e => {
@@ -233,36 +341,37 @@ function drawFeedback(rows) {
 }
 
 function drawVersions(rows) {
-  if (!rows.length) { $('#ver').innerHTML = '<div class="empty">아직 자료가 없습니다.</div>'; return; }
-  const tot = {};
-  rows.forEach(r => { tot[r.app] = (tot[r.app] || 0) + r.machines; });
+  if (!rows.length) { $('#ver').innerHTML = `<div class="empty">${esc(nm(cur))} — 아직 자료가 없습니다.</div>`; return; }
+  const tot = rows.reduce((s, r) => s + r.machines, 0);
   $('#ver').innerHTML = `<table><thead><tr>
-    <th>앱</th><th>버전</th><th class="num">대수</th><th class="num">비율</th></tr></thead><tbody>${rows.map((r, i) => `
-    <tr><td class="mut">${i && rows[i - 1].app === r.app ? '' : esc(nm(r.app))}</td>
-      <td>${esc(r.version)}</td>
+    <th>버전</th><th class="num">대수</th><th class="num">비율</th></tr></thead><tbody>${rows.map(r => `
+    <tr><td>${esc(r.version)}</td>
       <td class="num">${r.machines}</td>
-      <td class="num mut">${pct(r.machines, tot[r.app])}</td></tr>`).join('')}</tbody></table>
+      <td class="num mut">${pct(r.machines, tot)}</td></tr>`).join('')}</tbody></table>
     <div class="empty" style="text-align:left;padding-top:0">최근 14일에 신호가 있던 컴퓨터 기준입니다. 옛 버전이 많으면 알릴 때가 된 것입니다.</div>`;
 }
 
 function drawRetention(rows) {
-  if (!rows.length) { $('#ret').innerHTML = '<div class="empty">아직 자료가 없습니다.</div>'; return; }
+  const r = rows[0];
+  if (!r || (!r.cohort7 && !r.cohort30)) {
+    $('#ret').innerHTML = `<div class="empty">${esc(nm(cur))} — 설치한 지 7일이 지난 분이 아직 없습니다. 다음 주쯤 나옵니다.</div>`;
+    return;
+  }
   $('#ret').innerHTML = `<table><thead><tr>
-    <th>앱</th><th class="num">7일 뒤에도</th><th class="num">30일 뒤에도</th></tr></thead><tbody>${rows.map(r => `
-    <tr><td>${esc(nm(r.app))}</td>
-      <td class="num">${pct(r.kept7, r.cohort7)} <span class="mut">(${r.kept7}/${r.cohort7})</span></td>
+    <th class="num">7일 뒤에도</th><th class="num">30일 뒤에도</th></tr></thead><tbody>
+    <tr><td class="num">${pct(r.kept7, r.cohort7)} <span class="mut">(${r.kept7}/${r.cohort7})</span></td>
       <td class="num">${pct(r.kept30, r.cohort30)} <span class="mut">(${r.kept30}/${r.cohort30})</span></td>
-    </tr>`).join('')}</tbody></table>
+    </tr></tbody></table>
     <div class="empty" style="text-align:left;padding-top:0">설치한 지 그만큼 지난 분만 셉니다 — 어제 설치한 분을 넣으면 숫자가 늘 나빠 보입니다.</div>`;
 }
 
 function drawErrors(rows) {
-  if (!rows.length) { $('#err').innerHTML = '<div class="empty">최근 30일 동안 들어온 오류가 없습니다.</div>'; return; }
+  if (!rows.length) { $('#err').innerHTML = `<div class="empty">${esc(nm(cur))} — 최근 30일 동안 들어온 오류가 없습니다.</div>`; return; }
   $('#err').innerHTML = `<table><thead><tr>
-    <th>마지막</th><th>내용</th><th>앱</th><th class="num">횟수</th><th class="num">대수</th></tr></thead><tbody>${rows.map(r => `
+    <th>마지막</th><th>내용</th><th>버전</th><th class="num">횟수</th><th class="num">대수</th></tr></thead><tbody>${rows.map(r => `
     <tr><td class="mut">${esc(when(r.last_at))}</td>
       <td>${esc(r.sample)}</td>
-      <td class="mut">${esc(nm(r.app))} ${esc(r.version || '')}</td>
+      <td class="mut">v${esc(r.version || '?')}</td>
       <td class="num">${r.hits}</td><td class="num">${r.machines}</td></tr>`).join('')}</tbody></table>
     <div class="empty" style="text-align:left;padding-top:0">파일 경로는 앱에서 이미 버리고 보냅니다. <b>대수</b>가 많을수록 급한 것입니다 — 한 대에서만 나면 그 컴퓨터 사정일 수 있습니다.</div>`;
 }
