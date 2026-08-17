@@ -195,6 +195,10 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .featured-meta{font-family:'DM Mono',monospace;font-size:11.5px;color:var(--muted);letter-spacing:.02em;}
 .featured-media{border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#000;align-self:stretch;display:flex;}
 .featured-media video{width:100%;height:100%;object-fit:cover;display:block;}
+/* 화면 스샷은 잘리면 안 된다 — 위젯 하나가 반쯤 잘리면 앱이 망가진 것처럼 보인다 */
+.featured-shot{background:none;border:0;padding:0;margin:0;display:block;width:100%;height:100%;cursor:zoom-in;}
+.featured-shot img{width:100%;height:100%;object-fit:contain;display:block;background:#0f1b26;}
+.featured-shot:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
 @media (max-width:760px){
   .featured{grid-template-columns:1fr;padding:1.4rem 1.3rem;gap:1.2rem;}
   .featured-media{order:-1;}
@@ -290,6 +294,8 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .shot-lb{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.87);display:none;align-items:center;justify-content:center;padding:1.25rem;}
 .shot-lb.open{display:flex;}
 .shot-lb-inner{width:100%;max-width:720px;}
+/* 위젯 화면은 720px에서 글씨가 안 읽힌다 — 대표 스샷만 넓게 띄운다 */
+.shot-lb-inner.wide{max-width:1180px;}
 .shot-lb img{width:100%;border:1px solid var(--border);border-radius:10px;display:block;background:var(--surface2);}
 .shot-lb-bar{display:flex;align-items:center;gap:.6rem;margin-top:.8rem;}
 .shot-lb-name{font-size:13px;color:var(--text);flex:1;min-width:0;line-height:1.4;}
@@ -633,6 +639,32 @@ footer{
   <div class="hot-bar">
     <span class="hot-label">POPULAR</span>
     <div class="hot-list" id="hotList"></div>
+  </div>
+</div>
+
+<!-- ─── FEATURED: TeacherDesk 2 ─── -->
+<div class="featured-wrap">
+  <div class="featured" id="td2">
+    <div class="featured-info">
+      <div class="featured-label">FEATURED — 새로 나온 위젯 대시보드</div>
+      <h2 class="featured-title">TeacherDesk <em>2</em></h2>
+      <p class="featured-desc">시계·날씨·급식·시간표·학사일정·할 일·D-Day를 <b>바탕화면에 펼쳐 두는</b> 교사용 데스크톱 앱.<br>브라우저를 열 필요 없이 <b>컴퓨터를 켜면 바로 보입니다.</b></p>
+      <ul class="featured-points">
+        <li>바탕화면에 얹혀 있어 <b>창을 띄우지 않아도</b> 보입니다 — 아이콘도 그대로 눌려요</li>
+        <li>학교만 등록하면 <b>급식·시간표·학사일정이 자동</b>으로 채워집니다</li>
+        <li>AI 도우미와 <b>생기부 기재요령 근거자료</b>까지 — 기록은 내 컴퓨터에만</li>
+      </ul>
+      <div class="featured-btns">
+        <a class="featured-dl" href="https://github.com/kimju1416/teacherdesk2/releases/latest/download/TeacherDesk-Setup.exe" onclick="trackClick('TeacherDesk 2 다운로드')">⬇ 지금 다운로드</a>
+        <a class="featured-guide" href="https://kimju.kr/td2/" target="_blank" rel="noopener" onclick="trackClick('TeacherDesk 2 가이드')">📖 사용 가이드 보기</a>
+        <span class="featured-meta">Windows 10 · 11 · 무료</span>
+      </div>
+    </div>
+    <div class="featured-media">
+      <button class="featured-shot" onclick="openShotSrc('shots/td2-main.jpg','TeacherDesk 2 — 위젯을 모두 켠 화면','https://kimju.kr/td2/')" aria-label="TeacherDesk 2 화면 크게 보기">
+        <img src="shots/td2-main.jpg" alt="TeacherDesk 2 화면 — 시계·날씨·지금 이 시간·달력·할 일·급식·메모·학사일정·주간 시간표·D-Day 위젯이 바탕화면에 펼쳐진 모습" width="1440" height="900">
+      </button>
+    </div>
   </div>
 </div>
 
@@ -1024,7 +1056,19 @@ function openShot(e, btn){
   document.getElementById('shotLb').classList.add('open');
 }
 
-function closeShot(){ document.getElementById('shotLb').classList.remove('open'); }
+/* 스포트라이트 스샷 — 앱 목록 행이 아니라 주소를 직접 받아 같은 라이트박스로 띄운다 */
+function openShotSrc(src, name, href){
+  document.getElementById('shotLbImg').src = src;
+  document.getElementById('shotLbName').textContent = name;
+  document.getElementById('shotLbOpen').href = href;
+  document.querySelector('#shotLb .shot-lb-inner').classList.add('wide');
+  document.getElementById('shotLb').classList.add('open');
+}
+
+function closeShot(){
+  document.getElementById('shotLb').classList.remove('open');
+  document.querySelector('#shotLb .shot-lb-inner').classList.remove('wide');
+}
 
 /* 라이트박스 요소는 이 스크립트보다 아래에 있으므로 위임으로 처리한다 */
 document.addEventListener('click',e=>{ if(e.target.id === 'shotLb') closeShot(); });
