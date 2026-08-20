@@ -30,7 +30,10 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{font-family:"Nanum Square Round","Pretendard",system-ui,sans-serif;background:var(--bg);color:var(--ink);
-    line-height:1.8;-webkit-font-smoothing:antialiased;letter-spacing:0}
+    line-height:1.8;-webkit-font-smoothing:antialiased;letter-spacing:0;
+    /* 한글은 낱말 사이에만 끊어야 한다 — 없으면 "됩/니다"처럼 낱말 한가운데가 잘린다.
+       긴 영문·주소는 keep-all에 걸려 넘칠 수 있어 break-word를 같이 준다. */
+    word-break:keep-all;overflow-wrap:break-word}
   a{color:inherit;text-decoration:none}
   .wrap{display:grid;grid-template-columns:264px 1fr;max-width:1240px;margin:0 auto;gap:0}
   .sidebar{position:sticky;top:0;height:100vh;overflow-y:auto;padding:30px 20px 60px;
