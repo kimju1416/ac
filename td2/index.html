@@ -163,6 +163,28 @@
   .step p{font-size:13.5px;color:var(--ink-soft);font-weight:400}
   .step code{background:var(--clay-soft);color:var(--clay-dark);padding:2px 7px;border-radius:5px;font-size:12.5px;font-weight:800}
 
+  /* 업데이트 일지 — 무엇이 언제 바뀌었는지 한 줄씩 */
+  .log{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px 22px;
+    box-shadow:var(--shadow);margin:22px 0 8px}
+  .log-h{margin-bottom:6px}
+  .log-h h3{font-size:16px;font-weight:800}
+  .log-h span{display:block;margin-top:4px;font-size:12.5px;color:var(--ink-soft);font-weight:400;line-height:1.65;word-break:keep-all}
+  .log-item{padding:14px 0;border-top:1px solid var(--line)}
+  .log-item:first-of-type{border-top:none;padding-top:8px}
+  .log-top{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:7px}
+  .log-ver{font-weight:800;font-size:14.5px;color:var(--clay-dark);background:var(--clay-soft);
+    border-radius:7px;padding:2px 9px}
+  .log-date{font-size:12.5px;color:var(--ink-soft);font-weight:400}
+  .log-new{font-size:11.5px;font-weight:800;color:#fff;background:var(--clay);border-radius:20px;padding:2px 9px}
+  .log-item ul{margin:0;padding-left:18px}
+  .log-item li{font-size:13.5px;line-height:1.75;color:var(--ink-soft);font-weight:400;word-break:keep-all}
+  .log-item li b{color:var(--ink);font-weight:800}
+  .log-more{margin-top:6px}
+  .log-more summary{cursor:pointer;font-size:13.5px;font-weight:800;color:var(--clay-dark);
+    padding:9px 0 3px;list-style:none}
+  .log-more summary::-webkit-details-marker{display:none}
+  .log-more summary::before{content:"▾ ";font-size:12px}
+  .log-more[open] summary::before{content:"▴ "}
   .tips{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:8px 0}
   .tipcard{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px;box-shadow:var(--shadow);transition:.18s}
   .tipcard:hover{transform:translateY(-3px);border-color:var(--clay)}
@@ -227,6 +249,7 @@
       <div><b>TeacherDesk 2</b><span>설치 · 설정 · 사용 설명서</span></div>
     </div>
     <nav class="toc" id="toc">
+      <a href="#log"><span class="num">＊</span>업데이트 일지</a>
       <a href="#s1"><span class="num">01</span>어떤 프로그램인가요</a>
       <a href="#s2"><span class="num">02</span>다운로드 &amp; 설치</a>
       <a href="#s3"><span class="num">03</span>처음 켜기 · 학교 등록</a>
@@ -277,6 +300,7 @@
     <details class="m-toc">
       <summary><svg class="ic" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h11"/></svg> 목차 펼치기</summary>
       <nav class="toc">
+        <a href="#log">＊ 업데이트 일지</a>
         <a href="#s1">01 · 어떤 프로그램인가요</a>
         <a href="#s2">02 · 다운로드 &amp; 설치</a>
         <a href="#s3">03 · 처음 켜기 · 학교 등록</a>
@@ -290,6 +314,79 @@
     </details>
 
     <div class="inner">
+
+      <!-- ===== 업데이트 일지 ===== -->
+      <section id="log">
+        <div class="log">
+          <div class="log-h"><h3>업데이트 일지</h3>
+            <span>새 판에서 무엇이 달라졌는지 적어 둡니다. 최신 세 판이 먼저 보이고, 그 아래로 지난 판을 펼쳐 볼 수 있어요.</span></div>
+
+          <div class="log-item">
+            <div class="log-top"><span class="log-ver">v2.7.2</span><span class="log-date">2026년 8월 21일</span><span class="log-new">최신</span></div>
+            <ul>
+              <li><b>진도 위젯이 새로 생겼습니다.</b> 오늘 들어가는 수업이 주간 시간표에서 저절로 줄을 서고, 눌러서 단원·차시·한 줄만 적으면 됩니다. 차시는 <b>지난 시간 +1</b>로 미리 채워지고, 비가 와서 이론으로 때웠거나 행사로 빠진 시간은 <b>휴강</b>으로 두면 차시를 먹지 않아요. 제목 옆 <b>[전체]</b>를 누르면 이번 주 시간표 모양 그대로 보고, 아직 오지 않은 날도 미리 적어 둘 수 있습니다. (설정 → 위젯에서 켜세요)</li>
+              <li><b>화면이 안 열릴 때 스스로 다시 엽니다.</b> 이전에는 한 번 못 열면 창이 아예 안 떠서 "눌렀는데 아무 일도 안 일어난다"가 됐어요. 이제 여섯 번까지 다시 시도하고, 그래도 안 되면 안내 화면을 띄운 뒤 뒤에서 계속 다시 엽니다.</li>
+              <li>버전 알림 띠의 글자가 잘려 보이던 것을 고쳤습니다.</li>
+              <li>할 일의 마감일 표시가 가로로 길게 늘어나던 것을 고쳤습니다.</li>
+            </ul>
+          </div>
+
+          <div class="log-item">
+            <div class="log-top"><span class="log-ver">v2.7.0 · 2.7.1</span><span class="log-date">2026년 8월 21일</span></div>
+            <ul>
+              <li><b>독 아이콘 세트 5벌</b> — 흑연·리넨·유리·심해·세이지 중에서 고릅니다. (설정 → 독 → 아이콘 세트)</li>
+              <li><b>설치가 끝나면 바로 실행</b>됩니다.</li>
+              <li><b>‘지금 이 시간’에 뜰 문구를 직접</b> 쓸 수 있어요 — 수업 전·공강·퇴근 뒤 세 가지. 교실 화면에 "퇴근하세요!"가 뜨는 게 부담스러우면 바꿔 두세요.</li>
+              <li>생기부 <b>행동특성 초점 칩이 81개</b>로 늘었습니다(여섯 갈래).</li>
+              <li>넓은 화면에서 할 일·D-Day·메모 카드가 가로로 너무 벌어지던 것을 좁혔습니다.</li>
+            </ul>
+          </div>
+
+          <div class="log-item">
+            <div class="log-top"><span class="log-ver">v2.6.0 · 2.6.2</span><span class="log-date">2026년 8월 21일</span></div>
+            <ul>
+              <li><b>할 일 · D-Day · 메모에 [전체]</b> — 큰 창에 펼쳐 보고 그 자리에서 고칩니다.</li>
+              <li><b>되돌리기</b>를 생기부 저장글·내선번호·D-Day·일정에도 붙였습니다.</li>
+              <li><b>내선번호를 손으로 정리</b>할 수 있어요 — 다른 부서로 끌어 옮기기, 순서 바꾸기, 부서 이름 고치기.</li>
+              <li>설치 후 차지하는 공간을 <b>402MB → 331MB</b>로 줄였습니다.</li>
+              <li>학교를 옮겨도 이전 학교 급식이 남던 것, 명렬을 다시 불러오면 출결이 사라진 것처럼 보이던 것 등 점검에서 찾은 9건을 고쳤습니다.</li>
+            </ul>
+          </div>
+
+          <details class="log-more">
+            <summary>지난 판 더 보기 (v2.3 ~ v2.5)</summary>
+
+            <div class="log-item">
+              <div class="log-top"><span class="log-ver">v2.5.0 · 2.5.1</span><span class="log-date">2026년 8월 20일</span></div>
+              <ul>
+                <li>위젯을 <b>‘오른쪽 절반’처럼 좁게</b> 두어도 출결표·교사별 시간표가 잘리지 않습니다.</li>
+                <li><b>전남·광주 업무포털 통합</b> 반영 — 광주로 저장해 두신 분도 새 주소로 로그인됩니다.</li>
+              </ul>
+            </div>
+
+            <div class="log-item">
+              <div class="log-top"><span class="log-ver">v2.4.0 ~ 2.4.5</span><span class="log-date">2026년 8월 19~20일</span></div>
+              <ul>
+                <li><b>담임반 출결</b> — NEIS 출결 화면을 그대로 본떴습니다. 조회 시간에 찍어 두고 옮겨 적기 위한 기록이에요(NEIS 정식 입력을 대신하지 않습니다).</li>
+                <li><b>시간표 칸 색칠</b>(우클릭) — 겸무·전담처럼 반으로 갈리지 않는 칸을 손으로 칠합니다.</li>
+                <li><b>명렬 이름 옆 숫자 배지</b>를 누르면 그 학생 생기부만 펼쳐집니다.</li>
+                <li><b>급식 끼니 고르기</b>(조식·중식·석식) · 할 일 <b>마감 임박순</b> 정렬 · 달력 날짜에 올리면 그날 일정 미리보기.</li>
+                <li>작업표시줄이 독 앞을 가로막던 것(재부팅하면 낫던 증상), 과목별 시간표에서 글자를 못 치던 것을 고쳤습니다.</li>
+                <li><b>시계 모양 5종</b> · 날씨 아이콘을 직접 그린 그림으로 · <b>과목 겹쳐 보기</b>(체육과 스포츠클럽을 한 표에).</li>
+              </ul>
+            </div>
+
+            <div class="log-item">
+              <div class="log-top"><span class="log-ver">v2.3.0 ~ 2.3.2</span><span class="log-date">2026년 8월 19일</span></div>
+              <ul>
+                <li><b>과목별 · 교사별 시간표</b>가 생겼습니다. 과목별은 <b>학기 전체</b>를 받아 정규 시간표를 뽑으므로, 휴업일이 낀 주에도 흔들리지 않아요.</li>
+                <li>나이스 학사일정을 <b>내 화면에서만 고치고 지울</b> 수 있습니다.</li>
+                <li>학급이 많은 학교에서 전체 시간표를 받는 속도를 <b>22초 → 7초</b>로 줄였습니다.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
 
       <!-- ===== 01 ===== -->
       <section id="s1">
@@ -423,6 +520,7 @@
           <div><h2>기능 둘러보기</h2><p>위젯과 독에 담긴 기능들을 한눈에.</p></div>
         </div>
         <div class="tips">
+          <div class="tipcard"><span class="te"><svg class="ic" viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M9 8h6M9 12h4"/></svg></span><h4>진도</h4><p>오늘 들어가는 수업이 <b>주간 시간표에서 저절로</b> 줄을 섭니다 — 반을 고를 필요가 없어요. 눌러서 <b>단원 · 차시 · 한 줄</b>만 적으면 되고, 차시는 <b>지난 시간 +1</b>로 미리 채워집니다. 비가 와서 이론으로 때운 시간은 <b>휴강</b>으로 두면 차시를 먹지 않아요. <b>[전체]</b>에서는 이번 주를 시간표 모양으로 보고 지난 주·다음 주를 오가며, <b>아직 오지 않은 날도 미리</b> 적어 둘 수 있습니다. <b>[반별로]</b>에서는 반마다 지금 몇 차시인지 한눈에 보이고, 학기 중간부터 쓰기 시작한 반은 차시를 맞춰 둘 수 있어요. (v2.7.2)</p></div>
           <div class="tipcard"><span class="te"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3l1.7 4.8L18.5 9.5 13.7 11.2 12 16l-1.7-4.8L5.5 9.5l4.8-1.7z"/><path d="M18 15.5l.6 1.8.6-1.8"/></svg></span><h4>AI 도우미</h4><p>공지에서 할 일·마감일 뽑기, 공문서 문장 다듬기, 파일(명렬·시간표·학사일정) 읽어오기.</p></div>
           <div class="tipcard"><span class="te"><svg class="ic" viewBox="0 0 24 24"><path d="M6 3h8l4 4v12a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 6 19V4.5A1.5 1.5 0 0 1 6 3z"/><path d="M13 3v4h4"/><path d="M9 12h6M9 15.5h4"/></svg></span><h4>생기부 초안</h4><p>행발·세특·창체 등 영역별 초안 작성. <b>행동특성 및 종합의견</b>은 초점 칩이 <b>여섯 갈래 81개</b>입니다 — 학습·탐구, 인성·태도, 교우·협력, 리더십·자기관리, 개별 특성, 기본생활·안전. 아직 자라는 중인 모습은 <b>성장 중</b> 묶음에 따로 모아 두었어요. <b>왼쪽 초점 칩</b>으로 부각할 점을 고르고, 글자 수(바이트) 자동 맞춤, 기재요령 근거·나쁜예/좋은예 안내. 저장한 글은 <b>반별로 나눠</b> 보고 <b>반별 시트 엑셀</b>로 내보냅니다.</p></div>
           <div class="tipcard"><span class="te"><svg class="ic" viewBox="0 0 24 24"><path d="M4 10v4l9 4V6z"/><path d="M13 8.5a3.2 3.2 0 0 1 0 7"/><path d="M6.5 14v3.5"/></svg></span><h4>전광판</h4><p>화면 위로 흐르는 안내문. 수업·행사 안내를 크게 띄워요(속도 조절).</p></div>
