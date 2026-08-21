@@ -81,14 +81,37 @@ th{text-align:left;font-weight:600;color:var(--tx3);font-size:11px;padding:10px 
 td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
 tr:last-child td{border-bottom:none}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.body{white-space:pre-wrap}   /* 여러 줄로 적어 보내신 의견이 한 줄로 뭉치지 않게 */
 .tag{display:inline-block;font-size:10.5px;padding:2px 7px;border-radius:5px;
   background:var(--soft);color:var(--tx2);white-space:nowrap}
 .tag.bug{background:rgba(194,65,12,.12);color:var(--warn)}
 .tag.idea{background:rgba(37,99,235,.12);color:var(--ac)}
 .tag.thanks{background:rgba(21,128,61,.12);color:var(--ok)}
+.tag.new{background:rgba(21,128,61,.12);color:var(--ok)}
 .done td{opacity:.45}
 .empty{padding:22px 14px;font-size:12.5px;color:var(--tx3);text-align:center}
 .mut{color:var(--tx3);font-size:11.5px}
+
+/* ─── 정리 도구 ───
+   자료는 쌓이는 쪽으로만 자란다. 걸러 보기·접기·지우기가 없으면
+   몇 달만 지나도 이 화면은 스크롤 덩어리가 된다. */
+.filters{display:flex;align-items:center;gap:8px;margin:0 0 9px;flex-wrap:wrap}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chips button{padding:5px 10px;font-size:12px}
+.chips button b{font-variant-numeric:tabular-nums;font-weight:700;margin-left:3px}
+.chips button.on{background:var(--ac);color:#fff;border-color:var(--ac)}
+.find{width:auto;flex:1;min-width:150px;padding:6px 10px;font-size:12.5px}
+.bulk{display:flex;gap:7px;margin-top:9px;flex-wrap:wrap;align-items:center}
+.bulk button{padding:6px 11px;font-size:12px}
+.bulk .danger:hover{border-color:var(--warn);color:var(--warn)}
+.morewrap{padding:11px 14px;border-top:1px solid var(--line);text-align:center}
+.morewrap button{padding:5px 12px;font-size:12px}
+.x{padding:2px 8px;font-size:12px;line-height:1.4;color:var(--tx3)}
+.x:hover{border-color:var(--warn);color:var(--warn)}
+/* 버전 비율 — 숫자만 있으면 어느 판이 주력인지 한눈에 안 들어온다 */
+.sharewrap{display:block;height:5px;background:var(--soft);border-radius:3px;margin-top:5px;overflow:hidden}
+.share{display:block;height:100%;background:var(--ac);opacity:.7;border-radius:3px}
+tr.old td:first-child{color:var(--tx3)}
 
 /* 공지 쓰기 */
 textarea{width:100%;box-sizing:border-box;resize:vertical;font-family:inherit;font-size:13px;
@@ -107,7 +130,7 @@ textarea:focus{border-color:var(--ac)}
 .nt button{padding:4px 9px;font-size:11.5px}
 .nt .on{background:var(--ac);color:#fff;border-color:var(--ac)}
 .nt .del:hover{border-color:var(--warn);color:var(--warn)}
-@media(max-width:560px){ .wrap{padding:16px 12px 48px} .n b{font-size:21px} }
+@media(max-width:560px){ .wrap{padding:16px 12px 48px} .n b{font-size:21px} .find{min-width:100%} }
 </style>
 </head>
 <body>
@@ -135,7 +158,7 @@ textarea:focus{border-color:var(--ac)}
 
   <h2>공지 <span class="mut" id="ntFor"></span></h2>
   <div class="chart">
-    <textarea id="ntBody" rows="2" placeholder="예) 급식이 월요일에 안 나오던 것을 고쳤습니다."></textarea>
+    <textarea id="ntBody" rows="2" placeholder="(예) 급식이 월요일에 안 나오던 것을 고쳤습니다."></textarea>
     <div class="ntrow2">
       <label class="chk"><input type="checkbox" id="ntBanner"> 앱 켤 때 띠로 보이기</label>
       <button class="p" id="ntAdd">올리기</button>
@@ -147,8 +170,25 @@ textarea:focus{border-color:var(--ac)}
   <h2>날마다 쓰신 분 (30일)</h2>
   <div class="chart" id="chart"></div>
 
-  <h2>받은 의견</h2>
+  <!-- ─── 받은 의견 ───
+       기본은 '안 읽음'만 본다. 처리한 것까지 늘 보이면 새로 온 것이 묻힌다. -->
+  <h2>받은 의견 <span class="mut" id="fbCount"></span></h2>
+  <div class="filters">
+    <div class="chips" id="fbChips">
+      <button data-v="open">안 읽음 <b>0</b></button>
+      <button data-v="all">전체 <b>0</b></button>
+      <button data-v="bug">오류 <b>0</b></button>
+      <button data-v="idea">제안 <b>0</b></button>
+      <button data-v="thanks">응원 <b>0</b></button>
+    </div>
+    <input id="fbQ" class="find" placeholder="내용에서 찾기">
+  </div>
   <div class="tw" id="fb"></div>
+  <div class="bulk">
+    <button id="fbAllRead">보이는 것 모두 읽음으로</button>
+    <button id="fbPurge" class="danger">읽은 것 지우기</button>
+    <span class="mut" id="fbBulkMsg"></span>
+  </div>
 
   <h2>버전</h2>
   <div class="tw" id="ver"></div>
@@ -209,6 +249,20 @@ $('#reload').addEventListener('click', () => load());
 async function show() { $('#login').hidden = true; $('#main').hidden = false; await load(); }
 sb.auth.getSession().then(({ data }) => { if (data.session) show(); });
 
+/* ─── 지우기 ───
+   🔴 RLS는 '지우기 정책이 없으면' 오류를 내지 않는다 — 아무 줄도 안 지우고 조용히 성공한다.
+      그래서 지운 줄을 돌려받아(.select()) 0줄이면 권한이 없는 것으로 본다.
+      이 구분이 없으면 "눌렀는데 왜 그대로지?"가 되고, 원인을 찾는 데 한나절이 든다. */
+async function wipe(q, what) {
+  const { data, error } = await q.select();
+  if (error) { alert(what + ' 지우지 못했습니다 — ' + error.message); return 0; }
+  if (!data || !data.length) {
+    alert('지울 권한이 아직 없습니다.\n\nSupabase 콘솔 → SQL Editor 에서 db/telemetry.sql 을 한 번 더 실행해 주세요.\n(의견·오류를 지우는 정책이 새로 들어갔습니다. 여러 번 돌려도 안전합니다.)');
+    return 0;
+  }
+  return data.length;
+}
+
 /* 지금 보고 있는 앱. 두 앱을 섞어 보여주면 어느 쪽 숫자인지 알 수 없다 —
    카드만 나란히 두고, 그 아래는 고른 앱 하나만 본다. */
 let cur = localStorage.getItem('ops.app') || 'td2';
@@ -217,20 +271,25 @@ function drawPick() {
   $('#pick').innerHTML = Object.entries(APPS).map(([k, n]) =>
     `<button data-a="${k}" class="${cur === k ? 'on' : ''}">${esc(n)}</button>`).join('');
   $('#pick').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
-    cur = b.dataset.a; localStorage.setItem('ops.app', cur); drawPick(); drawAll();
+    cur = b.dataset.a; localStorage.setItem('ops.app', cur);
+    // 앱을 바꾸면 펼쳐 둔 것은 도로 접는다 — 앞 앱에서 20건 더 보던 상태가 따라오면 헷갈린다
+    FB.show = FB.step; VER.open = false; ERR.show = ERR.step; NT.show = NT.step;
+    drawPick(); drawAll();
   }));
 }
 
-/* ─── 자료 읽기 ─── */
+/* ─── 자료 읽기 ───
+   의견은 60줄만 읽어 오던 것을 늘렸다 — 걸러 보기가 생겼으니 손에 다 쥐고 있어야 한다.
+   (거른 뒤 60줄을 채우려고 서버에 다시 묻는 구조는 화면만 복잡해진다.) */
 async function load() {
   $('#asof').textContent = '불러오는 중…';
   const [sum, daily, fb, ver, ret, err, nt] = await Promise.all([
     sb.from('v_app_summary').select('*').then(r => r.data || []),
     sb.from('v_app_daily').select('*').then(r => r.data || []),
-    sb.from('app_feedback').select('*').order('created_at', { ascending: false }).limit(60).then(r => r.data || []),
+    sb.from('app_feedback').select('*').order('created_at', { ascending: false }).limit(500).then(r => r.data || []),
     sb.from('v_app_versions').select('*').then(r => r.data || []),
     sb.from('v_app_retention').select('*').then(r => r.data || []),
-    sb.from('v_app_errors').select('*').limit(30).then(r => r.data || []),
+    sb.from('v_app_errors').select('*').limit(80).then(r => r.data || []),
     sb.from('app_notice').select('*').order('created_at', { ascending: false }).limit(40).then(r => r.data || [])
   ]);
   DATA = { sum, daily, fb, ver, ret, err, nt };
@@ -244,7 +303,7 @@ function drawAll() {
   drawCards(DATA.sum);
   drawNotices(only(DATA.nt || []));
   drawChart(only(DATA.daily));
-  drawFeedback(only(DATA.fb));
+  drawFeedback();
   drawVersions(only(DATA.ver));
   drawRetention(only(DATA.ret));
   drawErrors(only(DATA.err));
@@ -252,10 +311,13 @@ function drawAll() {
 
 /* ─── 공지 쓰기 ───
    예전에는 GitHub의 JSON 파일을 고쳐야 했다. 공지 한 줄 쓰려고 저장소를 여는 건
-   번거로우니 여기서 쓰고 여기서 지운다. 앱은 켤 때 이 표를 읽어 간다. */
+   번거로우니 여기서 쓰고 여기서 지운다. 앱은 켤 때 이 표를 읽어 간다.
+   지난 공지도 쌓이므로 최근 다섯 줄만 펴 두고 나머지는 접는다. */
+const NT = { step: 5, show: 5 };
 function drawNotices(rows) {
-  $('#ntFor').textContent = '· ' + nm(cur) + '에만 나갑니다';
-  $('#ntList').innerHTML = rows.length ? rows.map(r => `
+  $('#ntFor').textContent = '· ' + nm(cur) + '에만 나갑니다' + (rows.length ? ' · ' + rows.length + '건' : '');
+  const shown = rows.slice(0, NT.show);
+  $('#ntList').innerHTML = (shown.length ? shown.map(r => `
     <div class="nt" data-id="${r.id}">
       <span class="d">${esc(String(r.created_at).slice(5, 10).replace('-', '/'))}</span>
       <span class="b">${esc(r.body)}</span>
@@ -263,7 +325,14 @@ function drawNotices(rows) {
         <button class="bn ${r.banner ? 'on' : ''}">${r.banner ? '띠 켜짐' : '띠 꺼짐'}</button>
         <button class="del">지우기</button>
       </span>
-    </div>`).join('') : '<p class="mut" style="margin:14px 0 0">아직 올린 공지가 없습니다.</p>';
+    </div>`).join('') : '<p class="mut" style="margin:14px 0 0">아직 올린 공지가 없습니다.</p>')
+    + (rows.length > NT.show
+      ? `<div class="morewrap" style="padding-bottom:0"><button id="ntMore">지난 공지 ${rows.length - NT.show}건 더 보기</button></div>`
+      : (NT.show > NT.step ? `<div class="morewrap" style="padding-bottom:0"><button id="ntLess">접기</button></div>` : ''));
+
+  const more = $('#ntMore'), less = $('#ntLess');
+  if (more) more.addEventListener('click', () => { NT.show += 10; drawNotices(rows); });
+  if (less) less.addEventListener('click', () => { NT.show = NT.step; drawNotices(rows); });
 
   $('#ntList').querySelectorAll('.nt').forEach(el => {
     const id = +el.dataset.id;
@@ -321,34 +390,165 @@ function drawChart(rows) {
      + (days.length < 3 ? '<div class="empty" style="text-align:left;padding:10px 0 0">아직 하루이틀치뿐입니다 — 며칠 지나야 흐름이 보입니다.</div>' : '');
 }
 
-function drawFeedback(rows) {
-  if (!rows.length) { $('#fb').innerHTML = `<div class="empty">${esc(nm(cur))} — 아직 받은 의견이 없습니다.</div>`; return; }
+/* ─── 받은 의견 ───
+   쌓이는 것을 막는 길은 셋뿐이다 — 걸러 보고, 끊어 보고, 지운다.
+   · 기본은 '안 읽음'. 처리한 것은 눈앞에서 치운다(지워지는 게 아니라 안 보일 뿐이다).
+   · 30줄씩 끊어 본다. 몇백 줄을 한 번에 그리면 화면이 스크롤 덩어리가 된다.
+   · 다 본 것은 통째로 지운다. 2년 뒤 자동 삭제(tidy_old_rows)만 믿으면 그때까지 계속 쌓인다. */
+const FB = { view: localStorage.getItem('ops.fb') || 'open', q: '', step: 30, show: 30 };
+
+function fbAll() { return ((DATA && DATA.fb) || []).filter(r => r.app === cur); }
+function fbPicked() {
+  let rows = fbAll();
+  if (FB.view === 'open') rows = rows.filter(r => !r.handled);
+  else if (FB.view !== 'all') rows = rows.filter(r => r.kind === FB.view);
+  const q = FB.q.trim().toLowerCase();
+  if (q) rows = rows.filter(r =>
+    String(r.body || '').toLowerCase().includes(q) || String(r.version || '').toLowerCase().includes(q));
+  return rows;
+}
+
+/* 거르개는 한 번만 그려 두고 숫자만 갈아 끼운다 —
+   글자를 칠 때마다 통째로 다시 그리면 찾기 칸에서 커서가 튕겨 나간다. */
+$('#fbChips').querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+  FB.view = b.dataset.v; localStorage.setItem('ops.fb', FB.view); FB.show = FB.step; drawFeedback();
+}));
+$('#fbQ').addEventListener('input', e => { FB.q = e.target.value; FB.show = FB.step; drawFeedback(); });
+
+function drawFeedback() {
+  const all = fbAll(), rows = fbPicked();
+  const cnt = {
+    open: all.filter(r => !r.handled).length, all: all.length,
+    bug: all.filter(r => r.kind === 'bug').length,
+    idea: all.filter(r => r.kind === 'idea').length,
+    thanks: all.filter(r => r.kind === 'thanks').length
+  };
+  $('#fbChips').querySelectorAll('button').forEach(b => {
+    b.querySelector('b').textContent = cnt[b.dataset.v] || 0;
+    b.classList.toggle('on', FB.view === b.dataset.v);
+  });
+  const read = cnt.all - cnt.open;
+  $('#fbCount').textContent = cnt.all
+    ? `· 안 읽음 ${cnt.open} / 전체 ${cnt.all}` + (read ? ` · 읽음 처리한 것 ${read}건` : '') : '';
+  $('#fbPurge').disabled = !read;
+  $('#fbPurge').textContent = read ? `읽은 것 ${read}건 지우기` : '읽은 것 지우기';
+
+  if (!rows.length) {
+    $('#fb').innerHTML = `<div class="empty">${esc(nm(cur))} — ` +
+      (!cnt.all ? '아직 받은 의견이 없습니다.'
+        : FB.q ? '찾으시는 말이 든 의견이 없습니다.'
+        : FB.view === 'open' ? '안 읽은 의견이 없습니다 — 다 보셨습니다.' : '해당하는 의견이 없습니다.') + '</div>';
+    $('#fbAllRead').disabled = true;
+    return;
+  }
+  const shown = rows.slice(0, FB.show);
+  $('#fbAllRead').disabled = !rows.some(r => !r.handled);
   $('#fb').innerHTML = `<table><thead><tr>
-    <th>언제</th><th>종류</th><th>내용</th><th>어디서</th><th class="num">읽음</th></tr></thead><tbody>${rows.map(r => `
+    <th>언제</th><th>종류</th><th>내용</th><th>어디서</th><th class="num">읽음</th><th></th></tr></thead><tbody>${shown.map(r => `
     <tr class="${r.handled ? 'done' : ''}" data-id="${r.id}">
       <td class="mut">${esc(when(r.created_at))}</td>
       <td><span class="tag ${esc(r.kind)}">${esc(KIND[r.kind] || r.kind)}</span></td>
-      <td>${esc(r.body)}</td>
+      <td class="body">${esc(r.body)}</td>
       <td class="mut">v${esc(r.version || '?')}<br>${esc(r.os || '')}</td>
       <td class="num"><input type="checkbox" style="width:auto" ${r.handled ? 'checked' : ''}></td>
-    </tr>`).join('')}</tbody></table>`;
-  $('#fb').querySelectorAll('tr[data-id] input').forEach(c => c.addEventListener('change', async e => {
-    const tr = e.target.closest('tr');
-    const { error } = await sb.from('app_feedback').update({ handled: e.target.checked }).eq('id', +tr.dataset.id);
-    if (error) { e.target.checked = !e.target.checked; alert('바꾸지 못했습니다: ' + error.message); return; }
-    tr.classList.toggle('done', e.target.checked);
-  }));
+      <td class="num"><button class="x" title="이 의견 지우기">✕</button></td>
+    </tr>`).join('')}</tbody></table>`
+    + (rows.length > FB.show
+      ? `<div class="morewrap"><button id="fbMore">${rows.length - FB.show}건 더 보기</button></div>` : '');
+
+  const more = $('#fbMore');
+  if (more) more.addEventListener('click', () => { FB.show += FB.step; drawFeedback(); });
+
+  $('#fb').querySelectorAll('tr[data-id]').forEach(tr => {
+    const id = +tr.dataset.id;
+    tr.querySelector('input').addEventListener('change', async e => {
+      const on = e.target.checked;
+      const { error } = await sb.from('app_feedback').update({ handled: on }).eq('id', id);
+      if (error) { e.target.checked = !on; alert('바꾸지 못했습니다: ' + error.message); return; }
+      const row = (DATA.fb || []).find(r => r.id === id); if (row) row.handled = on;
+      // '안 읽음'만 보는 중이면 방금 처리한 줄은 목록에서 빠져야 한다 — 세어 둔 숫자도 함께 갱신된다
+      drawFeedback();
+    });
+    tr.querySelector('.x').addEventListener('click', async () => {
+      if (!confirm('이 의견을 아주 지울까요? 되돌릴 수 없습니다.')) return;
+      if (!await wipe(sb.from('app_feedback').delete().eq('id', id), '의견을')) return;
+      DATA.fb = (DATA.fb || []).filter(r => r.id !== id);
+      drawFeedback();
+    });
+  });
 }
 
+/* 보이는 것 모두 읽음 — 응원 스무 건을 하나씩 누르고 있을 수는 없다 */
+$('#fbAllRead').addEventListener('click', async () => {
+  const ids = fbPicked().filter(r => !r.handled).map(r => r.id);
+  if (!ids.length) return;
+  if (!confirm(ids.length + '건을 읽음으로 표시할까요?')) return;
+  const b = $('#fbAllRead'); b.disabled = true;
+  const { error } = await sb.from('app_feedback').update({ handled: true }).in('id', ids);
+  b.disabled = false;
+  if (error) return alert('바꾸지 못했습니다: ' + error.message);
+  (DATA.fb || []).forEach(r => { if (ids.indexOf(r.id) >= 0) r.handled = true; });
+  drawFeedback();
+});
+
+/* 읽은 것 통째로 지우기 — 정리의 마지막 단계.
+   🔴 '보이는 것'이 아니라 '읽음으로 표시한 것'을 지운다. 거르개에 걸려 지금 안 보이는 줄까지
+      함께 지워지므로 물어볼 때 건수를 박아 둔다(모르고 누르면 안 된다). */
+$('#fbPurge').addEventListener('click', async () => {
+  const n = fbAll().filter(r => r.handled).length;
+  if (!n) return;
+  if (!confirm(`읽음으로 표시한 ${n}건을 아주 지울까요?\n\n${nm(cur)} 것만 지웁니다. 되돌릴 수 없습니다.`)) return;
+  const b = $('#fbPurge'); b.disabled = true;
+  const got = await wipe(sb.from('app_feedback').delete().eq('app', cur).eq('handled', true), '의견을');
+  b.disabled = false;
+  if (!got) { drawFeedback(); return; }
+  DATA.fb = (DATA.fb || []).filter(r => !(r.app === cur && r.handled));
+  $('#fbBulkMsg').textContent = got + '건을 지웠습니다.';
+  setTimeout(() => { $('#fbBulkMsg').textContent = ''; }, 4000);
+  drawFeedback();
+});
+
+/* ─── 버전 ───
+   판을 낼수록 줄이 늘어난다. 정작 볼 것은 "최신이 얼마나 퍼졌나"와
+   "아직 옛 판에 남은 분이 몇인가" 둘뿐이라, 주력 몇 줄만 펴 두고 나머지는 접는다. */
+const VER = { top: 5, open: false };
+function cmpVer(a, b) {   // "2.10"이 "2.9"보다 새 판이다 — 문자열로 견주면 뒤집히므로 마디마다 숫자로
+  const pa = String(a).replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+  const pb = String(b).replace(/^v/i, '').split('.').map(n => parseInt(n, 10) || 0);
+  for (let i = 0; i < Math.max(pa.length, pb.length); i++) {
+    const d = (pa[i] || 0) - (pb[i] || 0);
+    if (d) return d > 0 ? 1 : -1;
+  }
+  return 0;
+}
 function drawVersions(rows) {
   if (!rows.length) { $('#ver').innerHTML = `<div class="empty">${esc(nm(cur))} — 아직 자료가 없습니다.</div>`; return; }
   const tot = rows.reduce((s, r) => s + r.machines, 0);
+  const real = rows.map(r => r.version).filter(v => /^\d/.test(v)).sort(cmpVer);
+  const newest = real.length ? real[real.length - 1] : null;
+  const sorted = rows.slice().sort((a, b) => b.machines - a.machines);
+  const shown = VER.open ? sorted : sorted.slice(0, VER.top);
+  const rest = sorted.slice(shown.length);
+  const restM = rest.reduce((s, r) => s + r.machines, 0);
+  const old = newest ? sorted.filter(r => r.version !== newest).reduce((s, r) => s + r.machines, 0) : 0;
+
   $('#ver').innerHTML = `<table><thead><tr>
-    <th>버전</th><th class="num">대수</th><th class="num">비율</th></tr></thead><tbody>${rows.map(r => `
-    <tr><td>${esc(r.version)}</td>
+    <th>버전</th><th class="num">대수</th><th class="num">비율</th></tr></thead><tbody>${shown.map(r => `
+    <tr class="${newest && r.version !== newest ? 'old' : ''}"><td>${esc(r.version)}${
+      newest && r.version === newest ? ' <span class="tag new">최신</span>' : ''}
+      <span class="sharewrap"><span class="share" style="width:${tot ? r.machines / tot * 100 : 0}%"></span></span></td>
       <td class="num">${r.machines}</td>
-      <td class="num mut">${pct(r.machines, tot)}</td></tr>`).join('')}</tbody></table>
-    <div class="empty" style="text-align:left;padding-top:0">최근 14일에 신호가 있던 컴퓨터 기준입니다. 옛 버전이 많으면 알릴 때가 된 것입니다.</div>`;
+      <td class="num mut">${pct(r.machines, tot)}</td></tr>`).join('')}</tbody></table>`
+    + (rest.length
+      ? `<div class="morewrap"><button id="verMore">옛 버전 ${rest.length}가지 더 보기 (${restM}대)</button></div>`
+      : (VER.open && sorted.length > VER.top ? `<div class="morewrap"><button id="verLess">접기</button></div>` : ''))
+    + `<div class="empty" style="text-align:left;padding-top:10px">최근 14일에 신호가 있던 컴퓨터 기준입니다.`
+    + (newest && old ? ` 아직 옛 판에 <b>${old}대</b>가 남아 있습니다 — 알릴 때가 된 것입니다.`
+      : newest ? ' 모두 최신 판입니다.' : '') + `</div>`;
+
+  const m = $('#verMore'), l = $('#verLess');
+  if (m) m.addEventListener('click', () => { VER.open = true; drawVersions(rows); });
+  if (l) l.addEventListener('click', () => { VER.open = false; drawVersions(rows); });
 }
 
 function drawRetention(rows) {
@@ -365,15 +565,38 @@ function drawRetention(rows) {
     <div class="empty" style="text-align:left;padding-top:0">설치한 지 그만큼 지난 분만 셉니다 — 어제 설치한 분을 넣으면 숫자가 늘 나빠 보입니다.</div>`;
 }
 
+/* ─── 오류 ───
+   고친 오류가 표에 계속 남아 있으면 새로 난 것이 묻힌다. 묶음째 지운다
+   (같은 sig = 같은 오류. 한 줄만 지워 봐야 나머지가 그대로 남는다). */
+const ERR = { step: 6, show: 6 };
 function drawErrors(rows) {
   if (!rows.length) { $('#err').innerHTML = `<div class="empty">${esc(nm(cur))} — 최근 30일 동안 들어온 오류가 없습니다.</div>`; return; }
+  const shown = rows.slice(0, ERR.show);
   $('#err').innerHTML = `<table><thead><tr>
-    <th>마지막</th><th>내용</th><th>버전</th><th class="num">횟수</th><th class="num">대수</th></tr></thead><tbody>${rows.map(r => `
-    <tr><td class="mut">${esc(when(r.last_at))}</td>
-      <td>${esc(r.sample)}</td>
+    <th>마지막</th><th>내용</th><th>버전</th><th class="num">횟수</th><th class="num">대수</th><th></th></tr></thead><tbody>${shown.map(r => `
+    <tr data-sig="${esc(r.sig)}"><td class="mut">${esc(when(r.last_at))}</td>
+      <td class="body">${esc(r.sample)}</td>
       <td class="mut">v${esc(r.version || '?')}</td>
-      <td class="num">${r.hits}</td><td class="num">${r.machines}</td></tr>`).join('')}</tbody></table>
-    <div class="empty" style="text-align:left;padding-top:0">파일 경로는 앱에서 이미 버리고 보냅니다. <b>대수</b>가 많을수록 급한 것입니다 — 한 대에서만 나면 그 컴퓨터 사정일 수 있습니다.</div>`;
+      <td class="num">${r.hits}</td><td class="num">${r.machines}</td>
+      <td class="num"><button class="x" title="이 오류 묶음 지우기">✕</button></td></tr>`).join('')}</tbody></table>`
+    + (rows.length > ERR.show
+      ? `<div class="morewrap"><button id="errMore">${rows.length - ERR.show}가지 더 보기</button></div>`
+      : (ERR.show > ERR.step ? `<div class="morewrap"><button id="errLess">접기</button></div>` : ''))
+    + `<div class="empty" style="text-align:left;padding-top:10px">파일 경로는 앱에서 이미 버리고 보냅니다. <b>대수</b>가 많을수록 급한 것입니다 — 한 대에서만 나면 그 컴퓨터 사정일 수 있습니다. 고쳐서 낸 판이 퍼진 뒤에 ✕로 치우면 새로 난 것이 눈에 띕니다.</div>`;
+
+  const more = $('#errMore'), less = $('#errLess');
+  if (more) more.addEventListener('click', () => { ERR.show += ERR.step; drawErrors(rows); });
+  if (less) less.addEventListener('click', () => { ERR.show = ERR.step; drawErrors(rows); });
+
+  $('#err').querySelectorAll('tr[data-sig]').forEach(tr => {
+    tr.querySelector('.x').addEventListener('click', async () => {
+      const sig = tr.dataset.sig;
+      const r = rows.filter(x => x.sig === sig)[0] || {};
+      if (!confirm(`이 오류로 들어온 ${r.hits || ''}줄을 아주 지울까요?\n\n같은 오류가 또 나면 다시 쌓입니다 — 고친 판이 퍼진 뒤에 지우는 것이 좋습니다.`)) return;
+      if (!await wipe(sb.from('app_error').delete().eq('app', cur).eq('sig', sig), '오류를')) return;
+      await load();
+    });
+  });
 }
 </script>
 </body>
