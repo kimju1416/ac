@@ -323,120 +323,87 @@
           <div class="log-item">
             <div class="log-top"><span class="log-ver">v2.9.6</span><span class="log-date">2026. 8. 24.</span><span class="log-new">최신</span></div>
             <ul>
-              <li>🔴 <b>깊은 위젯 모드에서 설정 창에 글자를 못 치던 것</b>을 고쳤습니다 —
-                제보로 알았어요("시간표 시작시간 입력이 안 됩니다, 다른 시간도 안 됩니다").
-                깊은 위젯 모드는 창이 <b>바탕화면 아이콘 뒤</b>에 있어서, 설정 창을 띄워도
-                <b>아이콘이 깔린 자리의 입력칸은 눌러도 아이콘이 먼저 잡혔습니다.</b>
-                이제 설정·검색 창을 열면 잠깐 앞으로 올라옵니다(아이콘이 설정 창 위에 겹쳐 보이던 것도 함께 없어져요).
-                <b>일반 창·위젯 모드에서는 원래 멀쩡했습니다</b></li>
-              <li><b>업무포털 로그인 버튼</b>이 생겼습니다 — <b>설정 → 위젯 → 업무포털 로그인</b>을 켜면(기본 꺼짐)
-                바탕화면에 버튼 카드가 하나 붙어요. 누르면 그 자리에서 로그인된 창을 엽니다.
-                <b>자동 실행을 꺼 두어도 이 버튼은 됩니다</b> — 아침마다 저절로 뜨는 게 부담스러운 분께</li>
-              <li><b>나의 시간표</b> — [전체 시간표] → <b>교사별</b> 탭에서 <b>내 이름을 누르면</b> 그 줄이 네모로 도드라지고,
-                <b>[주간 시간표로 가져오기]</b>로 바탕화면 시간표에 그대로 옮겨집니다.
-                칸에는 <b>과목과 반이 함께</b> 적히고(<code>수학 3-1</code>), 칸이 좁아지면 과목이 접히고 반만 남아요.
-                이미 적어 둔 시간표는 지워지므로 <b>먼저 묻고, 되돌리기</b>를 드립니다</li>
-              <li>🔴 <b>시계 카드가 낮은 배치에서 시각이 잘리던 것</b>을 고쳤습니다 — 아주 낮으면 제목·날짜를 접고 시각만 남깁니다</li>
-              <li>날씨 카드의 “학교를 설정하면…” 안내가 낮은 카드에서 넘치던 것도 함께 고쳤습니다</li>
-              <li>앱 안 설명서(설정 → 도움말)에 <b>나의 시간표</b>와 <b>업무포털</b> 항목을 넣었습니다</li>
+              <li><b>나의 시간표</b> 추가</li>
+              <li><b>업무포털 로그인 버튼</b> 추가</li>
+              <li>깊은 위젯 모드에서 설정 창 입력 안 되던 것 수정</li>
+              <li>시계 카드 시각 잘림 수정</li>
+              <li>날씨 카드 안내 문구 넘침 수정</li>
             </ul>
           </div>
-          <div class="log-item">
-            <div class="log-top"><span class="log-ver">v2.9.4 · 2.9.5</span><span class="log-date">2026. 8. 23.</span></div>
-            <ul>
-              <li>🔴 <b>자리가 좁으면 과목 글자가 통째로 잘려 못 읽던 것</b>을 고쳤습니다 —
-                주간 시간표와 오늘 시간표를 <b>둘 다 켜고</b> 11교시면 줄이 5px까지 눌렸어요.
-                이제 최소 높이를 두고 넘치면 카드 안에서 스크롤합니다</li>
-              <li>🔴 설정 창에 보이는 <b>판 날짜가 하루 전으로</b> 박히던 것을 고쳤습니다(밤늦게 낸 판)</li>
-              <li>앱 안 설명서(설정 → 도움말)에 오늘 시간표 항목을 넣고, 주간과 같은 자리를 쓴다는 점을 적었습니다</li>
-            </ul>
-          </div>
+
           <details class="log-more">
             <summary>지난 판 더 보기 (15개)</summary>
+
+            <div class="log-item">
+              <div class="log-top"><span class="log-ver">v2.9.4 · 2.9.5</span><span class="log-date">2026. 8. 23.</span></div>
+              <ul>
+                <li>시간표 과목 글자 잘림 수정</li>
+                <li>설정 창 판 날짜 잘못 표시되던 것 수정</li>
+              </ul>
+            </div>
+
             <div class="log-item">
               <div class="log-top"><span class="log-ver">v2.9.3</span><span class="log-date">2026. 8. 23.</span></div>
               <ul>
-                <li><b>오늘 시간표 폭이 확 좁아졌습니다</b> — 주간 시간표의 <b>절반</b>으로 뜹니다(주간 696px / 오늘 343px).
-                  어느 레이아웃에서 켜든 좁게 유지됩니다</li>
-                <li>과목명을 <b>가운데 정렬</b>로 바꿨습니다</li>
-                <li>줄 오른쪽에 <b>끝나는 시각</b>이 붙습니다 — <code>1  08:50  체육  ~09:35</code></li>
-                <li><b>레이아웃 10종 전부</b>에서 쓸 수 있습니다</li>
-                <li>앱 안 설명서(설정 → 도움말)도 함께 고쳤습니다 <b>(v2.9.4)</b></li>
-                <li>⚠️ 주간 시간표와 <b>같은 자리</b>를 씁니다 — <b>둘 중 하나만 켜서</b> 쓰세요.
-                  둘 다 켜면 그 자리를 위아래로 나눠 씁니다</li>
+                <li>오늘 시간표 폭 절반으로 줄임</li>
+                <li>끝나는 시각 표시 추가</li>
+                <li>레이아웃 10종 전부에서 사용 가능</li>
               </ul>
             </div>
 
             <div class="log-item">
               <div class="log-top"><span class="log-ver">v2.9.1 · 2.9.2</span><span class="log-date">2026. 8. 22.</span></div>
               <ul>
-                <li>오늘 시간표 줄 오른쪽에 <b>끝나는 시각</b>이 붙습니다 — <code>1  08:50  체육  ~09:35</code></li>
-                <li>🔴 카드를 <b>작게</b> 줄였을 때 <b>칸이 한 칸씩 밀려 어긋나던 것</b>을 고쳤습니다
-                  (과목이 교시 자리로 튀었어요). 칠판 질감에서도 같았습니다</li>
-                <li>🔴 주말에 뜨는 <b>“오늘은 수업이 없어요”가 세로로 쪼개져</b> 보이던 것을 고쳤습니다</li>
-                <li>설정 → 도움말(앱 안 설명서)에 오늘 시간표 항목을 넣었습니다</li>
+                <li>카드를 작게 줄였을 때 칸 어긋남 수정</li>
+                <li>주말 안내 문구 쪼개지던 것 수정</li>
               </ul>
             </div>
+
             <div class="log-item">
               <div class="log-top"><span class="log-ver">v2.9.0</span><span class="log-date">2026. 8. 22.</span></div>
               <ul>
-                <li><b>오늘 시간표 위젯</b>이 생겼습니다 — 주간 시간표는 칸이 작아 잘 안 보이는데, 아침에 확인하는 건 오늘치뿐이죠.
-                  오늘 하루만 <b>세로로 크게</b> 폅니다. <b>설정 → 위젯 → 오늘 시간표</b>를 켜세요(기본은 꺼져 있어요)</li>
-                <li>자료를 새로 받지 않습니다 — 이미 받아 둔 학기 시간표에서 <b>오늘 요일만</b> 꺼내 씁니다</li>
-                <li>칸을 눌러 과목 입력, 우클릭으로 색칠 — <b>주간 시간표와 똑같이</b> 되고 한쪽에 적으면 다른 쪽에도 바로 반영됩니다</li>
-                <li>제목 옆 <b>[전체]</b>로 학교 전체 시간표를 엽니다. 주말에는 "오늘은 수업이 없어요"가 뜨고,
-                  <b>자정이 지나면 앱을 껐다 켜지 않아도</b> 다음 날로 바뀝니다</li>
-                <li>🔴 <b>주간 시간표를 "작게"로 두면 과목 글자가 위아래로 잘리던 것</b>을 고쳤습니다 — 줄이 얇아져도 글자가 따라 줄지 않아 30칸이 조금씩 잘리고 있었어요</li>
-                <li>오늘 시간표 칸에 <b>키보드로 닿게</b> 했습니다 (Tab → 화살표 이동 → Enter 입력)</li>
+                <li><b>오늘 시간표 위젯</b> 추가</li>
+                <li>주간 시간표 “작게”에서 글자 잘림 수정</li>
               </ul>
             </div>
+
             <div class="log-item">
               <div class="log-top"><span class="log-ver">v2.8.2</span><span class="log-date">2026. 8. 22.</span></div>
               <ul>
-                <li>생기부 <b>글자 수 표시</b> 수정 — 한도와 같은 잣대로(한글 기준 자수)</li>
-                <li>이모지가 섞였을 때 바이트를 적게 세던 것 수정</li>
+                <li>생기부 글자 수 표시 수정</li>
               </ul>
             </div>
 
             <div class="log-item">
               <div class="log-top"><span class="log-ver">v2.8.1</span><span class="log-date">2026. 8. 22.</span></div>
               <ul>
-                <li><b>구글 캘린더 주소를 고르기 쉽게</b> — 주소를 넣는 자리에 <b>맞는 주소와 아닌 주소</b>를 나란히 보여 줍니다.
-                  [캘린더 통합] 안에 비슷한 주소가 여럿 있어 헷갈리기 쉬웠어요</li>
-                <li>막히면 <b>[자세한 설명 보기]</b>를 눌러 이 설명서의 해당 대목으로 바로 올 수 있습니다</li>
-                <li>설명서에 <b>학교 공용 캘린더를 여럿이 볼 때</b> 항목을 새로 넣었습니다</li>
+                <li>구글 캘린더 주소 고르기 안내 추가</li>
               </ul>
             </div>
 
             <div class="log-item">
               <div class="log-top"><span class="log-ver">v2.8.0</span><span class="log-date">2026. 8. 21.</span></div>
               <ul>
-                <li><b>구글 캘린더 가져오기</b> 추가 — 구글 캘린더 일정을 달력에 함께 띄웁니다.
-                  설정 → 학교 → <b>[구글 캘린더 가져오기]</b>. 학교 캘린더든 개인 일정이든 되고, 매주·매월 반복되는 일정도 그대로 나옵니다</li>
-                <li><b>복사가 눌러도 아무 반응이 없던 것</b> 수정 — 내선번호·생기부·찾기 등 8곳.
-                  위젯이 바탕화면에 붙어 있을 때 복사가 조용히 실패하고 있었습니다</li>
-                <li><b>설정 내보내기 백업에 API 키가 그대로 들어가던 것</b> 수정 — 키와 캘린더 주소를 빼고 저장합니다</li>
-                <li>화면에서 난 오류도 기록에 남게 했습니다 — 그동안 절반만 보여서 원인을 못 좁혔습니다</li>
-                <li>어두운 테마에서 체크한 항목이 구분되지 않던 것, 일부 칸의 글씨체가 달랐던 것 수정</li>
+                <li><b>구글 캘린더 가져오기</b> 추가</li>
+                <li>복사가 안 되던 것 수정</li>
+                <li>설정 백업에 API 키가 들어가던 것 수정</li>
               </ul>
             </div>
 
             <div class="log-item">
               <div class="log-top"><span class="log-ver">v2.7.4</span><span class="log-date">2026. 8. 21.</span></div>
               <ul>
-                <li><b>발표 중 작업표시줄이 화면을 가리던 것</b> 수정 — 앱이 처음 설치할 때 <b>작업표시줄 자동 숨김을 켜던 것을 없앴습니다</b></li>
-                <li><b>할 일이 뭉개져 읽히던 것</b> 수정 — 내용이 긴 항목이 다음 줄과 겹쳐 그려졌습니다</li>
-                <li>창 크기가 바뀌는 순간 화면이 미세하게 어긋나던 것 수정</li>
+                <li>발표 중 작업표시줄 가림 수정</li>
+                <li>할 일이 겹쳐 보이던 것 수정</li>
               </ul>
             </div>
 
             <div class="log-item">
               <div class="log-top"><span class="log-ver">v2.7.3</span><span class="log-date">2026. 8. 21.</span></div>
               <ul>
-                <li><b>위젯 모드</b>가 화면 왼쪽 위에 잘려 뜨던 것 수정 — 모니터마다 배율이 다를 때(노트북 150% + 외부 100%) 어긋났습니다</li>
-                <li><b>설정 창</b>이 잘리고, 설정을 열면 멈추던 것 수정</li>
-                <li><b>교시 시각을 손으로</b> 정할 수 있습니다 — 쉬는 시간이 교시마다 다른 학교용</li>
-                <li>11교시까지 있는 학교에서 <b>10교시까지만 나오던 것</b> 수정</li>
+                <li>위젯 모드 위치 어긋남 수정</li>
+                <li>교시 시각 직접 설정 추가</li>
+                <li>11교시 표시 수정</li>
               </ul>
             </div>
 
@@ -445,61 +412,52 @@
               <ul>
                 <li><b>진도</b> 위젯 추가</li>
                 <li>화면이 안 열리던 문제 수정</li>
-                <li>버전 알림 띠 글자 잘림 수정</li>
-                <li>할 일 마감일 표시 수정</li>
               </ul>
             </div>
 
             <div class="log-item">
               <div class="log-top"><span class="log-ver">v2.7.0 · 2.7.1</span><span class="log-date">2026. 8. 21.</span></div>
               <ul>
-                <li>독 <b>아이콘 세트 5벌</b> 추가</li>
-                <li>‘지금 이 시간’ 문구 직접 입력 추가</li>
-                <li>설치 후 자동 실행</li>
-                <li>생기부 행동특성 초점 칩 81개로 확대</li>
-                <li>카드 제목·입력칸 잘림 수정</li>
+                <li>독 아이콘 세트 5벌 추가</li>
+                <li>설치 후 자동 실행 추가</li>
+                <li>생기부 초점 칩 81개로 확대</li>
               </ul>
             </div>
 
             <div class="log-item">
               <div class="log-top"><span class="log-ver">v2.6.0 · 2.6.2</span><span class="log-date">2026. 8. 21.</span></div>
               <ul>
-                <li>할 일·D-Day·메모 <b>전체 보기</b> 추가</li>
+                <li>할 일·D-Day·메모 전체 보기 추가</li>
                 <li>내선번호 부서 편집 추가</li>
-                <li>되돌리기 확대(생기부 저장글·D-Day·일정)</li>
                 <li>설치 용량 71MB 감소</li>
-                <li>급식 캐시·출결 표시 등 9건 수정</li>
               </ul>
             </div>
 
+            <div class="log-item">
+              <div class="log-top"><span class="log-ver">v2.5.0 · 2.5.1</span><span class="log-date">2026. 8. 20.</span></div>
+              <ul>
+                <li>좁은 배치에서 표 잘림 수정</li>
+                <li>전남·광주 업무포털 통합 반영</li>
+              </ul>
+            </div>
 
-              <div class="log-item">
-                <div class="log-top"><span class="log-ver">v2.5.0 · 2.5.1</span><span class="log-date">2026. 8. 20.</span></div>
-                <ul>
-                  <li>좁은 배치에서 표 잘림 수정</li>
-                  <li>전남·광주 업무포털 통합 반영</li>
-                </ul>
-              </div>
+            <div class="log-item">
+              <div class="log-top"><span class="log-ver">v2.4.0 ~ 2.4.5</span><span class="log-date">2026. 8. 19~20.</span></div>
+              <ul>
+                <li><b>담임반 출결</b> 추가</li>
+                <li>시간표 칸 색칠 추가</li>
+                <li>작업표시줄 가림 수정</li>
+              </ul>
+            </div>
 
-              <div class="log-item">
-                <div class="log-top"><span class="log-ver">v2.4.0 ~ 2.4.5</span><span class="log-date">2026. 8. 19~20.</span></div>
-                <ul>
-                  <li><b>담임반 출결</b> 추가</li>
-                  <li>시간표 칸 색칠 추가</li>
-                  <li>시계 모양·날씨 아이콘 개선</li>
-                  <li>급식 끼니 고르기, 할 일 마감 임박순 추가</li>
-                  <li>작업표시줄 가림·쪽지창 입력 문제 수정</li>
-                </ul>
-              </div>
-
-              <div class="log-item">
-                <div class="log-top"><span class="log-ver">v2.3.0 ~ 2.3.2</span><span class="log-date">2026. 8. 19.</span></div>
-                <ul>
-                  <li><b>과목별·교사별 시간표</b> 추가</li>
-                  <li>학사일정 직접 고치기 추가</li>
-                  <li>전체 시간표 속도 개선(22초 → 7초)</li>
-                </ul>
-              </div>
+            <div class="log-item">
+              <div class="log-top"><span class="log-ver">v2.3.0 ~ 2.3.2</span><span class="log-date">2026. 8. 19.</span></div>
+              <ul>
+                <li><b>과목별·교사별 시간표</b> 추가</li>
+                <li>학사일정 직접 고치기 추가</li>
+                <li>전체 시간표 속도 개선(22초 → 7초)</li>
+              </ul>
+            </div>
           </details>
         </div>
       </section>
