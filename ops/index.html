@@ -54,6 +54,10 @@ code{font-size:11.5px;background:var(--soft);padding:1px 5px;border-radius:4px}
 .n b{display:block;font-size:24px;font-weight:700;letter-spacing:-.03em;
   font-variant-numeric:tabular-nums;line-height:1.25}
 .n span{font-size:11px;color:var(--tx3)}
+/* 숫자 밑에 붙는 보조 한 줄 — '오늘 675' 만으로는 유입이 있는지 알 수 없다 */
+.n em{display:block;font-style:normal;font-size:10.5px;margin-top:3px;
+  color:var(--ok);font-variant-numeric:tabular-nums;white-space:nowrap}
+.n em.z{color:var(--tx3)}
 .app .foot{font-size:11px;color:var(--tx3);margin-top:11px;padding-top:9px;border-top:1px solid var(--line)}
 
 /* 앱 고르기 — 아래 표·그래프는 고른 앱 하나만 본다 */
@@ -71,7 +75,13 @@ code{font-size:11.5px;background:var(--soft);padding:1px 5px;border-radius:4px}
   font-size:10.5px;font-style:normal;color:var(--tx2);background:var(--card);padding:2px 5px;
   border:1px solid var(--line);border-radius:5px;display:none;margin-bottom:4px;z-index:2}
 .bar:hover i{display:block}
+/* 막대 아래쪽에 겹쳐 깔리는 '그중 새로 오신 분' — 같은 자리에 겹쳐야 비율이 보인다 */
+.bar u{position:absolute;left:0;right:0;bottom:0;background:var(--ok);opacity:.95;
+  border-radius:2px 2px 0 0;text-decoration:none}
 .axis{display:flex;justify-content:space-between;font-size:10.5px;color:var(--tx3);margin-top:7px}
+.lg{display:flex;gap:14px;font-size:11px;color:var(--tx3);margin-bottom:11px;flex-wrap:wrap}
+.lg s{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:5px;vertical-align:-1px}
+.lg s.a{background:var(--ac);opacity:.75} .lg s.b{background:var(--ok)}
 
 /* 표 */
 .tw{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow-x:auto}
@@ -89,6 +99,18 @@ td.body{white-space:pre-wrap}   /* 여러 줄로 적어 보내신 의견이 한 
 .tag.thanks{background:rgba(21,128,61,.12);color:var(--ok)}
 .tag.new{background:rgba(21,128,61,.12);color:var(--ok)}
 .done td{opacity:.45}
+/* 보내신 분 — 이름이 아니라 컴퓨터 번호 앞자리다. 누른 뒤엔 그분 것만 걸러 본다 */
+.who{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:10.5px;color:var(--tx3);
+  background:var(--soft);border:1px solid var(--line);border-radius:5px;padding:1px 5px;
+  cursor:pointer;white-space:nowrap}
+.who:hover{border-color:var(--ac);color:var(--ac)}
+.who b{font-weight:700;color:var(--ac);margin-left:5px}
+/* 잠잠한 컴퓨터 — 빠져나가는 중인 분은 재사용률로는 안 잡힌다 */
+.idle{display:flex;gap:22px;flex-wrap:wrap;padding:13px 14px;border-top:1px solid var(--line)}
+.idle .n b{font-size:19px}
+/* 오류 표의 '처음' — 폰에서는 열을 하나 더 두면 내용이 한 글자씩 쪼개진다.
+   좁을 때는 열을 접고 '마지막' 칸 아래에 한 줄로 붙인다. */
+.mfirst{display:none;color:var(--tx3)}
 .empty{padding:22px 14px;font-size:12.5px;color:var(--tx3);text-align:center}
 .mut{color:var(--tx3);font-size:11.5px}
 
@@ -130,7 +152,8 @@ textarea:focus{border-color:var(--ac)}
 .nt button{padding:4px 9px;font-size:11.5px}
 .nt .on{background:var(--ac);color:#fff;border-color:var(--ac)}
 .nt .del:hover{border-color:var(--warn);color:var(--warn)}
-@media(max-width:560px){ .wrap{padding:16px 12px 48px} .n b{font-size:21px} .find{min-width:100%} }
+@media(max-width:560px){ .wrap{padding:16px 12px 48px} .n b{font-size:21px} .find{min-width:100%}
+  .cfirst{display:none} .mfirst{display:block;font-size:10.5px;margin-top:3px} .idle{gap:16px} }
 </style>
 </head>
 <body>
@@ -283,18 +306,87 @@ function drawPick() {
    (거른 뒤 60줄을 채우려고 서버에 다시 묻는 구조는 화면만 복잡해진다.) */
 async function load() {
   $('#asof').textContent = '불러오는 중…';
-  const [sum, daily, fb, ver, ret, err, nt] = await Promise.all([
+  // 뷰가 아직 안 깔린 채로도 화면은 돌아야 한다 — 없으면 null 로 받아 두고 아래에서 손수 센다
+  const soft = r => (r.error ? null : (r.data || []));
+  const [sum, daily, fb, ver, ret, err, nt, nw, idle] = await Promise.all([
     sb.from('v_app_summary').select('*').then(r => r.data || []),
     sb.from('v_app_daily').select('*').then(r => r.data || []),
     sb.from('app_feedback').select('*').order('created_at', { ascending: false }).limit(500).then(r => r.data || []),
     sb.from('v_app_versions').select('*').then(r => r.data || []),
     sb.from('v_app_retention').select('*').then(r => r.data || []),
     sb.from('v_app_errors').select('*').limit(80).then(r => r.data || []),
-    sb.from('app_notice').select('*').order('created_at', { ascending: false }).limit(40).then(r => r.data || [])
+    sb.from('app_notice').select('*').order('created_at', { ascending: false }).limit(40).then(r => r.data || []),
+    sb.from('v_app_new').select('*').then(soft),
+    sb.from('v_app_idle').select('*').then(soft)
   ]);
-  DATA = { sum, daily, fb, ver, ret, err, nt };
+  DATA = { sum, daily, fb, ver, ret, err, nt, nw, idle, slow: false };
+  if (nw === null || idle === null) await lifeBySelf();
+  if (err.length && !('first_at' in err[0])) await errFirstBySelf();
   drawPick(); drawAll();
-  $('#asof').textContent = new Date().toLocaleString('ko-KR') + ' 기준';
+  $('#asof').textContent = new Date().toLocaleString('ko-KR') + ' 기준'
+    + (DATA.slow ? ' · 새로 오신 분은 원본에서 세는 중입니다(뷰를 깔면 빨라집니다)' : '');
+}
+
+/* ─── 뷰가 없을 때의 대비책 ───
+   v_app_new · v_app_idle 이 아직 안 깔렸으면 핑 원본을 읽어 손수 센다.
+   🔴 이건 어디까지나 버팀목이다 — 핑은 2년치가 쌓이므로 언젠가는 무거워진다.
+      db/telemetry.sql 을 한 번 돌리면 뷰가 생기고 이 길은 저절로 안 쓰인다. */
+const kstToday = () => new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
+function dayShift(s, n) {
+  const d = new Date(s + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+}
+
+async function lifeBySelf() {
+  const rows = [];
+  const STEP = 1000, CAP = 120000;          // 넉넉히 잡되 끝은 둔다 — 브라우저가 멎으면 안 된다
+  for (let from = 0; from < CAP; from += STEP) {
+    const { data, error } = await sb.from('app_ping').select('app,install_id,day')
+      .range(from, from + STEP - 1);
+    if (error || !data || !data.length) break;
+    for (let i = 0; i < data.length; i++) rows.push(data[i]);
+    if (data.length < STEP) break;
+  }
+  DATA.slow = true;
+  if (!rows.length) { DATA.nw = DATA.nw || []; DATA.idle = DATA.idle || []; return; }
+
+  const life = {};                            // 컴퓨터마다 첫날·마지막날
+  rows.forEach(r => {
+    const k = r.app + '|' + r.install_id, v = life[k];
+    if (!v) life[k] = { app: r.app, first: r.day, last: r.day };
+    else { if (r.day < v.first) v.first = r.day; if (r.day > v.last) v.last = r.day; }
+  });
+
+  const today = kstToday(), from30 = dayShift(today, -29);
+  const c7 = dayShift(today, -7), c14 = dayShift(today, -14), c30 = dayShift(today, -30);
+  const newBy = {}, idleBy = {};
+  Object.keys(life).forEach(k => {
+    const v = life[k];
+    if (v.first >= from30) { const kk = v.app + '|' + v.first; newBy[kk] = (newBy[kk] || 0) + 1; }
+    const b = idleBy[v.app] || (idleBy[v.app] = { app: v.app, total: 0, idle7: 0, idle14: 0, idle30: 0 });
+    b.total++;
+    if (v.last <= c7) b.idle7++;
+    if (v.last <= c14) b.idle14++;
+    if (v.last <= c30) b.idle30++;
+  });
+  DATA.nw = Object.keys(newBy).map(k => {
+    const p = k.split('|'); return { app: p[0], day: p[1], news: newBy[k] };
+  });
+  DATA.idle = Object.keys(idleBy).map(k => idleBy[k]);
+}
+
+/* 오류가 처음 난 날 — 뷰에 first_at 이 없으면 원본에서 묶음마다 가장 이른 것을 찾는다 */
+async function errFirstBySelf() {
+  const since = new Date(Date.now() - 31 * 864e5).toISOString();
+  const { data } = await sb.from('app_error').select('app,sig,created_at')
+    .gte('created_at', since).limit(8000);
+  if (!data || !data.length) return;
+  const min = {};
+  data.forEach(r => {
+    const k = r.app + '|' + r.sig;
+    if (!min[k] || r.created_at < min[k]) min[k] = r.created_at;
+  });
+  (DATA.err || []).forEach(r => { r.first_at = min[r.app + '|' + r.sig] || null; });
 }
 
 /* 카드는 두 앱 모두, 나머지는 고른 앱만 */
@@ -363,17 +455,33 @@ $('#ntAdd').addEventListener('click', async () => {
   await load();
 });
 
+/* 그 앱에 새로 오신 분 — 오늘 / 최근 7일 */
+function newOf(app) {
+  const today = kstToday(), w = dayShift(today, -6);
+  let t = 0, wk = 0;
+  (DATA.nw || []).forEach(r => {
+    if (r.app !== app) return;
+    if (r.day === today) t += r.news;
+    if (r.day >= w) wk += r.news;
+  });
+  return { today: t, week: wk };
+}
+const idleOf = app => (DATA.idle || []).filter(r => r.app === app)[0] || null;
+
 function drawCards(rows) {
   const by = Object.fromEntries(rows.map(r => [r.app, r]));
+  // 0이면 회색으로 — 초록으로 크게 쓴 0은 좋은 소식처럼 보인다
+  const nw = n => `<em class="${n ? '' : 'z'}">새로 ${n}</em>`;
   $('#cards').innerHTML = Object.keys(APPS).map(a => {
-    const r = by[a] || {};
+    const r = by[a] || {}, n = newOf(a), id = idleOf(a);
     return `<div class="app"><div class="nm">${esc(nm(a))}</div>
       <div class="nums">
-        <div class="n"><b>${r.installs || 0}</b><span>설치</span></div>
-        <div class="n"><b>${r.week || 0}</b><span>최근 7일</span></div>
-        <div class="n"><b>${r.today || 0}</b><span>오늘</span></div>
+        <div class="n"><b>${r.installs || 0}</b><span>설치</span><em class="z">누적</em></div>
+        <div class="n"><b>${r.week || 0}</b><span>최근 7일</span>${nw(n.week)}</div>
+        <div class="n"><b>${r.today || 0}</b><span>오늘</span>${nw(n.today)}</div>
       </div>
-      <div class="foot">${r.last_day ? '마지막 신호 ' + esc(r.last_day) : '아직 신호가 없습니다'}</div></div>`;
+      <div class="foot">${r.last_day ? '마지막 신호 ' + esc(r.last_day) : '아직 신호가 없습니다'}${
+        id && id.idle7 ? ' · 7일 넘게 조용한 컴퓨터 <b>' + id.idle7 + '대</b>' : ''}</div></div>`;
   }).join('');
 }
 
@@ -381,13 +489,24 @@ function drawChart(rows) {
   if (!rows.length) { $('#chart').innerHTML = `<div class="empty">${esc(nm(cur))} — 아직 자료가 없습니다.</div>`; return; }
   const by = {};
   rows.forEach(r => { by[r.day] = (by[r.day] || 0) + (r.users || 0); });
+  // 그중 그날 처음 오신 분 — 같은 막대에 겹쳐 깔아야 '몇 명 중 몇 명'이 눈에 들어온다
+  const nb = {};
+  (DATA.nw || []).forEach(r => { if (r.app === cur) nb[r.day] = (nb[r.day] || 0) + (r.news || 0); });
   const days = Object.keys(by).sort();
   const max = Math.max(1, ...days.map(d => by[d]));
+  const sumN = days.reduce((s, d) => s + (nb[d] || 0), 0);
+
   $('#chart').innerHTML =
-    `<div class="bars">${days.map(d =>
-      `<div class="bar" style="height:${Math.max(3, by[d] / max * 100)}%"><i>${esc(d.slice(5))} · ${by[d]}명</i></div>`).join('')}</div>
+    `<div class="lg"><span><s class="a"></s>그날 쓰신 분</span><span><s class="b"></s>그중 새로 오신 분</span></div>
+     <div class="bars">${days.map(d => {
+      const n = nb[d] || 0;
+      return `<div class="bar" style="height:${Math.max(3, by[d] / max * 100)}%">${
+        n ? `<u style="height:${Math.min(100, n / by[d] * 100)}%"></u>` : ''
+        }<i>${esc(d.slice(5))} · ${by[d]}명${n ? ' (새로 ' + n + ')' : ''}</i></div>`;
+    }).join('')}</div>
      <div class="axis"><span>${esc(days[0])}</span><span>최대 ${max}명</span><span>${esc(days[days.length - 1])}</span></div>`
-     + (days.length < 3 ? '<div class="empty" style="text-align:left;padding:10px 0 0">아직 하루이틀치뿐입니다 — 며칠 지나야 흐름이 보입니다.</div>' : '');
+     + (days.length < 3 ? '<div class="empty" style="text-align:left;padding:10px 0 0">아직 하루이틀치뿐입니다 — 며칠 지나야 흐름이 보입니다.</div>'
+        : `<div class="empty" style="text-align:left;padding:10px 0 0">이 30일 동안 <b>${sumN}대</b>가 새로 왔습니다. 초록이 줄어드는데 파랑이 그대로면 <b>새 분은 안 오고 쓰던 분들이 버티는 중</b>입니다.</div>`);
 }
 
 /* ─── 받은 의견 ───
@@ -404,8 +523,20 @@ function fbPicked() {
   else if (FB.view !== 'all') rows = rows.filter(r => r.kind === FB.view);
   const q = FB.q.trim().toLowerCase();
   if (q) rows = rows.filter(r =>
-    String(r.body || '').toLowerCase().includes(q) || String(r.version || '').toLowerCase().includes(q));
+    String(r.body || '').toLowerCase().includes(q) || String(r.version || '').toLowerCase().includes(q)
+    || String(r.install_id || '').toLowerCase().includes(q));   // 번호를 눌러 그분 것만 보는 길
   return rows;
+}
+
+/* 보내신 분 — 익명 그대로다. 이름이 아니라 컴퓨터 번호 앞 여섯 자리를 보여 줄 뿐인데,
+   이것만 있어도 "같은 분이 세 번 보낸 것"과 "세 분이 따로 보낸 것"이 갈린다.
+   (옛 판에서 온 줄에는 번호가 없을 수 있다 — 그때는 아무것도 안 보여 준다.) */
+function fbWho(r) {
+  if (!r.install_id) return '';
+  const id = String(r.install_id);
+  const n = fbAll().filter(x => x.install_id === id).length;
+  return `<br><span class="who" data-who="${esc(id)}" title="이 분이 보내신 것만 보기">#${
+    esc(id.slice(0, 6))}${n > 1 ? `<b>${n}건</b>` : ''}</span>`;
 }
 
 /* 거르개는 한 번만 그려 두고 숫자만 갈아 끼운다 —
@@ -449,7 +580,7 @@ function drawFeedback() {
       <td class="mut">${esc(when(r.created_at))}</td>
       <td><span class="tag ${esc(r.kind)}">${esc(KIND[r.kind] || r.kind)}</span></td>
       <td class="body">${esc(r.body)}</td>
-      <td class="mut">v${esc(r.version || '?')}<br>${esc(r.os || '')}</td>
+      <td class="mut">v${esc(r.version || '?')}<br>${esc(r.os || '')}${fbWho(r)}</td>
       <td class="num"><input type="checkbox" style="width:auto" ${r.handled ? 'checked' : ''}></td>
       <td class="num"><button class="x" title="이 의견 지우기">✕</button></td>
     </tr>`).join('')}</tbody></table>`
@@ -458,6 +589,15 @@ function drawFeedback() {
 
   const more = $('#fbMore');
   if (more) more.addEventListener('click', () => { FB.show += FB.step; drawFeedback(); });
+
+  // 번호를 누르면 그분이 보내신 것만 남는다 — 되돌리려면 찾기 칸을 비우면 된다
+  $('#fb').querySelectorAll('.who').forEach(el => el.addEventListener('click', () => {
+    const id = el.dataset.who;
+    FB.q = (FB.q.trim() === id) ? '' : id;      // 한 번 더 누르면 풀린다
+    $('#fbQ').value = FB.q;
+    if (FB.q) { FB.view = 'all'; localStorage.setItem('ops.fb', 'all'); }  // 읽음 처리한 옛 글도 함께 보여야 한다
+    FB.show = FB.step; drawFeedback();
+  }));
 
   $('#fb').querySelectorAll('tr[data-id]').forEach(tr => {
     const id = +tr.dataset.id;
@@ -551,10 +691,26 @@ function drawVersions(rows) {
   if (l) l.addEventListener('click', () => { VER.open = false; drawVersions(rows); });
 }
 
+/* ─── 잠잠한 컴퓨터 ───
+   재사용률은 '옛 무리가 남았는가'를 보는 것이라 **지금 빠져나가는 중인 분**은 안 잡힌다.
+   지웠는지는 영영 알 수 없으니(지운 앱은 신호를 안 보낸다) 며칠째 조용한지로 대신 본다. */
+function idleBox() {
+  const id = idleOf(cur);
+  if (!id || !id.total) return '';
+  const live = id.total - id.idle7;
+  return `<div class="idle">
+      <div class="n"><b>${id.idle7}</b><span>7일 넘게 조용</span></div>
+      <div class="n"><b>${id.idle14}</b><span>14일 넘게</span></div>
+      <div class="n"><b>${id.idle30}</b><span>30일 넘게</span></div>
+      <div class="n"><b>${pct(live, id.total)}</b><span>아직 쓰시는 분</span></div>
+    </div>
+    <div class="empty" style="text-align:left;padding:0 14px 13px">안쪽 숫자는 바깥에 포함됩니다 — 30일 넘게 조용한 ${id.idle30}대는 7일 쪽 ${id.idle7}대 안에 들어 있습니다. 지우셨는지는 알 길이 없어(지운 앱은 신호를 안 보냅니다) <b>며칠째 조용한지</b>로 대신 봅니다. 방학처럼 학교를 안 나가는 철에는 함께 늘어납니다.</div>`;
+}
+
 function drawRetention(rows) {
   const r = rows[0];
   if (!r || (!r.cohort7 && !r.cohort30)) {
-    $('#ret').innerHTML = `<div class="empty">${esc(nm(cur))} — 설치한 지 7일이 지난 분이 아직 없습니다. 다음 주쯤 나옵니다.</div>`;
+    $('#ret').innerHTML = `<div class="empty">${esc(nm(cur))} — 설치한 지 7일이 지난 분이 아직 없습니다. 다음 주쯤 나옵니다.</div>` + idleBox();
     return;
   }
   $('#ret').innerHTML = `<table><thead><tr>
@@ -562,7 +718,7 @@ function drawRetention(rows) {
     <tr><td class="num">${pct(r.kept7, r.cohort7)} <span class="mut">(${r.kept7}/${r.cohort7})</span></td>
       <td class="num">${pct(r.kept30, r.cohort30)} <span class="mut">(${r.kept30}/${r.cohort30})</span></td>
     </tr></tbody></table>
-    <div class="empty" style="text-align:left;padding-top:0">설치한 지 그만큼 지난 분만 셉니다 — 어제 설치한 분을 넣으면 숫자가 늘 나빠 보입니다.</div>`;
+    <div class="empty" style="text-align:left;padding-top:0">설치한 지 그만큼 지난 분만 셉니다 — 어제 설치한 분을 넣으면 숫자가 늘 나빠 보입니다.</div>` + idleBox();
 }
 
 /* ─── 오류 ───
@@ -572,9 +728,15 @@ const ERR = { step: 6, show: 6 };
 function drawErrors(rows) {
   if (!rows.length) { $('#err').innerHTML = `<div class="empty">${esc(nm(cur))} — 최근 30일 동안 들어온 오류가 없습니다.</div>`; return; }
   const shown = rows.slice(0, ERR.show);
+  // 사흘 안에 처음 난 것은 방금 생긴 것이다 — 새 판을 낸 뒤라면 그 판이 만든 오류다
+  const fresh = r => r.first_at && (Date.now() - new Date(r.first_at).getTime()) < 3 * 864e5;
+  const newCnt = rows.filter(fresh).length;
   $('#err').innerHTML = `<table><thead><tr>
-    <th>마지막</th><th>내용</th><th>버전</th><th class="num">횟수</th><th class="num">대수</th><th></th></tr></thead><tbody>${shown.map(r => `
-    <tr data-sig="${esc(r.sig)}"><td class="mut">${esc(when(r.last_at))}</td>
+    <th class="cfirst">처음</th><th>마지막</th><th>내용</th><th>버전</th><th class="num">횟수</th><th class="num">대수</th><th></th></tr></thead><tbody>${shown.map(r => `
+    <tr data-sig="${esc(r.sig)}">
+      <td class="mut cfirst">${r.first_at ? esc(when(r.first_at)) : '—'}${fresh(r) ? ' <span class="tag new">새로</span>' : ''}</td>
+      <td class="mut">${esc(when(r.last_at))}<span class="mfirst">${
+        r.first_at ? '처음 ' + esc(when(r.first_at)) : ''}${fresh(r) ? ' <span class="tag new">새로</span>' : ''}</span></td>
       <td class="body">${esc(r.sample)}</td>
       <td class="mut">v${esc(r.version || '?')}</td>
       <td class="num">${r.hits}</td><td class="num">${r.machines}</td>
@@ -582,7 +744,9 @@ function drawErrors(rows) {
     + (rows.length > ERR.show
       ? `<div class="morewrap"><button id="errMore">${rows.length - ERR.show}가지 더 보기</button></div>`
       : (ERR.show > ERR.step ? `<div class="morewrap"><button id="errLess">접기</button></div>` : ''))
-    + `<div class="empty" style="text-align:left;padding-top:10px">파일 경로는 앱에서 이미 버리고 보냅니다. <b>대수</b>가 많을수록 급한 것입니다 — 한 대에서만 나면 그 컴퓨터 사정일 수 있습니다. 고쳐서 낸 판이 퍼진 뒤에 ✕로 치우면 새로 난 것이 눈에 띕니다.</div>`;
+    + `<div class="empty" style="text-align:left;padding-top:10px">파일 경로는 앱에서 이미 버리고 보냅니다. <b>대수</b>가 많을수록 급한 것입니다 — 한 대에서만 나면 그 컴퓨터 사정일 수 있습니다. 고쳐서 낸 판이 퍼진 뒤에 ✕로 치우면 새로 난 것이 눈에 띕니다.`
+    + (newCnt ? ` <b>사흘 안에 처음 난 것이 ${newCnt}가지</b> 있습니다 — 방금 낸 판을 의심할 자리입니다.`
+       : ' 사흘 안에 새로 생긴 오류는 없습니다 — 남은 것은 예전부터 있던 것들입니다.') + `</div>`;
 
   const more = $('#errMore'), less = $('#errLess');
   if (more) more.addEventListener('click', () => { ERR.show += ERR.step; drawErrors(rows); });
