@@ -112,6 +112,10 @@
   .sec-head .mini-art{margin-left:auto;width:112px;height:112px;border-radius:26px;flex:none;
     border:5px solid #fff;transform:rotate(3deg);box-shadow:0 8px 20px rgba(59,125,216,.18);object-fit:cover}
   section:nth-of-type(even) .sec-head .mini-art{transform:rotate(-3deg)}
+  .infoart{margin:24px 0 6px}
+  .infoart img{width:100%;height:auto;display:block;border-radius:18px;border:1px solid var(--line);
+    box-shadow:0 8px 20px rgba(59,125,216,.14)}
+  .infoart figcaption{font-size:13px;color:var(--ink-soft);font-weight:700;margin-top:10px;text-align:center}
   .sec-head h2{font-size:25px;font-weight:800;letter-spacing:-.015em;line-height:1.3}
   .sec-head p{font-size:14px;color:var(--ink-soft);margin-top:4px;font-weight:700}
   h3{font-size:18px;font-weight:800;margin:30px 0 12px;letter-spacing:-.015em;display:flex;align-items:center;gap:9px}
@@ -460,6 +464,13 @@
           <div class="step"><h4>4. 설치 완료 · 자동 실행</h4><p>설치가 끝나면 바로 바탕화면에 위젯이 나타나요. 이후엔 컴퓨터를 켤 때 자동으로 실행됩니다.</p></div>
         </div>
 
+        <h3><svg class="ic" viewBox="0 0 24 24"><path d="M12 4v10"/><path d="M8 11l4 4 4-4"/><path d="M4 19h16"/></svg>크롬이 다운로드를 막을 때</h3>
+        <p class="body">서명하지 않은 프로그램이라 크롬이 먼저 막아서는 경우가 있어요. 아래 순서대로 하면 받아집니다.</p>
+        <figure class="infoart">
+          <img src="download-fix.webp" width="1280" height="853" alt="크롬이 다운로드를 막을 때 해결하는 네 가지 방법을 그린 안내 그림" loading="lazy" />
+          <figcaption>크롬이 다운로드를 막을 때 — 위 네 가지 순서대로 하면 됩니다.</figcaption>
+        </figure>
+        <p class="body"><strong>3번은 윈도우 보안이 지운 경우에만 통합니다.</strong> 보호 기록에 아무것도 없다면 크롬이 지운 것이니, 2번으로 <strong>표준 보호</strong>로 낮춘 뒤 다시 받으세요. 학교 컴퓨터에서 버튼이 회색으로 눌리지 않으면 교육청 보안 정책이라 <strong>집에서 받아 USB로 옮기는 편</strong>이 빠릅니다.</p>
         <div class="note warn"><span class="ic"><svg class="ic" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10.5v3.5"/><path d="M12 17h.01"/></svg></span><div><b>“Windows의 PC를 보호했습니다” 경고가 떠요</b><p>정상입니다. 개인이 만든 무료 프로그램이라 서명 비용을 들이지 않아서 뜨는 경고예요. <strong>[추가 정보]</strong>를 누르면 나타나는 <strong>[실행]</strong> 버튼으로 진행하세요. 백신이 막으면 잠시 <strong>허용/신뢰</strong>로 풀어 주면 됩니다.</p><p>제대로 받으신 게 맞는지 확인하고 싶다면, <strong>[추가 정보]</strong>를 눌렀을 때 나오는 <strong>게시자</strong>가 <strong>kimju.zip</strong>인지 보세요. 설치 후에는 <strong>제어판 → 프로그램 및 기능</strong>에서도 같은 이름으로 보입니다.</p></div></div>
         <div class="note tip"><span class="ic"><svg class="ic" viewBox="0 0 24 24"><path d="M4 19h16"/><path d="M6 15l4-9 4 9"/><path d="M7.5 12h5"/></svg></span><div><b>무엇이 근거인지 밑줄로 보여 줍니다</b><p><strong>파란 밑줄</strong>은 메모에서 나온 대목, <strong>보라 밑줄</strong>은 고른 초점(칩)에서 나온 대목입니다. 밑줄이 없는 부분은 AI가 이어 쓴 것이니 실제 수행과 맞는지 특히 봐 주세요. 초안마다 “메모 3곳 · 초점 2곳”처럼 개수도 나옵니다.</p><p><strong>메모 없이 칩만 골라도 씁니다.</strong> 적을 시간이 없을 때 초점만 골라 두면 그것을 근거로 써요. 그때는 구체적인 사건·횟수·기간·역할을 만들지 않고 태도와 모습만 담담하게 적습니다. 메모도 칩도 없을 때만 막습니다.</p><p><strong>분량은 바이트로 셉니다</strong> — 나이스가 그렇게 세기 때문입니다(한글 1자 3바이트, 공백·마침표는 1바이트). 옆에 적힌 자수는 참고용이라, <strong>1,114자를 써도 2,728바이트</strong>라서 한도(3,000) 안일 수 있어요. (v2.2.53~54)</p></div></div>
         <div class="note tip"><span class="ic"><svg class="ic" viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="14" rx="2"/><path d="M2 18h20"/></svg></span><div><b>작업표시줄과 겹치지 않습니다</b><p>독은 <strong>작업표시줄을 피해 그 위에</strong> 놓입니다. 화면 아래를 작업표시줄이 얼마나 쓰고 있는지 직접 읽어 그만큼 비켜서요 — 작업표시줄을 위·왼쪽·오른쪽에 두셔도, 모니터 해상도나 배율이 달라도 같습니다.</p><p><strong>처음 설치하면 작업표시줄 자동 숨김이 켜집니다</strong>. 작업표시줄이 평소 내려가 있어 화면을 세로로 더 쓰고, 마우스를 아래로 가져가면 다시 올라와요. 불편하시면 <strong>설정 → 화면 → 작업표시줄 자동 숨김</strong>을 끄면 되고, 한 번 끄면 다시 켜지 않습니다. (v2.2.50부터)</p></div></div>
