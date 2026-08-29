@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kimju.zip 도우미</title>
+<link rel="canonical" href="https://kimju.kr/help/">
+<meta name="description" content="GAS 배포 오류, TeacherDesk 2·유콜·쌤콜 사용법을 물어보는 선생님용 도우미입니다.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kimju.kr/help/">
+<meta property="og:title" content="kimju.zip 도우미">
+<meta property="og:description" content="GAS 배포 오류, TeacherDesk 2·유콜·쌤콜 사용법을 물어보세요.">
+<meta property="og:image" content="https://kimju.kr/help/avatar.png">
+<meta property="og:image:secure_url" content="https://kimju.kr/help/avatar.png">
+<meta property="og:image:alt" content="kimju.zip 도우미">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://kimju.kr/help/avatar.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080c10;
+  --surface:#0d1117;
+  --surface2:#131920;
+  --surface3:#1a2332;
+  --border:#1e2d3d;
+  --border2:#243447;
+  --accent:#00d4ff;
+  --accent2:#39ff85;
+  --accent3:#ff6b35;
+  --text:#cdd9e5;
+  --text-dim:#8b98a8;
+  --text-bright:#e6edf3;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Noto Sans KR',sans-serif;
+}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  height:100vh;
+  height:100dvh;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  font-size:15px;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+button,.chip,.notice-hdr{-webkit-tap-highlight-color:transparent}
+button:focus-visible,.chip:focus-visible,.notice-hdr:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px;border-radius:6px;
+}
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,212,255,0.012) 2px,rgba(0,212,255,0.012) 4px);
+  pointer-events:none;z-index:999;
+}
+.top-line{
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),var(--accent2),var(--accent3),transparent);
+  flex-shrink:0;
+  animation:lp 3s ease-in-out infinite;
+}
+@keyframes lp{0%,100%{opacity:0.7}50%{opacity:1}}
+
+header{
+  flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 20px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  position:relative;z-index:10;
+}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{
+  width:34px;height:34px;
+  background:var(--surface3);
+  border:1px solid var(--accent);
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:11px;font-weight:700;
+  color:var(--accent);line-height:1.25;text-align:center;
+  box-shadow:0 0 12px rgba(0,212,255,0.2);
+}
+.logo-texts{display:flex;flex-direction:column;gap:1px}
+.logo-name{font-family:var(--mono);font-size:17px;font-weight:700;color:var(--accent);letter-spacing:0.5px}
+.logo-sub{font-size:12px;color:var(--text-dim);letter-spacing:0.3px}
+.hdr-right{display:flex;align-items:center;gap:8px}
+.online-badge{
+  display:flex;align-items:center;gap:5px;
+  background:rgba(57,255,133,0.08);
+  border:1px solid rgba(57,255,133,0.25);
+  border-radius:20px;padding:4px 12px;
+  font-family:var(--mono);font-size:12px;color:var(--accent2);
+}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--accent2);box-shadow:0 0 6px var(--accent2);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+.main{
+  flex:1;min-height:0;
+  display:flex;flex-direction:column;
+  max-width:700px;width:100%;margin:0 auto;padding:0 14px;
+  position:relative;z-index:5;
+}
+
+/* 접혀 있을 때는 조용히 두고, 펼쳤을 때만 주황으로 살립니다.
+   챗봇이 GAS 말고 TD2·유콜·쌤콜까지 다루게 돼서, 첫 화면에서 이 안내가
+   가장 강한 색으로 시선을 먼저 가져가지 않도록 위계를 낮췄습니다. */
+.notice{
+  flex-shrink:0;margin:12px 0 6px;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-left:2px solid var(--border2);
+  border-radius:8px;overflow:hidden;
+  transition:border-left-color 0.25s;
+}
+.notice.open{border-left-color:var(--accent3)}
+.notice-hdr{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 12px;cursor:pointer;
+}
+.notice-hdr:hover{background:rgba(255,255,255,0.02)}
+.notice-hdr-l{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:13px;color:var(--text-dim);transition:color 0.25s}
+.notice:not(.open) .notice-hdr:hover .notice-hdr-l{color:var(--text)}
+.notice.open .notice-hdr-l{color:var(--accent3)}
+.notice-arrow{font-size:11px;color:var(--text-dim);transition:transform 0.3s;font-family:var(--mono)}
+.notice-arrow.open{transform:rotate(180deg)}
+.notice-body{
+  border-top:1px solid var(--border);
+  padding:12px 16px;display:none;
+  font-size:14px;line-height:1.9;color:var(--text-dim);
+  background:rgba(0,0,0,0.2);
+}
+.notice-body.open{display:block}
+.n-row{display:flex;gap:8px;margin-bottom:6px}
+.n-num{font-family:var(--mono);font-size:12px;color:var(--accent3);min-width:18px}
+.n-row b{color:var(--text);font-weight:500}
+.notice-foot{
+  margin-top:8px;padding-top:8px;
+  border-top:1px dashed var(--border);
+  font-size:11px;color:var(--text-dim);
+}
+
+.chat{
+  flex:1;min-height:0;overflow-y:auto;
+  padding:12px 0 6px;
+  display:flex;flex-direction:column;gap:12px;
+  scroll-behavior:smooth;
+}
+.chat::-webkit-scrollbar{width:3px}
+.chat::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+.welcome{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;text-align:center;padding:24px 16px;
+  animation:fadeUp 0.5s ease;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.welcome-ring{
+  width:84px;height:84px;border-radius:24px;
+  background:var(--surface3);
+  border:1px solid var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+  box-shadow:0 0 30px rgba(0,212,255,0.15),inset 0 0 20px rgba(0,212,255,0.05);
+  animation:float 4s ease-in-out infinite;
+}
+.welcome-ring img{width:100%;height:100%;object-fit:cover;display:block}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.welcome-title{font-size:22px;font-weight:700;color:var(--text-bright);line-height:1.4}
+.welcome-title span{color:var(--accent);font-family:var(--mono)}
+.welcome-desc{font-size:15px;color:var(--text-dim);line-height:1.9;max-width:420px;word-break:keep-all}
+.chips-wrap{display:flex;flex-direction:column;align-items:center;gap:8px}
+.chips-label{font-family:var(--mono);font-size:11px;color:var(--text-dim);letter-spacing:1px}
+.chips-label2{margin-top:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:520px}
+.chip{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:20px;padding:11px 16px;font-size:13px;color:var(--text-dim);
+  cursor:pointer;transition:all 0.2s;white-space:nowrap;
+  min-height:40px;display:flex;align-items:center;
+}
+.chip:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,0.06)}
+
+.msg{display:flex;gap:8px;animation:msgIn 0.25s ease}
+@keyframes msgIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{flex-direction:row-reverse}
+.av{
+  width:28px;height:28px;border-radius:8px;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  font-size:13px;margin-top:2px;overflow:hidden;
+}
+.av img{width:100%;height:100%;object-fit:cover;display:block}
+.av.bot{background:var(--surface3);border:1px solid var(--accent);box-shadow:0 0 8px rgba(0,212,255,0.15)}
+.av.uav{background:var(--surface2);border:1px solid var(--border2)}
+.bubble{
+  max-width:82%;padding:12px 16px;
+  border-radius:12px;font-size:15px;line-height:1.85;word-break:keep-all;
+}
+.msg.bot .bubble{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-bottom-left-radius:3px;color:var(--text);
+}
+.msg.user .bubble{
+  background:var(--surface3);border:1px solid var(--accent);
+  border-bottom-right-radius:3px;color:var(--text-bright);
+  box-shadow:0 0 12px rgba(0,212,255,0.08);
+}
+.bubble strong{color:var(--accent);font-weight:500}
+.bubble code{
+  background:rgba(0,212,255,0.08);padding:1px 5px;border-radius:4px;
+  font-family:var(--mono);font-size:11px;color:var(--accent2);
+}
+.bubble ol,.bubble ul{padding-left:20px;margin:4px 0 8px}
+.bubble li{margin-bottom:3px}
+.bubble li>ol,.bubble li>ul{margin:3px 0 3px}
+.bubble p{margin:0 0 9px}
+.bubble p:last-child{margin-bottom:0}
+.bubble h4{
+  font-size:15px;font-weight:700;color:var(--accent2);
+  margin:14px 0 6px;letter-spacing:0.2px;
+}
+.bubble h4:first-child{margin-top:0}
+.bubble hr{border:none;border-top:1px solid var(--border2);margin:12px 0}
+
+.typing-wrap{display:flex;gap:8px;align-items:flex-start;animation:msgIn 0.25s ease}
+.typing-bubble{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:12px;border-bottom-left-radius:3px;
+  padding:12px 16px;display:flex;gap:4px;align-items:center;
+}
+.td{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:td 1.4s ease-in-out infinite}
+.td:nth-child(2){animation-delay:0.2s;background:var(--accent2)}
+.td:nth-child(3){animation-delay:0.4s;background:var(--accent3)}
+@keyframes td{0%,60%,100%{transform:scale(1);opacity:0.3}30%{transform:scale(1.4);opacity:1}}
+
+.input-area{flex-shrink:0;padding:8px 0 14px}
+.input-box{
+  display:flex;gap:8px;align-items:flex-end;
+  background:var(--surface2);
+  border:1px solid var(--border2);
+  border-radius:12px;padding:9px 10px;
+  transition:border-color 0.2s,box-shadow 0.2s;
+}
+.input-box:focus-within{
+  border-color:var(--accent);
+  box-shadow:0 0 0 2px rgba(0,212,255,0.08);
+}
+#userInput{
+  flex:1;background:none;border:none;outline:none;
+  color:var(--text-bright);font-family:var(--sans);
+  font-size:15px;line-height:1.6;resize:none;
+  max-height:110px;min-height:24px;
+}
+#userInput::placeholder{color:var(--text-dim)}
+.send-btn{
+  width:34px;height:34px;border-radius:9px;
+  background:var(--accent);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:#080c10;font-size:16px;font-weight:700;
+  transition:all 0.2s;flex-shrink:0;
+  box-shadow:0 0 14px rgba(0,212,255,0.3);
+}
+.send-btn:hover:not(:disabled){background:#33ddff;box-shadow:0 0 20px rgba(0,212,255,0.5)}
+.send-btn:disabled{opacity:0.3;cursor:not-allowed;box-shadow:none}
+#userInput:disabled{opacity:0.5}
+.retry-btn{
+  display:inline-flex;align-items:center;gap:4px;margin-top:8px;
+  background:rgba(255,107,53,0.1);border:1px solid var(--accent3);
+  border-radius:8px;padding:6px 12px;cursor:pointer;
+  font-family:var(--sans);font-size:12px;font-weight:500;color:var(--accent3);
+  min-height:36px;
+}
+.retry-btn:hover{background:rgba(255,107,53,0.2)}
+/* 안내를 닫는 버튼이라 안내 자체보다 강해질 이유가 없습니다.
+   꽉 찬 형광 + 맥박 애니메이션을 걷어내고 칩과 같은 외곽선 톤으로 맞췄습니다. */
+.confirm-btn{
+  display:block;width:100%;margin-top:12px;
+  background:transparent;border:1px solid var(--border2);border-radius:8px;
+  padding:10px;cursor:pointer;
+  font-family:var(--sans);font-size:13px;font-weight:500;
+  color:var(--text-dim);letter-spacing:0.3px;
+  transition:all 0.2s;
+}
+.confirm-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,0.06)}
+
+.footer{
+  flex-shrink:0;text-align:center;
+  font-family:var(--mono);font-size:11px;color:var(--text-dim);
+  padding:6px;letter-spacing:0.5px;
+}
+.footer span{color:var(--accent);opacity:0.7}
+
+@media (max-width: 600px) {
+  body{font-size:14px}
+  header{padding:10px 14px}
+  .logo-mark{width:30px;height:30px;font-size:8px}
+  .logo-name{font-size:15px}
+  .logo-sub{font-size:11px}
+  .online-badge{font-size:11px;padding:3px 9px}
+  .main{padding:0 10px}
+  .notice-hdr-l{font-size:12px}
+  .notice-body{font-size:13px;padding:10px}
+  .welcome-ring{width:70px;height:70px;border-radius:20px}
+  .welcome-title{font-size:18px}
+  .welcome-desc{font-size:13px}
+  .chip{font-size:12px;padding:6px 13px}
+  .bubble{font-size:14px;padding:10px 13px}
+  .av{width:26px;height:26px;font-size:12px}
+  #userInput{font-size:16px}
+  .send-btn{width:32px;height:32px;font-size:15px}
+  .confirm-btn{font-size:13px;padding:10px}
+  .footer{font-size:10px}
+  .retry-btn{font-size:11px;padding:7px 11px}
+}
+</style>
+</head>
+<body>
+
+<div class="top-line"></div>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">kim<br>ju.z</div>
+    <div class="logo-texts">
+      <div class="logo-name">kimju.zip</div>
+      <div class="logo-sub">에듀테크 나눔 도우미</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="online-badge"><div class="dot"></div>온라인</div>
+  </div>
+</header>
+
+<div class="main">
+
+  <div class="notice">
+    <div class="notice-hdr" id="noticeHdr" onclick="toggleNotice()" tabindex="0" role="button" aria-expanded="false" aria-controls="nb" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleNotice()}">
+      <div class="notice-hdr-l">⚠ GAS 앱이 안 열릴 때 먼저 확인 5가지 (탭하여 펼치기)</div>
+      <span class="notice-arrow" id="arr">▼</span>
+    </div>
+    <div class="notice-body" id="nb">
+      <div class="n-row"><span class="n-num">1.</span><span>주소는 <b>PC에서 직접 복사-붙여넣기</b> 하세요. 대소문자 구분됩니다.</span></div>
+      <div class="n-row"><span class="n-num">2.</span><span>그래도 안 되면 <b>크롬 캐시 삭제</b> 후 새로고침 해보세요.</span></div>
+      <div class="n-row"><span class="n-num">3.</span><span><b>학교 구글 계정</b>은 이용 제한이 있을 수 있어요. 개인 계정으로 시도해보세요.</span></div>
+      <div class="n-row"><span class="n-num">4.</span><span>구글 계정 <b>용량이 가득 찼을 경우</b> 오류가 납니다. Drive에서 확인해보세요.</span></div>
+      <div class="n-row"><span class="n-num">5.</span><span><b>안전하지 않음 경고</b>는 정상이에요! 고급 → 계속 진행 클릭하면 됩니다.</span></div>
+      <div class="notice-foot">💬 위 방법으로도 안 되면 아래 챗봇에게 질문해 주세요!</div>
+      <button class="confirm-btn" id="confirmBtn" onclick="toggleNotice()">확인했어요, 접기</button>
+    </div>
+  </div>
+
+  <div class="chat" id="chat">
+    <div class="welcome" id="welcome">
+      <div class="welcome-ring"><img src="avatar.png" alt="" width="84" height="84" decoding="async"></div>
+      <div class="welcome-title">안녕하세요!<br><span>kimju.zip</span> 도우미입니다</div>
+      <div class="welcome-desc">TeacherDesk 2·유콜·쌤콜 사용법, GAS 배포 오류 등<br>에듀테크 관련 질문을 편하게 물어보세요!</div>
+      <div class="chips-wrap">
+        <div class="chips-label">▸ TeacherDesk 2</div>
+        <div class="chips">
+          <div class="chip" onclick="askChip(this)">✨ TD2 최신 버전과 새 기능</div>
+          <div class="chip" onclick="askChip(this)">⬇️ TD2 설치 방법</div>
+          <div class="chip" onclick="askChip(this)">🧩 위젯 배치하는 법</div>
+          <div class="chip" onclick="askChip(this)">📋 명렬 불러오기</div>
+        </div>
+        <div class="chips-label chips-label2">▸ 유콜 · 쌤콜</div>
+        <div class="chips">
+          <div class="chip" onclick="askChip(this)">📣 유콜이 뭐예요?</div>
+          <div class="chip" onclick="askChip(this)">🔔 쌤콜이 뭐예요?</div>
+        </div>
+        <div class="chips-label chips-label2">▸ GAS 배포</div>
+        <div class="chips">
+          <div class="chip" onclick="askChip(this)">🔐 안전하지 않음 경고</div>
+          <div class="chip" onclick="askChip(this)">⚙️ 배포 업데이트 안 됨</div>
+          <div class="chip" onclick="askChip(this)">🏫 학교 계정 오류</div>
+          <div class="chip" onclick="askChip(this)">🔑 권한 허용 방법</div>
+          <div class="chip" onclick="askChip(this)">📦 GAS 웹앱 배포 방법</div>
+          <div class="chip" onclick="askChip(this)">💾 구글 용량 확인</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="input-area" id="inputArea">
+    <div class="input-box">
+      <textarea id="userInput"
+        placeholder="질문을 입력하세요... (Enter 전송 / Shift+Enter 줄바꿈)"
+        rows="1"
+        onkeydown="onKey(event)"
+        oninput="resize(this)"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="send()">↑</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">Powered by <span>Gemini AI</span> · kimju.zip 에듀테크 나눔</div>
+
+<script>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// GAS 웹앱 URL을 여기에 입력하세요
+// 배포 후 이 한 줄만 수정하면 됩니다!
+const GAS_URL = "https://script.google.com/macros/s/AKfycbwmfd74SdyJXU2GPtuxUGSYu3AQUnFWaUj-PwvSDDmEKzEDV9fdxHT2l2rVdyj12EaE2A/exec";
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+let history = [];
+let loading = false;
+let lastFailedText = null;
+
+function toggleNotice(){
+  const nb = document.getElementById('nb');
+  const arr = document.getElementById('arr');
+  const hdr = document.getElementById('noticeHdr');
+  const open = nb.classList.toggle('open');
+  arr.classList.toggle('open', open);
+  arr.textContent = open ? '▲' : '▼';
+  hdr.setAttribute('aria-expanded', open ? 'true' : 'false');
+  // 접혀 있을 땐 조용히, 펼쳤을 때만 주황 강조
+  const box = hdr.parentElement;
+  if(box) box.classList.toggle('open', open);
+}
+
+function removeWelcome(){
+  const w = document.getElementById('welcome');
+  if(w) w.remove();
+}
+
+function addMsg(role, html){
+  removeWelcome();
+  const chat = document.getElementById('chat');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const av = document.createElement('div');
+  av.className = 'av ' + (role === 'bot' ? 'bot' : 'uav');
+  if(role === 'bot'){ av.innerHTML = '<img src="avatar.png" alt="">'; }
+  else { av.textContent = '👤'; }
+  const b = document.createElement('div');
+  b.className = 'bubble';
+  b.innerHTML = html;
+  div.appendChild(av);
+  div.appendChild(b);
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function esc(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function fmt(text){
+  const lines = esc(text).split('\n');
+  let html = '';
+  let para = [];
+  const stack = [];   // 열려 있는 목록: {tag, indent}
+
+  const flushPara = () => {
+    if(para.length){ html += '<p>' + para.join('<br>') + '</p>'; para = []; }
+  };
+  const closeLists = (toIndent) => {
+    while(stack.length && (toIndent === undefined || stack[stack.length-1].indent > toIndent)){
+      const s = stack.pop();
+      html += '</' + s.tag + '>' + (s.nested ? '</li>' : '');
+    }
+  };
+  // 중첩 목록은 바로 앞 <li> 안으로 넣는다
+  const openList = (tag, indent) => {
+    const nested = stack.length > 0;
+    if(nested && html.endsWith('</li>')) html = html.slice(0, -5);
+    stack.push({ tag, indent, nested });
+    html += '<' + tag + '>';
+  };
+
+  for(const raw of lines){
+    // 빈 줄 — 문단은 끊고, 목록은 유지(항목 사이 빈 줄이 흔함)
+    if(!raw.trim()){ flushPara(); continue; }
+
+    // 구분선
+    if(/^\s*(-{3,}|\*{3,}|_{3,})\s*$/.test(raw)){
+      flushPara(); closeLists(); html += '<hr>'; continue;
+    }
+
+    // 제목(#, ##, ### …)
+    const heading = raw.match(/^\s*#{1,6}\s+(.*)$/);
+    if(heading){
+      flushPara(); closeLists(); html += '<h4>' + heading[1] + '</h4>'; continue;
+    }
+
+    // 목록 항목 (들여쓰기로 중첩 처리)
+    const item = raw.match(/^(\s*)(\d+[.)]|[-*•])\s+(.*)$/);
+    if(item){
+      flushPara();
+      const indent = item[1].replace(/\t/g, '    ').length;
+      const tag = /\d/.test(item[2]) ? 'ol' : 'ul';
+      closeLists(indent);
+      const top = stack[stack.length-1];
+      if(!top || top.indent < indent){
+        openList(tag, indent);
+      } else if(top.tag !== tag){
+        const s = stack.pop();
+        html += '</' + s.tag + '>' + (s.nested ? '</li>' : '');
+        openList(tag, indent);
+      }
+      html += '<li>' + item[3] + '</li>';
+      continue;
+    }
+
+    // 일반 문단
+    closeLists();
+    para.push(raw.trim());
+  }
+  flushPara();
+  closeLists();
+
+  return html
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+?)`/g, '<code>$1</code>')
+    .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener" style="color:var(--accent)">$1</a>');
+}
+
+function showTyping(){
+  removeWelcome();
+  const chat = document.getElementById('chat');
+  const w = document.createElement('div');
+  w.className = 'typing-wrap'; w.id = 'typing';
+  const av = document.createElement('div');
+  av.className = 'av bot'; av.innerHTML = '<img src="avatar.png" alt="">';
+  const b = document.createElement('div');
+  b.className = 'typing-bubble';
+  b.innerHTML = '<div class="td"></div><div class="td"></div><div class="td"></div>';
+  w.appendChild(av); w.appendChild(b);
+  chat.appendChild(w);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function hideTyping(){ const t = document.getElementById('typing'); if(t) t.remove(); }
+
+async function send(overrideText){
+  if(loading) return;
+  const inp = document.getElementById('userInput');
+  const text = (overrideText !== undefined ? overrideText : inp.value.trim());
+  if(!text) return;
+  if(overrideText === undefined){ inp.value = ''; inp.style.height = 'auto'; }
+  loading = true;
+  lastFailedText = null;
+  document.getElementById('sendBtn').disabled = true;
+  inp.disabled = true;
+  const prevPlaceholder = inp.placeholder;
+  inp.placeholder = '답변 기다리는 중...';
+  if(overrideText === undefined) addMsg('user', fmt(text));
+  showTyping();
+  history.push({ role: 'user', parts: [{ text }] });
+
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 120000);
+
+  try{
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      signal: ctrl.signal,
+      body: JSON.stringify({
+        message: text,
+        history: history.slice(-9, -1)
+      })
+    });
+
+    let data;
+    try{
+      data = JSON.parse(await res.text());
+    } catch(parseErr) {
+      throw new Error('서버가 이상한 응답을 보냈어요. 잠시 후 다시 시도해 주세요.');
+    }
+
+    hideTyping();
+    if(data.error){
+      history.pop();
+      addErrorMsg('⚠️ ' + data.error, text);
+    } else {
+      let html = fmt(data.reply);
+      if(data.truncated){
+        html += '<div style="margin-top:6px;font-size:12px;color:var(--text-dim)">답변이 길어서 여기서 끊겼어요.</div>'
+             +  '<button class="retry-btn" onclick="continueLast()">↳ 이어서 답변받기</button>';
+      }
+      addMsg('bot', html);
+      history.push({ role: 'model', parts: [{ text: data.reply }] });
+    }
+  } catch(err) {
+    hideTyping();
+    history.pop();
+    const msg = (err.name === 'AbortError')
+      ? '답변이 너무 오래 걸려요. 잠시 후 다시 시도해 주세요.'
+      : (err.message === 'Failed to fetch' ? '인터넷 연결을 확인해 주세요.' : err.message);
+    addErrorMsg('⚠️ ' + msg, text);
+  } finally {
+    clearTimeout(timer);
+  }
+
+  loading = false;
+  document.getElementById('sendBtn').disabled = false;
+  inp.disabled = false;
+  inp.placeholder = prevPlaceholder;
+  inp.focus();
+}
+
+function addErrorMsg(message, retryText){
+  lastFailedText = retryText;
+  addMsg('bot', fmt(message) + '<button class="retry-btn" onclick="retryLast()">↻ 다시 시도</button>');
+}
+
+function retryLast(){
+  if(lastFailedText) send(lastFailedText);
+}
+
+function continueLast(){
+  send('방금 답변이 중간에서 끊겼어요. 끊긴 부분부터 이어서 계속 써주세요. 인사말은 생략하고 바로 이어서요.');
+}
+
+function askChip(el){
+  document.getElementById('userInput').value = el.textContent.trim();
+  send();
+}
+
+function onKey(e){
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); send(); }
+}
+
+function resize(el){
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 110) + 'px';
+}
+</script>
+</body>
+</html>
