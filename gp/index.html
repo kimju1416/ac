@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<title>2026학년도 2학기 교육과정 설명회 및 학부모 연수 | 광평중학교</title>
+<meta name="description" content="광평중학교 2026학년도 2학기 교육과정 설명회 및 학부모 연수 자료입니다. 교육과정 안내 13개 항목, 학부모 연수 16개 항목을 목차에서 바로 찾아볼 수 있습니다.">
+<meta name="theme-color" content="#16265A">
+<meta property="og:type" content="website">
+<meta property="og:title" content="2026학년도 2학기 교육과정 설명회 및 학부모 연수">
+<meta property="og:description" content="광평중학교 · 2026. 9. 7.(월) — 교육과정 안내와 학부모 연수 자료를 모바일·태블릿에서 바로 보실 수 있습니다.">
+<meta property="og:image" content="https://kimju.kr/gp/og.jpg">
+<meta property="og:url" content="https://kimju.kr/gp/">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --pt:#2456A6; --pt-d:#1C4487; --pt-soft:#EAF0FA;
+  --bg:#F6F8FB; --card:#FFFFFF; --bd:#E3E9F2;
+  --tx:#1B2A41; --tx2:#64748B;
+  --navy:#16265A; --gold:#C79A3E;
+  --side:312px; --bar:56px;
+  --r-s:10px; --r-l:14px;
+  --shadow:0 1px 3px rgba(0,0,0,.06);
+  --font:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,"Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  margin:0;background:var(--bg);color:var(--tx);font-family:var(--font);
+  font-size:15px;line-height:1.6;word-break:keep-all;
+  overflow-wrap:anywhere;-webkit-text-size-adjust:100%;
+}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit}
+
+/* ── 상단 진행 막대 ── */
+#prog{position:fixed;top:0;left:0;height:3px;width:0;background:var(--pt);z-index:60;transition:width .12s linear}
+
+/* ── 모바일 앱바 ── */
+#appbar{
+  position:fixed;top:0;left:0;right:0;height:calc(var(--bar) + env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top);
+  background:var(--bg);border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;gap:8px;padding-left:8px;padding-right:12px;z-index:50;
+}
+#appbar h1{font-size:15px;font-weight:600;margin:0;flex:1;min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.iconbtn{
+  width:44px;height:44px;flex:none;display:grid;place-items:center;
+  background:none;border:0;border-radius:var(--r-s);color:var(--tx);
+}
+.iconbtn:active{background:var(--pt-soft)}
+#pgnow{font-size:13px;font-weight:600;color:var(--tx2);flex:none;font-variant-numeric:tabular-nums}
+
+/* ── 사이드바(책갈피) ── */
+#side{
+  position:fixed;top:0;left:0;bottom:0;width:var(--side);z-index:55;
+  background:var(--card);border-right:1px solid var(--bd);
+  display:flex;flex-direction:column;
+  transform:translateX(-100%);transition:transform .24s cubic-bezier(.4,0,.2,1);
+  padding-top:env(safe-area-inset-top);
+}
+#side.open{transform:none}
+#sidehead{padding:16px 16px 12px;border-bottom:1px solid var(--bd);flex:none}
+#sidehead .school{font-size:12px;font-weight:600;color:var(--pt);letter-spacing:.02em}
+#sidehead .doc{font-size:16px;font-weight:700;margin-top:4px;line-height:1.4}
+#sidehead .date{font-size:12px;color:var(--tx2);margin-top:6px}
+#sideclose{position:absolute;top:calc(8px + env(safe-area-inset-top));right:8px}
+#navwrap{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:8px 0 16px;-webkit-overflow-scrolling:touch}
+.partlabel{
+  font-size:12px;font-weight:600;color:var(--tx2);letter-spacing:.04em;
+  padding:14px 16px 6px;
+}
+.navitem{
+  display:flex;align-items:center;gap:10px;width:100%;
+  min-height:44px;padding:8px 14px;border:0;background:none;text-align:left;
+  color:var(--tx);font-size:14px;line-height:1.35;border-radius:0;
+}
+.navitem .num{
+  flex:none;width:26px;height:26px;border-radius:8px;
+  display:grid;place-items:center;font-size:12px;font-weight:700;
+  background:var(--pt-soft);color:var(--pt);font-variant-numeric:tabular-nums;
+}
+.navitem .t{flex:1;min-width:0}
+.navitem .pg{flex:none;font-size:12px;color:var(--tx2);font-variant-numeric:tabular-nums}
+.navitem:hover{background:#F2F6FC}
+.navitem.on{background:var(--pt-soft);color:var(--pt-d);font-weight:600}
+.navitem.on .num{background:var(--pt);color:#fff}
+.navitem.on .pg{color:var(--pt)}
+.navitem.cover .num{background:#E9EDF4;color:var(--tx2)}
+.navitem.cover.on .num{background:var(--pt);color:#fff}
+
+#jump{flex:none;border-top:1px solid var(--bd);padding:12px 14px calc(12px + env(safe-area-inset-bottom));display:flex;gap:8px;align-items:center}
+#jump label{font-size:13px;font-weight:600;color:var(--tx2);flex:none}
+#jump input{
+  width:66px;height:40px;border:1px solid var(--bd);border-radius:var(--r-s);
+  font-family:inherit;font-size:15px;text-align:center;color:var(--tx);background:#fff;
+}
+#jump input:focus{outline:0;border-color:var(--pt);box-shadow:0 0 0 3px rgba(36,86,166,.12)}
+#jump button{
+  flex:1;height:40px;border:0;border-radius:var(--r-s);
+  background:var(--pt);color:#fff;font-size:14px;font-weight:600;
+}
+#jump button:active{background:var(--pt-d)}
+#jump .total{font-size:13px;color:var(--tx2);flex:none}
+
+#scrim{
+  position:fixed;inset:0;background:rgba(15,23,42,.44);z-index:54;
+  opacity:0;pointer-events:none;transition:opacity .24s;
+}
+#scrim.on{opacity:1;pointer-events:auto}
+
+/* ── 본문 ── */
+main{padding-top:calc(var(--bar) + env(safe-area-inset-top))}
+
+/* 표지 */
+#cover{
+  position:relative;min-height:min(88vh,760px);
+  display:flex;flex-direction:column;justify-content:space-between;
+  background:var(--navy) url("cover.webp") center/cover no-repeat;
+  color:#fff;padding:36px 24px calc(28px + env(safe-area-inset-bottom));
+  overflow:hidden;
+}
+#cover::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(11,20,48,.72) 0%,rgba(11,20,48,.30) 46%,rgba(11,20,48,.10) 100%);
+}
+#cover>*{position:relative;z-index:1}
+.c-top .badge{
+  display:inline-block;font-size:12px;font-weight:600;letter-spacing:.02em;
+  border:1px solid rgba(255,255,255,.42);border-radius:999px;padding:5px 12px;
+  color:rgba(255,255,255,.94);
+}
+.c-top .motto{
+  margin-top:16px;font-size:13px;line-height:1.65;color:rgba(255,255,255,.78);max-width:30ch;
+}
+.c-mid{margin:auto 0}
+.c-mid .year{font-size:15px;font-weight:600;color:var(--gold);letter-spacing:.02em}
+.c-mid h2{
+  margin:8px 0 0;font-size:clamp(26px,7vw,42px);font-weight:700;line-height:1.28;
+  letter-spacing:-.01em;text-shadow:0 2px 18px rgba(0,0,0,.35);
+}
+.c-mid .rule{width:52px;height:3px;background:var(--gold);border-radius:2px;margin:20px 0 16px}
+.c-mid .when{font-size:15px;color:rgba(255,255,255,.9)}
+.c-bot{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.c-bot .school{font-size:19px;font-weight:700;letter-spacing:.06em}
+.c-bot .tel{font-size:12px;color:rgba(255,255,255,.72);line-height:1.7;margin-top:6px}
+.c-start{
+  border:0;border-radius:var(--r-s);background:#fff;color:var(--navy);
+  height:48px;padding:0 22px;font-size:15px;font-weight:600;flex:none;width:100%;
+}
+@media (min-width:560px){ .c-start{width:auto} }
+.c-start:active{background:#E8EDF6}
+
+/* 목차 */
+#toc{padding:32px 20px 8px;max-width:1000px;margin:0 auto}
+#toc h3{font-size:13px;font-weight:600;color:var(--tx2);letter-spacing:.04em;margin:0 0 4px}
+#toc .lead{font-size:15px;color:var(--tx);margin:0 0 20px;line-height:1.65}
+.tocgroup{margin-bottom:28px}
+.tocgroup>.gh{
+  display:flex;align-items:baseline;gap:8px;margin-bottom:12px;
+  padding-bottom:8px;border-bottom:1px solid var(--bd);
+}
+.tocgroup>.gh strong{font-size:17px;font-weight:700}
+.tocgroup>.gh span{font-size:13px;color:var(--tx2)}
+.tocgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(232px,1fr));gap:8px}
+.toccard{
+  display:flex;align-items:center;gap:11px;min-height:56px;padding:10px 14px;
+  background:var(--card);border:1px solid var(--bd);border-radius:var(--r-l);
+  text-align:left;color:var(--tx);font-size:14.5px;line-height:1.35;
+}
+.toccard:hover{border-color:var(--pt);background:#FBFCFE}
+.toccard:active{background:var(--pt-soft)}
+.toccard .num{
+  flex:none;width:30px;height:30px;border-radius:9px;background:var(--pt);color:#fff;
+  display:grid;place-items:center;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;
+}
+.toccard .body{flex:1;min-width:0}
+.toccard .dept{display:block;font-size:12px;color:var(--tx2);margin-top:2px;font-weight:400}
+
+/* 페이지 이미지 */
+#pages{padding:20px 0 64px;max-width:1000px;margin:0 auto}
+.sectitle{
+  display:flex;align-items:center;gap:10px;
+  margin:36px 16px 12px;padding-bottom:10px;border-bottom:2px solid var(--pt);
+}
+.sectitle .badge{
+  flex:none;background:var(--pt);color:#fff;border-radius:8px;
+  font-size:12px;font-weight:700;padding:4px 9px;letter-spacing:.02em;
+}
+.sectitle h4{margin:0;font-size:17px;font-weight:700;flex:1;min-width:0}
+.sectitle .dept{font-size:12px;color:var(--tx2);flex:none}
+.page{
+  position:relative;margin:0 auto 14px;background:var(--card);
+  border:1px solid var(--bd);border-radius:var(--r-l);overflow:hidden;
+  scroll-margin-top:calc(var(--bar) + env(safe-area-inset-top) + 8px);
+  /* 화면 밖 쪽은 렌더·디코드에서 제외 — 66쪽 전부 펼치면 비트맵이 수백 MB가 된다 */
+  content-visibility:auto;
+  contain-intrinsic-size:auto var(--pgh,530px);
+}
+.page img{display:block;width:100%;height:auto;background:#fff;aspect-ratio:1400/1979}
+.page .plabel{
+  position:absolute;right:10px;bottom:10px;
+  background:rgba(27,42,65,.78);color:#fff;font-size:11px;font-weight:600;
+  border-radius:6px;padding:3px 8px;font-variant-numeric:tabular-nums;
+  pointer-events:none;
+}
+
+/* 이어보기 배너 */
+#resume{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(20px + env(safe-area-inset-bottom));z-index:45;
+  background:rgba(20,20,20,.92);color:#fff;border:0;border-radius:999px;
+  height:44px;padding:0 20px;font-size:14px;font-weight:600;
+  box-shadow:0 6px 20px rgba(0,0,0,.22);display:none;align-items:center;gap:10px;
+}
+#resume.show{display:flex}
+#resume .x{opacity:.6;font-size:18px;line-height:1;padding-left:4px}
+
+/* 맨 위로 */
+#top{
+  position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));z-index:44;
+  width:48px;height:48px;border-radius:50%;background:var(--card);
+  border:1px solid var(--bd);box-shadow:var(--shadow);color:var(--tx);
+  display:grid;place-items:center;opacity:0;pointer-events:none;transition:opacity .2s;
+}
+#top.show{opacity:1;pointer-events:auto}
+
+/* 확대 뷰어 */
+#zoom{
+  position:fixed;inset:0;z-index:70;background:#0E1526;display:none;
+  overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y pinch-zoom;
+}
+#zoom.on{display:block}
+#zoom img{display:block;width:100%;height:auto;margin:0 auto}
+#zoomclose{
+  position:fixed;top:calc(12px + env(safe-area-inset-top));right:12px;z-index:71;
+  width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.14);
+  border:0;color:#fff;display:grid;place-items:center;
+}
+#zoomhint{
+  position:fixed;left:50%;transform:translateX(-50%);
+  top:calc(16px + env(safe-area-inset-top));z-index:71;
+  background:rgba(255,255,255,.14);color:#fff;font-size:12px;
+  border-radius:999px;padding:6px 14px;
+}
+
+footer{
+  border-top:1px solid var(--bd);padding:24px 20px calc(32px + env(safe-area-inset-bottom));
+  text-align:center;color:var(--tx2);font-size:12.5px;line-height:1.8;
+}
+footer strong{color:var(--tx);font-weight:600}
+footer .dl{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:44px;padding:0 20px;margin-bottom:20px;
+  background:var(--card);border:1px solid var(--bd);border-radius:var(--r-s);
+  color:var(--pt);font-size:14px;font-weight:600;text-decoration:none;
+}
+footer .dl:hover{border-color:var(--pt);background:#FBFCFE}
+
+/* ── 태블릿·데스크톱 ── */
+@media (min-width:1024px){
+  #appbar{left:var(--side);padding-left:20px}
+  #menubtn{display:none}
+  #side{transform:none}
+  #scrim{display:none}
+  #sideclose{display:none}
+  main{margin-left:var(--side)}
+  #cover{min-height:min(84vh,720px);padding:48px 56px}
+  #toc{padding:40px 32px 8px}
+  #pages{padding:24px 24px 72px}
+  .sectitle{margin-left:0;margin-right:0}
+  #top{right:28px}
+}
+@media (min-width:1024px) and (max-width:1279px){
+  :root{--side:272px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important}
+}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<header id="appbar">
+  <button class="iconbtn" id="menubtn" aria-label="목차 열기" aria-expanded="false">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+  </button>
+  <h1>2026학년도 2학기 학부모 연수 자료</h1>
+  <span id="pgnow">표지</span>
+</header>
+
+<div id="scrim"></div>
+
+<nav id="side" aria-label="책갈피">
+  <div id="sidehead">
+    <div class="school">광평중학교</div>
+    <div class="doc">2026학년도 2학기<br>교육과정 설명회 및 학부모 연수</div>
+    <div class="date">2026. 9. 7.(월)</div>
+    <button class="iconbtn" id="sideclose" aria-label="목차 닫기">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+  <div id="navwrap"></div>
+  <div id="jump">
+    <label for="jumpin">쪽</label>
+    <input id="jumpin" type="number" min="1" max="66" inputmode="numeric" placeholder="25">
+    <button id="jumpbtn">이동</button>
+    <span class="total">/ 66</span>
+  </div>
+</nav>
+
+<main>
+  <section id="cover">
+    <div class="c-top">
+      <span class="badge">2026 음악중점학교 · AI정보교육중심학교</span>
+      <p class="motto">예술적 감수성을 지닌 창의적·미래지향적 인재 육성의 요람</p>
+    </div>
+    <div class="c-mid">
+      <div class="year">2026학년도 2학기</div>
+      <h2>교육과정 설명회<br>및 학부모 연수</h2>
+      <div class="rule"></div>
+      <div class="when">개최일시 &nbsp;2026. 9. 7.(월)</div>
+    </div>
+    <div class="c-bot">
+      <div>
+        <div class="school">광 평 중 학 교</div>
+        <div class="tel">교장실 054.444.4512 · 교무실 054.444.4511<br>행정실 054.444.4510 · FAX 054.444.4513</div>
+      </div>
+      <button class="c-start" id="startbtn">자료 보기</button>
+    </div>
+  </section>
+
+  <section id="toc">
+    <h3>차례</h3>
+    <p class="lead">보고 싶은 항목을 누르면 해당 쪽으로 바로 이동합니다.<br>왼쪽 목차는 자료를 보는 동안 계속 사용할 수 있습니다.</p>
+    <div id="tocbody"></div>
+  </section>
+
+  <section id="pages"></section>
+
+  <footer>
+    <a class="dl" href="handbook.pdf" download="2026학년도 2학기 학부모연수 자료.pdf">원본 PDF 내려받기 (3.2MB)</a>
+    <strong>광평중학교</strong><br>
+    경상북도 구미시 · 교무실 054.444.4511<br>
+    2026학년도 2학기 교육과정 설명회 및 학부모 연수 자료 (전 66쪽)
+  </footer>
+</main>
+
+<button id="resume">이어보기 <span class="x" aria-label="닫기">×</span></button>
+<button id="top" aria-label="맨 위로">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<div id="zoom" role="dialog" aria-modal="true" aria-label="확대 보기">
+  <div id="zoomhint">두 손가락으로 확대 · 아래로 넘기기</div>
+  <button id="zoomclose" aria-label="닫기">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+  </button>
+</div>
+
+<script>
+"use strict";
+
+/* PDF 총 68쪽 = 표지1 + 차례1 + 내지 66쪽.  내지 N쪽 = PDF (N+2)쪽 */
+var TOTAL = 68, OFFSET = 2;
+
+var SECTIONS = [
+  {part:1, no:1,  title:"학급 현황 및 교직원 현황",   dept:"교무기획부",      pg:1},
+  {part:1, no:2,  title:"연간 학사일정",             dept:"교무기획부",      pg:2},
+  {part:1, no:3,  title:"특색사업",                 dept:"음악중점부 외",    pg:3},
+  {part:1, no:4,  title:"전 학년 교육과정 편성표",    dept:"교무기획부",      pg:8},
+  {part:1, no:5,  title:"출결 처리 규정",            dept:"교무기획부",      pg:16},
+  {part:1, no:6,  title:"방과후학교 운영",           dept:"창의인성부",      pg:19},
+  {part:1, no:7,  title:"학생 봉사활동",             dept:"창의인성부",      pg:21},
+  {part:1, no:8,  title:"평가 일정 및 성적관리규정",  dept:"교육연구부",      pg:22},
+  {part:1, no:9,  title:"공교육정상화법",            dept:"교육연구부",      pg:24},
+  {part:1, no:10, title:"2027학년도 고입전형 지침",   dept:"3학년부",        pg:25},
+  {part:1, no:11, title:"학생 생활규정",             dept:"안전생활부",      pg:32},
+  {part:1, no:12, title:"학교알리미 서비스",          dept:"교무기획부",      pg:34},
+  {part:1, no:13, title:"안전하고 질 높은 학교 급식", dept:"안전생활부(영양)", pg:35},
+
+  {part:2, no:1,  title:"학교폭력 예방",             dept:"안전생활부",      pg:36},
+  {part:2, no:2,  title:"학생도박 예방",             dept:"안전생활부",      pg:39},
+  {part:2, no:3,  title:"생명존중(자살예방)",         dept:"위클래스",        pg:41},
+  {part:2, no:4,  title:"아동학대 예방",             dept:"위클래스",        pg:43},
+  {part:2, no:5,  title:"가정폭력 예방",             dept:"위클래스",        pg:45},
+  {part:2, no:6,  title:"교권 보호",                dept:"교무기획부",      pg:47},
+  {part:2, no:7,  title:"학교생활기록부 기재",        dept:"교무기획부",      pg:49},
+  {part:2, no:8,  title:"정보통신윤리교육",          dept:"교육정보부",      pg:51},
+  {part:2, no:9,  title:"감염병 예방",              dept:"안전생활부(보건)", pg:53},
+  {part:2, no:10, title:"성폭력 예방 및 양성평등",    dept:"안전생활부(보건)", pg:54},
+  {part:2, no:11, title:"흡연·약물오남용·마약 예방",  dept:"안전생활부(보건)", pg:55},
+  {part:2, no:12, title:"고농도 미세먼지 대응",       dept:"안전생활부(보건)", pg:57},
+  {part:2, no:13, title:"장애이해 및 인권 교육",      dept:"안전생활부(특수)", pg:58},
+  {part:2, no:14, title:"고교학점제 이해",           dept:"진로진학부",      pg:61},
+  {part:2, no:15, title:"불법찬조금 예방 및 근절",    dept:"행정실",         pg:62},
+  {part:2, no:16, title:"사교육 경감 안내",          dept:"창의인성부",      pg:65}
+];
+
+SECTIONS.forEach(function(s){ s.pdf = s.pg + OFFSET; });
+
+var PART_NAME = {1:"Part 1. 교육과정 안내", 2:"Part 2. 학부모 연수"};
+var $ = function(s){ return document.querySelector(s); };
+var pad2 = function(n){ return n < 10 ? "0" + n : "" + n; };
+
+/* ── 책갈피 목록 ── */
+(function buildNav(){
+  var wrap = $("#navwrap"), html = "";
+  html += '<button class="navitem cover" data-pdf="1" data-key="cover">'
+        + '<span class="num">표</span><span class="t">표지</span></button>'
+        + '<button class="navitem cover" data-pdf="2" data-key="toc2">'
+        + '<span class="num">차</span><span class="t">차례</span></button>';
+  [1,2].forEach(function(p){
+    html += '<div class="partlabel">' + PART_NAME[p] + '</div>';
+    SECTIONS.filter(function(s){ return s.part === p; }).forEach(function(s){
+      html += '<button class="navitem" data-pdf="' + s.pdf + '" data-key="s' + s.part + '-' + s.no + '">'
+            + '<span class="num">' + s.no + '</span>'
+            + '<span class="t">' + s.title + '</span>'
+            + '<span class="pg">' + s.pg + '</span></button>';
+    });
+  });
+  wrap.innerHTML = html;
+})();
+
+/* ── 목차 카드 ── */
+(function buildToc(){
+  var body = $("#tocbody"), html = "";
+  [1,2].forEach(function(p){
+    var list = SECTIONS.filter(function(s){ return s.part === p; });
+    html += '<div class="tocgroup"><div class="gh"><strong>' + PART_NAME[p] + '</strong>'
+          + '<span>' + list.length + '개 항목</span></div><div class="tocgrid">';
+    list.forEach(function(s){
+      html += '<button class="toccard" data-pdf="' + s.pdf + '">'
+            + '<span class="num">' + s.no + '</span>'
+            + '<span class="body">' + s.title
+            + '<span class="dept">' + s.dept + ' · ' + s.pg + '쪽</span></span></button>';
+    });
+    html += '</div></div>';
+  });
+  body.innerHTML = html;
+})();
+
+/* ── 페이지 이미지 ── */
+(function buildPages(){
+  var host = $("#pages"), html = "";
+  var byPdf = {};
+  SECTIONS.forEach(function(s){ byPdf[s.pdf] = s; });
+
+  for (var i = 1; i <= TOTAL; i++) {
+    var s = byPdf[i];
+    if (s) {
+      html += '<div class="sectitle" id="sec-' + s.part + '-' + s.no + '">'
+            + '<span class="badge">' + (s.part === 1 ? '안내' : '연수') + ' ' + s.no + '</span>'
+            + '<h4>' + s.title + '</h4>'
+            + '<span class="dept">' + s.dept + '</span></div>';
+    }
+    /* 첫 3쪽만 즉시 불러오고 나머지는 관찰자가 화면에 가까워질 때 붙인다.
+       loading="lazy"는 content-visibility로 렌더가 생략된 요소 안에서 트리거되지 않는다. */
+    var label = i <= 2 ? (i === 1 ? "표지" : "차례") : (i - OFFSET) + "쪽";
+    var eager = i <= 3;
+    html += '<figure class="page" id="pg-' + i + '" data-pdf="' + i + '">'
+          + '<img ' + (eager ? 'src' : 'data-src') + '="p/' + pad2(i) + '.webp" '
+          + 'width="1400" height="1979" decoding="async" alt="' + label + '">'
+          + '<figcaption class="plabel">' + label + '</figcaption></figure>';
+  }
+  host.innerHTML = html;
+})();
+
+/* ── 쪽 이미지 지연 로딩 ──
+   화면 가까이 오면 붙이고, 여러 화면 밖으로 멀어지면 떼어 메모리를 되돌린다.
+   66쪽을 한꺼번에 펼치면 디코드된 비트맵만 수백 MB라 저사양 태블릿에서 화면이 하얗게 죽는다. */
+(function lazyImages(){
+  /* 관찰 대상은 반드시 .page(=content-visibility가 걸린 요소) 자신이어야 한다.
+     렌더가 생략된 서브트리 안의 <img>를 관찰하면 교차가 보고되지 않아 영영 안 붙는다. */
+  var figs = Array.prototype.slice.call(document.querySelectorAll(".page"));
+  var pick = function(fig){ return fig.querySelector("img[data-src]"); };
+  if (!("IntersectionObserver" in window)) {
+    figs.forEach(function(f){ var im = pick(f); if (im) im.src = im.getAttribute("data-src"); });
+    return;
+  }
+  var loadIO = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (!en.isIntersecting) return;
+      var im = pick(en.target);
+      if (im && !im.getAttribute("src")) im.src = im.getAttribute("data-src");
+    });
+  }, { rootMargin: "900px 0px" });
+
+  var freeIO = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if (en.isIntersecting) return;
+      var im = pick(en.target);
+      if (im && im.getAttribute("src")) im.removeAttribute("src");
+    });
+  }, { rootMargin: "3000px 0px" });
+
+  figs.forEach(function(f){ if (pick(f)) { loadIO.observe(f); freeIO.observe(f); } });
+})();
+
+/* 화면 밖 쪽의 자리높이를 실제 렌더 높이와 맞춘다 (어긋나면 이동 위치가 튄다) */
+function setIntrinsic(){
+  var el = document.querySelector(".page");
+  if (!el) return;
+  var w = el.clientWidth || document.documentElement.clientWidth;
+  document.documentElement.style.setProperty("--pgh", Math.round(w * 1979 / 1400) + "px");
+}
+setIntrinsic();
+window.addEventListener("resize", setIntrinsic);
+
+/* ── 사이드바 열고 닫기 ── */
+var side = $("#side"), scrim = $("#scrim"), menubtn = $("#menubtn");
+var isWide = function(){ return window.matchMedia("(min-width:1024px)").matches; };
+function openSide(){
+  if (isWide()) return;
+  side.classList.add("open"); scrim.classList.add("on");
+  menubtn.setAttribute("aria-expanded", "true");
+  document.body.style.overflow = "hidden";
+}
+function closeSide(){
+  side.classList.remove("open"); scrim.classList.remove("on");
+  menubtn.setAttribute("aria-expanded", "false");
+  document.body.style.overflow = "";
+}
+menubtn.addEventListener("click", openSide);
+$("#sideclose").addEventListener("click", closeSide);
+scrim.addEventListener("click", closeSide);
+window.addEventListener("resize", function(){ if (isWide()) closeSide(); });
+
+/* ── 이동 ── */
+/* 이동은 항상 즉시. 수만 픽셀을 부드럽게 흘리면 어지럽고,
+   중간 쪽들이 그 사이에 붙었다 떨어지며 브라우저가 스크롤을 도중에 취소한다. */
+function goTo(pdf){
+  var el = document.getElementById("pg-" + pdf);
+  if (!el) return;
+  var sec = SECTIONS.filter(function(s){ return s.pdf === pdf; })[0];
+  var target = sec ? document.getElementById("sec-" + sec.part + "-" + sec.no) : el;
+  var bar = $("#appbar").offsetHeight + 8;
+  var y = target.getBoundingClientRect().top + window.pageYOffset - bar;
+  window.scrollTo({ top: Math.max(0, y), behavior: "instant" });
+  setCurrent(pdf);
+  closeSide();
+}
+
+document.addEventListener("click", function(e){
+  var btn = e.target.closest("[data-pdf]");
+  if (!btn || btn.tagName !== "BUTTON") return;
+  goTo(parseInt(btn.getAttribute("data-pdf"), 10));
+});
+
+$("#startbtn").addEventListener("click", function(){ goTo(3); });
+
+/* 쪽 직접 이동 */
+function doJump(){
+  var v = parseInt($("#jumpin").value, 10);
+  if (!v || v < 1) return;
+  if (v > TOTAL - OFFSET) v = TOTAL - OFFSET;
+  goTo(v + OFFSET);
+  $("#jumpin").blur();
+}
+$("#jumpbtn").addEventListener("click", doJump);
+$("#jumpin").addEventListener("keydown", function(e){ if (e.key === "Enter") doJump(); });
+
+/* ── 현재 위치 추적 ── */
+var navItems = Array.prototype.slice.call(document.querySelectorAll(".navitem"));
+var pgnow = $("#pgnow"), prog = $("#prog"), topbtn = $("#top");
+var curPdf = 1, saveTimer = null;
+
+function markActive(pdf){
+  var best = null;
+  navItems.forEach(function(it){
+    var p = parseInt(it.getAttribute("data-pdf"), 10);
+    if (p <= pdf && (!best || p > parseInt(best.getAttribute("data-pdf"), 10))) best = it;
+  });
+  navItems.forEach(function(it){ it.classList.toggle("on", it === best); });
+  if (best && isWide()) {
+    var wrap = $("#navwrap");
+    var r = best.getBoundingClientRect(), wr = wrap.getBoundingClientRect();
+    if (r.top < wr.top + 8 || r.bottom > wr.bottom - 8) {
+      wrap.scrollTop += r.top - wr.top - wr.height / 2 + r.height / 2;
+    }
+  }
+}
+
+function setCurrent(pdf){
+  if (pdf === curPdf) return;
+  curPdf = pdf;
+  pgnow.textContent = pdf <= 2 ? (pdf === 1 ? "표지" : "차례") : (pdf - OFFSET) + " / " + (TOTAL - OFFSET) + "쪽";
+  markActive(pdf);
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    try { localStorage.setItem("gp2026.page", String(pdf)); } catch (err) {}
+  }, 500);
+}
+
+var pageEls = Array.prototype.slice.call(document.querySelectorAll(".page"));
+if ("IntersectionObserver" in window) {
+  var seen = {};
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      seen[en.target.getAttribute("data-pdf")] = en.isIntersecting ? en.intersectionRatio : 0;
+    });
+    var top = 0, ratio = 0;
+    Object.keys(seen).forEach(function(k){
+      if (seen[k] > ratio) { ratio = seen[k]; top = parseInt(k, 10); }
+    });
+    if (top) setCurrent(top);
+  }, { rootMargin: "-15% 0px -55% 0px", threshold: [0, .25, .5, .75, 1] });
+  pageEls.forEach(function(el){ io.observe(el); });
+}
+
+/* 진행 막대 · 맨 위로 */
+var ticking = false;
+window.addEventListener("scroll", function(){
+  if (ticking) return;
+  ticking = true;
+  requestAnimationFrame(function(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    prog.style.width = (h > 0 ? (window.pageYOffset / h) * 100 : 0) + "%";
+    topbtn.classList.toggle("show", window.pageYOffset > 800);
+    ticking = false;
+  });
+}, { passive: true });
+
+topbtn.addEventListener("click", function(){ window.scrollTo({ top: 0, behavior: "instant" }); setCurrent(1); });
+
+/* ── 이어보기 ── */
+(function resumeInit(){
+  var btn = $("#resume"), saved = 0;
+  try { saved = parseInt(localStorage.getItem("gp2026.page") || "0", 10); } catch (err) {}
+  if (!saved || saved < 4) return;
+  btn.firstChild.nodeValue = (saved - OFFSET) + "쪽부터 이어보기 ";
+  btn.classList.add("show");
+  var hide = function(){ btn.classList.remove("show"); };
+  btn.addEventListener("click", function(e){
+    hide();
+    if (!e.target.classList.contains("x")) goTo(saved);
+  });
+  setTimeout(hide, 9000);
+})();
+
+/* ── 확대 뷰어 ── */
+var zoom = $("#zoom");
+document.addEventListener("click", function(e){
+  var img = e.target.closest(".page img");
+  if (!img) return;
+  var pdf = parseInt(img.closest(".page").getAttribute("data-pdf"), 10);
+  var html = "";
+  for (var i = pdf; i <= Math.min(TOTAL, pdf + 3); i++) {
+    html += '<img src="p/' + pad2(i) + '.webp" alt="' + (i - OFFSET) + '쪽" loading="' + (i === pdf ? "eager" : "lazy") + '">';
+  }
+  zoom.querySelectorAll("img").forEach(function(n){ n.remove(); });
+  zoom.insertAdjacentHTML("beforeend", html);
+  zoom.classList.add("on");
+  zoom.scrollTop = 0;
+  document.body.style.overflow = "hidden";
+  setTimeout(function(){ $("#zoomhint").style.opacity = "0"; }, 2600);
+});
+function closeZoom(){
+  zoom.classList.remove("on");
+  document.body.style.overflow = "";
+  $("#zoomhint").style.opacity = "";
+}
+$("#zoomclose").addEventListener("click", closeZoom);
+
+/* ── 키보드 ── */
+document.addEventListener("keydown", function(e){
+  if (e.target.tagName === "INPUT") return;
+  if (e.key === "Escape") { if (zoom.classList.contains("on")) closeZoom(); else closeSide(); return; }
+  if (zoom.classList.contains("on")) return;
+  if (e.key === "ArrowRight" || e.key === "PageDown") { e.preventDefault(); goTo(Math.min(TOTAL, curPdf + 1)); }
+  if (e.key === "ArrowLeft"  || e.key === "PageUp")   { e.preventDefault(); goTo(Math.max(1, curPdf - 1)); }
+});
+
+markActive(1);
+</script>
+</body>
+</html>
