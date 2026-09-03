@@ -555,21 +555,10 @@ async function send(overrideText){
   const timer = setTimeout(() => ctrl.abort(), 120000);
 
   try{
-    const res = await fetch(GAS_URL, {
-      method: 'POST',
-      signal: ctrl.signal,
-      body: JSON.stringify({
-        message: text,
-        history: history.slice(-9, -1)
-      })
-    });
-
-    let data;
-    try{
-      data = JSON.parse(await res.text());
-    } catch(parseErr) {
-      throw new Error('서버가 이상한 응답을 보냈어요. 잠시 후 다시 시도해 주세요.');
-    }
+    // 서버가 답도 오류도 아닌 것을 보내는 순간이 간혹 있다(POST가 경유지에서 빈 GET으로
+    // 바뀌어 점검용 JSON이 오거나, JSON이 아닌 HTML이 온다). 그럴 땐 사용자에게 보이지 말고
+    // 조용히 두 번까지 다시 보낸다. 서버가 정식으로 보낸 오류(data.error)는 재시도하지 않는다.
+    const data = await requestReply(text, ctrl.signal);
 
     hideTyping();
     if(data.error){
@@ -600,6 +589,40 @@ async function send(overrideText){
   inp.disabled = false;
   inp.placeholder = prevPlaceholder;
   inp.focus();
+}
+
+// 서버에 한 번 물어본다. 답(reply)이나 정식 오류(error)가 담긴 JSON만 정상으로 본다.
+// 그 밖의 응답은 '일시적'으로 표시해 두고, 호출한 쪽이 조용히 다시 보내게 한다.
+const TRANSIENT_RETRIES = 2;      // 자동 재시도 횟수(처음 시도 제외)
+const TRANSIENT_RETRY_DELAY = 1500;
+
+async function requestReply(text, signal){
+  let lastTransient = null;
+  for(let attempt = 0; attempt <= TRANSIENT_RETRIES; attempt++){
+    if(attempt > 0) await new Promise(r => setTimeout(r, TRANSIENT_RETRY_DELAY));
+    if(signal.aborted) throw Object.assign(new Error('aborted'), { name: 'AbortError' });
+
+    const res = await fetch(GAS_URL, {
+      method: 'POST',
+      signal,
+      body: JSON.stringify({
+        message: text,
+        history: history.slice(-9, -1)
+      })
+    });
+    const raw = await res.text();
+
+    let data = null;
+    try{ data = JSON.parse(raw); } catch(parseErr) { data = null; }
+
+    if(data && typeof data === 'object'){
+      if(typeof data.error === 'string' && data.error) return data;   // 서버의 정식 오류: 재시도 안 함
+      if(typeof data.reply === 'string' && data.reply) return data;   // 정상 답변
+    }
+    // 여기 오면 점검용 JSON({status:...})이거나 HTML 같은 비정상 응답이다.
+    lastTransient = new Error('서버가 이상한 응답을 보냈어요. 잠시 후 다시 시도해 주세요.');
+  }
+  throw lastTransient;
 }
 
 function addErrorMsg(message, retryText){
