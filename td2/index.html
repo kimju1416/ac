@@ -525,6 +525,8 @@
               <div class="fx" data-k="나의 시간표 내 이름 가져오기 교사별"><span class="fn">내 시간표 한 번에 채우기 <span class="ftag hid">숨은 자리</span></span><span class="fw">[전체 시간표] → 교사별에서 <b>내 이름을 클릭</b> → [주간 시간표로 가져오기]</span></div>
               <div class="fx" data-k="컴시간 알리미 시간표 출처 교체 대체"><span class="fn">컴시간알리미에서 받아오기</span><span class="fw">설정 [학교] → 시간표 출처 → <b>컴시간알리미</b>. 이번주 교체·대체 수업까지 들어오고, 아침 8시·오후 1시에 저절로 갱신됩니다</span></div>
               <div class="fx" data-k="진도 차시 수업 기록 진도표"><span class="fn">진도(수업 기록) <span class="ftag off">기본 꺼짐</span></span><span class="fw">설정 [위젯] → <b>진도</b>를 켜세요. 수업이 끝나면 그 줄을 <b>한 번 누르기만</b> 하면 차시가 저절로 이어집니다</span></div>
+              <div class="fx" data-k="주간학습안내 주간학습 초등 담임 안내문 한글 hwp 업로드"><span class="fn">주간학습안내 <span class="ftag off">기본 꺼짐</span></span><span class="fw">설정 [위젯] → <b>주간학습안내</b>를 켜세요. 한글·PDF·사진을 카드에 <b>끌어다 놓으면</b> 원본 그대로 보이고, AI로 읽으면 <b>하루·주간·과목별</b>로 봅니다</span></div>
+              <div class="fx" data-k="출결 위젯 담임반 결석 지각 조퇴 바탕화면"><span class="fn">출결 카드(담임반) <span class="ftag off">기본 꺼짐</span></span><span class="fw">설정 [위젯] → <b>출결</b>을 켜세요. 독의 <b>✓ 출결</b>에 찍은 특이사항이 바탕화면에 늘 보입니다</span></div>
               <div class="fx" data-k="학년 진도표 격자 반별 전체"><span class="fn">학년 진도표 한눈에</span><span class="fw">진도 카드 제목 옆 <b>[전체]</b> — 날짜 × 반 격자. <b>반 이름을 클릭</b>하면 그 반만 차시순으로 펼쳐집니다</span></div>
               <div class="fx" data-k="시간표 파일 불러오기 한글 엑셀 사진"><span class="fn">시간표를 파일에서 읽어오기 <span class="ftag ai">AI 키 필요</span></span><span class="fw">설정 [시간표] → <b>[📥 파일에서 시간표 불러오기]</b> — 한글·엑셀·PDF·사진 어느 것이든</span></div>
             </div>
@@ -618,10 +620,8 @@
           <div class="log-item">
             <div class="log-top"><span class="log-ver">v3.21.0</span><span class="log-date">2026. 9. 4.</span><span class="log-new">최신</span></div>
             <ul>
-              <li><b>주간학습안내</b>(초등) — 한글·PDF·사진을 카드에 올리면 원본 그대로 보고, AI가 표까지 읽어 <b>하루·주간·과목별</b>로 세워 줍니다. 시간표와 «지금 이 시간»에도 그 시간에 배울 것이 함께 나옵니다</li>
-              <li><b>출결 카드</b> — 담임반 출결의 특이사항만 바탕화면에 세웁니다. 아무도 안 빠진 날은 «개근»</li>
-              <li>웨일에서 업무포털에 들어갈 때마다 뜨던 <b>권한 창</b>을 고쳤습니다</li>
-              <li>출결·주간학습안내를 <b>켜도 화면에 안 나타나던 것</b>을 고쳤습니다 — 이제 켜면 빈 곳을 찾아 앉습니다</li>
+              <li><b>주간학습안내</b>(초등) — 매주 받는 안내문을 올려 두고 원본 그대로 보거나, AI가 표까지 읽어 <b>하루·주간·과목별</b>로 봅니다. 시간표·진도와도 이어집니다</li>
+              <li><b>출결 카드</b> — 담임반 출결의 특이사항만 바탕화면에 늘 세웁니다</li>
             </ul>
           </div>
 
@@ -1348,6 +1348,49 @@
         </div>
 
         <div class="feat">
+
+        <div class="feat">
+          <img src="shots/30-w-81-weekly-week.webp" width="1100" height="626" alt="주간학습안내 위젯 - 주간 보기" loading="lazy" />
+          <div class="feat-b">
+            <h4>주간학습안내 <span class="ftag off">기본 꺼짐</span> <span class="ftag ai">AI 키 있으면 더</span></h4>
+            <span class="where">설정 [위젯] → 주간학습안내를 켜세요 · 카드에 파일을 끌어다 놓기</span>
+            <p>초등 담임 선생님이 <strong>매주 만드시는 그 안내문</strong>을 카드에 올려 두는 자리입니다. 앨범에 사진으로 붙여 쓰시던 것을 그대로 대신하고, 여기에 더해 <strong>AI가 표까지 읽어</strong> 오늘 배울 것만 추려 줍니다.</p>
+            <ul>
+              <li><strong>올리는 법 세 가지</strong> — 카드에 파일을 끌어다 놓기 · 메신저에서 복사해 <b>Ctrl+V</b> · <b>📥 파일 고르기</b>. 한글(구형 <b>.hwp</b>도 됩니다) · PDF · 사진을 받습니다</li>
+              <li><strong>주는 파일 이름에서 알아냅니다</strong> — 「1학년2반_ 8월24일 - 8월28일.hwp」를 올리면 그 주에 저절로 붙어요. 주차를 고르실 필요가 없습니다</li>
+              <li><strong>보기 넷</strong> — <b>하루</b>(오늘 것만) · <b>주간</b>(한 주를 표로) · <b>과목별</b>(과목으로 묶어) · <b>원본</b>(올린 파일 그대로). ‹ › 로 지난 주도 넘겨 봅니다</li>
+              <li><strong>AI가 읽은 뒤엔 고칠 수 있습니다</strong> — 카드의 <b>✎</b>로 학습내용·과목 이름을 고치고, 잘못 읽은 줄은 지웁니다. 과목 색도 직접 고르면 다음 주에도 이어집니다</li>
+            </ul>
+            <div class="note tip"><span class="ic"><svg class="ic" viewBox="0 0 24 24"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-3.8 10.7c.6.5.8 1 .8 1.8v.5h6v-.5c0-.8.2-1.3.8-1.8A6 6 0 0 0 12 3z"/></svg></span><div><b>원본만 올려도 됩니다</b><p>AI로 읽지 않으면 <strong>시간표·진도에는 아무것도 붙지 않습니다.</strong> 종이 그대로 보고 싶으실 때는 올려 두기만 하세요.</p></div></div>
+          </div>
+        </div>
+
+        <div class="feat">
+          <img src="shots/30-w-80-weekly-day.webp" width="1100" height="525" alt="주간학습안내 위젯 - 하루 보기" loading="lazy" />
+          <div class="feat-b">
+            <h4>주간학습안내 — 시간표·진도와 잇기</h4>
+            <span class="where">설정 [시간표] → 주간학습안내 내용 함께 보기</span>
+            <p>AI로 읽어 두면 <strong>시간표 칸과 「지금 이 시간」에도</strong> 그 시간에 배울 것이 함께 나옵니다. 진도 큰 창의 <b>📖 안내문에서 채우기</b>로 학습내용을 진도표에 옮겨 담을 수도 있어요.</p>
+            <ul>
+              <li><strong>과목이 다를 때는 고르실 수 있습니다</strong> — 시간표 칸은 「수학」인데 안내문 같은 자리가 「국어」일 때, [시간표만 / 둘 다 보기 / 안내문 먼저] 중에 정하세요. 어느 쪽을 고르셔도 <strong>시간표에 적어 두신 내용은 바뀌지 않습니다</strong></li>
+              <li>진도 채우기는 <strong>이미 적어 두신 칸을 건드리지 않고</strong>, 무엇을 채울지 보여 드린 뒤에만 씁니다. 아직 오지 않은 날도 채우지 않아요</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="feat">
+          <img src="shots/30-w-84-attend.webp" width="1100" height="439" alt="출결 위젯" loading="lazy" />
+          <div class="feat-b">
+            <h4>출결(담임반) <span class="ftag off">기본 꺼짐</span></h4>
+            <span class="where">설정 [위젯] → 출결을 켜세요 · 독의 ✓ 출결에 찍으면 여기 올라옵니다</span>
+            <p>독에서 찍은 출결이 <strong>바탕화면에 늘 서 있습니다.</strong> 큰 창을 열지 않아도 오늘 누가 빠졌는지 보여요.</p>
+            <ul>
+              <li><strong>특이사항만 세웁니다</strong> — 아무도 빠지지 않은 날은 「개근」이라고 적습니다</li>
+              <li><strong>몇 교시인지도 적습니다</strong> — 「3~4교시 조퇴」처럼</li>
+              <li>제목 옆 <strong>‹ ›</strong>로 어제·그제도 넘겨 봅니다</li>
+            </ul>
+          </div>
+        </div>
           <img src="shots/30-w-90-prog.webp" width="1100" height="444" alt="진도 위젯" loading="lazy" />
           <div class="feat-b">
             <h4>진도(수업 기록) <span class="ftag off">기본 꺼짐</span></h4>
