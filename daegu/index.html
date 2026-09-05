@@ -1130,22 +1130,24 @@ function pd(iso){ const p=String(iso||"").split("-").map(Number);
 function addD(dt,n){ return new Date(dt.getTime()+n*MSD); }
 function isoOf(dt){ return dt.toISOString().slice(0,10); }
 function ymdSpan(sISO,eISO){
-  const s=pd(sISO), e=addD(pd(eISO),1);
-  if(!(e>s)) return {months:0,days:0};
-  let y=e.getUTCFullYear()-s.getUTCFullYear();
-  let m=e.getUTCMonth()-s.getUTCMonth();
-  let d=e.getUTCDate()-s.getUTCDate();
-  // 일수가 모자라면 한 달을 빌려온다. 이때 되돌릴 일수는 '시작일이 속한 달'의 길이를 쓴다.
-  // 종료월(2월 등) 기준으로 빌리면 28·29일만 되돌아와, 하루 늦게 시작한 사람이
-  // 오히려 더 많은 경력을 인정받는 역전이 생긴다.
-  if(d<0){
-    m--;
-    const startMonthLen=new Date(Date.UTC(s.getUTCFullYear(), s.getUTCMonth()+1, 0)).getUTCDate();
-    d+=startMonthLen;
-  }
-  if(m<0){ y--; m+=12; }
-  const tot=Math.max(0,(y*12+m)*30+d);
-  return {months:Math.floor(tot/30), days:tot%30};
+  // 「민법」제160조에 따른 역법 계산(초일 산입).
+  // 월로 정한 기간은 최후의 월에서 기산일에 해당하는 날의 전일에 만료하고,
+  // 최후의 월에 해당하는 날이 없으면 그 월의 말일에 만료한다.
+  // (예: 1월 31일부터 1개월 → 2월 28일까지)
+  const s=pd(sISO), e=pd(eISO);
+  if(!(e>=s)) return {months:0,days:0};
+  const sy=s.getUTCFullYear(), sm=s.getUTCMonth(), sd=s.getUTCDate();
+  const endOf=function(k){          // 기산일부터 k개월이 만료하는 날
+    const abs=sm+k, ty=sy+Math.floor(abs/12), tm=((abs%12)+12)%12;
+    const last=new Date(Date.UTC(ty,tm+1,0)).getUTCDate();
+    if(sd>last) return new Date(Date.UTC(ty,tm,last));
+    return new Date(Date.UTC(ty,tm,sd)-MSD);
+  };
+  let m=Math.max(0,(e.getUTCFullYear()-sy)*12+(e.getUTCMonth()-sm));
+  while(m>0 && endOf(m)>e) m--;
+  while(endOf(m+1)<=e) m++;
+  const rest=Math.round((e-endOf(m))/MSD);
+  return {months:m, days:Math.max(0,rest)};
 }
 function spanPd(sISO,eISO){ const r=ymdSpan(sISO,eISO); return r.months*30+r.days; }
 function pdText(v){
@@ -2418,11 +2420,6 @@ document.getElementById("btnPrint").addEventListener("click",function(){
   const restore=function(){
     document.querySelectorAll("section").forEach(function(s,i){ s.classList.toggle("open", wasOpen[i]); });
   };
-  if(window.matchMedia){
-    const mq=window.matchMedia("print");
-    const fn=function(e){ if(!e.matches){ restore(); if(mq.removeEventListener) mq.removeEventListener("change",fn); } };
-    if(mq.addEventListener) mq.addEventListener("change",fn);
-  }
   window.addEventListener("afterprint", function once(){ restore(); window.removeEventListener("afterprint",once); });
   setTimeout(function(){ window.print(); },120);
   setTimeout(restore, 3000);   // afterprint를 지원하지 않는 환경 대비
