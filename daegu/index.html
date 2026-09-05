@@ -649,6 +649,8 @@ td.grp{text-align:left;font-weight:600;color:var(--sub);font-size:12.5px;backgro
           <option value="석사-직무">석사 — 직무와 관련 있는 학위 (1.5점)</option>
           <option value="석사-기타">석사 — 기타 학위 (1.0점)</option>
         </select>
+        <label class="chk" style="margin-top:8px"><input type="checkbox" id="degBefore">
+          <span>2021.2.28.까지 대학원에 입학해 취득한 학위입니다</span></label>
         <p class="hint">‘직무와 관련 있는 학위’는 담당 교과뿐 아니라 학생생활지도·특별활동·학교 또는 학급경영·교무업무 등 학생교육과 관련된 전공을 포함합니다. <b>자격연수성적으로 평정한 석사학위는 여기서 제외</b>합니다(위 자격연수 평정 방식을 ‘석사학위 취득’으로 고른 경우).</p>
       </div>
       <div id="contestList"></div>
@@ -901,7 +903,7 @@ td.grp{text-align:left;font-weight:600;color:var(--sub);font-size:12.5px;backgro
       </p>
 
       <div class="grouptitle">저장과 내보내기</div>
-      <p class="hint" style="margin-top:0">입력값은 이 브라우저에 자동 저장됩니다. 다른 기기로 옮기거나 여러 경우를 비교하려면 JSON으로 내보내 두었다가 다시 가져오세요.</p>
+      <p class="hint" style="margin-top:0">입력값은 이 브라우저에 자동 저장됩니다. 다른 기기로 옮기거나 여러 경우를 비교하려면 JSON으로 내보내 두었다가 다시 가져오세요. <b>인쇄는 계산기 화면만</b> 나가며, 인쇄할 때 접어 둔 단계는 모두 펼쳐졌다가 인쇄 뒤 원래대로 돌아옵니다.</p>
       <div class="btnrow noprint" style="margin-top:12px">
         <button class="btn" id="btnExport">내보내기 (JSON)</button>
         <button class="btn" id="btnImport">가져오기</button>
@@ -987,8 +989,8 @@ td.grp{text-align:left;font-weight:600;color:var(--sub);font-size:12.5px;backgro
     </div>
 
     <div class="faq">
-      <p class="q">직무연수는 4단계와 5단계 양쪽에 넣어도 되나요?</p>
-      <p class="a">안 됩니다. 공통가산점의 직무연수 이수실적은 <b>“연수성적으로 평정한 직무연수 제외”</b>가 명시돼 있습니다. 4단계 연수성적평정에 쓴 3개는 5단계 이수실적 시간에서 빼고 넣으세요.</p>
+      <p class="q">직무연수는 3단계와 4단계 양쪽에 넣어도 되나요?</p>
+      <p class="a">안 됩니다. 공통가산점의 직무연수 이수실적은 <b>“연수성적으로 평정한 직무연수 제외”</b>가 명시돼 있습니다. 3단계 연수성적평정에 쓴 3개는 4단계 이수실적 시간에서 빼고 넣으세요.</p>
     </div>
 
     <div class="faq">
@@ -1017,7 +1019,7 @@ td.grp{text-align:left;font-weight:600;color:var(--sub);font-size:12.5px;backgro
     <ul class="exlist">
       <li><b>이미 교감 자격증을 취득한 교감 승진 대상자</b> — 만점 구성(200점)은 같지만 자격연수성적을 교감 자격연수성적으로 계수 0.05를 적용해 계산합니다. 3단계에서 나온 점수와 <b>(100 − 자격연수성적) × 0.025</b>만큼 차이가 납니다.</li>
       <li><b>교장 승진·자격연수 대상자와 장학관·교육연구관 승진후보자</b> — 만점이 185점(경과조치 188점)으로 다르고 연수성적이 15점, 연구실적이 3점 구조입니다.</li>
-      <li><b>대구광역시교육청 외 시·도</b> — 경력·근무성적·연수성적은 대통령령이라 전국 공통이지만, <b>선택가산점은 시·도교육청 규정</b>이라 항목과 점수가 다릅니다. 다른 교육청 소속이라면 1~4단계까지만 참고하세요.</li>
+      <li><b>대구광역시교육청 외 시·도</b> — 경력·근무성적·연수성적은 대통령령이라 전국 공통이지만, <b>선택가산점은 시·도교육청 규정</b>이라 항목과 점수가 다릅니다. 다른 교육청 소속이라면 1~3단계까지만 참고하세요.</li>
       <li><b>동석차·명부 순위</b> — 총평정점만 계산합니다. 실제 순위는 같은 명부에 오른 다른 대상자들의 점수에 따라 정해집니다.</li>
     </ul>
     <div class="alert warn">공식 평정점이 아닙니다. 인사기록카드에 기록된 사항과 교육(지원)청 확인 결과가 최종입니다. 특히 가산점의 인정 시작일·지역 구분·중복 제한은 개인별 사정에 따라 달라지므로, 결과가 실제 평정과 다르다면 교육(지원)청 인사 담당자에게 확인하세요.</div>
@@ -1133,10 +1135,15 @@ function ymdSpan(sISO,eISO){
   let y=e.getUTCFullYear()-s.getUTCFullYear();
   let m=e.getUTCMonth()-s.getUTCMonth();
   let d=e.getUTCDate()-s.getUTCDate();
-  if(d<0){ m--; const prev=new Date(Date.UTC(e.getUTCFullYear(),e.getUTCMonth(),0)); d+=prev.getUTCDate(); }
+  // 일수가 모자라면 한 달을 빌려온다. 이때 되돌릴 일수는 '시작일이 속한 달'의 길이를 쓴다.
+  // 종료월(2월 등) 기준으로 빌리면 28·29일만 되돌아와, 하루 늦게 시작한 사람이
+  // 오히려 더 많은 경력을 인정받는 역전이 생긴다.
+  if(d<0){
+    m--;
+    const startMonthLen=new Date(Date.UTC(s.getUTCFullYear(), s.getUTCMonth()+1, 0)).getUTCDate();
+    d+=startMonthLen;
+  }
   if(m<0){ y--; m+=12; }
-  // 월말 기산일(29·30·31일)에서는 보정 후에도 days가 음수로 남을 수 있다.
-  // 총량(월수×30+일수)은 그대로 두고 음수가 밖으로 새지 않도록 다시 나눈다.
   const tot=Math.max(0,(y*12+m)*30+d);
   return {months:Math.floor(tot/30), days:tot%30};
 }
@@ -1389,15 +1396,22 @@ const CONTEST_PT={ "전국":{1:1.50,2:1.25,3:1.00}, "시·도":{1:1.00,2:0.75,3:
 const JOINT_RATIO={1:1, 2:0.7, 3:0.5, 4:0.3};   // 2인 70% · 3인 50% · 4인 이상 30%
 const DEGREE_PT={ "박사-직무":3.0, "박사-기타":1.5, "석사-직무":1.5, "석사-기타":1.0 };
 
+const RESEARCH_LAST_YEAR=2021;   // 부칙 제2조 : 2021.2.28.까지의 실적에 한함
+
 function calcResearch(s){
   const R=s.research||{};
-  const rows=[];
+  const rows=[], excluded=[], checkYear=[];
   (R.contests||[]).forEach(function(x){
     const base=(CONTEST_PT[x.scale]||{})[num(x.grade)]||0;
     const j=Math.min(4, Math.max(1, num(x.joint)||1));
     const v=base*JOINT_RATIO[j];
-    rows.push({year:String(x.year||""), scale:x.scale, grade:num(x.grade), joint:j,
-      base:base, v:r3(v), id:x.id});
+    const yr=num(x.year);
+    const row={year:String(x.year||""), scale:x.scale, grade:num(x.grade), joint:j,
+      base:base, v:r3(v), id:x.id};
+    // 부칙 제2조 : 2021.2.28.까지 참가·입상한 실적만 종전 규정으로 평정한다
+    if(yr>RESEARCH_LAST_YEAR){ row.tooLate=true; excluded.push(row); return; }
+    if(yr===RESEARCH_LAST_YEAR) checkYear.push(row);
+    rows.push(row);
   });
   // 「승진규정」제37조제2항 : 연구대회 입상실적은 1년에 1회에 한한다
   const byYear=Object.create(null), dropped=[];
@@ -1407,9 +1421,14 @@ function calcResearch(s){
     else { r.used=false; dropped.push(r); }
   });
   const contestSum=Object.keys(byYear).reduce(function(a,k){ return a+byYear[k].v; },0);
-  const degreeVal = DEGREE_PT[R.degree] || 0;
+  // 학위도 2021.2.28.까지 대학원에 입학해 취득한 것만 평정 대상이다
+  const degreeOk = R.degree && R.degree!=="none" && R.degreeBefore2021;
+  const degreeVal = degreeOk ? (DEGREE_PT[R.degree] || 0) : 0;
+  const degreeUnconfirmed = !!(R.degree && R.degree!=="none" && !R.degreeBefore2021);
   const raw=contestSum+degreeVal;
-  return { rows:rows, dropped:dropped, contest:r3(contestSum), degree:r3(degreeVal),
+  return { rows:rows, dropped:dropped, excluded:excluded, checkYear:checkYear,
+           degreeUnconfirmed:degreeUnconfirmed,
+           contest:r3(contestSum), degree:r3(degreeVal),
            raw:r3(raw), total:r3(Math.max(0, Math.min(3, raw))), capped:raw>3+1e-9 };
 }
 
@@ -1457,7 +1476,7 @@ function calcSelect(s, commonG1){
     (capSets[k]=capSets[k]||[]).push(r);
   });
   Object.keys(capSets).forEach(function(k){
-    const g=capSets[k], cap=g[0].cap;
+    const g=capSets[k], cap=Math.min.apply(null, g.map(function(r){ return r.cap; }));
     const sum=g.reduce(function(a,r){ return a+r.raw; },0);
     if(sum>cap+1e-9){
       const kk=cap/sum;
@@ -1521,7 +1540,7 @@ function defaultState(){
   const yrs=[]; for(let i=0;i<5;i++) yrs.push({year:2025-i, score:"", none:false});
   return { career:[], perf:yrs,
     qual:{method:"score", full:"100", score:"", grade:"0.90", degree:"0.90"},
-    trainings:[], research:{contests:[], degree:"none"},
+    trainings:[], research:{contests:[], degree:"none", degreeBefore2021:false},
     common:{c1m:"",c1d:"",c2m:"",c2d:"",credits:[],c4y:""},
     select:[], maxEach:false };
 }
@@ -1577,12 +1596,18 @@ function applyState(d){
 
   const bp=defaultState().perf;
   if(!Array.isArray(st.perf) || st.perf.length!==5) st.perf=bp;
-  else st.perf=st.perf.map(function(y,i){
-    if(!y || typeof y!=="object") return bp[i];
-    return { year: num(y.year)||bp[i].year,
-             score: (y.score===null||y.score===undefined)?"":String(y.score),
-             none: !!y.none };
-  });
+  else {
+    const seenYear={};
+    st.perf=st.perf.map(function(y,i){
+      if(!y || typeof y!=="object") return bp[i];
+      let yr=num(y.year)||bp[i].year;
+      if(seenYear[yr]) yr=bp[i].year;      // 같은 학년도가 겹치면 기본 연도로 되돌린다
+      seenYear[yr]=1;
+      return { year: yr,
+               score: (y.score===null||y.score===undefined)?"":String(y.score),
+               none: !!y.none };
+    });
+  }
   if(typeof st.mode!=="undefined") delete st.mode;
 }
 
@@ -1722,7 +1747,7 @@ function renderPerf(){
     return {total:0, ok:false};
   }
   const W=["34%","33%","33%"];
-  let h='<div class="result"><div class="rt">조합별 계산 — 10가지 전부</div>'+
+  let h='<div class="result"><div class="rt">조합별 계산 — '+res.combos.length+'가지 전부</div>'+
     '<div class="tablewrap"><table><thead><tr><th>선택 학년도</th><th>가중 합산점</th></tr></thead><tbody>';
   res.combos.forEach(function(c,i){
     h+='<tr class="'+(i===0?"sel":"")+'"><td>'+c.years.map(function(y){ return y; }).join(" · ")+
@@ -1771,8 +1796,8 @@ function renderTraining(){
         '<div><label class="lbl">성적 만점</label><input type="text" inputmode="decimal" data-f="full" value="'+esc(t.full)+'" placeholder="100"></div>'+
       '</div>';
     d.querySelectorAll("[data-f]").forEach(function(inp){
-      inp.addEventListener("input",function(){ t[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
-      inp.addEventListener("change",function(){ t[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
+      const ev = inp.tagName==="SELECT" ? "change" : "input";
+      inp.addEventListener(ev,function(){ t[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
     });
     d.querySelector("[data-del]").addEventListener("click",function(){
       st.trainings=st.trainings.filter(function(x){ return x!==t; }); renderAll(); save();
@@ -1797,7 +1822,9 @@ function renderTraining(){
   if(res.qualNote) h+='<div class="alert warn">'+esc(res.qualNote)+'</div>';
   if(st.qual.method==="score" && st.qual.score!=="" && num(st.qual.score)>(num(st.qual.full)||100))
     h+='<div class="alert err">자격연수 성적('+f2(num(st.qual.score))+')이 만점('+f2(num(st.qual.full)||100)+')보다 큽니다. 성적과 만점을 다시 확인하세요.</div>';
-  if(Math.abs((num(st.qual.full)||100)-100)>1e-9)
+  if(st.qual.full!=="" && !isFinite(parseFloat(st.qual.full)))
+    h+='<div class="alert warn">자격연수 만점 칸에 숫자가 아닌 값이 들어 있어 <b>100점</b>으로 보고 계산했습니다.</div>';
+  else if(Math.abs((num(st.qual.full)||100)-100)>1e-9)
     h+='<div class="alert warn">자격연수 만점을 '+f2(num(st.qual.full))+'점으로 넣으셨습니다. 계산식의 계수 0.025는 <b>100점 만점을 전제</b>로 한 값이라, 만점이 다르면 같은 백분율이어도 점수가 달라집니다. 성적표의 만점이 실제로 100점이 아닌지 확인하세요.</div>';
 
   h+='<div class="kv"><span class="k">직무연수 <span class="badge n">'+res.used.length+'개 반영</span></span>'+
@@ -1841,6 +1868,7 @@ function renderTraining(){
 /* ════════════════════ 렌더 — 연구실적 ════════════════════ */
 function renderResearch(){
   document.getElementById("degreeSel").value = st.research.degree || "none";
+  document.getElementById("degBefore").checked = !!st.research.degreeBefore2021;
   const box=document.getElementById("contestList");
   box.innerHTML="";
   (st.research.contests||[]).forEach(function(c){
@@ -1863,8 +1891,8 @@ function renderResearch(){
         '</select></div>'+
       '</div>';
     d.querySelectorAll("[data-f]").forEach(function(inp){
-      inp.addEventListener("input",function(){ c[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
-      inp.addEventListener("change",function(){ c[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
+      const ev = inp.tagName==="SELECT" ? "change" : "input";
+      inp.addEventListener(ev,function(){ c[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
     });
     d.querySelector("[data-del]").addEventListener("click",function(){
       st.research.contests=st.research.contests.filter(function(x){ return x!==c; }); renderAll(); save();
@@ -1874,24 +1902,30 @@ function renderResearch(){
 
   const res=calcResearch(st);
   let h="";
-  if(st.qual.method==="degree" && String(st.research.degree||"").indexOf("석사")===0 && !res.rows.length && res.degree>0){
-    // 아래 공통 분기에서 처리됨
-  }
-  if(res.rows.length || res.degree>0){
+  if(res.rows.length || res.excluded.length || res.degree>0 || res.degreeUnconfirmed){
     h='<div class="result"><div class="rt">연구실적 계산</div>';
     if(res.rows.length){
       h+='<div class="tablewrap"><table><thead><tr><th>입상 연도</th><th>규모·등급</th><th>공동작</th><th>평정점</th></tr></thead><tbody>';
-      res.rows.forEach(function(r){
+      res.rows.concat(res.excluded).forEach(function(r){
         h+='<tr class="'+(r.used?"sel":"")+'"><td>'+esc(r.year||"—")+
-          (r.used?'':' <span class="badge n">연 1회 초과</span>')+'</td>'+
+          (r.tooLate?' <span class="badge err">2021.2.28. 이후</span>':
+           r.used?'':' <span class="badge n">'+(r.year?"연 1회 초과":"연도 미상 — 연 1회로 묶임")+'</span>')+'</td>'+
           '<td>'+esc(r.scale)+' '+r.grade+'등급</td><td>'+(r.joint===1?"단독":r.joint+"인")+'</td>'+
-          '<td>'+(r.used?f3(r.v):"—")+'</td></tr>';
+          '<td>'+(r.used&&!r.tooLate?f3(r.v):"—")+'</td></tr>';
       });
       h+='</tbody></table></div>';
       h+='<div class="kv"><span class="k">연구대회 입상실적</span><span class="v">'+f3(res.contest)+'</span></div>';
     }
     if(res.degree>0)
       h+='<div class="kv"><span class="k">학위취득실적 <span class="badge n">'+esc(st.research.degree)+'</span></span><span class="v">'+f3(res.degree)+'</span></div>';
+    if(res.excluded.length)
+      h+='<div class="alert err">「교육공무원 승진규정」 부칙 제2조에 따라 <b>2021.2.28.까지</b> 참가·입상한 실적만 평정합니다. '+
+        res.excluded.map(function(r){ return esc(r.year)+"년"; }).join(", ")+
+        ' 입상 '+res.excluded.length+'건은 평정에서 제외했습니다.</div>';
+    if(res.checkYear.length)
+      h+='<div class="alert warn">2021년 입상실적이 있습니다. <b>2021.2.28.까지</b> 참가하여 입상한 것만 평정 대상이니, 그 이후 입상이라면 항목을 지우세요.</div>';
+    if(res.degreeUnconfirmed)
+      h+='<div class="alert warn">학위는 <b>2021.2.28.까지 대학원에 입학</b>해 취득한 것만 평정 대상입니다. 위 확인란에 체크해야 점수에 반영됩니다.</div>';
     if(res.dropped.length)
       h+='<div class="alert info">같은 해에 입상실적이 둘 이상이면 「승진규정」제37조제2항에 따라 <b>1년에 1회</b>만 평정합니다. 유리한 실적을 남기고 '+res.dropped.length+'건을 제외했습니다.</div>';
     if(res.capped)
@@ -1958,8 +1992,8 @@ function renderSelect(){
       (def.note?'<br>'+esc(def.note):'')+'</div>';
     d.innerHTML=inner;
     d.querySelectorAll("[data-f]").forEach(function(inp){
-      inp.addEventListener("input",function(){ s[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
-      inp.addEventListener("change",function(){ s[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
+      const ev = inp.tagName==="SELECT" ? "change" : "input";
+      inp.addEventListener(ev,function(){ s[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
     });
     d.querySelector("[data-del]").addEventListener("click",function(){
       st.select=st.select.filter(function(x){ return x!==s; }); renderAll(); save();
@@ -2287,6 +2321,7 @@ function setVal(n, text, warn){
   }
 }
 function renderAll(){
+  const _focus=grabFocus();
   document.getElementById("qualMethod").value=st.qual.method;
   document.getElementById("qualFull").value=st.qual.full;
   document.getElementById("qualScore").value=st.qual.score;
@@ -2295,7 +2330,6 @@ function renderAll(){
   ["c1m","c1d","c2m","c2d","c4y"].forEach(function(k){ document.getElementById(k).value=st.common[k]; });
   document.getElementById("optMaxEach").checked=!!st.maxEach;
 
-  const _focus=grabFocus();
   const career=renderCareer(), perf=renderPerf();
   const train=renderTraining(), research=renderResearch();
   const trainTotal=r3(Math.min(30, train.total+research.total));
@@ -2330,6 +2364,8 @@ document.getElementById("sampleCareer").addEventListener("click",function(){
 });
 document.getElementById("degreeSel").addEventListener("change",function(e){
   st.research.degree=e.target.value; renderAll(); save(); });
+document.getElementById("degBefore").addEventListener("change",function(e){
+  st.research.degreeBefore2021=e.target.checked; renderAll(); save(); });
 document.getElementById("addContest").addEventListener("click",function(){
   st.research.contests.push({id:nid(), year:"", scale:"전국", grade:"1", joint:"1"});
   renderAll(); save();
@@ -2376,8 +2412,20 @@ document.getElementById("btnReset").addEventListener("click",function(){
   renderAll(); toast("초기화했습니다");
 });
 document.getElementById("btnPrint").addEventListener("click",function(){
+  // 인쇄는 계산기 화면만 나갑니다(도움말 탭은 인쇄되지 않습니다)
+  const wasOpen=[].map.call(document.querySelectorAll("section"), function(s){ return s.classList.contains("open"); });
   document.querySelectorAll("section").forEach(function(s){ s.classList.add("open"); });
+  const restore=function(){
+    document.querySelectorAll("section").forEach(function(s,i){ s.classList.toggle("open", wasOpen[i]); });
+  };
+  if(window.matchMedia){
+    const mq=window.matchMedia("print");
+    const fn=function(e){ if(!e.matches){ restore(); if(mq.removeEventListener) mq.removeEventListener("change",fn); } };
+    if(mq.addEventListener) mq.addEventListener("change",fn);
+  }
+  window.addEventListener("afterprint", function once(){ restore(); window.removeEventListener("afterprint",once); });
   setTimeout(function(){ window.print(); },120);
+  setTimeout(restore, 3000);   // afterprint를 지원하지 않는 환경 대비
 });
 document.getElementById("btnExport").addEventListener("click",function(){
   try{
@@ -2457,7 +2505,7 @@ renderAll();
 setTab("calc");
 
 /* ════════════════════ 자체 검증 ════════════════════ */
-window.CALC={calcCareer:calcCareer, calcPerf:calcPerf, calcTraining:calcTraining,
+window.CALC={calcCareer:calcCareer, calcPerf:calcPerf, calcTraining:calcTraining, calcResearch:calcResearch,
   calcCommon:calcCommon, calcSelect:calcSelect, spanPd:spanPd, ymdSpan:ymdSpan, pdText:pdText};
 window.selfTest=function(){
   function build(list){
