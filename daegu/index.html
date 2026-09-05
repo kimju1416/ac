@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>교감 승진 평정점 계산기 · 대구광역시교육청 2026</title>
+<meta name="description" content="대구광역시교육청 2026학년도 기준 교감 자격연수 대상자 승진 평정점 계산기. 경력 70점·근무성적 100점·연수성적 30점과 가산점을 지침 원문과 함께 계산합니다.">
+<meta name="author" content="김주현">
+<link rel="canonical" href="https://kimju.kr/daegu/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kimju.kr/daegu/">
+<meta property="og:site_name" content="kimju.kr">
+<meta property="og:title" content="교감 승진 평정점 계산기">
+<meta property="og:description" content="대구광역시교육청 2026학년도 기준 · 경력·근무성적·연수성적·가산점을 지침 원문과 함께 계산합니다.">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:image" content="https://kimju.kr/daegu/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="교감 승진 평정점 계산기 · 대구광역시교육청 2026학년도 기준">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kimju.kr/daegu/og-image.jpg">
+<meta name="theme-color" content="#2456A6">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --pt:#2456A6; --pt-h:#1C4487; --pt-w:rgba(36,86,166,.12); --pt-f:rgba(36,86,166,.05);
+  --bg:#F6F8FB; --card:#FFFFFF; --bd:#E3E9F2;
+  --ink:#1B2A41; --sub:#64748B;
+  --ok:#1D7A4D; --ok-bg:#E7F3EC;
+  --warn:#B26B0F; --warn-bg:#FBF0DE;
+  --err:#C0392B; --err-bg:#F9E8E6;
+  --r-s:10px; --r-l:14px;
+  --toc-w:236px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:'Pretendard Variable',Pretendard,-apple-system,system-ui,sans-serif;
+  background:var(--bg); color:var(--ink);
+  font-size:15px; line-height:1.65; word-break:keep-all;
+  padding-bottom:96px;
+}
+h1,h2,h3,p,ul,ol{margin:0}
+ul,ol{padding-left:18px}
+
+/* ───── 앱바 ───── */
+.appbar{position:sticky;top:0;z-index:40;background:var(--bg);border-bottom:1px solid var(--bd)}
+.appbar .in{max-width:1280px;margin:0 auto;padding:0 20px;height:56px;display:flex;align-items:center;gap:12px}
+.appbar h1{font-size:17px;font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.appbar .tot{display:none;font-size:13px;color:var(--sub);white-space:nowrap}
+.appbar .tot b{font-size:16px;color:var(--pt);font-variant-numeric:tabular-nums;margin-left:4px}
+.saved{font-size:12px;color:var(--sub);white-space:nowrap}
+
+/* ───── 탭 ───── */
+.tabbar{position:sticky;top:56px;z-index:35;background:var(--bg);border-bottom:1px solid var(--bd)}
+.tabbar .in{max-width:1280px;margin:0 auto;padding:0 20px;display:flex;gap:2px}
+.tabbar button{height:46px;padding:0 16px;border:0;background:none;font-family:inherit;
+  font-size:15px;font-weight:600;color:var(--sub);border-bottom:2px solid transparent}
+.tabbar button:hover{color:var(--ink)}
+.tabbar button.on{color:var(--pt);border-bottom-color:var(--pt)}
+body[data-tab="guide"] #tabCalc{display:none}
+body[data-tab="calc"] #tabGuide{display:none}
+body[data-tab="guide"] .totalbar{display:none}
+
+/* ───── 예시 탭 ───── */
+.guidewrap{max-width:1000px;margin:0 auto;padding:0 20px}
+.gcard{background:var(--card);border:1px solid var(--bd);border-radius:var(--r-l);padding:18px;margin:16px 0}
+.gcard>h3{font-size:16px;font-weight:600;margin:0 0 4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.gcard>h3 .tag{font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px;background:#EEF1F6;color:var(--sub)}
+.gcard .who{font-size:13.5px;color:var(--sub);margin:0 0 14px;line-height:1.65}
+.exrow{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:6px 0;border-bottom:1px solid var(--bd)}
+.exrow:last-of-type{border-bottom:0}
+.exrow .k{color:var(--sub);flex:1}
+.exrow .v{font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.extotal{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  margin-top:12px;padding-top:12px;border-top:1px solid var(--bd)}
+.extotal .k{font-size:13px;color:var(--sub)}
+.extotal .v{font-size:23px;font-weight:700;color:var(--pt);font-variant-numeric:tabular-nums}
+.exlist{font-size:13.5px;line-height:1.75;color:var(--ink);margin:0 0 14px;padding-left:17px}
+.exlist li{margin:3px 0}
+.exlist b{font-weight:600}
+.faq{border-top:1px solid var(--bd);padding:14px 0 0;margin-top:14px}
+.faq:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.faq .q{font-size:14.5px;font-weight:600;margin:0 0 6px}
+.faq .a{font-size:13.5px;color:var(--sub);line-height:1.75}
+.faq .a b{color:var(--ink)}
+.steps{counter-reset:s;padding:0;margin:0;list-style:none}
+.steps li{counter-increment:s;position:relative;padding:0 0 14px 34px;font-size:14px;line-height:1.7}
+.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:22px;height:22px;
+  border-radius:50%;background:var(--pt-f);color:var(--pt);font-size:12px;font-weight:600;
+  display:flex;align-items:center;justify-content:center}
+.steps li b{font-weight:600}
+.steps li:last-child{padding-bottom:0}
+
+/* ───── 레이아웃 ───── */
+.layout{max-width:1280px;margin:0 auto;padding:0 20px;display:block}
+.toc{display:none}
+.col{min-width:0}
+
+/* ───── 안내 ───── */
+.notice{margin:16px 0 0;padding:16px;border:1px solid var(--bd);border-radius:var(--r-l);
+  background:#fff;font-size:14px;color:var(--sub);line-height:1.7}
+.notice b{color:var(--ink);font-weight:600}
+.notice p+p{margin-top:9px}
+.notice .t{font-size:13.5px}
+.notice details.ref{margin-top:14px;background:#FBFCFE}
+
+/* ───── 섹션 ───── */
+section{background:var(--card);border:1px solid var(--bd);border-radius:var(--r-l);margin:16px 0;overflow:hidden;scroll-margin-top:118px}
+.sechead{display:flex;align-items:center;gap:10px;padding:16px;cursor:pointer;user-select:none;min-height:56px}
+.sechead .no{width:24px;height:24px;flex:none;border-radius:50%;background:var(--pt);color:#fff;
+  font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center}
+.sechead h2{font-size:16px;font-weight:600;flex:1}
+.sechead .val{font-size:14px;font-weight:600;color:var(--pt);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sechead .arw{width:16px;height:16px;flex:none;color:var(--sub);transition:transform .18s}
+section.open .sechead .arw{transform:rotate(180deg)}
+.secbody{display:none;padding:0 16px 20px}
+section.open .secbody{display:block}
+
+/* ───── 설명 ───── */
+.desc{font-size:14px;color:var(--sub);line-height:1.7;margin:0 0 16px}
+.desc p+p{margin-top:8px}
+.desc b{color:var(--ink);font-weight:600}
+.lbl{font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--sub);display:block;margin:0 0 6px}
+.hint{font-size:13px;color:var(--sub);margin:6px 0 0;line-height:1.6}
+.grouptitle{font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--sub);
+  margin:26px 0 12px;padding-top:18px;border-top:1px solid var(--bd)}
+.grouptitle:first-child{margin-top:0;padding-top:0;border-top:0}
+
+/* ───── 규정 원문 ───── */
+details.ref{border:1px solid var(--bd);border-radius:var(--r-s);margin:14px 0 0;background:#FCFDFE}
+details.ref>summary{
+  list-style:none;cursor:pointer;padding:11px 14px;font-size:13.5px;font-weight:600;
+  color:var(--pt);display:flex;align-items:center;gap:7px;min-height:44px;
+}
+details.ref>summary::-webkit-details-marker{display:none}
+details.ref>summary::before{
+  content:"";width:14px;height:14px;flex:none;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232456A6' stroke-width='2.5'><polyline points='9 18 15 12 9 6'/></svg>") no-repeat center/contain;
+  transition:transform .18s;
+}
+details.ref[open]>summary::before{transform:rotate(90deg)}
+details.ref>summary .pg{margin-left:auto;font-weight:400;font-size:12px;color:var(--sub)}
+.refbody{padding:2px 14px 16px;font-size:13.5px;line-height:1.75;color:var(--ink);border-top:1px solid var(--bd);margin-top:-1px}
+.refbody>*+*{margin-top:10px}
+.refbody h4{font-size:13px;font-weight:600;color:var(--sub);letter-spacing:.02em;margin-top:16px}
+.refbody ul{padding-left:17px}
+.refbody li{margin:3px 0}
+.refbody .q{border-left:3px solid var(--bd);padding:2px 0 2px 12px;color:var(--sub);font-size:13px}
+.refbody table{font-size:12.5px}
+.refbody em{font-style:normal;background:#FFF6E0;padding:0 3px;border-radius:3px}
+
+/* ───── 입력 ───── */
+input[type=text],input[type=number],input[type=date],select{
+  width:100%;height:44px;padding:0 12px;border:1px solid var(--bd);border-radius:var(--r-s);
+  background:#fff;color:var(--ink);font-family:inherit;font-size:15px;
+}
+select{appearance:none;padding-right:34px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat:no-repeat;background-position:right 12px center}
+input:focus,select:focus{outline:none;border-color:var(--pt);box-shadow:0 0 0 3px var(--pt-w)}
+input[type=number]{-moz-appearance:textfield}
+input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input:disabled{background:#F6F8FB;color:var(--sub)}
+.field{margin:0 0 14px}
+.row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.row3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media (max-width:430px){
+  input[type=date]{font-size:14px;padding:0 8px}
+  input[type=date]::-webkit-calendar-picker-indicator{margin-left:0;padding-left:0}
+}
+
+/* ───── 라디오 ───── */
+.radios{display:grid;gap:8px}
+.radio{display:flex;gap:10px;align-items:flex-start;padding:13px 14px;border:1px solid var(--bd);
+  border-radius:var(--r-s);cursor:pointer;background:#fff}
+.radio.on{border-color:var(--pt);background:var(--pt-f)}
+.radio input{margin:4px 0 0;accent-color:var(--pt);flex:none;width:16px;height:16px}
+.radio .t{font-weight:600;font-size:15px;display:block}
+.radio .d{font-size:13px;color:var(--sub);margin-top:3px;display:block;line-height:1.6}
+
+/* ───── 버튼 ───── */
+button{font-family:inherit;cursor:pointer}
+.btn{height:44px;padding:0 16px;border-radius:var(--r-s);border:1px solid var(--bd);
+  background:#fff;color:var(--ink);font-size:14px;font-weight:600}
+.btn:hover{background:#F6F8FB}
+.btn.primary{background:var(--pt);border-color:var(--pt);color:#fff}
+.btn.primary:hover{background:var(--pt-h)}
+.btn.danger{border-color:transparent;color:var(--err);background:transparent}
+.btn.sm{height:44px;padding:0 14px;font-size:13.5px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+.iconbtn{width:44px;height:44px;flex:none;border:1px solid var(--bd);border-radius:8px;background:#fff;
+  color:var(--sub);display:flex;align-items:center;justify-content:center}
+.iconbtn:hover{color:var(--err);border-color:var(--err)}
+
+/* ───── 리스트 ───── */
+.item{border:1px solid var(--bd);border-radius:var(--r-s);padding:12px;margin:0 0 10px;background:#fff}
+.item .top{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.item .top select,.item .top input{flex:1;min-width:0}
+.item .top .nm{flex:1;font-weight:600;font-size:14.5px;min-width:0}
+.empty{padding:22px 0;text-align:center;color:var(--sub);font-size:14px}
+
+/* ───── 결과 ───── */
+.result{border:1px solid var(--bd);border-radius:var(--r-s);background:#F6F8FB;padding:15px;margin-top:16px}
+.result .rt{font-size:13px;font-weight:600;color:var(--sub);letter-spacing:.02em;margin-bottom:10px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:5px 0;font-size:14px;align-items:baseline}
+.kv .k{color:var(--sub)}
+.kv .v{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.kv.total{border-top:1px solid var(--bd);margin-top:8px;padding-top:11px;font-size:15px}
+.kv.total .k{color:var(--ink);font-weight:600}
+.kv.total .v{color:var(--pt);font-size:17px}
+.formula{font-size:12.5px;color:var(--sub);font-variant-numeric:tabular-nums;margin-top:8px;line-height:1.75}
+
+/* ───── 배지·알림 ───── */
+.badge{display:inline-block;padding:1px 7px;border-radius:6px;font-size:11.5px;font-weight:600;vertical-align:1px}
+.badge.ok{background:var(--ok-bg);color:var(--ok)}
+.badge.warn{background:var(--warn-bg);color:var(--warn)}
+.badge.err{background:var(--err-bg);color:var(--err)}
+.badge.n{background:#EEF1F6;color:var(--sub)}
+.alert{padding:11px 13px;border-radius:var(--r-s);font-size:13px;margin:10px 0 0;line-height:1.6}
+.alert.warn{background:var(--warn-bg);color:#7A4A0A}
+.alert.err{background:var(--err-bg);color:#8E2A1F}
+.alert.info{background:#EEF3FA;color:#2A4468}
+.alert.ok{background:var(--ok-bg);color:#14603B}
+
+/* ───── 표 ───── */
+.tablewrap{overflow-x:auto;margin-top:12px;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:400px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--bd);white-space:nowrap}
+th:first-child,td:first-child{text-align:left;white-space:normal}
+th{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.02em;background:#FBFCFE}
+td{font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}
+tbody tr.sel td{background:var(--pt-f);font-weight:600}
+td.grp{text-align:left;font-weight:600;color:var(--sub);font-size:12.5px;background:#FBFCFE}
+
+/* ───── 막대 ───── */
+.bar{height:8px;border-radius:4px;background:var(--bd);overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--pt);border-radius:4px;transition:width .25s}
+.barrow{margin:0 0 14px}
+.barrow .h{display:flex;justify-content:space-between;font-size:13.5px;gap:10px}
+.barrow .h b{font-variant-numeric:tabular-nums;font-weight:600}
+
+/* ───── 하단 총점바 (모바일) ───── */
+.totalbar{position:fixed;left:0;right:0;bottom:0;z-index:45;background:#fff;border-top:1px solid var(--bd)}
+.totalbar .in{max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:14px;height:76px}
+.totalbar .c{flex:1;min-width:0}
+.totalbar .c .k{font-size:12px;color:var(--sub);letter-spacing:.02em}
+.totalbar .c .v{font-size:25px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.15}
+.totalbar .c .v small{font-size:13px;font-weight:400;color:var(--sub);margin-left:3px}
+.totalbar .div{width:1px;height:36px;background:var(--bd);flex:none}
+
+/* ───── 체크 ───── */
+.chk{display:flex;align-items:center;gap:8px;font-size:14px;cursor:pointer;min-height:44px}
+.chk input{width:18px;height:18px;accent-color:var(--pt);flex:none}
+
+/* ───── 토스트 ───── */
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:96px;z-index:60;
+  background:rgba(20,20,20,.92);color:#fff;font-size:14px;padding:11px 17px;border-radius:8px;
+  opacity:0;pointer-events:none;transition:opacity .2s;max-width:90vw;text-align:center}
+#toast.on{opacity:1}
+
+/* ═══════════ 태블릿 ═══════════ */
+@media (min-width:700px){
+  .secbody{padding:0 20px 24px}
+  .sechead{padding:18px 20px}
+  .row3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .item{padding:14px}
+  .item.career{display:grid;grid-template-columns:minmax(0,1fr) 158px 158px 44px;
+    gap:10px;align-items:end;grid-auto-flow:dense}
+  .item.career .top{margin:0;display:contents}
+  .item.career .top select{grid-column:1;grid-row:1}
+  .item.career .top .iconbtn{grid-column:4;grid-row:1;align-self:end}
+  .item.career .row2{display:contents}
+  .item.career .row2>div:first-child{grid-column:2;grid-row:1}
+  .item.career .row2>div:last-child{grid-column:3;grid-row:1}
+  .item.career .span{grid-column:1/-1;grid-row:2;margin:0}
+}
+
+/* ═══════════ PC ═══════════ */
+@media (min-width:960px){
+  body{padding-bottom:40px;font-size:15px}
+  .appbar .in,.tabbar .in{max-width:1360px}
+  .appbar .in{height:60px}
+  .appbar .tot{display:block}
+  .tabbar{top:60px}
+  section{scroll-margin-top:124px}
+  .layout{max-width:1360px;display:grid;grid-template-columns:var(--toc-w) minmax(0,1fr);
+    gap:32px;align-items:start;padding-top:8px}
+  .guidewrap{max-width:1100px}
+  /* 넓은 화면에서는 입력칸을 키워 편하게 */
+  input[type=text],input[type=number],input[type=date],select{height:48px;font-size:15px}
+  .btn{height:48px;padding:0 18px;font-size:14.5px}
+  .btn.sm{height:44px}
+  .iconbtn{width:48px;height:48px}
+  .chk{min-height:48px}
+  .sechead{padding:20px 24px}
+  .secbody{padding:0 24px 26px}
+  .field{margin-bottom:18px}
+  .row2,.row3{gap:14px}
+  .item{padding:16px}
+  .item.career{grid-template-columns:minmax(0,1fr) 172px 172px 48px;gap:14px}
+  .desc{font-size:14.5px}
+  .fieldgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 24px;align-items:start}
+  .itemgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .itemgrid .item{margin:0}
+  .itemgrid .empty{grid-column:1/-1}
+  .selgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .selgrid .item{margin:0}
+  .toc{display:block;position:sticky;top:126px;padding:6px 0}
+  .gcols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+  .gcols .gcard{margin:0}
+  .toc .tt{font-size:12px;font-weight:600;letter-spacing:.03em;color:var(--sub);padding:0 12px 8px}
+  .toc a{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:8px;
+    text-decoration:none;color:var(--ink);font-size:14px;line-height:1.4}
+  .toc a:hover{background:#EDF1F7}
+  .toc a.cur{background:var(--pt-f);color:var(--pt);font-weight:600}
+  .toc a .n{width:20px;height:20px;flex:none;border-radius:50%;background:var(--bd);color:var(--sub);
+    font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center}
+  .toc a.cur .n{background:var(--pt);color:#fff}
+  .toc a .t{flex:1;min-width:0}
+  .toc a .s{font-size:12px;color:var(--sub);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .toc a.cur .s{color:var(--pt)}
+  .toc .sum{margin-top:14px;padding:14px 12px;border:1px solid var(--bd);border-radius:var(--r-l);background:#fff}
+  .toc .sum .k{font-size:12px;color:var(--sub)}
+  .toc .sum .v{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+  .toc .sum .v small{font-size:12px;font-weight:400;color:var(--sub)}
+  .toc .sum .d{height:1px;background:var(--bd);margin:12px 0}
+  .totalbar{display:none}
+  #toast{bottom:32px}
+  section{margin:0 0 18px}
+  .row2{gap:12px}
+  .perfgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+  .perfgrid .item{margin:0}
+}
+@media (min-width:1200px){
+  .refbody{font-size:14px}
+  .fieldgrid{gap:0 32px}
+  .itemgrid,.selgrid{gap:14px}
+}
+
+/* ═══════════ 인쇄 ═══════════ */
+@media print{
+  .appbar,.totalbar,.btnrow,#toast,.toc,.tabbar,.noprint{display:none!important}
+  #tabGuide{display:none!important}
+  #tabCalc{display:block!important}
+  .secbody{display:block!important;padding:0 0 12px}
+  body{padding:0;background:#fff;font-size:11pt}
+  .layout{display:block;max-width:none;padding:0}
+  section{break-inside:avoid;border-color:#ccc;margin:0 0 10px}
+  details.ref{display:none}
+  .result{background:#fff;border-color:#ccc}
+}
+</style>
+</head>
+<body data-tab="calc">
+
+<header class="appbar">
+  <div class="in">
+    <h1>교감 승진 평정점 계산기</h1>
+    <span class="tot">총계<b id="barTot">0.000</b></span>
+    <span class="saved" id="savedAt">—</span>
+  </div>
+</header>
+
+<nav class="tabbar">
+  <div class="in">
+    <button type="button" data-tab="calc" class="on">계산기</button>
+    <button type="button" data-tab="guide">예시와 도움말</button>
+  </div>
+</nav>
+
+<div class="layout" id="tabCalc">
+
+  <!-- 좌측 목차 (PC) -->
+  <nav class="toc" id="toc">
+    <div class="tt">단계</div>
+    <a href="#sec1" data-t="sec1"><span class="n">1</span><span class="t">경력평정</span><span class="s" id="t1">0</span></a>
+    <a href="#sec2" data-t="sec2"><span class="n">2</span><span class="t">근무성적평정</span><span class="s" id="t2">0</span></a>
+    <a href="#sec3" data-t="sec3"><span class="n">3</span><span class="t">연수성적평정</span><span class="s" id="t3">0</span></a>
+    <a href="#sec4" data-t="sec4"><span class="n">4</span><span class="t">가산점</span><span class="s" id="t4">0</span></a>
+    <a href="#sec5" data-t="sec5"><span class="n">5</span><span class="t">평정 결과</span><span class="s" id="t5">—</span></a>
+    <div class="sum">
+      <div class="k">평정점 (200점 만점)</div>
+      <div class="v" id="sumMain">0.000<small>/200</small></div>
+      <div class="d"></div>
+      <div class="k">가산점 포함 총계</div>
+      <div class="v" id="sumAll">0.000</div>
+    </div>
+  </nav>
+
+  <div class="col">
+
+  <div class="notice">
+    <p class="t"><b>대구광역시교육청 2026학년도 기준</b> · 명부 작성기준일 2026.3.31. / 평정 기준일 2026.2.28.</p>
+    <p>이 계산기는 <b>교감 자격연수 대상자</b>가 받게 될 총평정점을 계산합니다. 중등 정교사(1급) 자격증을 가지고 3년 이상 교육경력이 있는 교사가 <b>교감 자격연수과정 응시대상자 순위명부</b>에 오를 때 매겨지는 점수로, <b>경력 70점 + 근무성적 100점 + 연수성적 30점 = 200점</b>이며 가산점은 별도로 공통 3.5점 · 선택 9.99점입니다.</p>
+    <p>모든 계산은 브라우저 안에서만 이루어지고 입력값은 이 기기에만 저장됩니다. 공식 평정점은 나이스 및 교육(지원)청 확인 결과를 따릅니다.</p>
+    <details class="ref"><summary>지침 원문 — 작성 대상과 승진평정점의 구성<span class="pg">책자 p.7~8</span></summary>
+    <div class="refbody">
+      <h4>2. 작성 대상 — 나. 자격연수대상자 명부</h4>
+      <p>2) 교감 자격연수대상자 : <em>중등학교 정교사(1급) 자격증을 가지고 3년 이상 교육경력이 있는 자</em> 중 총평정점이 일정 수준에 도달하는 자(보건교사 포함)</p>
+      <h4>5. 승진평정점의 구성(「교육공무원 승진규정」 제40조)</h4>
+      <p>가. 교감 승진 및 자격연수 대상자 : <em>200점 만점</em>(가산점 별도)<br>
+      &nbsp;&nbsp;&nbsp;- 경력평정점 70점, 근무성적평정점 100점, 연수성적평정점 30점</p>
+      <p>나. 교장 승진 및 자격연수 대상자, 장학관·교육연구관 승진후보자 : 185점 만점(가산점 별도), 단 경과조치에 따라 종전 규정이 적용되는 자는 188점 만점<br>
+      &nbsp;&nbsp;&nbsp;- 경력평정점 70점, 근무성적평정점 100점, 연수성적평정점 15점, (종전규정: 연구실적 3점)</p>
+      <h4>4. 정기 평정 기준일 : 2026.2.28.</h4>
+      <p class="q">※ 평정 기준일 현재 재직자로, 해당 학년도 2개월 이상 근무자에 한하여 평정함</p>
+      <h4>3. 평정의 기초 : 교육공무원인사기록카드(NEIS)</h4>
+      <p class="q">근무성적평정을 제외한 모든 평정은 교육공무원인사기록카드에 기록된 사항을 따르고, 필요한 경우 기재 사항이 정확한지 여부를 조회·확인한다.</p>
+    </div></details>
+  </div>
+
+  <!-- ══ 1. 경력평정 ══ -->
+  <section class="open" id="sec1">
+    <div class="sechead" data-sec="sec1">
+      <span class="no">1</span><h2>경력평정</h2>
+      <span class="val" id="v1">0.000 / 70</span>
+      <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="secbody">
+      <div class="desc">
+        <p>경력평정은 <b>기준일(2026.2.28.)에서 거슬러 올라간 20년</b>을 평정합니다. 최근 15년이 <b>기본경력</b>(만점 64점), 그 앞 5년이 <b>초과경력</b>(만점 6점)입니다.</p>
+        <p><b>총경력제</b>이므로 휴직·일시퇴직처럼 경력으로 인정되지 않는 기간은 빼고, 20년이 채워지는 시점까지 더 과거로 거슬러 올라갑니다. 교사 직위에서는 정규 교원·교육전문직·임용 전 군복무가 <b>‘가’경력</b>, 기간제교원과 강사가 <b>‘나’경력</b>입니다. ‘가’경력이 월 0.3555점으로 가장 높습니다.</p>
+        <p>발령일부터 순서대로 이력을 넣으면 됩니다. 기간제 경력이 있으면 규정이 허용하는 범위에서 <b>최대한 제외해 가장 유리하게</b> 자동 배분합니다. 지침의 경력평정 예시 7건과 결과가 일치하는지 검증했습니다.</p>
+      </div>
+      <div id="careerList"></div>
+      <div class="btnrow noprint" style="margin-top:4px">
+        <button class="btn sm primary" id="addCareer">＋ 근무 이력 추가</button>
+        <button class="btn sm" id="sampleCareer">예시 넣기</button>
+      </div>
+      <div id="careerResult"></div>
+
+      <details class="ref"><summary>지침 원문 — 경력의 종류·등급별 평정점·평정 방법<span class="pg">책자 p.10~13</span></summary>
+      <div class="refbody">
+        <h4>라. 경력의 종류 및 평정기간</h4>
+        <div class="tablewrap"><table><thead><tr><th>경력의 종류</th><th>평정기간</th><th>평정점수</th></tr></thead>
+        <tbody><tr><td>기본경력</td><td style="text-align:left">2026.2.28.로부터 15년<br>(총경력제에 의한 평정)</td><td rowspan="2">70점</td></tr>
+        <tr><td>초과경력</td><td style="text-align:left">기본경력 전 5년</td></tr></tbody></table></div>
+        <p class="q">※ (총경력제) 경력평정기간 중 일시퇴직기간 등이 있으면 그 기간을 제외하고 경력평정 시점으로부터 경력평정기간이 충족되는 시점까지 도달하여 평정하는 것을 말함</p>
+
+        <h4>경력의 등급별 평정점 (「규정」제9조 별표1 및 제10조 별표2)</h4>
+        <div class="tablewrap"><table>
+        <thead><tr><th>구분</th><th>등급</th><th>평정 만점</th><th>1월 평정점</th><th>1일 평정점</th></tr></thead>
+        <tbody>
+        <tr><td rowspan="3">기본경력<br>(15년)</td><td>가 경력</td><td>64.00</td><td>0.3555</td><td>0.0118</td></tr>
+        <tr><td>나 경력</td><td>60.00</td><td>0.3333</td><td>0.0111</td></tr>
+        <tr><td>다 경력</td><td>56.00</td><td>0.3111</td><td>0.0103</td></tr>
+        <tr><td rowspan="3">초과경력<br>(5년)</td><td>가 경력</td><td>6.00</td><td>0.1000</td><td>0.0033</td></tr>
+        <tr><td>나 경력</td><td>5.00</td><td>0.0833</td><td>0.0027</td></tr>
+        <tr><td>다 경력</td><td>4.00</td><td>0.0666</td><td>0.0022</td></tr>
+        </tbody></table></div>
+        <p class="q">※ 월수를 단위로 하여 계산하되, 1개월 미만은 일단위로 계산함</p>
+
+        <h4>[별표1] 경력의 등급 및 종별 — 평정대상자의 직위가 ‘교사’인 경우</h4>
+        <ul>
+          <li><b>가 경력</b> : 각급학교 교장·교감 또는 교사의 경력(전임강사 이상의 대학교원, 중·고등학교 졸업학력이 인정되는 사회교육시설에서 동등급 교원자격증을 가지고 학생을 지도한 경력 포함) / 장학관·교육연구관·장학사 또는 교육연구사의 경력 / 교육공무원으로 임용되기 전에 「병역법」, 그 밖의 법률에 의한 의무를 수행하기 위하여 징집 또는 소집되거나 근무한 경력</li>
+          <li><b>나 경력</b> : 임용권자가 임용하여 전임으로 근무한 강사(대학의 전임강사는 제외) 또는 기간제교원(임시교원 경력 포함)의 경력</li>
+        </ul>
+
+        <h4>마. 평정 요령 — 평정 방법</h4>
+        <ul>
+          <li>① 평정 기간 20년(기본경력 15년, 초과경력 5년)을 경력 등급 ‘가, 나, 다’로 평정</li>
+          <li>② 평정점 = (월수 × 근무기간 1월에 대한 평정점) + (일수 × 근무기간 1일에 대한 평정점)<br>
+            <span class="q">※ 경력평정점은 소수점 이하 넷째자리에서 반올림하여 셋째자리까지 계산</span></li>
+          <li>③ 교육공무원의 경력이 기본 경력 15년, 초과 경력 5년인 경우에는 그 경력 평정 점수는 각각 평정 만점으로 평정<br>
+            – [기본 ‘가’경력]이 15년이면 0.3555×180=63.9900점이지만 <em>64.0000점</em>으로 평정<br>
+            – [초과 ‘나’경력]이 5년이면 0.0833×60=4.9980점이지만 <em>5.0000점</em>으로 평정</li>
+          <li>④ 경력의 기간 계산
+            <ul>
+              <li>월수를 단위로 계산하되, 1개월 미만은 일 단위로 계산함</li>
+              <li>평정기간 중 일시퇴직기간이 있으면 제외하고 20년이 되는 시점까지 도달 평정(총경력제 적용)</li>
+              <li><em>임시교사나 기간제교원 등의 경력이 있을 경우는 당사자에게 유리한 경력을 우선 평정 기간으로 하여 임시교사나 기간제교원 등의 경력 기간을 제외하고, 경력평정 시점부터 경력평정 기간이 충족되는 시점까지 도달하여 평정할 수 있음</em></li>
+              <li>50% 인정의 경력이 있는 경우 부족한 50%의 기간은 뒤에서 당겨와 평정기간에 산입</li>
+              <li>경력평정의 평정기간 중에 휴직·직위해제 또는 정직기간이 있는 경우 그 기간을 평정에서 제외(단, 아래 휴직 중 인정 경력은 제외)</li>
+              <li>시간선택제교사의 경력평정은 근무시간에 비례하여 산정</li>
+            </ul>
+          </li>
+        </ul>
+
+        <h4>⑤ 휴직·직위해제 기간 중 경력 인정</h4>
+        <div class="tablewrap"><table><thead><tr><th>내용</th><th>인정비율</th></tr></thead><tbody>
+        <tr><td>질병휴직(공무상 질병·부상에 한함), 병역휴직, 법정의무수행, 노조전임자, 고용휴직(상근 근무에 한함), 육아휴직, 입양휴직</td><td>100%</td></tr>
+        <tr><td>유학휴직, 연수휴직, 고용휴직(비상근으로 근무한 경우에 한함)</td><td>50%</td></tr>
+        <tr><td>직위해제 처분의 사유가 무효·취소로 확정되거나 형사사건이 무죄로 확정된 경우의 그 직위해제기간</td><td>100%</td></tr>
+        </tbody></table></div>
+
+        <h4>⑥ 임용 전 군경력 인정 범위</h4>
+        <ul>
+          <li>(임용 전 군경력) 교사는 ‘가’경력, 교감(장학사·교육연구사)은 ‘나’경력</li>
+          <li>「병역법」및「군인사법」에 따른 병역의무 복무기간은 <em>3년의 범위 기간 이내</em>에서 병적증명서에 기재되어 있는 사실상 실역복무기간을 징집 또는 소집된 기간으로 갈음</li>
+          <li>의무·전투경찰·순경은 현역병의 복무특례로 군복무 경력으로 인정</li>
+          <li>(불인정) 임용 전 무관후보생, RNTC, 장교임관 전 무관후보생기간, 방위산업체 근무 경력, 여교원의 지원에 따른 군복무 경력</li>
+        </ul>
+      </div></details>
+
+      <details class="ref"><summary>지침 원문 — 경력평정 예시 8건 (이 계산기의 검증 기준)<span class="pg">책자 p.14</span></summary>
+      <div class="refbody">
+        <p>(예시 1) 정규교사 9년, 기간제교사 2년, 정규교사 10년의 순으로 근무한 교사</p>
+        <ul><li>[기본경력] 15년(‘가’ 14년, ‘나’ 1년) + [초과경력] 5년(‘가’ 5년) ⇒ <em>69.7236점</em></li>
+        <li>[기본경력] 15년(‘가’ 15년) + [초과경력] 4년(‘가’ 4년) ⇒ 68.7900점(불리함)</li>
+        <li>[기본경력] 15년(‘가’ 15년) + [초과경력] 5년(‘가’ 4년, ‘나’ 1년) ⇒ 불인정<br>
+          – 기본경력 내의 ‘나’경력을 제외할 수 있으나, 초과경력에 포함할 수 없음</li></ul>
+        <p>(예시 2) 정규교사 9년, 기간제교사 2년, 정규교사 11년 ⇒ [기본] 15년(‘가’ 15년) + [초과] 5년(‘가’ 5년) ⇒ <em>70.000점</em></p>
+        <p>(예시 3) 기간제 4년, 정규 9년, 기간제 4년, 정규 10년 ⇒ [기본] 15년(‘가’ 15년) + [초과] 5년(‘가’ 4년, ‘나’ 1년) ⇒ <em>69.7896점</em></p>
+        <p>(예시 4) 기간제 3년, 정규 8년, 기간제 3년, 정규 6년 ⇒ [기본] 15년(‘가’ 12년, ‘나’ 3년) + [초과] 5년(‘가’ 2년, ‘나’ 3년) ⇒ <em>68.5896점</em></p>
+        <p>(예시 5) 사립학교 교원 경력이 있는 사람이 임시교원을 하다가 교육공무원으로 임용된 경우 ⇒ 경력평정기간 내의 임시교원 경력은 제외하고 평정기간 전의 사립학교 교원경력으로 대체할 수 있음</p>
+        <p>(예시 6) 정규 8년, 유학휴직 5년, 복직 후 7년 ⇒ 유학휴직 5년의 50%인 2년 6월을 기본경력 ‘가’로 인정 ⇒ [기본] 15년(‘가’ 15년) + [초과] 2년 6월(‘가’) ⇒ <em>67점</em></p>
+        <p>(예시 7) 정규 5년, 유학휴직 4년, 복직 2년, 퇴직 후 기간제 2년, 정규 9년 ⇒ [기본] 15년(‘가’ 13년, ‘나’ 2년) + [초과] 5년(‘가’ 5년) ⇒ <em>69.4572점</em></p>
+        <p>(예시 8) 3년간 군 의무복무 후 개인사업, 이후 임용되어 실교육경력 18년 ⇒ 개인사업 기간 제외, 군 복무 포함 ⇒ <em>70.000점</em></p>
+        <div class="alert info" style="margin-top:12px">이 계산기는 위 예시 중 계산 결과가 명시된 7건을 모두 재현합니다. 다만 <b>예시 6은 66.990점</b>으로 계산되는데, 지침이 “67점”으로 표기한 것은 반올림 표기로 보입니다. 만점 보정을 어떻게 적용하느냐에 따라 0.010점이 달라질 수 있어 6단계에 선택 옵션을 두었습니다.</div>
+      </div></details>
+    </div>
+  </section>
+
+  <!-- ══ 2. 근무성적 ══ -->
+  <section id="sec2">
+    <div class="sechead" data-sec="sec2">
+      <span class="no">2</span><h2>근무성적평정</h2>
+      <span class="val" id="v2">0.000 / 100</span>
+      <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="secbody">
+      <div class="desc">
+        <p>넣을 값은 학년도별 <b>근무성적평정 및 다면평가 합산점</b>(100점 만점)입니다. 근무성적평정점 60점(평정자 20% + 확인자 40%)과 다면평가점 40점(정성 32% + 정량 8%)을 합한 값으로, 나이스에서 확인할 수 있습니다.</p>
+        <p>교사는 <b>명부 작성기준일부터 5년 이내에 평정한 합산점 중 유리한 3년</b>을 골라 반영합니다. 고른 3년을 최근 순으로 <b>34% · 33% · 33%</b>로 가중합니다. 어떤 3년을 고르느냐에 따라 점수가 달라지므로, 이 계산기는 <b>10가지 조합을 모두 계산해 가장 높은 조합을 자동으로 선택</b>합니다.</p>
+        <p>평정점이 없는 학년도(전 기간 휴직·파견 등)는 ‘평정점 없음’에 체크하세요. 그 연도는 앞뒤 연도 평정점의 평균으로 보되, 직전(과거) 평정점이 없으면 85점으로 봅니다.</p>
+      </div>
+      <div id="perfList" class="perfgrid"></div>
+      <div id="perfResult"></div>
+
+      <details class="ref"><summary>지침 원문 — 명부 작성 시 근무성적평정점 산정<span class="pg">책자 p.8, 15~16, 33~34</span></summary>
+      <div class="refbody">
+        <h4>명부작성 시 연도별 반영 비율(「규정」제40조)</h4>
+        <p>‒ 교사 : 최근 5년간의 평정점 중 <em>3년 선택</em><br>
+        명부의 작성기준일부터 가장 가까운 연도의 합산점 <b>34%</b><br>
+        + 명부의 작성기준일부터 두 번째 가까운 연도의 합산점 <b>33%</b><br>
+        + 명부의 작성기준일부터 세 번째 가까운 연도의 합산점 <b>33%</b></p>
+        <p class="q">∙ 최근 5년 이내 유리한 3년 반영 — 명부의 작성 기준일부터 5년 이내에 해당 직위에서 평정한 합산점 중에서 평정대상자에게 유리한 3년을 선택하여 산정</p>
+
+        <h4>채점(「규정」제28조의7) — 교사</h4>
+        <ul>
+          <li>근무성적평정점(60점) = (평정자의 평정점 × 0.2) + (확인자의 평정점 × 0.4)</li>
+          <li>다면평가점(40점) = (정성평가 평가점 × 0.32) + (정량평가 평가점 × 0.08)</li>
+          <li>합산점(100점) = 근무성적평정점(60점) + 다면평가점(40점)</li>
+        </ul>
+
+        <h4>합산점 분포 비율(「규정」제28조의6)</h4>
+        <div class="tablewrap"><table><thead><tr><th>평어</th><th>평정점</th><th>분포비율</th></tr></thead><tbody>
+        <tr><td>수</td><td>95점 이상</td><td>30%</td></tr>
+        <tr><td>우</td><td>90점 이상 ~ 95점 미만</td><td>40%</td></tr>
+        <tr><td>미</td><td>85점 이상 ~ 90점 미만</td><td>20%</td></tr>
+        <tr><td>양</td><td>85점 미만</td><td>10%</td></tr>
+        </tbody></table></div>
+        <p class="q">‘양’의 비율은 ‘미’의 비율에 포함할 수 있음. ‘양’으로 평정 시 6개월간 승급 제한 조치 및 소명자료 제출</p>
+
+        <h4>근무성적평정점이 없는 경우의 평정(「규정」제40조 제5항)</h4>
+        <p>⇒ 근무성적평정점이 없는 평정단위 학년도가 있는 경우 <em>평정단위 학년도의 전후에 평정한 평정점의 평균</em>을 그 평정단위 학년도의 평정점으로 함<br>
+        ⇒ 평정단위 학년도 전의 평정점이 없는 때에는 <em>85점</em>으로 함</p>
+        <p class="q">(전직된 자의 평정) 교육공무원이 전직된 경우에는 전직된 해당 학년도 평정 외의 평정은 전직되기 전의 직위에서 받은 근무성적평정을 해당 평정으로 함</p>
+
+        <h4>‘주의’ 이상 처분 대상자의 감점 반영</h4>
+        <p class="q">근무성적평정(교사의 경우 합산점)을 감점 반영과 관계없이 정상적으로 평정한 후, 감점대상자는 당초 조정점에서 해당 감점 점수만큼 감하여 조정점을 기재합니다. 감점이 있다면 감점 후의 조정점을 입력하세요.</p>
+      </div></details>
+    </div>
+  </section>
+
+  <!-- ══ 3. 연수성적 ══ -->
+  <section id="sec3">
+    <div class="sechead" data-sec="sec3">
+      <span class="no">3</span><h2>연수성적평정</h2>
+      <span class="val" id="v3">0.000 / 30</span>
+      <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="secbody">
+      <div class="desc">
+        <p>연수성적평정 30점은 <b>교육성적 27점</b>(자격연수 9점 + 직무연수 18점)과 <b>연구실적 3점</b>으로 나뉩니다. 직무연수 18점은 성적평정 6점 + 이수실적 12점(6점 × 2회) 구조입니다.</p>
+      </div>
+
+      <div class="grouptitle">자격연수성적 (9점)</div>
+      <div class="desc">
+        <p>넣을 값은 <b>승진 대상 직위와 가장 관련이 깊은 자격연수성적 하나</b>입니다. 대개 <b>정교사(1급) 자격연수성적</b>이고, 1급 정교사 취득 후 이수한 사서교사·전문상담교사 자격연수성적도 해당합니다. 여러 개를 합산하지 않고 하나만 평정합니다.</p>
+        <p>계산식은 <b>9점 − (연수성적 만점 − 자격연수성적) × 0.025</b>입니다. 만점 100점에 96점이면 8.900점, 90점이면 8.750점이 됩니다. 성적이 만점의 80% 미만이면 80%로 보아 평정하고, 60% 미만이면 평정하지 않습니다.</p>
+      </div>
+      <div class="field">
+        <label class="lbl">평정 방식</label>
+        <select id="qualMethod">
+          <option value="score">연수성적(점수)으로 평정</option>
+          <option value="grade">평어로 평정 (최상위 / 차상위 / 3등급 이하)</option>
+          <option value="degree">석사학위 취득으로 자격을 취득한 경우</option>
+          <option value="none">성적 기록이 없음 — 만점의 80%로 평정</option>
+        </select>
+      </div>
+      <div id="qualScoreBox" class="row2">
+        <div class="field"><label class="lbl">연수성적 만점</label><input type="number" id="qualFull" step="0.01" placeholder="100">
+          <p class="hint">대개 100점입니다.</p></div>
+        <div class="field"><label class="lbl">취득 성적</label><input type="number" id="qualScore" step="0.01" placeholder="예: 96.5">
+          <p class="hint">하나의 자격연수가 분할 실시되어 성적이 2개 이상이면 합산 평균값을 넣습니다.</p></div>
+      </div>
+      <div id="qualGradeBox" class="field" style="display:none">
+        <label class="lbl">평어 등급</label>
+        <select id="qualGrade">
+          <option value="0.90">최상위 등급의 평어 — 만점의 90%</option>
+          <option value="0.85">차상위 등급의 평어 — 만점의 85%</option>
+          <option value="0.80">제3등급 이하의 평어 — 만점의 80%</option>
+        </select>
+        <p class="hint">학업성적표에 등급·평점·실점이 함께 적혀 있으면 평어를 기준으로 평정합니다.</p>
+      </div>
+      <div id="qualNoneBox" class="alert info" style="display:none">
+        연수를 받았으나 성적 기록이 없는 경우입니다. 「교육공무원 승진규정」에 따라 <b>만점의 80%</b>를 성적으로 보아 평정합니다.
+      </div>
+      <div id="qualDegreeBox" class="field" style="display:none">
+        <label class="lbl">학위 취득 성적</label>
+        <select id="qualDegree">
+          <option value="0.90">A학점 이상 — 만점의 90%</option>
+          <option value="0.85">B학점 이상 — 만점의 85%</option>
+          <option value="0.80">D학점 이상 — 만점의 80%</option>
+        </select>
+        <p class="hint">해당 직위에서 방송통신대학 초등교육과를 졸업했거나 교육대학원·지정 대학원에서 석사학위를 취득해 자격을 얻은 경우에 한합니다. 이때 그 석사학위는 연구실적 평정 대상에서 제외됩니다.</p>
+      </div>
+
+      <div class="grouptitle">직무연수 (18점)</div>
+      <div class="desc">
+        <p>평정 대상은 교사 직위에서 <b>2016.1.1.〜2026.2.28.</b>(최근 10년 2개월) 사이에 이수한 <b>60시간 이상</b> 직무연수 <b>3개</b>입니다. 180시간·120시간 이상 연수도 1회로 봅니다. <b>성적 기록이 없는 연수는 성적 칸을 비워 두세요</b> — 규정에 따라 만점의 80%로 보아 평정합니다.</p>
+        <p>계산식은 <b>6점 × (직무연수환산성적 ÷ 직무연수성적 만점) + 6점 × 이수 횟수(2회)</b>입니다. 즉 3개를 채우면 성적과 무관하게 12점은 확보되고, 나머지 6점이 성적에 따라 갈립니다. 성적이 가장 좋은 연수를 성적평정분으로 자동 선택합니다.</p>
+        <p>환산성적은 95점 초과 → 100, 90점 초과~95 이하 → 95, 85점 초과~90 이하 → 90, 85점 이하 → 85로 계산합니다. 즉 <b>95점을 넘겨야 6점 만점</b>입니다.</p>
+      </div>
+      <div id="trainList" class="itemgrid"></div>
+      <div class="btnrow noprint" style="margin-top:4px">
+        <button class="btn sm primary" id="addTrain">＋ 직무연수 추가</button>
+      </div>
+      <div id="trainResult"></div>
+
+      <div class="grouptitle">연구실적 (3점)</div>
+      <div class="desc">
+        <p>연구대회 입상실적과 학위취득실적을 합해 <b>최대 3점</b>입니다. 다만 「교육공무원 승진규정」 부칙 제2조에 따라, <b>2021.2.28.까지 연구대회에 참가하여 입상한 실적</b>과 <b>2021.2.28.까지 대학원에 입학하여 취득한 학위</b>가 있는 사람에게만 종전 규정이 적용됩니다. 해당 실적이 없으면 비워 두세요.</p>
+        <p>연구대회 입상실적은 <b>1년에 1회</b>만 인정되고, 공동작이면 2인 70% · 3인 50% · 4인 이상 30%로 줄어듭니다. 학위는 박사·석사 중 <b>유리한 것 하나만</b> 인정합니다.</p>
+      </div>
+      <div class="field">
+        <label class="lbl">학위취득실적</label>
+        <select id="degreeSel">
+          <option value="none">해당 없음</option>
+          <option value="박사-직무">박사 — 직무와 관련 있는 학위 (3.0점)</option>
+          <option value="박사-기타">박사 — 기타 학위 (1.5점)</option>
+          <option value="석사-직무">석사 — 직무와 관련 있는 학위 (1.5점)</option>
+          <option value="석사-기타">석사 — 기타 학위 (1.0점)</option>
+        </select>
+        <p class="hint">‘직무와 관련 있는 학위’는 담당 교과뿐 아니라 학생생활지도·특별활동·학교 또는 학급경영·교무업무 등 학생교육과 관련된 전공을 포함합니다. <b>자격연수성적으로 평정한 석사학위는 여기서 제외</b>합니다(위 자격연수 평정 방식을 ‘석사학위 취득’으로 고른 경우).</p>
+      </div>
+      <div id="contestList"></div>
+      <div class="btnrow noprint" style="margin-top:4px">
+        <button class="btn sm" id="addContest">＋ 연구대회 입상 추가</button>
+      </div>
+      <div id="researchResult"></div>
+
+      <details class="ref"><summary>지침 원문 — 연구실적 평정<span class="pg">책자 p.9, 26~27</span></summary>
+      <div class="refbody">
+        <h4>연수성적평정의 구성(책자 p.9)</h4>
+        <div class="tablewrap"><table><thead><tr><th>구분</th><th>교감 승진 및 자격연수 대상자</th><th>교장·교육전문직원</th></tr></thead><tbody>
+        <tr><td>교육성적 — 자격연수</td><td>9점</td><td>9점</td></tr>
+        <tr><td>교육성적 — 직무연수</td><td><em>18점</em> (성적평정 6 + 이수실적 12)</td><td>6점 (성적평정)</td></tr>
+        <tr><td>연구실적</td><td><em>3점</em></td><td>0점</td></tr>
+        <tr><td><b>합계</b></td><td><b>30점</b></td><td><b>15점</b></td></tr>
+        </tbody></table></div>
+        <p class="q">연구실적 대상 : 교감 승진 및 자격연수 대상자, 「교육공무원 승진규정」 부칙 제2조 해당자</p>
+
+        <h4>부칙 제2조(연구실적평정 및 명부 작성에 관한 경과조치)</h4>
+        <p class="q">이 영 시행 전에 연구대회입상실적(<em>2021. 2. 28.까지</em> 연구대회에 참가하여 입상한 실적 포함), 학위취득실적(<em>2021. 2. 28.까지</em> 대학원에 입학하여 학위취득한 실적 포함)이 있는 사람은 종전의 규정을 적용함</p>
+
+        <h4>① 연구대회 입상실적 평정</h4>
+        <div class="tablewrap"><table><thead><tr><th>구분</th><th>1등급</th><th>2등급</th><th>3등급</th></tr></thead><tbody>
+        <tr><td>전국규모</td><td>1.50점</td><td>1.25점</td><td>1.00점</td></tr>
+        <tr><td>시·도규모</td><td>1.00점</td><td>0.75점</td><td>0.50점</td></tr>
+        </tbody></table></div>
+        <ul>
+          <li>「승진규정」제37조제2항에 따라 연구대회 입상실적은 <em>1년에 1회</em>의 연구대회 입상실적에 한함</li>
+          <li>공동작인 경우 — 2인 공동작 입상실적의 <em>70%</em> / 3인 공동작 <em>50%</em> / 4인 이상 공동작 <em>30%</em></li>
+          <li>입상 등급이 없는 연구실적 — 최상위등급 입상실적은 1등급, 차상위등급은 2등급, 기타 등급이거나 등급을 구분할 수 없는 입상실적은 3등급</li>
+          <li>연구계획 수립·연구연도와 입상연도가 다른 경우에는 <em>입상(수상)연도를 기준</em>으로 평정</li>
+          <li>(1997.7.9. 이전에 입상한 공동연구) 입상자 전원에 대하여 동일하게 평정</li>
+        </ul>
+
+        <h4>② 학위취득 실적 평정</h4>
+        <div class="tablewrap"><table><thead><tr><th>구분</th><th>직무와 관련 있는 학위</th><th>기타 학위</th></tr></thead><tbody>
+        <tr><td>박사 학위</td><td>3.0점</td><td>1.5점</td></tr>
+        <tr><td>석사 학위</td><td>1.5점</td><td>1.0점</td></tr>
+        </tbody></table></div>
+        <ul>
+          <li>박사학위와 석사학위를 함께 소지한 경우 <em>유리한 것 1개</em>를 인정</li>
+          <li>2005년 2학기 대학원 입학자부터 당해 직위에서 취득한 <em>1개의 석사학위만</em> 평정대상으로 인정</li>
+          <li><em>자격연수성적으로 평정한 석사학위는 연구실적 평정대상에서 제외</em>(「규정」제36조)</li>
+          <li>소속 기관장의 승인 없이 주간대학원을 수강해 취득한 학위 등 정당한 복무관리 절차를 거치지 않고 취득한 학위는 평정대상에서 제외</li>
+        </ul>
+        <p class="q">▣ 평정점 = 연구대회 입상실적 평정점 + 학위취득실적 평정점 (<em>3점을 초과할 수 없음</em>)</p>
+      </div></details>
+
+      <details class="ref"><summary>지침 원문 — 교육성적 평정·환산표·유의점<span class="pg">책자 p.22~25</span></summary>
+      <div class="refbody">
+        <h4>자격연수 및 직무연수의 평정대상 및 평정점 — 교감 승진 및 자격연수 대상자</h4>
+        <div class="tablewrap"><table><thead><tr><th>구분</th><th>자격연수 (9점)</th><th>직무연수 (18점)</th></tr></thead><tbody>
+        <tr><td>교감 승진후보자</td><td style="text-align:left">교감 자격연수성적<br>9점−(자격연수성적만점−자격연수성적)×<em>0.05</em></td>
+        <td rowspan="2" style="text-align:left">∙ (평정대상연수) 해당 직위에서 <em>10년 2개월 이내</em>에 이수한 <em>60시간 이상</em> 직무연수 <em>3개</em><br>
+        ∙ (평정점) 18점<br>
+        ∙ (평정방법) 6점 × (직무연수환산성적 / 직무연수성적만점) + 6점 × 직무연수횟수(2회)</td></tr>
+        <tr class="sel"><td>자격연수 대상자 <span class="badge ok">이 계산기 적용</span></td><td style="text-align:left">승진 대상 직위와 가장 관련이 깊은 자격연수성적<br>9점−(자격연수성적만점−자격연수성적)×<em>0.025</em></td></tr>
+        </tbody></table></div>
+        <p class="q">부칙 제3조 : 2016학년도에 대한 평정부터 2025학년도에 대한 평정까지 “10년 이내에 이수한 60시간 이상의 직무연수성적”을 “<em>10년 2개월 이내</em>에 이수한 60시간 이상의 직무연수성적”으로 본다.</p>
+
+        <h4>① 자격연수성적 평정 — 교감 승진 및 자격연수 대상자</h4>
+        <ul>
+          <li>(교감 승진 대상자) 9점 − (연수성적 만점 − 교감자격 연수성적) × 0.05</li>
+          <li>(교감 자격연수 대상자) 9점 − (연수성적 만점 − 자격연수성적) × 0.025<br>
+            * 평정대상 : 승진 대상 직위와 가장 관련이 깊은 자격연수성적 하나만 평정<br>
+            – 정교사(1급) 자격연수성적<br>
+            – 사서교사 자격연수성적(1급 정교사 취득 후 이수한 것)<br>
+            – 전문상담교사 자격연수성적(1급 정교사 취득 후 이수한 것)</li>
+        </ul>
+
+        <h4>② 직무연수성적 평정 — 교감 승진 및 자격연수 대상자 (만점 18점)</h4>
+        <ul>
+          <li>(평정점) 6점 × (직무연수환산성적/직무연수성적만점) + 6점 × 직무연수횟수(2회)<br>
+            – 60시간 이상의 직무연수 1회에 대한 연수성적평정점은 6점<br>
+            – 180시간 이상 또는 120시간 이상의 직무연수도 1회로 간주함</li>
+          <li>(평정대상) 해당직위에서 최근 10년 2개월 이내(<em>2016.1.1.〜2026.2.28.</em>) 이수한 60시간 이상의 직무연수 성적(환산성적)</li>
+        </ul>
+
+        <h4>③ 교육성적 평정 시 유의점</h4>
+        <p>1) 교육성적이 만점의 <em>80% 미만</em>(교육을 받았으나 교육성적이 없는 경우를 포함)일 때에는 그 성적을 만점의 80%로 하여 평정하며, 교육성적이 만점의 <em>60% 미만</em>인 경우에는 이를 평정하지 않음</p>
+        <p>2) 직무연수성적 환산표</p>
+        <div class="tablewrap"><table><thead><tr><th>직무연수성적</th><th>환산성적</th></tr></thead><tbody>
+        <tr><td>95점 초과</td><td>100점</td></tr>
+        <tr><td>90점 초과 ~ 95점 이하</td><td>95점</td></tr>
+        <tr><td>85점 초과 ~ 90점 이하</td><td>90점</td></tr>
+        <tr><td>85점 이하</td><td>85점</td></tr>
+        </tbody></table></div>
+        <p>3) 하나의 자격연수가 분할 실시되어 성적이 2개 이상인 때에는 합산 평균하여 평정</p>
+        <p>4) 평어로 평정된 연수성적 : 최상위 등급 만점의 90% / 차상위 등급 85% / 제3등급 이하 80%</p>
+        <p>5) 석사학위 취득자의 자격연수 평정점 : A학점 이상 90% / B학점 이상 85% / D학점 이상 80%</p>
+
+        <h4>④ 교감 자격연수 응시대상자의 한국사 관련 실적</h4>
+        <p class="q">기준일(2026.3.31.) 현재 한국사능력검정시험 <em>3급 이상</em> 합격 또는 연수원에서 <em>60시간 이상</em>의 한국사 관련 연수 이수. 30차시·15차시 등 복수 과정을 합해 60시간 이상(3개 이상의 역사 시기)이면 인정. 한국사 관련 실적이 없으면 서류 제출 불가.<br>
+        ※ 이 항목은 응시 자격 요건이므로 점수 계산에는 반영되지 않습니다.</p>
+
+        <h4>동일·유사과정 중복 및 연수 기간 중복 (2014.1.1. 이후 개설 과정)</h4>
+        <ul>
+          <li>동일·유사과정 : 2강좌 중 1강좌 인정. 단 과정표로 70% 이상 다른 과정임을 증명하면 2강좌 모두 인정(연수생 입증 책임)</li>
+          <li>연수 기간 중복 : 같은 기간에 2개 이상 이수하여도 전부 인정, 연수 기간에 관계없이 이수한 모든 과정을 허용</li>
+        </ul>
+      </div></details>
+    </div>
+  </section>
+
+  <!-- ══ 4. 가산점 ══ -->
+  <section id="sec4">
+    <div class="sechead" data-sec="sec4">
+      <span class="no">4</span><h2>가산점</h2>
+      <span class="val" id="v4">0.000</span>
+      <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="secbody">
+      <div class="desc">
+        <p>가산점은 200점 만점과 <b>별도로</b> 더해집니다. 전국 공통인 <b>공통가산점(상한 3.5점)</b>과 시·도교육청이 정하는 <b>선택가산점(상한 9.99점)</b>으로 나뉩니다. 이 계산기의 선택가산점은 <b>대구광역시교육청 규정</b>을 따릅니다.</p>
+        <p>경력 기간은 <b>월수를 단위로 하되 1개월 미만은 일 단위</b>로 계산합니다. 휴직·직위해제·정직 기간은 빼고 넣으세요. 겸무교사·시간선택제 교사는 근무일수에 비례합니다(주3일이면 3/5).</p>
+      </div>
+
+      <div class="grouptitle">공통가산점 (상한 3.5점)</div>
+      <div class="fieldgrid">
+      <div class="field">
+        <label class="lbl">교육부장관 지정 연구·시범·실험학교 근무경력</label>
+        <div class="row2">
+          <input type="number" id="c1m" min="0" step="1" placeholder="개월 수">
+          <input type="number" id="c1d" min="0" max="29" step="1" placeholder="잔여 일수">
+        </div>
+        <p class="hint">월 0.018점 · 일 0.0006점, 항목 상한 1.00점. 교육감 지정 연구학교, 교육실습 대용·협력학교 경력과 <b>통합 상한 1.7점</b>이 적용됩니다.</p>
+      </div>
+      <div class="field">
+        <label class="lbl">재외국민교육기관 파견 근무경력</label>
+        <div class="row2">
+          <input type="number" id="c2m" min="0" step="1" placeholder="개월 수">
+          <input type="number" id="c2d" min="0" max="29" step="1" placeholder="잔여 일수">
+        </div>
+        <p class="hint">월 0.015점 · 일 0.0005점, 상한 0.50점.</p>
+      </div>
+      <div class="field">
+        <label class="lbl">직무연수 이수실적 — 연도별 이수시간</label>
+        <div id="creditList"></div>
+        <button class="btn sm noprint" id="addCredit" style="margin-top:6px">＋ 연도 추가</button>
+        <p class="hint">15시간 = 1학점, 1학점당 0.02점. <b>연 상한 0.08점</b>(60시간이면 연 만점), 총 상한 1.00점. 1998.1.1. 이후 실적부터 인정하며, 4단계에서 <b>연수성적으로 평정한 직무연수는 제외</b>합니다.</p>
+      </div>
+      <div class="field">
+        <label class="lbl">학교폭력 예방 및 대응 관련 실적 — 인정 연수</label>
+        <input type="number" id="c4y" min="0" max="20" step="1" placeholder="예: 5">
+        <p class="hint">연 0.1점, 총 상한 1.00점. 2013.1.1. 이후 실적부터 인정합니다.</p>
+      </div>
+      </div>
+      <div id="commonResult"></div>
+
+      <div class="grouptitle">선택가산점 (상한 9.99점)</div>
+      <div class="desc">
+        <p>해당하는 항목만 골라 추가하세요. 항목별 상한과 함께 <b>통합 상한</b>이 걸리는 묶음이 있습니다 — 연구학교 계열 1.7점, 농어촌·특구·마이스터고 1.7점, 별정 경력 및 실적 1.55점입니다.</p>
+        <p>같은 기간이 두 항목에 겹치면 <b>중복 제한</b>이 걸립니다. 겹치는 항목을 함께 넣으면 경고가 뜨지만, 실제로 기간이 겹치는지는 본인만 알 수 있으므로 점수에서 자동으로 빼지는 않습니다.</p>
+      </div>
+      <div id="selList"></div>
+      <div class="field noprint" style="margin-top:4px">
+        <select id="selPicker"><option value="">＋ 항목 추가…</option></select>
+      </div>
+      <div id="selResult"></div>
+
+      <details class="ref"><summary>지침 원문 — 공통가산점·선택가산점 전체 표<span class="pg">책자 p.28~30</span></summary>
+      <div class="refbody">
+        <h4>1) 공통가산점 (「규정」제41조제3항 및 「평정규정」제2장)</h4>
+        <div class="tablewrap"><table><thead><tr><th>평정 항목</th><th>월</th><th>일</th><th>상한</th></tr></thead><tbody>
+        <tr><td>교육부장관 지정 연구·시범·실험학교 근무경력</td><td>0.018</td><td>0.0006</td><td>1점</td></tr>
+        <tr><td>재외국민교육기관 파견 근무경력</td><td>0.015</td><td>0.0005</td><td>0.5점</td></tr>
+        <tr><td>직무연수 이수실적 — 1학점당(15시간) 0.02점, 연평정점 0.08점</td><td colspan="2">—</td><td>1.00점</td></tr>
+        <tr><td>학교폭력의 예방 및 대응 관련 실적 — 연평정점 0.1점</td><td colspan="2">—</td><td>1.00점</td></tr>
+        </tbody></table></div>
+        <p class="q">· 연구·시범·실험학교 : 교육감 지정 연구학교 근무경력, 교육실습지도 대용학교 또는 협력학교 근무경력과 통합하여 산정, <em>통합 상한점 1.7점</em><br>
+        · 직무연수 이수실적 : 1998.1.1. 이후 실적부터 인정, <em>연수성적으로 평정한 직무연수 제외</em><br>
+        · 학교폭력 관련 실적 : 2013.1.1. 이후 실적부터 인정</p>
+
+        <h4>2) 선택가산점 (「규정」제41조제5항 및 「평정규정」제3장) — 총점 9.99점</h4>
+        <div class="tablewrap"><table><thead><tr><th>평정 항목</th><th>월 평정점</th><th>일 평정점</th><th>상한</th></tr></thead><tbody>
+        <tr><td>1급 정교사의 보직교사 근무경력</td><td>0.015</td><td>0.0005</td><td>1.17</td></tr>
+        <tr><td>장학사·교육연구사 근무경력</td><td>0.015</td><td>0.0005</td><td>0.84</td></tr>
+        <tr><td>도서·벽지지역 교육기관 및 교육행정기관 근무경력</td><td>가 0.0250 / 나 0.0205<br>다 0.0150 / 라 0.0102</td><td>가 0.00083 / 나 0.00068<br>다 0.00050 / 라 0.00034</td><td>1.20</td></tr>
+        <tr><td>한센병환자 자녀학교 근무·학급담당 경력</td><td>0.01</td><td>0.00033</td><td>0.65</td></tr>
+        <tr><td>농어촌교육진흥지역 학교 근무경력</td><td>가 0.016 / 나 0.025<br>다 0.034</td><td>가 0.00053 / 나 0.00083<br>다 0.00113</td><td>1.46<br><span class="q">(3항목 통합 1.7)</span></td></tr>
+        <tr><td>교육감지정 교육특구지역(학교) 근무경력</td><td>0.011</td><td>0.00036</td><td>1.46</td></tr>
+        <tr><td>마이스터고 근무경력</td><td>0.011</td><td>0.00036</td><td>0.264</td></tr>
+        <tr><td>특수학교·특수학급 근무경력</td><td>학교 0.0150<br>학급 0.0075</td><td>학교 0.00050<br>학급 0.00025</td><td>0.84</td></tr>
+        <tr><td>교육감 지정 연구학교 근무경력</td><td>0.007</td><td>0.00023</td><td>1.00<br><span class="q">(통합 1.7)</span></td></tr>
+        <tr><td>교육실습지도 대용학교 또는 협력학교 근무경력</td><td>0.01</td><td>0.00033</td><td>(1.00)</td></tr>
+        <tr><td>국가기술자격증·해기사면허증 소지자</td><td colspan="2">1급 0.50 / 2급 0.34 / 3급 0.17</td><td>0.50</td></tr>
+        <tr><td>교육행정기관·교육연구기관 파견, 교육기관 순회교사 근무경력</td><td>0.015</td><td>0.0005</td><td>0.54</td></tr>
+        <tr><td class="grp" colspan="4">별정 경력 및 실적 — 통합 상한 1.55점</td></tr>
+        <tr><td>가) 교육복지우선지원사업 학교 근무경력</td><td>0.005</td><td>0.00016</td><td>0.50</td></tr>
+        <tr><td>나) 학교교육력 제고 경력</td><td>0.007</td><td>0.00023</td><td>0.30</td></tr>
+        <tr><td>다) 농어촌전원학교 근무경력</td><td>0.003</td><td>0.0001</td><td>0.25</td></tr>
+        <tr><td>라) 중·고등학교 담임교사 근무경력</td><td>0.003</td><td>0.0001</td><td>0.25</td></tr>
+        <tr><td>마) 청소년단체 활동지도 경력</td><td>0.002</td><td>0.00006</td><td>0.15</td></tr>
+        <tr><td>바) 미래학교 근무경력 (구 행복학교)</td><td>0.005</td><td>0.00016</td><td>0.50</td></tr>
+        <tr><td>사) 장기근무 경력 (20년 초과경력)</td><td>0.005</td><td>0.00016</td><td>0.30</td></tr>
+        <tr><td>아) 거점학교 근무경력</td><td>0.003</td><td>0.0001</td><td>0.15</td></tr>
+        </tbody></table></div>
+
+        <h4>주요 특기사항</h4>
+        <ul>
+          <li><b>학교교육력 제고</b> : 농어촌교육진흥지역학교·교육감지정 교육특구지역(학교) 이외 학교의 교무관련부장, 연구관련 부장, 학생생활지도 관련부장 및 학교장이 추천한 교사 2명. 2016.2.29. 이전까지는 월 0.005점 적용, 2020.3.31. 자 명부작성부터 상한 0.3점 적용</li>
+          <li><b>중·고등학교 담임교사</b> : 2012.3.1.부터 인정, 특수학교 포함</li>
+          <li><b>청소년단체 활동지도</b> : 2005.3.1.부터 인정. 교육청으로부터 선택가산점 부여 지도교사로 확정받은 경우에 한함</li>
+          <li><b>장기근무</b> : 20년 초과경력. 2023.3.31.자 순위명부는 상한 0.18점, 2024.3.31.자 이후 순위명부는 상한 0.30점. 기본경력(15년)·초과경력(5년) 이전의 경력에 한함</li>
+          <li><b>거점학교</b> : 2025.3.1.부터, 군위초(병설유)·군위중·군위고 근무경력에 한함</li>
+          <li><b>국가기술자격증</b> : 해당 자격증과 관련 있는 과목의 수업을 직접 담당하는 자에 한함(정보화 관련 자격증은 담당과목·학교급과 관계없이 부여). 최상위 자격 또는 유리한 것 1종만 평정</li>
+        </ul>
+
+        <h4>마. 가산점 평정 시 유의점</h4>
+        <ul>
+          <li>선택가산점의 총합계는 <em>10점을 초과할 수 없음</em>(표상 총점 9.99점)</li>
+          <li>평정경력기간은 월수를 단위로 계산하되, 1개월 미만은 1일 단위로 계산</li>
+          <li><em>공통가산점과 선택가산점 간 경력 또는 실적이 중복되는 경우 공통가산점 우선</em></li>
+          <li>가산점 평정 대상기간 중 <em>휴직·직위해제 및 정직기간</em>이 있는 때에는 그 기간은 평정에서 제외</li>
+          <li>타 시·도 농어촌교육진흥지역학교 근무경력은 불인정. (타시도 전입자) 교육감 지정 교육특구지역 근무경력, 교육행정기관·교육연구기관 파견·순회교사 근무경력, 별정 경력 및 실적(장기근무 제외)은 불인정</li>
+          <li>인사구역 변동으로 농어촌·교육특구 지역 구분이 바뀐 경우 <em>본인에게 유리한 쪽</em>으로 적용(2009.1.1. 이후)</li>
+          <li>겸무교사·시간선택제 교사는 근무일수에 비례하여 산정(주3일 → 3/5, 주2일 → 2/5)</li>
+        </ul>
+      </div></details>
+
+      <details class="ref"><summary>지침 원문 — 선택가산점 중복 제한 일람표 [별표1]<span class="pg">책자 p.32</span></summary>
+      <div class="refbody">
+        <p class="q">※ ○표는 중복할 경우 모두 평정, △표는 중복할 경우 한 가지만 평정, ×표는 해당 없음<br>
+        ※ ☆표는 매 학년도 말 가산점대상자 선정 시에 한 가지만 선택하여 부여</p>
+        <p>아래는 각 항목의 <b>중복 금지 대상</b>을 항목별로 풀어 정리한 것입니다. 같은 기간이 두 항목에 겹칠 때 한 가지만 평정합니다.</p>
+        <div id="confTable"></div>
+      </div></details>
+    </div>
+  </section>
+
+  <!-- ══ 5. 결과 ══ -->
+  <section class="open" id="sec5">
+    <div class="sechead" data-sec="sec5">
+      <span class="no">5</span><h2>평정 결과</h2>
+      <span class="val" id="v5">—</span>
+      <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="secbody">
+      <div id="finalResult"></div>
+
+      <div class="grouptitle">고급 설정</div>
+      <label class="chk"><input type="checkbox" id="optMaxEach">
+        <span>경력 만점 보정을 기본경력·초과경력에 각각 독립 적용</span></label>
+      <p class="hint">
+        기본값(체크 해제)은 지침의 계산 예시와 같이 <b>기본 15년과 초과 5년이 모두 단일 등급으로 충족된 경우에만</b> 만점으로 보정합니다(예시 1·2·3·4·7·8과 일치).
+        체크하면 규정 문언대로 각 블록에 독립 적용하며, 이 경우 지침 예시 3과 0.010점 차이가 납니다. 지침 문서 자체가 두 방식을 섞어 쓰고 있어 선택지를 남겨두었습니다.
+      </p>
+
+      <div class="grouptitle">저장과 내보내기</div>
+      <p class="hint" style="margin-top:0">입력값은 이 브라우저에 자동 저장됩니다. 다른 기기로 옮기거나 여러 경우를 비교하려면 JSON으로 내보내 두었다가 다시 가져오세요.</p>
+      <div class="btnrow noprint" style="margin-top:12px">
+        <button class="btn" id="btnExport">내보내기 (JSON)</button>
+        <button class="btn" id="btnImport">가져오기</button>
+        <button class="btn" id="btnPrint">인쇄 · PDF로 저장</button>
+        <button class="btn danger" id="btnReset">전체 초기화</button>
+      </div>
+      <input type="file" id="fileInput" accept="application/json" style="display:none">
+    </div>
+  </section>
+
+  <p class="hint" style="margin:24px 0 8px;text-align:center">
+    「교육공무원 승진규정」 및 「대구광역시교육청 교육공무원 승진가산점 평정규정」 기준<br>
+    2026학년도 교원인사 관련 교감회의자료(2025.12.4.) 반영 · 참고용 계산 도구
+  </p>
+
+  </div><!-- /col -->
+</div><!-- /layout -->
+
+<!-- ══════════ 예시와 도움말 탭 ══════════ -->
+<div id="tabGuide" class="guidewrap">
+
+  <div class="gcard">
+    <h3>넣기 전에 준비할 자료</h3>
+    <p class="who">아래 다섯 가지만 손에 있으면 10분 안에 끝납니다. 대부분 나이스와 인사기록카드에서 확인할 수 있습니다.</p>
+    <ol class="steps">
+      <li><b>인사기록카드 경력 사항</b> — 첫 발령일부터 지금까지의 발령·휴직·복직 날짜. 기간제 경력과 임용 전 군 복무 기간도 빠짐없이 챙기세요. 경력평정 70점이 여기서 결정됩니다.</li>
+      <li><b>최근 5개 학년도 근무성적평정 및 다면평가 합산점</b> — 나이스 「인사기록 → 근무성적평정」에서 학년도별 합산점을 확인합니다. ‘주의’ 이상 처분으로 감점이 있었다면 감점 후 조정점을 넣습니다.</li>
+      <li><b>자격연수 성적</b> — 정교사(1급) 자격연수 성적과 그 만점.</li>
+      <li><b>60시간 이상 직무연수 이수증</b> — 2016.1.1. 이후 이수한 것 중 성적이 좋은 3개. 이수일·시간·성적·만점이 필요합니다.</li>
+      <li><b>가산점 관련 경력</b> — 담임·부장 근무 개월 수, 연구학교 근무 기간, 학교폭력 관련 실적 연수, 직무연수 이수시간(연도별).</li>
+    </ol>
+    <div class="alert info" style="margin-top:14px">경력은 <b>개월과 일</b>까지 따집니다. 담임 7년이면 84개월인데, 3월 2일 발령이었다면 하루 차이도 점수에 반영되니 발령일 기준으로 정확히 세는 편이 좋습니다.</div>
+  </div>
+
+  <div class="gcard">
+    <h3>어떤 순서로 넣나</h3>
+    <ol class="steps">
+      <li><b>근무 이력</b>을 첫 발령일부터 순서대로 넣습니다. 휴직도 종류를 골라 그대로 넣으면 인정 비율이 자동 적용됩니다. 이력을 추가하면 시작일이 앞 이력의 다음 날로 자동 채워집니다.</li>
+      <li><b>합산점 5년치</b>를 넣습니다. 어느 3년을 고를지는 계산기가 알아서 최적 조합을 잡습니다.</li>
+      <li><b>자격연수와 직무연수</b>를 넣습니다. 직무연수는 4개 이상 넣어도 되며 유리한 3개만 자동으로 씁니다.</li>
+      <li><b>가산점</b>은 해당하는 항목만 골라 추가합니다. 없는 항목은 넣지 않아도 됩니다.</li>
+      <li><b>결과</b>에서 만점까지 남은 점수를 보고 어디를 채울지 판단합니다.</li>
+    </ol>
+  </div>
+
+  <h3 style="font-size:15px;font-weight:600;margin:26px 0 0;padding:0 2px">사례로 보기</h3>
+  <p class="hint" style="margin:6px 0 0;padding:0 2px">아래 세 사례는 실제 규정으로 끝까지 계산한 결과입니다. ‘이 사례로 채우기’를 누르면 계산기 탭에 그대로 입력되니, 내 상황과 비슷한 것을 골라 숫자만 바꾸는 편이 빠릅니다.</p>
+  <div class="gcols" id="exampleBox"></div>
+
+  <div class="gcard">
+    <h3>지침의 경력평정 예시와 대조<span class="tag" id="verifyTag">확인 전</span></h3>
+    <p class="who">교감회의자료 책자 14쪽에는 경력평정 예시 8건이 나옵니다. 이 계산기가 그중 계산 결과가 명시된 7건을 그대로 재현하는지 아래 버튼으로 직접 확인할 수 있습니다.</p>
+    <div class="btnrow noprint"><button class="btn sm primary" id="btnVerify">검증 실행</button></div>
+    <div id="verifyResult"></div>
+  </div>
+
+  <div class="gcard">
+    <h3>자주 헷갈리는 것</h3>
+
+    <div class="faq">
+      <p class="q">기간제 경력이 있으면 무조건 손해인가요?</p>
+      <p class="a">아닙니다. 총 경력이 20년을 넘으면 기간제 경력을 <b>제외할 수 있습니다</b>. 지침은 “당사자에게 유리한 경력을 우선 평정 기간으로 하여 기간제교원 등의 경력 기간을 제외하고, 경력평정 시점부터 경력평정 기간이 충족되는 시점까지 도달하여 평정할 수 있다”고 정합니다. 이 계산기는 20년을 넘는 만큼 기간제 경력을 <b>최근 것부터</b> 제외합니다. 그래야 남는 기간제 경력이 배점이 낮은 초과경력 쪽으로 밀려나 유리하기 때문입니다.</p>
+    </div>
+
+    <div class="faq">
+      <p class="q">기본경력에 든 ‘나’경력을 빼서 초과경력으로 옮길 수 있나요?</p>
+      <p class="a">없습니다. 지침 예시 1이 이 경우를 명시적으로 <b>불인정</b>이라고 적었습니다. “기본경력 내의 ‘나’경력을 제외할 수 있으나, 초과경력에 포함할 수 없음.” 즉 시간 순서를 뒤집는 배분은 안 됩니다.</p>
+    </div>
+
+    <div class="faq">
+      <p class="q">휴직하면 경력이 전부 날아가나요?</p>
+      <p class="a">종류에 따라 다릅니다. <b>병역·육아·입양·공무상 질병·법정의무수행·노조전임·상근 고용휴직은 100%</b> 인정되고, <b>유학·연수·비상근 고용휴직은 50%</b> 인정됩니다. 그 밖의 휴직과 직위해제·정직 기간은 평정에서 빠집니다. 다만 총경력제이므로 빠진 기간만큼 더 과거로 거슬러 올라가 20년을 채웁니다.</p>
+    </div>
+
+    <div class="faq">
+      <p class="q">근무성적 5년 중 3년, 어떻게 고르는 게 유리한가요?</p>
+      <p class="a">가중치가 <b>최근 순으로 34% · 33% · 33%</b>이므로, 단순히 높은 점수 3개를 고르는 것이 항상 최선은 아닙니다. 가장 높은 점수가 34%를 받으려면 그 학년도가 고른 3개 중 가장 최근이어야 하기 때문입니다. 그래서 계산기가 10가지 조합을 전부 계산해 최고점을 자동으로 잡습니다. 조합별 표에서 차이를 직접 확인할 수 있습니다.</p>
+    </div>
+
+    <div class="faq">
+      <p class="q">직무연수는 몇 개를 채워야 하나요?</p>
+      <p class="a">교감 대상자는 <b>3개</b>입니다. 3개를 채우면 이수실적만으로 12점이 확보되고, 나머지 6점은 그중 성적이 가장 좋은 연수의 환산성적으로 정해집니다. 환산은 <b>95점 초과라야 100점</b>이 되므로, 95.0점은 95로 환산되어 5.7점이 됩니다. 0.3점 차이가 여기서 갈립니다. 2016.1.1. 이후 이수한 60시간 이상 연수만 대상입니다.</p>
+    </div>
+
+    <div class="faq">
+      <p class="q">직무연수는 4단계와 5단계 양쪽에 넣어도 되나요?</p>
+      <p class="a">안 됩니다. 공통가산점의 직무연수 이수실적은 <b>“연수성적으로 평정한 직무연수 제외”</b>가 명시돼 있습니다. 4단계 연수성적평정에 쓴 3개는 5단계 이수실적 시간에서 빼고 넣으세요.</p>
+    </div>
+
+    <div class="faq">
+      <p class="q">가산점 항목이 겹치면 어떻게 되나요?</p>
+      <p class="a">같은 기간이 두 항목에 걸리면 <b>한 가지만</b> 평정합니다. 예를 들어 부장교사이면서 담임이었다면 그 기간은 둘 중 하나만 인정됩니다. 겹치는 항목을 함께 넣으면 계산기가 경고를 띄우지만, 실제로 기간이 겹치는지는 본인만 알 수 있어 점수에서 자동으로 빼지는 않습니다. 경고가 뜨면 기간이 실제로 겹치는지 확인하고 한쪽 개월 수를 줄이세요. 공통가산점과 선택가산점이 겹치면 <b>공통가산점이 우선</b>합니다.</p>
+    </div>
+
+    <div class="faq">
+      <p class="q">통합 상한이 뭔가요?</p>
+      <p class="a">항목별 상한과 별개로, 몇 개 항목을 묶어 걸리는 상한입니다. ① 교육부장관 지정 연구학교(공통) + 교육감 지정 연구학교 + 교육실습 대용·협력학교 = <b>1.7점</b>, ② 농어촌 + 교육특구 + 마이스터고 = <b>1.7점</b>, ③ 별정 경력 및 실적 8개 항목 = <b>1.55점</b>입니다. 계산기는 묶음 합계가 넘으면 각 항목을 비례해 깎고 ‘통합 상한’ 배지를 붙입니다.</p>
+    </div>
+
+    <div class="faq">
+      <p class="q">한국사 실적은 왜 점수에 없나요?</p>
+      <p class="a">한국사능력검정 3급 이상 또는 연수원에서 60시간 이상 한국사 연수는 <b>점수가 아니라 응시 자격 요건</b>입니다. 근거 조문(「교원 등의 연수에 관한 규정 시행규칙」 제4조)이 <b>연수 대상자의 선발</b>에 관한 것이라, 교감 자격연수 응시대상자 순위명부를 작성할 때만 요구됩니다. 기준일은 순위명부 작성일(2026.3.31.)이고, 실적이 없으면 서류 제출 자체가 불가합니다. 점수에는 들어가지 않지만 반드시 갖춰야 합니다.</p>
+    </div>
+
+    <div class="faq">
+      <p class="q">경력 20년을 이미 넘었는데 더 근무하면 점수가 오르나요?</p>
+      <p class="a">경력평정 70점은 20년에서 만점이라 더 오르지 않습니다. 대신 <b>선택가산점의 ‘장기근무 경력’</b>(20년 초과경력, 월 0.005점, 상한 0.30점)이 붙습니다. 5단계에서 항목을 추가해 넣으세요.</p>
+    </div>
+  </div>
+
+  <div class="gcard">
+    <h3>이 계산기가 다루지 않는 것</h3>
+    <ul class="exlist">
+      <li><b>이미 교감 자격증을 취득한 교감 승진 대상자</b> — 만점 구성(200점)은 같지만 자격연수성적을 교감 자격연수성적으로 계수 0.05를 적용해 계산합니다. 4단계에서 나온 점수와 <b>(100 − 자격연수성적) × 0.025</b>만큼 차이가 납니다.</li>
+      <li><b>교장 승진·자격연수 대상자와 장학관·교육연구관 승진후보자</b> — 만점이 185점(경과조치 188점)으로 다르고 연수성적이 15점, 연구실적이 3점 구조입니다.</li>
+      <li><b>연구실적 평정(연구대회 입상·학위취득)</b> — 교감 승진·자격연수 대상자에게는 적용되지 않습니다. 경과조치 대상인 교장 트랙에만 해당합니다.</li>
+      <li><b>대구광역시교육청 외 시·도</b> — 경력·근무성적·연수성적은 대통령령이라 전국 공통이지만, <b>선택가산점은 시·도교육청 규정</b>이라 항목과 점수가 다릅니다. 다른 교육청 소속이라면 1~4단계까지만 참고하세요.</li>
+      <li><b>동석차·명부 순위</b> — 총평정점만 계산합니다. 실제 순위는 같은 명부에 오른 다른 대상자들의 점수에 따라 정해집니다.</li>
+    </ul>
+    <div class="alert warn">공식 평정점이 아닙니다. 인사기록카드에 기록된 사항과 교육(지원)청 확인 결과가 최종입니다. 특히 가산점의 인정 시작일·지역 구분·중복 제한은 개인별 사정에 따라 달라지므로, 결과가 실제 평정과 다르다면 교육(지원)청 인사 담당자에게 확인하세요.</div>
+  </div>
+
+  <p class="hint" style="margin:24px 0 32px;text-align:center">
+    출처 — 2026학년도 교원인사 관련 교감회의자료(대구광역시교육청, 2025.12.4.)<br>
+    「교육공무원 승진규정」·「대구광역시교육청 교육공무원 승진가산점 평정규정」
+  </p>
+</div>
+
+<div class="totalbar">
+  <div class="in">
+    <div class="c"><div class="k">평정점 (200점 만점)</div><div class="v" id="tbMain">0.000</div></div>
+    <div class="div"></div>
+    <div class="c"><div class="k">가산점 포함 총계</div><div class="v" id="tbAll">0.000</div></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+"use strict";
+
+/* ════════════════════ 상수 ════════════════════ */
+const BASE_DATE  = "2026-02-28";   // 정기평정 기준일
+const TRAIN_FROM = "2016-01-01";   // 직무연수 인정 시작(10년 2개월)
+
+const CAREER_RATE = {
+  base:{ "가":{m:0.3555,d:0.0118,max:64}, "나":{m:0.3333,d:0.0111,max:60}, "다":{m:0.3111,d:0.0103,max:56} },
+  over:{ "가":{m:0.1000,d:0.0033,max:6},  "나":{m:0.0833,d:0.0027,max:5},  "다":{m:0.0666,d:0.0022,max:4} }
+};
+const BASE_PD = 180*30;   // 기본경력 15년 (1개월 = 30일 환산)
+const OVER_PD = 60*30;    // 초과경력 5년
+
+const CAREER_TYPES = [
+  {v:"regular",  t:"정규 교원",         d:"국·공·사립 학교의 교사·교감·교장", grade:"가", ratio:1},
+  {v:"official", t:"교육전문직원",      d:"장학관·교육연구관·장학사·교육연구사", grade:"가", ratio:1},
+  {v:"military", t:"임용 전 군 복무",   d:"3년 범위 안에서 인정", grade:"가", ratio:1, cap:3*12*30},
+  {v:"temp",     t:"기간제교원 · 강사", d:"‘나’경력으로 평정되어 배점이 낮음", grade:"나", ratio:1},
+  {v:"leave100", t:"휴직 — 100% 인정",  d:"병역·육아·입양·공무상 질병·법정의무수행·노조전임·상근 고용휴직", grade:"가", ratio:1},
+  {v:"leave50",  t:"휴직 — 50% 인정",   d:"유학휴직·연수휴직·비상근 고용휴직", grade:"가", ratio:0.5},
+  {v:"leave0",   t:"휴직 — 인정 안 됨", d:"그 밖의 휴직과 직위해제·정직 기간", grade:null, ratio:0},
+  {v:"break",    t:"일시퇴직",          d:"경력으로 인정되지 않는 기간", grade:null, ratio:0}
+];
+
+const COMMON_CAP = 3.5, SEL_CAP = 9.99;
+const SEL_ITEMS = [
+  {id:"s1",  n:"1급 정교사의 보직교사 근무경력", m:0.015, d:0.0005, cap:1.17,
+   conf:["s4","s6","s9","s10b","s10d","s10e"]},
+  {id:"s2",  n:"장학사·교육연구사 근무경력", m:0.015, d:0.0005, cap:0.84, conf:["s3"]},
+  {id:"s3",  n:"도서·벽지지역 근무경력", cap:1.20, conf:["s2","s4","s5a","s5b","s6","s9"],
+   regions:[["가",0.0250,0.00083],["나",0.0205,0.00068],["다",0.0150,0.00050],["라",0.0102,0.00034]],
+   note:"1997.12.31. 이전 경력에 한함. 대구교육해양수련원 근무경력은 2007.9.1.부터 인정"},
+  {id:"s4",  n:"한센병환자 자녀학교 근무·학급담당 경력", m:0.01, d:0.00033, cap:0.65,
+   conf:["s1","s3","s5a","s5b","s5c","s6","s9","s10f"]},
+  {id:"s5a", n:"농어촌교육진흥지역 학교 근무경력", cap:1.46, grp:"G2", conf:["s3","s4","s6","s9"],
+   regions:[["가",0.016,0.00053],["나",0.025,0.00083],["다",0.034,0.00113]],
+   note:"1996.1.1.부터 인정, 2008.12.31. 이전 경력은 ‘가’지역으로 인정. 타 시·도 경력 불인정"},
+  {id:"s5b", n:"교육감지정 교육특구지역(학교) 근무경력", m:0.011, d:0.00036, cap:1.46, grp:"G2",
+   conf:["s3","s4","s6","s9"], note:"2010.3.1.부터 인정"},
+  {id:"s5c", n:"마이스터고 근무경력", m:0.011, d:0.00036, cap:0.264, grp:"G2",
+   conf:["s4","s6","s9"], note:"교사 정원의 10% 이내, 지정운영일로부터 2년간 부여"},
+  {id:"s6",  n:"특수학교 · 특수학급 근무경력", cap:0.84, conf:["s1","s3","s4","s5a","s5b","s5c","s9"],
+   regions:[["특수학교",0.0150,0.00050],["특수학급",0.0075,0.00025]],
+   note:"2004.3.2. 폐지 — 그 이전 경력만 해당"},
+  {id:"s7a", n:"교육감 지정 연구학교 근무경력", m:0.007, d:0.00023, cap:1.00, grp:"G1",
+   conf:["s7b","s9","s10a","s10c","s10f"], note:"교육부장관 지정 연구학교(공통가산점)와 통합 상한 1.7점"},
+  {id:"s7b", n:"교육실습지도 대용학교·협력학교 근무경력", m:0.01, d:0.00033, cap:1.00, grp:"G1",
+   conf:["s7a","s9","s10a","s10c","s10f"], note:"협력학교는 연평정점 0.04점까지 인정"},
+  {id:"s8",  n:"국가기술자격증 · 해기사면허증 소지", cap:0.50, fixed:true,
+   levels:[["1급",0.50],["2급",0.34],["3급",0.17]],
+   note:"관련 과목 수업을 직접 담당하는 자에 한함. 최상위 또는 유리한 것 1종만 평정"},
+  {id:"s9",  n:"교육행정·교육연구기관 파견, 순회교사 근무경력", m:0.015, d:0.0005, cap:0.54,
+   conf:["s1","s3","s4","s5a","s5b","s5c","s6","s7a","s7b","s10a","s10c","s10f","s10h"],
+   note:"파견 2002.1.1., 순회교사 2003.1.1., Wee센터 근무교사 2019.9.1.부터 인정"},
+  {id:"s10a",n:"교육복지우선지원사업 학교 근무경력", m:0.005, d:0.00016, cap:0.50, grp:"G3",
+   conf:["s7a","s7b","s9","s10f"], note:"2009.1.1.부터 인정"},
+  {id:"s10b",n:"학교교육력 제고 경력", m:0.007, d:0.00023, cap:0.30, grp:"G3",
+   conf:["s1","s10d","s10e"], star:["s5a","s5b"],
+   note:"2012.3.1.부터 인정. 2016.2.29. 이전은 월 0.005점 적용"},
+  {id:"s10c",n:"농어촌전원학교 근무경력", m:0.003, d:0.0001, cap:0.25, grp:"G3",
+   conf:["s7a","s7b","s9","s10f"], note:"2012.3.1.부터, 2019.2.28. 이전 경력에 한함"},
+  {id:"s10d",n:"중·고등학교 담임교사 근무경력", m:0.003, d:0.0001, cap:0.25, grp:"G3",
+   conf:["s1","s10b","s10e"], note:"2012.3.1.부터 인정, 특수학교 포함"},
+  {id:"s10e",n:"청소년단체 활동지도 경력", m:0.002, d:0.00006, cap:0.15, grp:"G3",
+   conf:["s1","s10b","s10d"], note:"2005.3.1.부터, 교육청이 확정한 지도교사에 한함"},
+  {id:"s10f",n:"미래학교(구 행복학교) 근무경력", m:0.005, d:0.00016, cap:0.50, grp:"G3",
+   conf:["s4","s7a","s7b","s9","s10a","s10c"], note:"2015.9.1.부터 인정"},
+  {id:"s10g",n:"장기근무 경력", m:0.005, d:0.00016, cap:0.30, grp:"G3",
+   note:"20년 초과경력. 기본경력·초과경력 이전의 경력에 한함"},
+  {id:"s10h",n:"거점학교 근무경력", m:0.003, d:0.0001, cap:0.15, grp:"G3",
+   conf:["s9"], note:"2025.3.1.부터, 군위초(병설유)·군위중·군위고 경력에 한함"}
+];
+const SEL_GROUPS = {
+  G1:{cap:1.7,  n:"연구·시범학교 + 교육실습 대용·협력학교 (공통가산점 포함)"},
+  G2:{cap:1.7,  n:"농어촌 + 교육특구 + 마이스터고"},
+  G3:{cap:1.55, n:"별정 경력 및 실적"}
+};
+
+/* ════════════════════ 유틸 ════════════════════ */
+const MSD = 86400000;
+function pd(iso){ const p=String(iso||"").split("-").map(Number);
+  return new Date(Date.UTC(p[0],(p[1]||1)-1,p[2]||1)); }
+function addD(dt,n){ return new Date(dt.getTime()+n*MSD); }
+function isoOf(dt){ return dt.toISOString().slice(0,10); }
+function ymdSpan(sISO,eISO){
+  const s=pd(sISO), e=addD(pd(eISO),1);
+  if(!(e>s)) return {months:0,days:0};
+  let y=e.getUTCFullYear()-s.getUTCFullYear();
+  let m=e.getUTCMonth()-s.getUTCMonth();
+  let d=e.getUTCDate()-s.getUTCDate();
+  if(d<0){ m--; const prev=new Date(Date.UTC(e.getUTCFullYear(),e.getUTCMonth(),0)); d+=prev.getUTCDate(); }
+  if(m<0){ y--; m+=12; }
+  return {months:y*12+m, days:d};
+}
+function spanPd(sISO,eISO){ const r=ymdSpan(sISO,eISO); return r.months*30+r.days; }
+function pdText(v){
+  const m=Math.floor(v/30), d=v%30, y=Math.floor(m/12), mm=m%12;
+  let s=""; if(y)s+=y+"년 "; if(mm)s+=mm+"개월 "; if(d)s+=d+"일";
+  return s.trim()||"0";
+}
+function r3(v){ return Math.round((v+Number.EPSILON)*1000)/1000; }
+function f3(v){ return r3(v).toFixed(3); }
+function f2(v){ return (Math.round((v+Number.EPSILON)*100)/100).toFixed(2); }
+function num(v){ const n=parseFloat(v); return isFinite(n)?n:0; }
+function pos(v){ return Math.max(0, num(v)); }            // 음수 입력 방어
+function clamp(v,lo,hi){ return Math.min(hi, Math.max(lo, num(v))); }
+function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function grade(v){ return v>=95?"수":v>=90?"우":v>=85?"미":"양"; }
+
+/* ════════════════════ 경력평정 ════════════════════ */
+function calcCareer(items, maxEach){
+  const rows=(items||[]).filter(function(it){ return it.start&&it.end&&it.type&&it.end>=it.start; })
+    .slice().sort(function(a,b){ return a.start<b.start?-1:a.start>b.start?1:0; });
+
+  // 평정 기준일 이후 기간은 평정 대상이 아니므로 잘라낸다
+  const future=[];
+  const clipped=rows.map(function(it){
+    if(it.start>BASE_DATE){ future.push(it); return null; }
+    if(it.end>BASE_DATE){ future.push(it); return {type:it.type, start:it.start, end:BASE_DATE}; }
+    return it;
+  }).filter(Boolean);
+
+  // 기간이 겹치는 이력 검출 (중복 입력 실수)
+  const overlaps=[];
+  for(let i=1;i<clipped.length;i++)
+    if(clipped[i].start<=clipped[i-1].end)
+      overlaps.push({a:clipped[i-1], b:clipped[i]});
+
+  const segs=[];
+  clipped.forEach(function(it){
+    const def=CAREER_TYPES.find(function(t){ return t.v===it.type; });
+    if(!def||!def.grade) return;
+    let p=spanPd(it.start,it.end);
+    if(def.cap) p=Math.min(p,def.cap);
+    p=Math.floor(p*def.ratio);
+    if(p>0) segs.push({grade:def.grade, pd:p, raw:spanPd(it.start,it.end),
+                       start:it.start, end:it.end, type:it.type, label:def.t});
+  });
+
+  const total=segs.reduce(function(a,s){ return a+s.pd; },0);
+  const need=BASE_PD+OVER_PD;
+
+  // 20년 초과분: 불리한 등급(다 → 나)을 최근 것부터 제외해 남은 저등급 경력을 과거(초과경력)로 밀어낸다
+  const dropped=[];
+  let excess=total-need;
+  if(excess>0){
+    ["다","나"].forEach(function(g){
+      for(let i=segs.length-1;i>=0&&excess>0;i--){
+        if(segs[i].grade!==g) continue;
+        const cut=Math.min(segs[i].pd,excess);
+        segs[i].pd-=cut; excess-=cut;
+        dropped.push({grade:g, pd:cut, label:segs[i].label, start:segs[i].start, end:segs[i].end});
+      }
+    });
+  }
+  const live=segs.filter(function(s){ return s.pd>0; });
+
+  // 기준일에서 역순으로 기본 15년 → 초과 5년 배분
+  const acc={ base:{"가":0,"나":0,"다":0}, over:{"가":0,"나":0,"다":0} };
+  let rb=BASE_PD, ro=OVER_PD;
+  for(let i=live.length-1;i>=0;i--){
+    let left=live[i].pd, g=live[i].grade;
+    if(rb>0){ const t=Math.min(left,rb); acc.base[g]+=t; rb-=t; left-=t; }
+    if(left>0&&ro>0){ const t=Math.min(left,ro); acc.over[g]+=t; ro-=t; left-=t; }
+    if(rb<=0&&ro<=0) break;
+  }
+
+  function block(bucket,which){
+    const rate=CAREER_RATE[which];
+    const used=Object.keys(bucket).filter(function(g){ return bucket[g]>0; });
+    const fullPd=which==="base"?BASE_PD:OVER_PD;
+    const sum=used.reduce(function(a,g){ return a+bucket[g]; },0);
+    const single=used.length===1&&sum>=fullPd;
+    let score=0; const parts=[];
+    used.forEach(function(g){
+      const m=Math.floor(bucket[g]/30), d=bucket[g]%30;
+      const s=m*rate[g].m+d*rate[g].d;
+      parts.push({grade:g,months:m,days:d,score:s,pd:bucket[g]});
+      score+=s;
+    });
+    return {score:score, parts:parts, single:single, singleGrade:single?used[0]:null, sum:sum};
+  }
+
+  const b=block(acc.base,"base"), o=block(acc.over,"over");
+  let bs=b.score, os=o.score, ba=false, oa=false;
+  const both=b.single&&o.single;
+  if(b.single&&(maxEach||both)){ bs=CAREER_RATE.base[b.singleGrade].max; ba=true; }
+  if(o.single&&(maxEach||both)){ os=CAREER_RATE.over[o.singleGrade].max; oa=true; }
+
+  return { base:b, over:o, acc:acc,
+    baseScore:r3(bs), overScore:r3(os), baseAdj:ba, overAdj:oa,
+    total:r3(Math.min(r3(bs)+r3(os),70)),
+    totalPd:total, need:need, shortfall:Math.max(0,need-total), dropped:dropped,
+    future:future, overlaps:overlaps };
+}
+
+/* ════════════════════ 근무성적평정 ════════════════════ */
+function calcPerf(years){
+  // 실제로 평정한 학년도
+  const real=years.map(function(y){
+    return (!y.none && y.score!==null && y.score!=="") ? clamp(y.score,0,100) : null; });
+  const realCount=real.filter(function(v){ return v!==null; }).length;
+
+  // 「규정」제40조 : 5년 이내에 '평정한' 합산점 중에서 유리한 3년을 선택한다.
+  // 평정한 학년도가 3개 이상이면 평정하지 않은 학년도는 선택 대상이 아니다.
+  // 3개 미만일 때만 제40조 제5항(전후 평균, 직전이 없으면 85점)으로 채운다.
+  let filled;
+  if(realCount>=3){
+    filled=years.map(function(y,i){
+      return real[i]!==null ? {year:y.year, v:real[i], src:"입력"}
+                            : {year:y.year, v:null, src:"미평정"};
+    });
+  } else {
+    filled=years.map(function(y,i){
+      if(real[i]!==null) return {year:y.year, v:real[i], src:"입력"};
+      let after=null, before=null;
+      for(let j=i-1;j>=0;j--) if(real[j]!==null){ after=real[j]; break; }
+      for(let j=i+1;j<years.length;j++) if(real[j]!==null){ before=real[j]; break; }
+      if(after===null&&before===null) return {year:y.year, v:null, src:"없음"};
+      return {year:y.year, v:((after!==null?after:85)+(before!==null?before:85))/2, src:"보정"};
+    });
+  }
+  const idx=[]; filled.forEach(function(f,i){ if(f.v!==null) idx.push(i); });
+  if(idx.length<3) return {ok:false, filled:filled, total:0, combos:[], realCount:realCount};
+
+  const W=[0.34,0.33,0.33], combos=[];
+  for(let a=0;a<idx.length-2;a++) for(let b=a+1;b<idx.length-1;b++) for(let c=b+1;c<idx.length;c++){
+    const pick=[idx[a],idx[b],idx[c]];
+    combos.push({ pick:pick,
+      score:r3(pick.reduce(function(s,p,k){ return s+filled[p].v*W[k]; },0)),
+      years:pick.map(function(p){ return filled[p].year; }),
+      vals:pick.map(function(p){ return filled[p].v; }) });
+  }
+  combos.sort(function(x,y){ return y.score-x.score; });
+  return {ok:true, filled:filled, best:combos[0], combos:combos, total:combos[0].score, realCount:realCount};
+}
+
+/* ════════════════════ 연수성적평정 ════════════════════ */
+function convTrain(pct){ return pct>95?100 : pct>90?95 : pct>85?90 : 85; }
+
+function calcTraining(s){
+  const coef = 0.025;   // 교감 자격연수 대상자 기준
+  let qScore=0, qPct=null, qNote="";
+  const full=num(s.qual.full)||100;
+
+  if(s.qual.method==="score"){
+    if(s.qual.score!==""&&s.qual.score!==null){
+      let sc=num(s.qual.score);
+      qPct = full>0 ? sc/full*100 : 0;
+      if(qPct<60){ qScore=0; qNote="자격연수성적이 만점의 60% 미만이어서 평정하지 않습니다."; }
+      else{
+        if(qPct<80){ sc=full*0.8; qNote="자격연수성적이 만점의 80% 미만이어서 만점의 80%로 보아 평정했습니다."; }
+        qScore = 9-(full-sc)*coef;
+      }
+    }
+  } else if(s.qual.method==="none"){
+    // 교육을 받았으나 교육성적이 없는 경우 → 만점의 80%로 평정
+    qPct=80;
+    qScore = 9-(full-full*0.8)*coef;
+    qNote = "성적 기록이 없어 만점의 80%("+f2(full*0.8)+"점)를 성적으로 보아 평정했습니다.";
+  } else {
+    const ratio=num(s.qual.method==="grade" ? s.qual.grade : s.qual.degree);
+    if(ratio>0){
+      qPct=ratio*100;
+      qScore = 9-(full-full*ratio)*coef;
+      qNote = (s.qual.method==="grade"?"평어":"학위 성적")+" 기준으로 만점의 "+(ratio*100)+"%를 성적으로 보아 평정했습니다.";
+    }
+  }
+  qScore=Math.max(0,Math.min(9,qScore));
+
+  const valid=[], invalid=[];
+  (s.trainings||[]).forEach(function(t){
+    const h=num(t.hours), why=[];
+    if(!t.date) why.push("이수일 없음");
+    else if(t.date<TRAIN_FROM) why.push("2016.1.1. 이전 이수");
+    else if(t.date>BASE_DATE) why.push("기준일 이후 이수");
+    if(h<60) why.push("60시간 미만");
+    if(why.length){ invalid.push({t:t, why:why.join(" · ")}); return; }
+    const f=num(t.full)||100;
+    const has = t.score!==null && t.score!==undefined && String(t.score).trim()!=="" &&
+                isFinite(parseFloat(t.score));
+    // 「규정」 : 교육성적이 만점의 80% 미만일 때(교육을 받았으나 성적이 없는 경우 포함)에는
+    //           만점의 80%로 하여 평정하고, 60% 미만이면 평정하지 않는다.
+    const pct = has ? (f>0 ? num(t.score)/f*100 : 0) : null;
+    const under60 = pct!==null && pct<60;
+    const effPct = (pct===null || pct<80) ? 80 : pct;
+    valid.push({t:t, pct:pct, noScore:!has, under60:under60,
+                conv: under60 ? 0 : convTrain(effPct)});
+  });
+  valid.sort(function(a,b){
+    return b.conv-a.conv || ((b.pct===null?80:b.pct)-(a.pct===null?80:a.pct));
+  });
+  const used=valid.slice(0,3);
+
+  let jScore=0, jNote="", headConv=0;
+  if(used.length){
+    const head=used[0];
+    if(head.under60){
+      jNote="성적평정 대상 연수의 성적이 만점의 60% 미만이어서 성적평정분 6점을 평정하지 않았습니다.";
+    } else {
+      if(head.noScore) jNote="성적 기록이 없는 연수는 「규정」에 따라 만점의 80%로 보아 환산했습니다.";
+      else if(head.pct<80) jNote="성적이 만점의 80% 미만이어서 만점의 80%로 보아 환산했습니다.";
+      headConv=head.conv;
+      jScore = 6*(headConv/100);
+    }
+    jScore += 6*Math.min(2, used.length-1);
+  }
+  jScore=Math.max(0,Math.min(18,jScore));
+
+  return { qual:r3(qScore), qualNote:qNote, qualPct:qPct, coef:coef,
+    job:r3(jScore), jobNote:jNote, headConv:headConv, used:used, invalid:invalid,
+    extra:Math.max(0, valid.length-3),
+    total:r3(Math.min(30, r3(qScore)+r3(jScore))) };
+}
+
+/* ════════════════════ 연구실적 평정 (3점) ════════════════════ */
+// 「승진규정」제34조~제37조 · 교감 승진 및 자격연수 대상자 중 부칙 제2조 해당자
+const CONTEST_PT={ "전국":{1:1.50,2:1.25,3:1.00}, "시·도":{1:1.00,2:0.75,3:0.50} };
+const JOINT_RATIO={1:1, 2:0.7, 3:0.5, 4:0.3};   // 2인 70% · 3인 50% · 4인 이상 30%
+const DEGREE_PT={ "박사-직무":3.0, "박사-기타":1.5, "석사-직무":1.5, "석사-기타":1.0 };
+
+function calcResearch(s){
+  const R=s.research||{};
+  const rows=[];
+  (R.contests||[]).forEach(function(x){
+    const base=(CONTEST_PT[x.scale]||{})[num(x.grade)]||0;
+    const j=Math.min(4, Math.max(1, num(x.joint)||1));
+    const v=base*JOINT_RATIO[j];
+    rows.push({year:String(x.year||""), scale:x.scale, grade:num(x.grade), joint:j,
+      base:base, v:r3(v), id:x.id});
+  });
+  // 「승진규정」제37조제2항 : 연구대회 입상실적은 1년에 1회에 한한다
+  const byYear={}, dropped=[];
+  rows.slice().sort(function(a,b){ return b.v-a.v; }).forEach(function(r){
+    const k=r.year||"(연도 미상)";
+    if(byYear[k]===undefined){ byYear[k]=r; r.used=true; }
+    else { r.used=false; dropped.push(r); }
+  });
+  const contestSum=Object.keys(byYear).reduce(function(a,k){ return a+byYear[k].v; },0);
+  const degreeVal = DEGREE_PT[R.degree] || 0;
+  const raw=contestSum+degreeVal;
+  return { rows:rows, dropped:dropped, contest:r3(contestSum), degree:r3(degreeVal),
+           raw:r3(raw), total:r3(Math.max(0, Math.min(3, raw))), capped:raw>3+1e-9 };
+}
+
+/* ════════════════════ 가산점 ════════════════════ */
+function calcCommon(s){
+  const c=s.common, rows=[];
+  rows.push({k:"c1", n:"교육부장관 지정 연구·시범·실험학교",
+    raw:r3(pos(c.c1m)*0.018+pos(c.c1d)*0.0006), cap:1.00, grp:"G1"});
+  rows.push({k:"c2", n:"재외국민교육기관 파견",
+    raw:r3(pos(c.c2m)*0.015+pos(c.c2d)*0.0005), cap:0.50});
+  let cr=0; const crDetail=[];
+  (c.credits||[]).forEach(function(x){
+    const credit=Math.floor(pos(x.hours)/15);
+    const v=Math.min(0.08, credit*0.02);
+    cr+=v; crDetail.push({year:x.year, hours:pos(x.hours), credit:credit, v:v});
+  });
+  rows.push({k:"c3", n:"직무연수 이수실적", raw:r3(cr), cap:1.00, detail:crDetail});
+  rows.push({k:"c4", n:"학교폭력 예방 및 대응 실적", raw:r3(pos(c.c4y)*0.1), cap:1.00});
+  rows.forEach(function(r){ r.v=r3(Math.max(0, Math.min(r.cap, r.raw))); r.capped=r.raw>r.cap+1e-9; });
+  const sum=rows.reduce(function(a,r){ return a+r.v; },0);
+  return {rows:rows, raw:r3(sum), total:r3(Math.max(0,Math.min(COMMON_CAP,sum))), capped:sum>COMMON_CAP+1e-9};
+}
+
+function calcSelect(s, commonG1){
+  const rows=[];
+  (s.select||[]).forEach(function(x){
+    const def=SEL_ITEMS.find(function(i){ return i.id===x.itemId; });
+    if(!def) return;
+    let v=0, detail="";
+    if(def.fixed){
+      const lv=(def.levels||[]).find(function(l){ return l[0]===x.level; });
+      v=lv?lv[1]:0; detail=x.level||"";
+    } else if(def.regions){
+      const rg=(def.regions||[]).find(function(r){ return r[0]===x.region; });
+      if(rg){ v=pos(x.months)*rg[1]+pos(x.days)*rg[2]; detail=rg[0]; }
+    } else v=pos(x.months)*def.m+pos(x.days)*def.d;
+    rows.push({id:def.id, n:def.n, raw:r3(v), v:r3(Math.max(0,Math.min(def.cap,v))), cap:def.cap,
+      grp:def.grp, capped:v>def.cap+1e-9, detail:detail, def:def});
+  });
+
+  const groups={};
+  Object.keys(SEL_GROUPS).forEach(function(g){
+    let sum=rows.filter(function(r){ return r.grp===g; }).reduce(function(a,r){ return a+r.v; },0);
+    if(g==="G1") sum+=commonG1||0;
+    groups[g]={sum:r3(sum), cap:SEL_GROUPS[g].cap, over:sum>SEL_GROUPS[g].cap+1e-9,
+      has:rows.some(function(r){ return r.grp===g; })||(g==="G1"&&(commonG1||0)>0)};
+  });
+  rows.forEach(function(r){ r.applied=r.v; });
+  Object.keys(groups).forEach(function(g){
+    if(!groups[g].over) return;
+    const mine=rows.filter(function(r){ return r.grp===g; });
+    const mineSum=mine.reduce(function(a,r){ return a+r.v; },0);
+    const allow=Math.max(0, groups[g].cap-(g==="G1"?(commonG1||0):0));
+    if(mineSum>0){
+      const k=allow/mineSum;
+      mine.forEach(function(r){ r.applied=r3(r.v*k); });
+      // 항목별 반올림 때문에 그룹 합계가 상한을 넘는 일이 없도록 최대 항목에서 차액을 뺀다
+      let sum2=mine.reduce(function(a,r){ return a+r.applied; },0);
+      if(sum2>allow+1e-9){
+        const big=mine.slice().sort(function(a,b){ return b.applied-a.applied; })[0];
+        big.applied=r3(Math.max(0, big.applied-(sum2-allow)));
+      }
+    }
+  });
+  rows.forEach(function(r){ r.groupCut = r.applied < r.v-1e-9; });
+
+  const sum=rows.reduce(function(a,r){ return a+r.applied; },0);
+  const ids=rows.map(function(r){ return r.id; }), warns=[];
+  rows.forEach(function(r){
+    (r.def.conf||[]).forEach(function(c){
+      if(ids.indexOf(c)<0||r.id>=c) return;
+      warns.push({a:r.n, b:SEL_ITEMS.find(function(i){ return i.id===c; }).n, type:"중복 금지"});
+    });
+    (r.def.star||[]).forEach(function(c){
+      if(ids.indexOf(c)<0) return;
+      warns.push({a:r.n, b:SEL_ITEMS.find(function(i){ return i.id===c; }).n, type:"한 가지만 선택"});
+    });
+  });
+  return {rows:rows, groups:groups, raw:r3(sum),
+    total:r3(Math.max(0,Math.min(SEL_CAP,sum))), capped:sum>SEL_CAP+1e-9, warns:warns};
+}
+
+/* ════════════════════ 상태 ════════════════════ */
+const KEY="gyogam-promotion-v3";
+let uid=1, storageOK=true;
+function nid(){ return "i"+(uid++)+Math.random().toString(36).slice(2,6); }
+
+function defaultState(){
+  const yrs=[]; for(let i=0;i<5;i++) yrs.push({year:2025-i, score:"", none:false});
+  return { career:[], perf:yrs,
+    qual:{method:"score", full:"100", score:"", grade:"0.90", degree:"0.90"},
+    trainings:[], research:{contests:[], degree:"none"},
+    common:{c1m:"",c1d:"",c2m:"",c2d:"",credits:[],c4y:""},
+    select:[], maxEach:false };
+}
+let st=defaultState();
+
+(function testStorage(){
+  try{ localStorage.setItem("__probe__","1"); localStorage.removeItem("__probe__"); }
+  catch(e){ storageOK=false; }
+})();
+
+function save(){
+  if(!storageOK) return;
+  try{
+    localStorage.setItem(KEY, JSON.stringify({t:Date.now(), d:st}));
+    const n=new Date();
+    document.getElementById("savedAt").textContent="저장됨 "+
+      String(n.getHours()).padStart(2,"0")+":"+String(n.getMinutes()).padStart(2,"0");
+  }catch(e){ storageOK=false; markNoStorage(); }
+}
+function markNoStorage(){
+  document.getElementById("savedAt").textContent="자동 저장 불가";
+}
+function load(){
+  if(!storageOK) return false;
+  try{
+    const raw=localStorage.getItem(KEY); if(!raw) return false;
+    const o=JSON.parse(raw); if(!o||!o.d) return false;
+    applyState(o.d); return true;
+  }catch(e){ return false; }
+}
+function applyState(d){
+  const base=defaultState();
+  st=Object.assign(base, d);
+  st.qual=Object.assign(base.qual, d.qual||{});
+  st.common=Object.assign(base.common, d.common||{});
+  st.research=Object.assign(base.research, d.research||{});
+  if(!Array.isArray(st.research.contests)) st.research.contests=[];
+  if(!Array.isArray(st.career)) st.career=[];
+  if(!Array.isArray(st.trainings)) st.trainings=[];
+  if(!Array.isArray(st.select)) st.select=[];
+  if(!Array.isArray(st.common.credits)) st.common.credits=[];
+  if(!Array.isArray(st.perf)||st.perf.length!==5) st.perf=defaultState().perf;
+}
+
+/* ════════════════════ DOM 헬퍼 ════════════════════ */
+function el(tag,attrs,html){
+  const e=document.createElement(tag);
+  if(attrs) Object.keys(attrs).forEach(function(k){
+    if(k==="class") e.className=attrs[k]; else e.setAttribute(k,attrs[k]); });
+  if(html!==undefined) e.innerHTML=html;
+  return e;
+}
+function toast(msg){
+  const t=document.getElementById("toast");
+  t.textContent=msg; t.classList.add("on");
+  clearTimeout(toast._t); toast._t=setTimeout(function(){ t.classList.remove("on"); },2600);
+}
+const TRASH='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>';
+
+/* ════════════════════ 렌더 — 경력 ════════════════════ */
+function renderCareer(){
+  const box=document.getElementById("careerList");
+  box.innerHTML="";
+  if(!st.career.length)
+    box.appendChild(el("div",{class:"empty"},"근무 이력이 없습니다. 첫 발령일부터 순서대로 추가하세요."));
+
+  st.career.forEach(function(it){
+    const d=el("div",{class:"item career"});
+    const opts=CAREER_TYPES.map(function(t){
+      return '<option value="'+t.v+'"'+(t.v===it.type?" selected":"")+'>'+esc(t.t)+'</option>'; }).join("");
+    d.innerHTML=
+      '<div class="top"><select data-f="type" aria-label="경력 종류">'+opts+'</select>'+
+      '<button class="iconbtn noprint" data-del="1" aria-label="이 이력 삭제">'+TRASH+'</button></div>'+
+      '<div class="row2">'+
+        '<div><label class="lbl">시작일</label><input type="date" data-f="start" value="'+esc(it.start)+'"></div>'+
+        '<div><label class="lbl">종료일</label><input type="date" data-f="end" value="'+esc(it.end)+'"></div>'+
+      '</div><div class="hint span" data-span></div>';
+
+    const span=d.querySelector("[data-span]");
+    const def=CAREER_TYPES.find(function(t){ return t.v===it.type; });
+    if(it.start&&it.end&&it.end<it.start){
+      span.innerHTML='<span class="badge err">종료일이 시작일보다 빠릅니다</span>';
+    } else if(it.start&&it.end){
+      const rawPd=spanPd(it.start,it.end);
+      let txt=pdText(rawPd);
+      if(def&&def.cap&&rawPd>def.cap) txt+=" → 3년까지만 인정 ("+pdText(def.cap)+")";
+      else if(def&&def.ratio===0.5) txt+=" → 50% 인정 ("+pdText(Math.floor(rawPd*0.5))+")";
+      else if(def&&def.ratio===0) txt+=" → 경력에서 제외";
+      else if(def&&def.grade) txt+=" · ‘"+def.grade+"’경력";
+      span.innerHTML=esc(txt)+(def&&def.d?'<br>'+esc(def.d):'');
+    } else {
+      span.innerHTML=(def&&def.d?esc(def.d)+'<br>':'')+"시작일과 종료일을 넣으면 기간이 표시됩니다.";
+    }
+
+    d.querySelectorAll("[data-f]").forEach(function(inp){
+      inp.addEventListener("change",function(){ it[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
+    });
+    d.querySelector("[data-del]").addEventListener("click",function(){
+      st.career=st.career.filter(function(x){ return x!==it; }); renderAll(); save();
+    });
+    box.appendChild(d);
+  });
+
+  const res=calcCareer(st.career, st.maxEach);
+  const rb=document.getElementById("careerResult");
+  if(!st.career.length){ rb.innerHTML=""; setVal("1","0.000 / 70"); return res; }
+
+  function rowsOf(which){
+    const acc=res.acc[which], rate=CAREER_RATE[which];
+    return ["가","나","다"].filter(function(g){ return acc[g]>0; }).map(function(g){
+      const m=Math.floor(acc[g]/30), d=acc[g]%30;
+      return '<tr><td>‘'+g+'’경력</td><td>'+pdText(acc[g])+'</td><td>'+m+'월 '+d+'일</td>'+
+        '<td>'+f3(m*rate[g].m+d*rate[g].d)+'</td></tr>';
+    }).join("")||'<tr><td colspan="4" style="text-align:left;color:var(--sub)">해당 없음</td></tr>';
+  }
+
+  let h='<div class="result"><div class="rt">자동 배분 결과</div>'+
+    '<div class="tablewrap"><table><thead><tr><th>구분</th><th>인정 기간</th><th>월·일</th><th>평정점</th></tr></thead><tbody>'+
+    '<tr><td class="grp" colspan="4">기본경력 — 최근 15년 (만점 64점)</td></tr>'+rowsOf("base")+
+    '<tr><td class="grp" colspan="4">초과경력 — 그 앞 5년 (만점 6점)</td></tr>'+rowsOf("over")+
+    '</tbody></table></div>'+
+    '<div class="kv"><span class="k">기본경력 평정점'+(res.baseAdj?' <span class="badge ok">만점 보정</span>':'')+
+      '</span><span class="v">'+f3(res.baseScore)+'</span></div>'+
+    '<div class="kv"><span class="k">초과경력 평정점'+(res.overAdj?' <span class="badge ok">만점 보정</span>':'')+
+      '</span><span class="v">'+f3(res.overScore)+'</span></div>'+
+    '<div class="kv total"><span class="k">경력평정점</span><span class="v">'+f3(res.total)+' / 70</span></div>';
+
+  if(res.future.length)
+    h+='<div class="alert warn">평정 기준일(2026.2.28.) <b>이후 기간이 포함된 이력 '+res.future.length+'건</b>을 기준일까지만 인정했습니다. 기준일 이후의 경력은 이번 평정 대상이 아닙니다.</div>';
+  if(res.overlaps.length)
+    h+='<div class="alert err">기간이 <b>서로 겹치는 이력 '+res.overlaps.length+'건</b>이 있습니다 — '+
+      res.overlaps.map(function(o){ return esc(o.a.start+"~"+o.a.end)+" 와 "+esc(o.b.start+"~"+o.b.end); }).join(", ")+
+      '. 겹친 기간이 이중으로 계산되어 점수가 실제보다 높게 나옵니다. 한 시점에는 하나의 이력만 남기세요.</div>';
+  if(res.shortfall>0)
+    h+='<div class="alert warn">인정 경력이 20년에 <b>'+pdText(res.shortfall)+'</b> 부족합니다. 부족한 만큼 평정점이 낮아집니다. 임용 전 군 복무나 기간제 경력이 빠지지 않았는지 확인하세요.</div>';
+  if(res.dropped.length){
+    const t=res.dropped.reduce(function(a,x){ return a+x.pd; },0);
+    h+='<div class="alert ok">총 인정경력 <b>'+pdText(res.totalPd)+'</b> 가운데 20년을 넘는 만큼은 평정에서 빠집니다. 그중 불리한 등급(기간제 등) 경력 <b>'+pdText(t)+'</b>을 최근 것부터 먼저 제외해 가장 유리하게 배분했습니다. 남은 저등급 경력은 배점이 낮은 초과경력 쪽으로 밀려납니다.</div>';
+  }
+  h+='</div>';
+  rb.innerHTML=h;
+  setVal("1", f3(res.total)+" / 70");
+  return res;
+}
+
+/* ════════════════════ 렌더 — 근무성적 ════════════════════ */
+function renderPerf(){
+  const box=document.getElementById("perfList");
+  box.innerHTML="";
+  st.perf.forEach(function(y,i){
+    const d=el("div",{class:"item"});
+    const g = (!y.none&&y.score!=="") ? grade(num(y.score)) : null;
+    d.innerHTML=
+      '<label class="lbl">'+y.year+'학년도'+
+        (i===0?' <span class="badge n">최근</span>':'')+
+        (g?' <span class="badge '+(g==="수"?"ok":g==="양"?"err":"n")+'">'+g+'</span>':'')+'</label>'+
+      '<input type="number" step="0.01" min="0" max="100" data-f="score" value="'+esc(y.score)+
+        '" placeholder="합산점" '+(y.none?"disabled":"")+'>'+
+      '<label class="chk"><input type="checkbox" data-f="none" '+(y.none?"checked":"")+
+        '><span>평정점 없음</span></label>';
+    d.querySelector('[data-f="score"]').addEventListener("input",function(e){
+      y.score=e.target.value; renderAll(); save(); });
+    d.querySelector('[data-f="none"]').addEventListener("change",function(e){
+      y.none=e.target.checked; if(y.none) y.score=""; renderAll(); save(); });
+    box.appendChild(d);
+  });
+
+  const res=calcPerf(st.perf);
+  const rb=document.getElementById("perfResult");
+  if(!res.ok){
+    rb.innerHTML='<div class="alert info">평정점을 3개 학년도 이상 넣으면 최적 조합을 계산합니다.</div>';
+    setVal("2","0.000 / 100");
+    return {total:0, ok:false};
+  }
+  const W=["34%","33%","33%"];
+  let h='<div class="result"><div class="rt">조합별 계산 — 10가지 전부</div>'+
+    '<div class="tablewrap"><table><thead><tr><th>선택 학년도</th><th>가중 합산점</th></tr></thead><tbody>';
+  res.combos.forEach(function(c,i){
+    h+='<tr class="'+(i===0?"sel":"")+'"><td>'+c.years.map(function(y){ return y; }).join(" · ")+
+      (i===0?' <span class="badge ok">선택</span>':'')+'</td><td>'+f3(c.score)+'</td></tr>';
+  });
+  h+='</tbody></table></div><div class="formula">'+
+    res.best.vals.map(function(v,i){ return f2(v)+" × "+W[i]; }).join(" + ")+" = "+f3(res.best.score)+'</div>';
+
+  const skipped=res.filled.filter(function(f){ return f.src==="미평정"; });
+  if(skipped.length) h+='<div class="alert info">'+skipped.map(function(a){ return a.year+"학년도"; }).join(" · ")+
+    '는 평정점이 없어 선택 대상에서 제외했습니다. 「규정」제40조는 <b>5년 이내에 평정한 합산점 중에서</b> 유리한 3년을 고르도록 정하고 있어, 평정한 학년도가 3개 이상이면 없는 학년도는 채우지 않습니다.</div>';
+  const adj=res.filled.filter(function(f){ return f.src==="보정"; });
+  if(adj.length) h+='<div class="alert warn">평정한 학년도가 '+res.realCount+'개뿐이어서 「규정」제40조 제5항에 따라 '+
+    adj.map(function(a){ return a.year+"학년도를 "+f2(a.v)+"점"; }).join(", ")+
+    '으로 보정했습니다(앞뒤 평정점의 평균, 직전 평정점이 없으면 85점). <b>이 경우 보정 방식이 사례마다 달라질 수 있으니 교육(지원)청 확인을 받으세요.</b></div>';
+  const diff=r3(res.combos[0].score-res.combos[res.combos.length-1].score);
+  if(diff>0.001) h+='<div class="alert ok">가장 유리한 조합과 가장 불리한 조합의 차이가 <b>'+f3(diff)+'점</b>입니다.</div>';
+  h+='<div class="kv total"><span class="k">근무성적평정점</span><span class="v">'+f3(res.total)+' / 100</span></div></div>';
+  rb.innerHTML=h;
+  setVal("2", f3(res.total)+" / 100");
+  return res;
+}
+
+/* ════════════════════ 렌더 — 연수성적 ════════════════════ */
+function renderTraining(){
+  document.getElementById("qualScoreBox").style.display  = st.qual.method==="score"?"grid":"none";
+  document.getElementById("qualGradeBox").style.display  = st.qual.method==="grade"?"block":"none";
+  document.getElementById("qualDegreeBox").style.display = st.qual.method==="degree"?"block":"none";
+  document.getElementById("qualNoneBox").style.display   = st.qual.method==="none"?"block":"none";
+
+  const box=document.getElementById("trainList");
+  box.innerHTML="";
+  if(!st.trainings.length)
+    box.appendChild(el("div",{class:"empty"},"평정 대상 직무연수를 추가하세요. 3개를 채우면 12점이 확보됩니다."));
+
+  st.trainings.forEach(function(t){
+    const d=el("div",{class:"item"});
+    d.innerHTML=
+      '<div class="top"><input type="text" data-f="name" value="'+esc(t.name)+'" placeholder="연수명" aria-label="연수명">'+
+      '<button class="iconbtn noprint" data-del="1" aria-label="이 연수 삭제">'+TRASH+'</button></div>'+
+      '<div class="row2">'+
+        '<div><label class="lbl">이수일</label><input type="date" data-f="date" value="'+esc(t.date)+'"></div>'+
+        '<div><label class="lbl">이수 시간</label><input type="number" data-f="hours" value="'+esc(t.hours)+'" placeholder="60"></div>'+
+      '</div><div class="row2">'+
+        '<div><label class="lbl">연수 성적</label><input type="number" step="0.01" data-f="score" value="'+esc(t.score)+'" placeholder="기록 없으면 비움"></div>'+
+        '<div><label class="lbl">성적 만점</label><input type="number" step="0.01" data-f="full" value="'+esc(t.full)+'" placeholder="100"></div>'+
+      '</div>';
+    d.querySelectorAll("[data-f]").forEach(function(inp){
+      inp.addEventListener("input",function(){ t[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
+      inp.addEventListener("change",function(){ t[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
+    });
+    d.querySelector("[data-del]").addEventListener("click",function(){
+      st.trainings=st.trainings.filter(function(x){ return x!==t; }); renderAll(); save();
+    });
+    box.appendChild(d);
+  });
+
+  const res=calcTraining(st);
+  let h='<div class="result"><div class="rt">연수성적 계산</div>'+
+    '<div class="kv"><span class="k">자격연수성적 <span class="badge n">계수 '+res.coef+'</span></span>'+
+    '<span class="v">'+f3(res.qual)+' / 9</span></div>';
+
+  if(res.qualPct!==null){
+    const full=num(st.qual.full)||100;
+    let sc = st.qual.method==="score" ? num(st.qual.score)
+           : st.qual.method==="none" ? full*0.8
+           : full*num(st.qual.method==="grade"?st.qual.grade:st.qual.degree);
+    if(res.qualPct<80&&res.qualPct>=60) sc=full*0.8;
+    if(res.qualPct>=60)
+      h+='<div class="formula">9 − ('+f2(full)+' − '+f2(sc)+') × '+res.coef+' = '+f3(res.qual)+'</div>';
+  }
+  if(res.qualNote) h+='<div class="alert warn">'+esc(res.qualNote)+'</div>';
+
+  h+='<div class="kv"><span class="k">직무연수 <span class="badge n">'+res.used.length+'개 반영</span></span>'+
+     '<span class="v">'+f3(res.job)+' / 18</span></div>';
+  if(res.used.length){
+    h+='<div class="formula">성적평정 6 × ('+(res.headConv||0)+' ÷ 100) = '+f3(6*(res.headConv||0)/100)+
+      ' &nbsp;+&nbsp; 이수실적 6 × '+Math.min(2,res.used.length-1)+'회 = '+f3(6*Math.min(2,res.used.length-1))+'</div>'+
+      '<div class="tablewrap"><table><thead><tr><th>연수명</th><th>이수일</th><th>시간</th><th>성적</th><th>환산</th></tr></thead><tbody>';
+    res.used.forEach(function(u,i){
+      h+='<tr class="'+(i===0?"sel":"")+'"><td>'+esc(u.t.name||"(이름 없음)")+
+        (i===0?' <span class="badge ok">성적평정</span>':' <span class="badge n">이수실적</span>')+'</td>'+
+        '<td>'+esc(u.t.date||"—")+'</td><td>'+num(u.t.hours)+'</td><td>'+
+        (u.noScore?'<span class="badge n">성적 없음</span>':f2(num(u.t.score)))+'</td>'+
+        '<td>'+(i===0?u.conv:"—")+'</td></tr>';
+    });
+    h+='</tbody></table></div>';
+    if(res.used.length<3)
+      h+='<div class="alert info">60시간 이상 직무연수를 <b>'+(3-res.used.length)+'개 더</b> 채우면 '+
+         f3(6*(3-res.used.length)-(res.used.length===0?6*(res.headConv||0)/100*0:0))+'점까지 더 올릴 수 있습니다.</div>';
+    if(res.headConv&&res.headConv<100)
+      h+='<div class="alert info">성적평정 대상 연수의 환산성적이 '+res.headConv+'점입니다. 95점을 넘는 성적의 연수가 있으면 최대 '+
+         f3(6-6*res.headConv/100)+'점을 더 얻을 수 있습니다.</div>';
+  }
+  if(res.jobNote) h+='<div class="alert warn">'+esc(res.jobNote)+'</div>';
+  if(res.extra>0) h+='<div class="alert info">평정 대상은 3개까지입니다. 성적이 좋은 3개를 자동 선택하고 나머지 '+res.extra+'개는 제외했습니다.</div>';
+  if(res.invalid.length)
+    h+='<div class="alert warn">평정에서 제외된 연수 '+res.invalid.length+'건 — '+
+      res.invalid.map(function(v){ return esc(v.t.name||"(이름 없음)")+" ("+esc(v.why)+")"; }).join(", ")+'</div>';
+  h+='<div class="kv total"><span class="k">교육성적 합계</span><span class="v">'+f3(res.total)+' / 27</span></div></div>';
+
+  document.getElementById("trainResult").innerHTML=h;
+  return res;
+}
+
+/* ════════════════════ 렌더 — 연구실적 ════════════════════ */
+function renderResearch(){
+  document.getElementById("degreeSel").value = st.research.degree || "none";
+  const box=document.getElementById("contestList");
+  box.innerHTML="";
+  (st.research.contests||[]).forEach(function(c){
+    const d=el("div",{class:"item"});
+    d.innerHTML=
+      '<div class="top"><div class="nm">연구대회 입상실적</div>'+
+      '<button class="iconbtn noprint" data-del="1" aria-label="삭제">'+TRASH+'</button></div>'+
+      '<div class="row2">'+
+        '<div><label class="lbl">입상 연도</label><input type="number" data-f="year" value="'+esc(c.year)+'" placeholder="예: 2018"></div>'+
+        '<div><label class="lbl">규모</label><select data-f="scale">'+
+          ['전국','시·도'].map(function(x){ return '<option value="'+x+'"'+(c.scale===x?" selected":"")+'>'+x+'규모</option>'; }).join("")+
+        '</select></div>'+
+      '</div><div class="row2">'+
+        '<div><label class="lbl">입상 등급</label><select data-f="grade">'+
+          [1,2,3].map(function(g){ return '<option value="'+g+'"'+(num(c.grade)===g?" selected":"")+'>'+g+'등급</option>'; }).join("")+
+        '</select></div>'+
+        '<div><label class="lbl">공동작 인원</label><select data-f="joint">'+
+          [[1,'단독 (100%)'],[2,'2인 공동 (70%)'],[3,'3인 공동 (50%)'],[4,'4인 이상 (30%)']].map(function(x){
+            return '<option value="'+x[0]+'"'+(num(c.joint)===x[0]?" selected":"")+'>'+x[1]+'</option>'; }).join("")+
+        '</select></div>'+
+      '</div>';
+    d.querySelectorAll("[data-f]").forEach(function(inp){
+      inp.addEventListener("input",function(){ c[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
+      inp.addEventListener("change",function(){ c[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
+    });
+    d.querySelector("[data-del]").addEventListener("click",function(){
+      st.research.contests=st.research.contests.filter(function(x){ return x!==c; }); renderAll(); save();
+    });
+    box.appendChild(d);
+  });
+
+  const res=calcResearch(st);
+  let h="";
+  if(res.rows.length || res.degree>0){
+    h='<div class="result"><div class="rt">연구실적 계산</div>';
+    if(res.rows.length){
+      h+='<div class="tablewrap"><table><thead><tr><th>입상 연도</th><th>규모·등급</th><th>공동작</th><th>평정점</th></tr></thead><tbody>';
+      res.rows.forEach(function(r){
+        h+='<tr class="'+(r.used?"sel":"")+'"><td>'+esc(r.year||"—")+
+          (r.used?'':' <span class="badge n">연 1회 초과</span>')+'</td>'+
+          '<td>'+esc(r.scale)+' '+r.grade+'등급</td><td>'+(r.joint===1?"단독":r.joint+"인")+'</td>'+
+          '<td>'+(r.used?f3(r.v):"—")+'</td></tr>';
+      });
+      h+='</tbody></table></div>';
+      h+='<div class="kv"><span class="k">연구대회 입상실적</span><span class="v">'+f3(res.contest)+'</span></div>';
+    }
+    if(res.degree>0)
+      h+='<div class="kv"><span class="k">학위취득실적 <span class="badge n">'+esc(st.research.degree)+'</span></span><span class="v">'+f3(res.degree)+'</span></div>';
+    if(res.dropped.length)
+      h+='<div class="alert info">같은 해에 입상실적이 둘 이상이면 「승진규정」제37조제2항에 따라 <b>1년에 1회</b>만 평정합니다. 유리한 실적을 남기고 '+res.dropped.length+'건을 제외했습니다.</div>';
+    if(res.capped)
+      h+='<div class="alert warn">합계 '+f3(res.raw)+'점이 상한 3점을 넘어 3.000점으로 평정합니다.</div>';
+    h+='<div class="kv total"><span class="k">연구실적 평정점</span><span class="v">'+f3(res.total)+' / 3</span></div></div>';
+  }
+  document.getElementById("researchResult").innerHTML=h;
+  return res;
+}
+
+/* ════════════════════ 렌더 — 가산점 ════════════════════ */
+function renderCredits(){
+  const box=document.getElementById("creditList");
+  box.innerHTML="";
+  (st.common.credits||[]).forEach(function(c){
+    const d=el("div",{class:"row2",style:"margin-bottom:8px"});
+    d.innerHTML='<input type="number" data-f="year" value="'+esc(c.year)+'" placeholder="연도" aria-label="연도">'+
+      '<div style="display:flex;gap:8px"><input type="number" data-f="hours" value="'+esc(c.hours)+
+      '" placeholder="이수시간" aria-label="이수시간">'+
+      '<button class="iconbtn noprint" data-del="1" aria-label="삭제">'+TRASH+'</button></div>';
+    d.querySelectorAll("[data-f]").forEach(function(inp){
+      inp.addEventListener("input",function(){ c[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
+    });
+    d.querySelector("[data-del]").addEventListener("click",function(){
+      st.common.credits=st.common.credits.filter(function(x){ return x!==c; }); renderAll(); save();
+    });
+    box.appendChild(d);
+  });
+  if(!(st.common.credits||[]).length)
+    box.appendChild(el("div",{class:"hint",style:"margin:0"},"연도별로 나눠 넣어야 연 상한 0.08점이 정확히 적용됩니다."));
+}
+
+function renderSelect(){
+  const box=document.getElementById("selList");
+  box.className = st.select.length>1 ? "selgrid" : "";
+  box.innerHTML="";
+  if(!st.select.length)
+    box.appendChild(el("div",{class:"empty"},"해당하는 선택가산점 항목을 아래에서 골라 추가하세요."));
+
+  st.select.forEach(function(s){
+    const def=SEL_ITEMS.find(function(i){ return i.id===s.itemId; });
+    if(!def) return;
+    const d=el("div",{class:"item"});
+    let inner='<div class="top"><div class="nm">'+esc(def.n)+'</div>'+
+      '<button class="iconbtn noprint" data-del="1" aria-label="삭제">'+TRASH+'</button></div>';
+    if(def.fixed){
+      inner+='<div class="field" style="margin:0"><label class="lbl">등급</label><select data-f="level">'+
+        def.levels.map(function(l){ return '<option value="'+l[0]+'"'+(s.level===l[0]?" selected":"")+'>'+
+          l[0]+' — '+l[1].toFixed(2)+'점</option>'; }).join("")+'</select></div>';
+    } else {
+      if(def.regions)
+        inner+='<div class="field"><label class="lbl">구분</label><select data-f="region">'+
+          def.regions.map(function(r){ return '<option value="'+r[0]+'"'+(s.region===r[0]?" selected":"")+'>'+
+            r[0]+' — 월 '+r[1]+'점</option>'; }).join("")+'</select></div>';
+      inner+='<div class="row2">'+
+        '<div><label class="lbl">개월 수</label><input type="number" min="0" data-f="months" value="'+esc(s.months)+'" placeholder="0"></div>'+
+        '<div><label class="lbl">잔여 일수</label><input type="number" min="0" max="29" data-f="days" value="'+esc(s.days)+'" placeholder="0"></div>'+
+      '</div>';
+    }
+    inner+='<div class="hint">상한 '+def.cap.toFixed(2)+'점'+
+      (def.grp?' · 통합 상한 '+SEL_GROUPS[def.grp].cap.toFixed(2)+'점 묶음':'')+
+      (def.note?'<br>'+esc(def.note):'')+'</div>';
+    d.innerHTML=inner;
+    d.querySelectorAll("[data-f]").forEach(function(inp){
+      inp.addEventListener("input",function(){ s[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
+      inp.addEventListener("change",function(){ s[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
+    });
+    d.querySelector("[data-del]").addEventListener("click",function(){
+      st.select=st.select.filter(function(x){ return x!==s; }); renderAll(); save();
+    });
+    box.appendChild(d);
+  });
+
+  const picker=document.getElementById("selPicker");
+  const used=st.select.map(function(s){ return s.itemId; });
+  picker.innerHTML='<option value="">＋ 항목 추가…</option>'+
+    SEL_ITEMS.filter(function(i){ return used.indexOf(i.id)<0; })
+      .map(function(i){ return '<option value="'+i.id+'">'+esc(i.n)+'</option>'; }).join("");
+}
+
+function renderBonus(){
+  renderCredits(); renderSelect();
+
+  const cr=calcCommon(st);
+  let ch='<div class="result"><div class="rt">공통가산점</div>';
+  cr.rows.forEach(function(r){
+    ch+='<div class="kv"><span class="k">'+esc(r.n)+(r.capped?' <span class="badge warn">상한 적용</span>':'')+
+      '</span><span class="v">'+f3(r.v)+' / '+r.cap.toFixed(2)+'</span></div>';
+    if(r.k==="c3"&&r.detail&&r.detail.length)
+      ch+='<div class="formula">'+r.detail.map(function(x){
+        return (x.year||"?")+"년 "+x.hours+"시간 = "+x.credit+"학점 → "+f3(x.v)+"점"; }).join(" / ")+'</div>';
+  });
+  ch+='<div class="kv total"><span class="k">공통가산점 합계</span><span class="v">'+f3(cr.total)+' / 3.50</span></div>';
+  if(cr.capped) ch+='<div class="alert warn">합계 '+f3(cr.raw)+'점이 상한 3.50점을 넘어 3.500점으로 평정합니다.</div>';
+  ch+='</div>';
+  document.getElementById("commonResult").innerHTML=ch;
+
+  const g1c=cr.rows[0].v;
+  const sr=calcSelect(st, g1c);
+  let sh="";
+  if(st.select.length){
+    sh='<div class="result"><div class="rt">선택가산점</div>';
+    sr.rows.forEach(function(r){
+      sh+='<div class="kv"><span class="k">'+esc(r.n)+(r.detail?' <span class="badge n">'+esc(r.detail)+'</span>':'')+
+        (r.capped?' <span class="badge warn">항목 상한</span>':'')+
+        (r.groupCut?' <span class="badge warn">통합 상한</span>':'')+
+        '</span><span class="v">'+f3(r.applied)+' / '+r.cap.toFixed(2)+'</span></div>';
+      if(r.capped||r.groupCut)
+        sh+='<div class="formula">산출 '+f3(r.raw)+'점 → 항목 상한 '+f3(r.v)+'점'+
+          (r.groupCut?' → 통합 상한 적용 '+f3(r.applied)+'점':'')+'</div>';
+    });
+    Object.keys(sr.groups).forEach(function(g){
+      const gi=sr.groups[g]; if(!gi.has) return;
+      sh+='<div class="formula">통합 상한 — '+esc(SEL_GROUPS[g].n)+' : '+
+        f3(Math.min(gi.sum,gi.cap))+' / '+gi.cap.toFixed(2)+(gi.over?' <b>(초과분 삭감)</b>':'')+'</div>';
+    });
+    sh+='<div class="kv total"><span class="k">선택가산점 합계</span><span class="v">'+f3(sr.total)+' / 9.99</span></div>';
+    if(sr.capped) sh+='<div class="alert warn">합계 '+f3(sr.raw)+'점이 상한 9.99점을 넘어 9.990점으로 평정합니다.</div>';
+    sr.warns.forEach(function(w){
+      sh+='<div class="alert '+(w.type==="중복 금지"?"err":"warn")+'"><b>'+esc(w.a)+'</b> 와 <b>'+esc(w.b)+
+        '</b> 는 '+w.type+' 대상입니다. 같은 기간이 겹친다면 한 가지만 평정해야 하니 확인하세요.</div>';
+    });
+    sh+='</div>';
+  }
+  document.getElementById("selResult").innerHTML=sh;
+  setVal("4", f3(cr.total+sr.total));
+  return {common:cr, select:sr, total:r3(cr.total+sr.total)};
+}
+
+/* ════════════════════ 렌더 — 결과 ════════════════════ */
+function renderFinal(career, perf, train, bonus){
+  const main=r3(career.total+perf.total+train.total);
+  const all=r3(main+bonus.total);
+
+  document.getElementById("tbMain").innerHTML=f3(main)+'<small>/200</small>';
+  document.getElementById("tbAll").innerHTML=f3(all)+'<small>/213.49</small>';
+  document.getElementById("sumMain").innerHTML=f3(main)+'<small>/200</small>';
+  document.getElementById("sumAll").innerHTML=f3(all);
+  document.getElementById("barTot").textContent=f3(all);
+  setVal("5", f3(all));
+
+  function bar(n,v,max){
+    const p=Math.max(0,Math.min(100,max?v/max*100:0));
+    return '<div class="barrow"><div class="h"><span>'+n+'</span><b>'+f3(v)+' / '+max+'</b></div>'+
+      '<div class="bar"><i style="width:'+p.toFixed(1)+'%"></i></div></div>';
+  }
+  let h='<div class="result" style="background:#fff;border:0;padding:0;margin:0">';
+  h+=bar("경력평정",career.total,70)+bar("근무성적평정",perf.total,100)+bar("연수성적평정",train.total,30);
+  if(train.edu!==undefined)
+    h+='<div class="formula" style="margin:-8px 0 14px">교육성적 '+f3(train.edu)+' / 27 &nbsp;+&nbsp; 연구실적 '+f3(train.research)+' / 3</div>';
+  h+='<div class="kv total"><span class="k">평정점 합계</span><span class="v">'+f3(main)+' / 200</span></div>';
+  h+='<div style="height:18px"></div>';
+  h+=bar("공통가산점",bonus.common.total,3.5)+bar("선택가산점",bonus.select.total,9.99);
+  h+='<div class="kv total"><span class="k">가산점 포함 총계</span><span class="v">'+f3(all)+'</span></div></div>';
+
+  const room=[];
+  if(career.total<70)  room.push("경력평정 "+f3(70-career.total));
+  if(perf.ok&&perf.total<100) room.push("근무성적 "+f3(100-perf.total));
+  if(train.total<30)   room.push("연수성적 "+f3(30-train.total));
+  if(bonus.common.total<3.5)  room.push("공통가산점 "+f3(3.5-bonus.common.total));
+  if(bonus.select.total<9.99) room.push("선택가산점 "+f3(9.99-bonus.select.total));
+  if(room.length) h+='<div class="alert info" style="margin-top:18px">만점까지 남은 점수 — '+room.join(" · ")+'점</div>';
+  if(!storageOK) h+='<div class="alert warn">이 환경에서는 브라우저 저장소를 쓸 수 없어 자동 저장이 되지 않습니다. 아래 <b>내보내기</b>로 파일에 보관하세요.</div>';
+
+  document.getElementById("finalResult").innerHTML=h;
+}
+
+/* ════════════════════ 중복 제한 표 ════════════════════ */
+function renderConfTable(){
+  const box=document.getElementById("confTable");
+  if(!box) return;
+  let h='<div class="tablewrap"><table><thead><tr><th>항목</th><th style="text-align:left">중복 금지 대상 (한 가지만 평정)</th></tr></thead><tbody>';
+  SEL_ITEMS.forEach(function(it){
+    const list=(it.conf||[]).map(function(c){
+      const o=SEL_ITEMS.find(function(x){ return x.id===c; }); return o?o.n:c; });
+    const star=(it.star||[]).map(function(c){
+      const o=SEL_ITEMS.find(function(x){ return x.id===c; }); return o?o.n+"(☆)":c; });
+    const all=list.concat(star);
+    h+='<tr><td>'+esc(it.n)+'</td><td style="text-align:left;white-space:normal">'+
+      (all.length?esc(all.join(", ")):'<span style="color:var(--sub)">없음</span>')+'</td></tr>';
+  });
+  h+='</tbody></table></div><p class="q" style="margin-top:10px">(☆) 표시는 매 학년도 말 가산점 대상자 선정 시 한 가지만 선택하여 부여하는 항목입니다.</p>';
+  box.innerHTML=h;
+}
+
+/* ════════════════════ 예시 사례 ════════════════════ */
+const EXAMPLES=[
+  {
+    tag:"기본형",
+    title:"정규 임용만 있는 21년차 교사",
+    who:"2005년 3월 신규 발령 후 휴직 없이 계속 근무했습니다. 담임 7년, 학교폭력 관련 실적 6년이 있고 직무연수 3개를 채웠습니다. 가장 단순한 형태로, 경력평정은 20년을 넘겨 만점입니다.",
+    facts:[
+      "정규 교원 2005.3.1. ~ 2026.2.28. (21년)",
+      "합산점 96 / 94 / 97 / 92 / 95",
+      "정교사(1급) 자격연수 96점 (만점 100)",
+      "60시간 이상 직무연수 3개 (96 · 94 · 91점)",
+      "담임 84개월, 학교폭력 실적 6년, 직무연수 이수시간 2개 연도"
+    ],
+    data:{
+      career:[{id:"e1",type:"regular",start:"2005-03-01",end:"2026-02-28"}],
+      perf:[{year:2025,score:"96",none:false},{year:2024,score:"94",none:false},
+            {year:2023,score:"97",none:false},{year:2022,score:"92",none:false},
+            {year:2021,score:"95",none:false}],
+      qual:{method:"score",full:"100",score:"96",grade:"0.90",degree:"0.90"},
+      trainings:[
+        {id:"t1",name:"교육과정 이해와 실행",date:"2018-08-10",hours:"60",score:"96",full:"100"},
+        {id:"t2",name:"학생평가 전문성 신장",date:"2021-01-15",hours:"90",score:"94",full:"100"},
+        {id:"t3",name:"생활교육 심화",date:"2023-08-01",hours:"60",score:"91",full:"100"}
+      ],
+      common:{c1m:"",c1d:"",c2m:"",c2d:"",
+        credits:[{id:"c1",year:"2022",hours:"60"},{id:"c2",year:"2024",hours:"45"}],c4y:"6"},
+      select:[{id:"s1",itemId:"s10d",months:"84",days:"0"}],
+      maxEach:false
+    }
+  },
+  {
+    tag:"기간제·군 경력",
+    title:"군 복무와 기간제 경력이 있는 교사",
+    who:"군 복무 2년 2개월과 기간제 3년을 거쳐 2006년에 정규 임용됐습니다. 총경력이 25년이 넘어 기간제 3년이 <b>전부 제외</b>되고 정규 경력만으로 20년이 채워져 경력평정이 만점입니다. 직무연수가 2개뿐이라 6점을 놓친 상태입니다.",
+    facts:[
+      "임용 전 군 복무 2000.3.1. ~ 2002.4.30.",
+      "기간제교원 2003.3.1. ~ 2006.2.28. (3년)",
+      "정규 교원 2006.3.1. ~ 2026.2.28. (20년)",
+      "합산점 92 / 95 / 90 / 94 / 88",
+      "직무연수 2개만 이수 · 보직교사 60개월 · 장기근무 62개월"
+    ],
+    data:{
+      career:[
+        {id:"e1",type:"military",start:"2000-03-01",end:"2002-04-30"},
+        {id:"e2",type:"temp",start:"2003-03-01",end:"2006-02-28"},
+        {id:"e3",type:"regular",start:"2006-03-01",end:"2026-02-28"}
+      ],
+      perf:[{year:2025,score:"92",none:false},{year:2024,score:"95",none:false},
+            {year:2023,score:"90",none:false},{year:2022,score:"94",none:false},
+            {year:2021,score:"88",none:false}],
+      qual:{method:"score",full:"100",score:"92",grade:"0.90",degree:"0.90"},
+      trainings:[
+        {id:"t1",name:"학교폭력 예방과 대응",date:"2019-08-05",hours:"60",score:"96",full:"100"},
+        {id:"t2",name:"학급경영의 실제",date:"2022-01-10",hours:"60",score:"88",full:"100"}
+      ],
+      common:{c1m:"",c1d:"",c2m:"",c2d:"",credits:[],c4y:"3"},
+      select:[{id:"s1",itemId:"s1",months:"60",days:"0"},
+              {id:"s2",itemId:"s10g",months:"62",days:"0"}],
+      maxEach:false
+    }
+  },
+  {
+    tag:"휴직 포함",
+    title:"육아휴직과 유학휴직이 있는 교사",
+    who:"육아휴직 2년(100% 인정)과 유학휴직 2년(50% 인정)이 있습니다. 휴직으로 빠진 기간만큼 더 과거로 거슬러 올라가 20년을 채우는 <b>총경력제</b>가 적용되어 경력평정은 만점입니다. 2024학년도는 평정점이 없어 선택 대상에서 빠지고, 평정한 4개 학년도 중 유리한 3개가 뽑힙니다.",
+    facts:[
+      "정규 교원 2004.3.1. ~ 2012.2.29. (8년)",
+      "육아휴직 2012.3.1. ~ 2014.2.28. (100% 인정)",
+      "정규 교원 2014.3.1. ~ 2018.2.28. (4년)",
+      "유학휴직 2018.3.1. ~ 2020.2.29. (50% 인정 → 1년)",
+      "정규 교원 2020.3.1. ~ 2026.2.28. (6년)",
+      "합산점 95 / 없음 / 93 / 96 / 90 · 자격연수는 평어 최상위"
+    ],
+    data:{
+      career:[
+        {id:"e1",type:"regular", start:"2004-03-01",end:"2012-02-29"},
+        {id:"e2",type:"leave100",start:"2012-03-01",end:"2014-02-28"},
+        {id:"e3",type:"regular", start:"2014-03-01",end:"2018-02-28"},
+        {id:"e4",type:"leave50", start:"2018-03-01",end:"2020-02-29"},
+        {id:"e5",type:"regular", start:"2020-03-01",end:"2026-02-28"}
+      ],
+      perf:[{year:2025,score:"95",none:false},{year:2024,score:"",none:true},
+            {year:2023,score:"93",none:false},{year:2022,score:"96",none:false},
+            {year:2021,score:"90",none:false}],
+      qual:{method:"grade",full:"100",score:"",grade:"0.90",degree:"0.90"},
+      trainings:[
+        {id:"t1",name:"교사 리더십 과정",date:"2017-08-01",hours:"120",score:"99",full:"100"},
+        {id:"t2",name:"수업 나눔과 성찰",date:"2021-08-12",hours:"60",score:"93",full:"100"},
+        {id:"t3",name:"진로교육 역량 강화",date:"2024-01-20",hours:"60",score:"87",full:"100"}
+      ],
+      common:{c1m:"24",c1d:"0",c2m:"",c2d:"",
+        credits:[{id:"c1",year:"2021",hours:"60"}],c4y:"2"},
+      select:[{id:"s1",itemId:"s7a",months:"36",days:"0"},
+              {id:"s2",itemId:"s10e",months:"60",days:"0"}],
+      maxEach:false
+    }
+  }
+];
+
+function calcAll(s){
+  const career=calcCareer(s.career, s.maxEach);
+  const perf=calcPerf(s.perf);
+  const edu=calcTraining(s);
+  const research=calcResearch(s);
+  const train={total:r3(Math.min(30, edu.total+research.total)), used:edu.used,
+               edu:edu.total, research:research.total};
+  const cm=calcCommon(s);
+  const sel=calcSelect(s, cm.rows[0].v);
+  const main=r3(career.total+perf.total+train.total);
+  return {career:career, perf:perf, train:train, common:cm, select:sel,
+    bonus:r3(cm.total+sel.total), main:main, all:r3(main+cm.total+sel.total)};
+}
+
+function renderExamples(){
+  const box=document.getElementById("exampleBox");
+  if(!box) return;
+  box.innerHTML="";
+  EXAMPLES.forEach(function(ex,i){
+    const R=calcAll(ex.data);
+    const d=el("div",{class:"gcard"});
+    d.innerHTML=
+      '<h3>'+esc(ex.title)+'<span class="tag">'+esc(ex.tag)+'</span></h3>'+
+      '<p class="who">'+ex.who+'</p>'+
+      '<ul class="exlist">'+ex.facts.map(function(f){ return '<li>'+esc(f)+'</li>'; }).join("")+'</ul>'+
+      '<div class="exrow"><span class="k">경력평정</span><span class="v">'+f3(R.career.total)+' / 70</span></div>'+
+      '<div class="exrow"><span class="k">근무성적평정 <span class="badge n">'+
+        (R.perf.ok?R.perf.best.years.join("·"):"—")+'</span></span><span class="v">'+f3(R.perf.total)+' / 100</span></div>'+
+      '<div class="exrow"><span class="k">연수성적평정 <span class="badge n">직무 '+R.train.used.length+'개</span></span>'+
+        '<span class="v">'+f3(R.train.total)+' / 30</span></div>'+
+      '<div class="exrow"><span class="k">가산점 (공통 '+f3(R.common.total)+' + 선택 '+f3(R.select.total)+')</span>'+
+        '<span class="v">'+f3(R.bonus)+'</span></div>'+
+      '<div class="extotal"><span class="k">평정점 '+f3(R.main)+' + 가산점<br>가산점 포함 총계</span>'+
+        '<span class="v">'+f3(R.all)+'</span></div>'+
+      '<div class="btnrow noprint" style="margin-top:14px"><button class="btn sm primary" data-fill="'+i+'">이 사례로 채우기</button></div>';
+    d.querySelector("[data-fill]").addEventListener("click",function(){
+      if(!confirm("계산기에 입력한 내용을 이 사례로 덮어씁니다. 계속할까요?")) return;
+      applyState(JSON.parse(JSON.stringify(ex.data)));
+      renderAll(); save(); setTab("calc");
+      toast("사례를 넣었습니다. 숫자를 내 것으로 바꿔 보세요");
+    });
+    box.appendChild(d);
+  });
+}
+
+/* ════════════════════ 탭 ════════════════════ */
+function setTab(t){
+  document.body.setAttribute("data-tab",t);
+  document.querySelectorAll(".tabbar button").forEach(function(b){
+    b.classList.toggle("on", b.getAttribute("data-tab")===t);
+  });
+  window.scrollTo({top:0, behavior:"auto"});
+}
+
+/* ════════════════════ 전체 렌더 ════════════════════ */
+function setVal(n, text){
+  const a=document.getElementById("v"+n); if(a) a.textContent=text;
+  const b=document.getElementById("t"+n);
+  if(b) b.textContent = text.indexOf("/")>0 ? text.split("/")[0].trim() : text;
+}
+function renderAll(){
+  document.getElementById("qualMethod").value=st.qual.method;
+  document.getElementById("qualFull").value=st.qual.full;
+  document.getElementById("qualScore").value=st.qual.score;
+  document.getElementById("qualGrade").value=st.qual.grade;
+  document.getElementById("qualDegree").value=st.qual.degree;
+  ["c1m","c1d","c2m","c2d","c4y"].forEach(function(k){ document.getElementById(k).value=st.common[k]; });
+  document.getElementById("optMaxEach").checked=!!st.maxEach;
+
+  const career=renderCareer(), perf=renderPerf();
+  const train=renderTraining(), research=renderResearch();
+  const trainTotal=r3(Math.min(30, train.total+research.total));
+  setVal("3", f3(trainTotal)+" / 30");
+  const bonus=renderBonus();
+  renderFinal(career, perf, {total:trainTotal, edu:train.total, research:research.total}, bonus);
+}
+
+/* ════════════════════ 이벤트 ════════════════════ */
+document.querySelectorAll(".sechead").forEach(function(h){
+  h.addEventListener("click",function(){
+    document.getElementById(h.getAttribute("data-sec")).classList.toggle("open");
+  });
+});
+document.getElementById("addCareer").addEventListener("click",function(){
+  const last=st.career[st.career.length-1];
+  st.career.push({id:nid(), type:"regular",
+    start: last&&last.end ? isoOf(addD(pd(last.end),1)) : "", end:""});
+  document.getElementById("sec1").classList.add("open");
+  renderAll(); save();
+});
+document.getElementById("sampleCareer").addEventListener("click",function(){
+  st.career=[
+    {id:nid(), type:"military", start:"2001-03-01", end:"2003-04-30"},
+    {id:nid(), type:"temp",     start:"2004-03-01", end:"2006-02-28"},
+    {id:nid(), type:"regular",  start:"2006-03-01", end:"2026-02-28"}
+  ];
+  document.getElementById("sec1").classList.add("open");
+  renderAll(); save(); toast("예시 이력을 넣었습니다");
+});
+document.getElementById("degreeSel").addEventListener("change",function(e){
+  st.research.degree=e.target.value; renderAll(); save(); });
+document.getElementById("addContest").addEventListener("click",function(){
+  st.research.contests.push({id:nid(), year:"", scale:"전국", grade:"1", joint:"1"});
+  renderAll(); save();
+});
+document.getElementById("addTrain").addEventListener("click",function(){
+  st.trainings.push({id:nid(), name:"", date:"", hours:"60", score:"", full:"100"});
+  renderAll(); save();
+});
+document.getElementById("addCredit").addEventListener("click",function(){
+  const used=(st.common.credits||[]).map(function(c){ return num(c.year); });
+  let y=new Date().getFullYear();
+  while(used.indexOf(y)>=0) y--;
+  st.common.credits.push({id:nid(), year:String(y), hours:""});
+  renderAll(); save();
+});
+document.getElementById("qualMethod").addEventListener("change",function(e){
+  st.qual.method=e.target.value; renderAll(); save(); });
+document.getElementById("qualFull").addEventListener("input",function(e){
+  st.qual.full=e.target.value; renderAll(); save(); });
+document.getElementById("qualScore").addEventListener("input",function(e){
+  st.qual.score=e.target.value; renderAll(); save(); });
+document.getElementById("qualGrade").addEventListener("change",function(e){
+  st.qual.grade=e.target.value; renderAll(); save(); });
+document.getElementById("qualDegree").addEventListener("change",function(e){
+  st.qual.degree=e.target.value; renderAll(); save(); });
+["c1m","c1d","c2m","c2d","c4y"].forEach(function(k){
+  document.getElementById(k).addEventListener("input",function(e){
+    st.common[k]=e.target.value; renderAll(); save(); });
+});
+document.getElementById("selPicker").addEventListener("change",function(e){
+  const id=e.target.value; if(!id) return;
+  const def=SEL_ITEMS.find(function(i){ return i.id===id; });
+  const o={id:nid(), itemId:id, months:"", days:""};
+  if(def.regions) o.region=def.regions[0][0];
+  if(def.levels)  o.level=def.levels[0][0];
+  st.select.push(o); e.target.value=""; renderAll(); save();
+});
+document.getElementById("optMaxEach").addEventListener("change",function(e){
+  st.maxEach=e.target.checked; renderAll(); save(); });
+document.getElementById("btnReset").addEventListener("click",function(){
+  if(!confirm("입력한 내용을 모두 지웁니다. 계속할까요?")) return;
+  st=defaultState();
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  renderAll(); toast("초기화했습니다");
+});
+document.getElementById("btnPrint").addEventListener("click",function(){
+  document.querySelectorAll("section").forEach(function(s){ s.classList.add("open"); });
+  setTimeout(function(){ window.print(); },120);
+});
+document.getElementById("btnExport").addEventListener("click",function(){
+  try{
+    const blob=new Blob([JSON.stringify(st,null,2)],{type:"application/json"});
+    const a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);
+    a.download="평정점_"+new Date().toISOString().slice(0,10)+".json";
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },500);
+    toast("파일로 저장했습니다");
+  }catch(e){ toast("내보내지 못했습니다"); }
+});
+document.getElementById("btnImport").addEventListener("click",function(){
+  document.getElementById("fileInput").click(); });
+document.getElementById("fileInput").addEventListener("change",function(e){
+  const f=e.target.files[0]; if(!f) return;
+  const rd=new FileReader();
+  rd.onload=function(){
+    try{ applyState(JSON.parse(rd.result)); renderAll(); save(); toast("불러왔습니다"); }
+    catch(err){ toast("파일을 읽지 못했습니다"); }
+  };
+  rd.readAsText(f); e.target.value="";
+});
+// 목차 현재 위치 표시
+(function(){
+  const links=[].slice.call(document.querySelectorAll(".toc a"));
+  if(!links.length) return;
+  function upd(){
+    let cur=links[0];
+    links.forEach(function(a){
+      const s=document.getElementById(a.getAttribute("data-t"));
+      if(s&&s.getBoundingClientRect().top<=140) cur=a;
+    });
+    links.forEach(function(a){ a.classList.toggle("cur",a===cur); });
+  }
+  window.addEventListener("scroll",upd,{passive:true});
+  links.forEach(function(a){
+    a.addEventListener("click",function(){
+      const s=document.getElementById(a.getAttribute("data-t"));
+      if(s) s.classList.add("open");
+    });
+  });
+  upd();
+})();
+
+// 탭 버튼
+document.querySelectorAll(".tabbar button").forEach(function(b){
+  b.addEventListener("click",function(){ setTab(b.getAttribute("data-tab")); });
+});
+// 지침 예시 검증 버튼
+document.getElementById("btnVerify").addEventListener("click",function(){
+  const rs=window.selfTest();
+  const okAll=rs.every(function(r){ return r.결과==="일치"; });
+  let h='<div class="tablewrap" style="margin-top:14px"><table><thead><tr>'+
+    '<th>지침 예시</th><th>계산기</th><th>지침</th><th>대조</th></tr></thead><tbody>';
+  rs.forEach(function(r){
+    h+='<tr><td>'+esc(r.사례)+'</td><td>'+r.계산+'</td><td>'+r.지침+'</td><td>'+
+      '<span class="badge '+(r.결과==="일치"?"ok":"err")+'">'+r.결과+'</span></td></tr>';
+  });
+  h+='</tbody></table></div>';
+  h+='<div class="alert '+(okAll?"ok":"err")+'">'+
+    (okAll ? "지침에 결과가 명시된 예시 7건이 모두 일치합니다. 예시 6은 지침이 “67점”으로 반올림 표기한 값을 66.990으로 계산한 것으로, 같은 값입니다."
+           : "일치하지 않는 항목이 있습니다.")+'</div>';
+  document.getElementById("verifyResult").innerHTML=h;
+  const tag=document.getElementById("verifyTag");
+  tag.textContent = okAll ? "7건 모두 일치" : "확인 필요";
+  tag.style.background = okAll ? "var(--ok-bg)" : "var(--err-bg)";
+  tag.style.color = okAll ? "var(--ok)" : "var(--err)";
+});
+
+/* ════════════════════ 시작 ════════════════════ */
+if(!storageOK) markNoStorage();
+load();
+renderConfTable();
+renderExamples();
+renderAll();
+setTab("calc");
+
+/* ════════════════════ 자체 검증 ════════════════════ */
+window.CALC={calcCareer:calcCareer, calcPerf:calcPerf, calcTraining:calcTraining,
+  calcCommon:calcCommon, calcSelect:calcSelect, spanPd:spanPd, ymdSpan:ymdSpan, pdText:pdText};
+window.selfTest=function(){
+  function build(list){
+    const out=[]; let Y=2026, M=2;
+    for(let i=list.length-1;i>=0;i--){
+      const months=Math.round(list[i][1]*12);
+      out.unshift({type:list[i][0],
+        start:isoOf(new Date(Date.UTC(Y,M-months,1))),
+        end:isoOf(new Date(Date.UTC(Y,M,0)))});
+      const prev=new Date(Date.UTC(Y,M-months,1)-MSD);
+      Y=prev.getUTCFullYear(); M=prev.getUTCMonth()+1;
+    }
+    return out;
+  }
+  const cases=[
+    ["예시1 정규9+기간제2+정규10",[["regular",9],["temp",2],["regular",10]],69.7236],
+    ["예시2 정규9+기간제2+정규11",[["regular",9],["temp",2],["regular",11]],70.0000],
+    ["예시3 기간제4+정규9+기간제4+정규10",[["temp",4],["regular",9],["temp",4],["regular",10]],69.7896],
+    ["예시4 기간제3+정규8+기간제3+정규6",[["temp",3],["regular",8],["temp",3],["regular",6]],68.5896],
+    ["예시6 정규8+유학5+정규7",[["regular",8],["leave50",5],["regular",7]],66.9900],
+    ["예시7 정규5+유학4+정규2+기간제2+정규9",[["regular",5],["leave50",4],["regular",2],["temp",2],["regular",9]],69.4572],
+    ["예시8 군3+정규18",[["military",3],["regular",18]],70.0000]
+  ];
+  const out=cases.map(function(c){
+    const r=calcCareer(build(c[1]),false);
+    return {사례:c[0], 계산:f3(r.total), 지침:c[2].toFixed(4),
+      결과:Math.abs(r.total-c[2])<0.0011?"일치":"불일치"};
+  });
+  if(console.table) console.table(out); else console.log(out);
+  return out;
+};
+</script>
+</body>
+</html>
