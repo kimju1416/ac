@@ -25,7 +25,7 @@
 :root{
   --pt:#2456A6; --pt-h:#1C4487; --pt-w:rgba(36,86,166,.12); --pt-f:rgba(36,86,166,.05);
   --bg:#F6F8FB; --card:#FFFFFF; --bd:#E3E9F2;
-  --ink:#1B2A41; --sub:#64748B;
+  --ink:#1B2A41; --sub:#5F6E82;
   --ok:#1D7A4D; --ok-bg:#E7F3EC;
   --warn:#B26B0F; --warn-bg:#FBF0DE;
   --err:#C0392B; --err-bg:#F9E8E6;
@@ -112,6 +112,9 @@ section{background:var(--card);border:1px solid var(--bd);border-radius:var(--r-
   font-size:12px;font-weight:600;display:flex;align-items:center;justify-content:center}
 .sechead h2{font-size:16px;font-weight:600;flex:1}
 .sechead .val{font-size:14px;font-weight:600;color:var(--pt);white-space:nowrap;font-variant-numeric:tabular-nums}
+.sechead .warndot{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;
+  flex:none;border-radius:50%;background:var(--err-bg);color:var(--err);font-size:12px;font-weight:700}
+.toc a .s.warn{color:var(--err)}
 .sechead .arw{width:16px;height:16px;flex:none;color:var(--sub);transition:transform .18s}
 section.open .sechead .arw{transform:rotate(180deg)}
 .secbody{display:none;padding:0 16px 20px}
@@ -156,7 +159,7 @@ input[type=text],input[type=number],input[type=date],select{
   background:#fff;color:var(--ink);font-family:inherit;font-size:15px;
 }
 select{appearance:none;padding-right:34px;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748B' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235F6E82' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");
   background-repeat:no-repeat;background-position:right 12px center}
 input:focus,select:focus{outline:none;border-color:var(--pt);box-shadow:0 0 0 3px var(--pt-w)}
 input[type=number]{-moz-appearance:textfield}
@@ -423,6 +426,7 @@ td.grp{text-align:left;font-weight:600;color:var(--sub);font-size:12.5px;backgro
         <p>경력평정은 <b>기준일(2026.2.28.)에서 거슬러 올라간 20년</b>을 평정합니다. 최근 15년이 <b>기본경력</b>(만점 64점), 그 앞 5년이 <b>초과경력</b>(만점 6점)입니다.</p>
         <p><b>총경력제</b>이므로 휴직·일시퇴직처럼 경력으로 인정되지 않는 기간은 빼고, 20년이 채워지는 시점까지 더 과거로 거슬러 올라갑니다. 교사 직위에서는 정규 교원·교육전문직·임용 전 군복무가 <b>‘가’경력</b>, 기간제교원과 강사가 <b>‘나’경력</b>입니다. ‘가’경력이 월 0.3555점으로 가장 높습니다.</p>
         <p>발령일부터 순서대로 이력을 넣으면 됩니다. 기간제 경력이 있으면 규정이 허용하는 범위에서 <b>최대한 제외해 가장 유리하게</b> 자동 배분합니다. 지침의 경력평정 예시 7건과 결과가 일치하는지 검증했습니다.</p>
+        <p><b>시간선택제 교사</b>였던 기간은 근무시간에 비례해 산정하므로, 그 비율만큼 줄인 기간으로 넣으세요. 예를 들어 주 20시간 근무였다면 실제 기간의 절반으로 넣습니다.</p>
       </div>
       <div id="careerList"></div>
       <div class="btnrow noprint" style="margin-top:4px">
@@ -1249,10 +1253,13 @@ function calcCareer(items, maxEach){
 /* ════════════════════ 근무성적평정 ════════════════════ */
 function calcPerf(years){
   // 실제로 평정한 학년도
+  const outOfRange=[];
   const real=years.map(function(y){
     if(!y || y.none) return null;
     const v=y.score;
     if(v===null || v===undefined || String(v).trim()==="" || !isFinite(parseFloat(v))) return null;
+    const raw=parseFloat(v);
+    if(raw<0 || raw>100) outOfRange.push({year:y.year, raw:raw});
     return clamp(v,0,100);
   });
   const realCount=real.filter(function(v){ return v!==null; }).length;
@@ -1281,7 +1288,7 @@ function calcPerf(years){
     });
   }
   const idx=[]; filled.forEach(function(f,i){ if(f.v!==null) idx.push(i); });
-  if(idx.length<3) return {ok:false, filled:filled, total:0, combos:[], realCount:realCount};
+  if(idx.length<3) return {ok:false, filled:filled, total:0, combos:[], realCount:realCount, outOfRange:outOfRange};
 
   const W=[0.34,0.33,0.33], combos=[];
   for(let a=0;a<idx.length-2;a++) for(let b=a+1;b<idx.length-1;b++) for(let c=b+1;c<idx.length;c++){
@@ -1292,7 +1299,7 @@ function calcPerf(years){
       vals:pick.map(function(p){ return filled[p].v; }) });
   }
   combos.sort(function(x,y){ return y.score-x.score; });
-  return {ok:true, filled:filled, best:combos[0], combos:combos, total:combos[0].score, realCount:realCount};
+  return {ok:true, filled:filled, best:combos[0], combos:combos, total:combos[0].score, realCount:realCount, outOfRange:outOfRange};
 }
 
 /* ════════════════════ 연수성적평정 ════════════════════ */
@@ -1609,8 +1616,8 @@ function renderCareer(){
       '<div class="top"><select data-f="type" aria-label="경력 종류">'+opts+'</select>'+
       '<button class="iconbtn noprint" data-del="1" aria-label="이 이력 삭제">'+TRASH+'</button></div>'+
       '<div class="row2">'+
-        '<div><label class="lbl">시작일</label><input type="date" data-f="start" value="'+esc(it.start)+'"></div>'+
-        '<div><label class="lbl">종료일</label><input type="date" data-f="end" value="'+esc(it.end)+'"></div>'+
+        '<div><label class="lbl">시작일</label><input type="date" min="1950-01-01" max="'+BASE_DATE+'" data-f="start" value="'+esc(it.start)+'"></div>'+
+        '<div><label class="lbl">종료일</label><input type="date" min="1950-01-01" max="'+BASE_DATE+'" data-f="end" value="'+esc(it.end)+'"></div>'+
       '</div><div class="hint span" data-span></div>';
 
     const span=d.querySelector("[data-span]");
@@ -1676,7 +1683,7 @@ function renderCareer(){
   }
   h+='</div>';
   rb.innerHTML=h;
-  setVal("1", f3(res.total)+" / 70");
+  setVal("1", f3(res.total)+" / 70", res.overlaps.length>0 || res.future.length>0);
   return res;
 }
 
@@ -1704,8 +1711,13 @@ function renderPerf(){
 
   const res=calcPerf(st.perf);
   const rb=document.getElementById("perfResult");
+  const rangeWarn = (res.outOfRange&&res.outOfRange.length)
+    ? '<div class="alert err">합산점은 <b>0~100점</b> 범위입니다. '+
+      res.outOfRange.map(function(o){ return esc(String(o.year))+"학년도 "+esc(String(o.raw))+"점"; }).join(", ")+
+      ' — 범위를 벗어나 '+res.outOfRange.map(function(o){ return o.raw>100?"100점":"0점"; }).join(", ")+
+      '으로 보고 계산했습니다. 소수점을 잘못 찍지 않았는지 확인하세요.</div>' : '';
   if(!res.ok){
-    rb.innerHTML='<div class="alert info">평정점을 3개 학년도 이상 넣으면 최적 조합을 계산합니다.</div>';
+    rb.innerHTML=rangeWarn+'<div class="alert info">평정점을 3개 학년도 이상 넣으면 최적 조합을 계산합니다.</div>';
     setVal("2","0.000 / 100");
     return {total:0, ok:false};
   }
@@ -1729,8 +1741,8 @@ function renderPerf(){
   const diff=r3(res.combos[0].score-res.combos[res.combos.length-1].score);
   if(diff>0.001) h+='<div class="alert ok">가장 유리한 조합과 가장 불리한 조합의 차이가 <b>'+f3(diff)+'점</b>입니다.</div>';
   h+='<div class="kv total"><span class="k">근무성적평정점</span><span class="v">'+f3(res.total)+' / 100</span></div></div>';
-  rb.innerHTML=h;
-  setVal("2", f3(res.total)+" / 100");
+  rb.innerHTML=rangeWarn+h;
+  setVal("2", f3(res.total)+" / 100", !!(res.outOfRange&&res.outOfRange.length));
   return res;
 }
 
@@ -1752,7 +1764,7 @@ function renderTraining(){
       '<div class="top"><input type="text" data-f="name" value="'+esc(t.name)+'" placeholder="연수명" aria-label="연수명">'+
       '<button class="iconbtn noprint" data-del="1" aria-label="이 연수 삭제">'+TRASH+'</button></div>'+
       '<div class="row2">'+
-        '<div><label class="lbl">이수일</label><input type="date" data-f="date" value="'+esc(t.date)+'"></div>'+
+        '<div><label class="lbl">이수일</label><input type="date" min="1950-01-01" max="'+BASE_DATE+'" data-f="date" value="'+esc(t.date)+'"></div>'+
         '<div><label class="lbl">이수 시간</label><input type="text" inputmode="numeric" data-f="hours" value="'+esc(t.hours)+'" placeholder="60"></div>'+
       '</div><div class="row2">'+
         '<div><label class="lbl">연수 성적</label><input type="text" inputmode="decimal" data-f="score" value="'+esc(t.score)+'" placeholder="기록 없으면 비움"></div>'+
@@ -1783,6 +1795,8 @@ function renderTraining(){
       h+='<div class="formula">9 − ('+f2(full)+' − '+f2(sc)+') × '+res.coef+' = '+f3(res.qual)+'</div>';
   }
   if(res.qualNote) h+='<div class="alert warn">'+esc(res.qualNote)+'</div>';
+  if(st.qual.method==="score" && st.qual.score!=="" && num(st.qual.score)>(num(st.qual.full)||100))
+    h+='<div class="alert err">자격연수 성적('+f2(num(st.qual.score))+')이 만점('+f2(num(st.qual.full)||100)+')보다 큽니다. 성적과 만점을 다시 확인하세요.</div>';
   if(Math.abs((num(st.qual.full)||100)-100)>1e-9)
     h+='<div class="alert warn">자격연수 만점을 '+f2(num(st.qual.full))+'점으로 넣으셨습니다. 계산식의 계수 0.025는 <b>100점 만점을 전제</b>로 한 값이라, 만점이 다르면 같은 백분율이어도 점수가 달라집니다. 성적표의 만점이 실제로 100점이 아닌지 확인하세요.</div>';
 
@@ -1999,14 +2013,22 @@ function renderBonus(){
     });
     sh+='<div class="kv total"><span class="k">선택가산점 합계</span><span class="v">'+f3(sr.total)+' / 9.99</span></div>';
     if(sr.capped) sh+='<div class="alert warn">합계 '+f3(sr.raw)+'점이 상한 9.99점을 넘어 9.990점으로 평정합니다.</div>';
-    sr.warns.forEach(function(w){
-      sh+='<div class="alert '+(w.type==="중복 금지"?"err":"warn")+'"><b>'+esc(w.a)+'</b> 와 <b>'+esc(w.b)+
-        '</b> 는 '+w.type+' 대상입니다. 같은 기간이 겹친다면 한 가지만 평정해야 하니 확인하세요.</div>';
-    });
+    if(sr.warns.length){
+      const dup=sr.warns.filter(function(w){ return w.type==="중복 금지"; });
+      const one=sr.warns.filter(function(w){ return w.type!=="중복 금지"; });
+      if(dup.length)
+        sh+='<div class="alert err"><b>중복 금지 조합 '+dup.length+'건</b> — 같은 기간이 겹친다면 한 가지만 평정해야 합니다. 겹치는 기간이 있는지 확인하고 한쪽 개월 수를 줄이세요.'+
+          '<ul style="margin:8px 0 0;padding-left:18px">'+dup.map(function(w){
+            return '<li>'+esc(w.a)+' ↔ '+esc(w.b)+'</li>'; }).join("")+'</ul></div>';
+      if(one.length)
+        sh+='<div class="alert warn"><b>한 가지만 선택 '+one.length+'건</b> — 매 학년도 말 가산점 대상자 선정 시 한 가지만 부여됩니다.'+
+          '<ul style="margin:8px 0 0;padding-left:18px">'+one.map(function(w){
+            return '<li>'+esc(w.a)+' ↔ '+esc(w.b)+'</li>'; }).join("")+'</ul></div>';
+    }
     sh+='</div>';
   }
   document.getElementById("selResult").innerHTML=sh;
-  setVal("4", f3(cr.total+sr.total));
+  setVal("4", f3(cr.total+sr.total), sr.warns.length>0);
   return {common:cr, select:sr, total:r3(cr.total+sr.total)};
 }
 
@@ -2247,10 +2269,22 @@ function restoreFocus(k){
   }catch(e){}
 }
 
-function setVal(n, text){
-  const a=document.getElementById("v"+n); if(a) a.textContent=text;
+function setVal(n, text, warn){
+  const a=document.getElementById("v"+n);
+  if(a){
+    a.textContent=text;
+    // 섹션을 접어도 그 안에 경고가 있다는 사실이 보이도록 표시를 남긴다
+    const head=a.parentElement;
+    let dot=head.querySelector(".warndot");
+    if(warn){
+      if(!dot){ dot=el("span",{class:"warndot",title:"확인이 필요한 항목이 있습니다"},"!"); head.insertBefore(dot,a); }
+    } else if(dot) dot.remove();
+  }
   const b=document.getElementById("t"+n);
-  if(b) b.textContent = text.indexOf("/")>0 ? text.split("/")[0].trim() : text;
+  if(b){
+    b.textContent = text.indexOf("/")>0 ? text.split("/")[0].trim() : text;
+    b.classList.toggle("warn", !!warn);
+  }
 }
 function renderAll(){
   document.getElementById("qualMethod").value=st.qual.method;
@@ -2285,6 +2319,7 @@ document.getElementById("addCareer").addEventListener("click",function(){
   renderAll(); save();
 });
 document.getElementById("sampleCareer").addEventListener("click",function(){
+  if(st.career.length && !confirm("입력한 근무 이력 "+st.career.length+"건을 예시로 덮어씁니다. 계속할까요?")) return;
   st.career=[
     {id:nid(), type:"military", start:"2001-03-01", end:"2003-04-30"},
     {id:nid(), type:"temp",     start:"2004-03-01", end:"2006-02-28"},
