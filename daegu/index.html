@@ -427,6 +427,7 @@ td.grp{text-align:left;font-weight:600;color:var(--sub);font-size:12.5px;backgro
         <p><b>총경력제</b>이므로 휴직·일시퇴직처럼 경력으로 인정되지 않는 기간은 빼고, 20년이 채워지는 시점까지 더 과거로 거슬러 올라갑니다. 교사 직위에서는 정규 교원·교육전문직·임용 전 군복무가 <b>‘가’경력</b>, 기간제교원과 강사가 <b>‘나’경력</b>입니다. ‘가’경력이 월 0.3555점으로 가장 높습니다.</p>
         <p>발령일부터 순서대로 이력을 넣으면 됩니다. 기간제 경력이 있으면 규정이 허용하는 범위에서 <b>최대한 제외해 가장 유리하게</b> 자동 배분합니다. 지침의 경력평정 예시 7건과 결과가 일치하는지 검증했습니다.</p>
         <p><b>시간선택제 교사</b>였던 기간은 근무시간에 비례해 산정하므로, 그 비율만큼 줄인 기간으로 넣으세요. 예를 들어 주 20시간 근무였다면 실제 기간의 절반으로 넣습니다.</p>
+        <p>기간은 「민법」제160조의 역법에 따라 셉니다 — 초일을 넣어 세고, 마지막 달에 기산일과 같은 날짜가 없으면 그 달의 말일에 만료합니다(1월 31일부터 1개월은 2월 28일까지). <b>발령일이 매월 1일이 아닌 이력이 있다면</b>, 나이스의 재직기간 값과 한 번 대조해 보시길 권합니다.</p>
       </div>
       <div id="careerList"></div>
       <div class="btnrow noprint" style="margin-top:4px">
@@ -1146,8 +1147,10 @@ function ymdSpan(sISO,eISO){
   let m=Math.max(0,(e.getUTCFullYear()-sy)*12+(e.getUTCMonth()-sm));
   while(m>0 && endOf(m)>e) m--;
   while(endOf(m+1)<=e) m++;
-  const rest=Math.round((e-endOf(m))/MSD);
-  return {months:m, days:Math.max(0,rest)};
+  const rest=Math.max(0, Math.round((e-endOf(m))/MSD));
+  // 잔여 일수가 30일 이상이면(31일 달) 월·일 표현이 어긋나므로 총량 기준으로 다시 나눈다
+  const tot=m*30+rest;
+  return {months:Math.floor(tot/30), days:tot%30};
 }
 function spanPd(sISO,eISO){ const r=ymdSpan(sISO,eISO); return r.months*30+r.days; }
 function pdText(v){
@@ -1193,11 +1196,12 @@ function calcCareer(items, maxEach){
     const prev=merged[merged.length-1];
     if(prev && prev.type===it.type && isoOf(addD(pd(prev.end),1))===it.start){
       prev.end=it.end;
-      prev.mergedCount=(prev.mergedCount||1)+1;
+      prev.parts.push(it);
     } else {
-      merged.push({type:it.type, start:it.start, end:it.end});
+      merged.push({type:it.type, start:it.start, end:it.end, parts:[it]});
     }
   });
+  const mergedGroups=merged.filter(function(g){ return g.parts.length>1; });
 
   const segs=[];
   const typeUsed={};   // 상한이 있는 종류(군 복무 3년)는 이력 건별이 아니라 합계에 건다
@@ -1269,7 +1273,7 @@ function calcCareer(items, maxEach){
     baseScore:r3(bs), overScore:r3(os), baseAdj:ba, overAdj:oa,
     total:r3(Math.min(r3(bs)+r3(os),70)),
     totalPd:total, need:need, shortfall:Math.max(0,need-total), dropped:dropped,
-    future:future, overlaps:overlaps };
+    future:future, overlaps:overlaps, mergedGroups:mergedGroups };
 }
 
 /* ════════════════════ 근무성적평정 ════════════════════ */
@@ -1709,6 +1713,12 @@ function renderCareer(){
       '</span><span class="v">'+f3(res.overScore)+'</span></div>'+
     '<div class="kv total"><span class="k">경력평정점</span><span class="v">'+f3(res.total)+' / 70</span></div>';
 
+  if(res.mergedGroups.length)
+    h+='<div class="alert info">끊김 없이 이어지는 같은 종류의 이력 '+
+      res.mergedGroups.map(function(g){ return g.parts.length+"건"; }).join(", ")+
+      '을 하나로 이어 계산했습니다 ('+res.mergedGroups.map(function(g){
+        return esc(g.start)+"~"+esc(g.end)+" = "+pdText(spanPd(g.start,g.end)); }).join(", ")+
+      '). 경력은 기간을 이어 붙여 세는 것이 맞으므로, <b>행마다 표시된 기간을 단순히 더한 값과는 며칠 차이가 날 수 있습니다.</b></div>';
   if(res.future.length)
     h+='<div class="alert warn">평정 기준일(2026.2.28.) <b>이후 기간이 포함된 이력 '+res.future.length+'건</b>을 기준일까지만 인정했습니다. 기준일 이후의 경력은 이번 평정 대상이 아닙니다.</div>';
   if(res.overlaps.length)
