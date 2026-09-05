@@ -1201,7 +1201,13 @@ function calcCareer(items, maxEach){
       merged.push({type:it.type, start:it.start, end:it.end, parts:[it]});
     }
   });
-  const mergedGroups=merged.filter(function(g){ return g.parts.length>1; });
+  // 경력으로 인정되지 않는 종류(일시퇴직·미인정 휴직)는 병합해도 점수에 영향이 없으므로
+  // 안내에서 제외한다 — "이어 계산했다"는 문구가 경력에 든다는 오해를 부른다
+  const mergedGroups=merged.filter(function(g){
+    if(g.parts.length<2) return false;
+    const def=CAREER_TYPES.find(function(t){ return t.v===g.type; });
+    return !!(def && def.grade);
+  });
 
   const segs=[];
   const typeUsed={};   // 상한이 있는 종류(군 복무 3년)는 이력 건별이 아니라 합계에 건다
