@@ -1186,9 +1186,22 @@ function calcCareer(items, maxEach){
     if(maxEnd===null || it.end>maxEnd){ maxEnd=it.end; maxItem=it; }
   });
 
+  // 같은 종류이면서 앞 이력의 종료일 다음날부터 이어지는 이력은 하나로 합쳐 계산한다.
+  // 지침이 연속된 여러 학교를 한 행에 넣어도 된다고 정하므로, 나눠 넣어도 결과가 같아야 한다.
+  const merged=[];
+  clipped.forEach(function(it){
+    const prev=merged[merged.length-1];
+    if(prev && prev.type===it.type && isoOf(addD(pd(prev.end),1))===it.start){
+      prev.end=it.end;
+      prev.mergedCount=(prev.mergedCount||1)+1;
+    } else {
+      merged.push({type:it.type, start:it.start, end:it.end});
+    }
+  });
+
   const segs=[];
   const typeUsed={};   // 상한이 있는 종류(군 복무 3년)는 이력 건별이 아니라 합계에 건다
-  clipped.forEach(function(it){
+  merged.forEach(function(it){
     const def=CAREER_TYPES.find(function(t){ return t.v===it.type; });
     if(!def||!def.grade) return;
     let p=spanPd(it.start,it.end);
