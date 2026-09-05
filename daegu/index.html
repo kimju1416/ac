@@ -508,7 +508,7 @@ td.grp{text-align:left;font-weight:600;color:var(--sub);font-size:12.5px;backgro
         <p>(예시 6) 정규 8년, 유학휴직 5년, 복직 후 7년 ⇒ 유학휴직 5년의 50%인 2년 6월을 기본경력 ‘가’로 인정 ⇒ [기본] 15년(‘가’ 15년) + [초과] 2년 6월(‘가’) ⇒ <em>67점</em></p>
         <p>(예시 7) 정규 5년, 유학휴직 4년, 복직 2년, 퇴직 후 기간제 2년, 정규 9년 ⇒ [기본] 15년(‘가’ 13년, ‘나’ 2년) + [초과] 5년(‘가’ 5년) ⇒ <em>69.4572점</em></p>
         <p>(예시 8) 3년간 군 의무복무 후 개인사업, 이후 임용되어 실교육경력 18년 ⇒ 개인사업 기간 제외, 군 복무 포함 ⇒ <em>70.000점</em></p>
-        <div class="alert info" style="margin-top:12px">이 계산기는 위 예시 중 계산 결과가 명시된 7건을 모두 재현합니다. 다만 <b>예시 6은 66.990점</b>으로 계산되는데, 지침이 “67점”으로 표기한 것은 반올림 표기로 보입니다. 만점 보정을 어떻게 적용하느냐에 따라 0.010점이 달라질 수 있어 6단계에 선택 옵션을 두었습니다.</div>
+        <div class="alert info" style="margin-top:12px">이 계산기는 위 예시 중 계산 결과가 명시된 7건을 모두 재현합니다. 다만 <b>예시 6은 66.990점</b>으로 계산되는데, 지침이 “67점”으로 표기한 것은 반올림 표기로 보입니다. 만점 보정을 어떻게 적용하느냐에 따라 0.010점이 달라질 수 있어 5단계 고급 설정에 선택 옵션을 두었습니다.</div>
       </div></details>
     </div>
   </section>
@@ -524,7 +524,7 @@ td.grp{text-align:left;font-weight:600;color:var(--sub);font-size:12.5px;backgro
       <div class="desc">
         <p>넣을 값은 학년도별 <b>근무성적평정 및 다면평가 합산점</b>(100점 만점)입니다. 근무성적평정점 60점(평정자 20% + 확인자 40%)과 다면평가점 40점(정성 32% + 정량 8%)을 합한 값으로, 나이스에서 확인할 수 있습니다.</p>
         <p>교사는 <b>명부 작성기준일부터 5년 이내에 평정한 합산점 중 유리한 3년</b>을 골라 반영합니다. 고른 3년을 최근 순으로 <b>34% · 33% · 33%</b>로 가중합니다. 어떤 3년을 고르느냐에 따라 점수가 달라지므로, 이 계산기는 <b>10가지 조합을 모두 계산해 가장 높은 조합을 자동으로 선택</b>합니다.</p>
-        <p>평정점이 없는 학년도(전 기간 휴직·파견 등)는 ‘평정점 없음’에 체크하세요. 그 연도는 앞뒤 연도 평정점의 평균으로 보되, 직전(과거) 평정점이 없으면 85점으로 봅니다.</p>
+        <p>평정점이 없는 학년도(전 기간 휴직·파견 등)는 ‘평정점 없음’에 체크하세요. <b>평정한 학년도가 3개 이상이면</b> 없는 학년도는 아예 선택 대상에서 빠집니다. 3개가 안 될 때만 「규정」제40조 제5항에 따라 앞뒤 평정점의 평균으로 채우며(직전 평정점이 없으면 85점), 이 경우에는 교육(지원)청 확인을 받으세요.</p>
       </div>
       <div id="perfList" class="perfgrid"></div>
       <div id="perfResult"></div>
@@ -592,9 +592,9 @@ td.grp{text-align:left;font-weight:600;color:var(--sub);font-size:12.5px;backgro
         </select>
       </div>
       <div id="qualScoreBox" class="row2">
-        <div class="field"><label class="lbl">연수성적 만점</label><input type="number" id="qualFull" step="0.01" placeholder="100">
+        <div class="field"><label class="lbl">연수성적 만점</label><input type="text" inputmode="decimal" id="qualFull" placeholder="100">
           <p class="hint">대개 100점입니다.</p></div>
-        <div class="field"><label class="lbl">취득 성적</label><input type="number" id="qualScore" step="0.01" placeholder="예: 96.5">
+        <div class="field"><label class="lbl">취득 성적</label><input type="text" inputmode="decimal" id="qualScore" placeholder="예: 96.5">
           <p class="hint">하나의 자격연수가 분할 실시되어 성적이 2개 이상이면 합산 평균값을 넣습니다.</p></div>
       </div>
       <div id="qualGradeBox" class="field" style="display:none">
@@ -768,16 +768,16 @@ td.grp{text-align:left;font-weight:600;color:var(--sub);font-size:12.5px;backgro
       <div class="field">
         <label class="lbl">교육부장관 지정 연구·시범·실험학교 근무경력</label>
         <div class="row2">
-          <input type="number" id="c1m" min="0" step="1" placeholder="개월 수">
-          <input type="number" id="c1d" min="0" max="29" step="1" placeholder="잔여 일수">
+          <input type="text" inputmode="numeric" id="c1m" placeholder="개월 수">
+          <input type="text" inputmode="numeric" id="c1d" placeholder="잔여 일수">
         </div>
         <p class="hint">월 0.018점 · 일 0.0006점, 항목 상한 1.00점. 교육감 지정 연구학교, 교육실습 대용·협력학교 경력과 <b>통합 상한 1.7점</b>이 적용됩니다.</p>
       </div>
       <div class="field">
         <label class="lbl">재외국민교육기관 파견 근무경력</label>
         <div class="row2">
-          <input type="number" id="c2m" min="0" step="1" placeholder="개월 수">
-          <input type="number" id="c2d" min="0" max="29" step="1" placeholder="잔여 일수">
+          <input type="text" inputmode="numeric" id="c2m" placeholder="개월 수">
+          <input type="text" inputmode="numeric" id="c2d" placeholder="잔여 일수">
         </div>
         <p class="hint">월 0.015점 · 일 0.0005점, 상한 0.50점.</p>
       </div>
@@ -785,11 +785,11 @@ td.grp{text-align:left;font-weight:600;color:var(--sub);font-size:12.5px;backgro
         <label class="lbl">직무연수 이수실적 — 연도별 이수시간</label>
         <div id="creditList"></div>
         <button class="btn sm noprint" id="addCredit" style="margin-top:6px">＋ 연도 추가</button>
-        <p class="hint">15시간 = 1학점, 1학점당 0.02점. <b>연 상한 0.08점</b>(60시간이면 연 만점), 총 상한 1.00점. 1998.1.1. 이후 실적부터 인정하며, 4단계에서 <b>연수성적으로 평정한 직무연수는 제외</b>합니다.</p>
+        <p class="hint">15시간 = 1학점, 1학점당 0.02점. <b>연 상한 0.08점</b>(60시간이면 연 만점), 총 상한 1.00점. 1998.1.1. 이후 실적부터 인정하며, 3단계에서 <b>연수성적으로 평정한 직무연수는 제외</b>합니다.</p>
       </div>
       <div class="field">
         <label class="lbl">학교폭력 예방 및 대응 관련 실적 — 인정 연수</label>
-        <input type="number" id="c4y" min="0" max="20" step="1" placeholder="예: 5">
+        <input type="text" inputmode="numeric" id="c4y" placeholder="예: 5">
         <p class="hint">연 0.1점, 총 상한 1.00점. 2013.1.1. 이후 실적부터 인정합니다.</p>
       </div>
       </div>
@@ -799,6 +799,8 @@ td.grp{text-align:left;font-weight:600;color:var(--sub);font-size:12.5px;backgro
       <div class="desc">
         <p>해당하는 항목만 골라 추가하세요. 항목별 상한과 함께 <b>통합 상한</b>이 걸리는 묶음이 있습니다 — 연구학교 계열 1.7점, 농어촌·특구·마이스터고 1.7점, 별정 경력 및 실적 1.55점입니다.</p>
         <p>같은 기간이 두 항목에 겹치면 <b>중복 제한</b>이 걸립니다. 겹치는 항목을 함께 넣으면 경고가 뜨지만, 실제로 기간이 겹치는지는 본인만 알 수 있으므로 점수에서 자동으로 빼지는 않습니다.</p>
+        <p>상한을 넘으면 여기서는 각 항목을 비례로 줄여 보여줍니다. <b>합계는 어느 쪽으로 줄이든 같지만</b>, 실제 제출 서류에서 어느 항목의 평정기간을 조정할지는 본인이 정합니다(공식 평정 도우미도 ‘점수제한’ 칸에 직접 입력하도록 되어 있습니다).</p>
+        <p>항목마다 <b>인정 시작일</b>이 다릅니다 — 담임교사·학교교육력 제고·농어촌전원학교는 2012.3.1., 청소년단체 2005.3.1., 미래학교 2015.9.1., 교육복지우선지원 2009.1.1., 거점학교 2025.3.1.부터입니다. 그 이전 기간은 빼고 넣으세요.</p>
       </div>
       <div id="selList"></div>
       <div class="field noprint" style="margin-top:4px">
@@ -1002,16 +1004,15 @@ td.grp{text-align:left;font-weight:600;color:var(--sub);font-size:12.5px;backgro
 
     <div class="faq">
       <p class="q">경력 20년을 이미 넘었는데 더 근무하면 점수가 오르나요?</p>
-      <p class="a">경력평정 70점은 20년에서 만점이라 더 오르지 않습니다. 대신 <b>선택가산점의 ‘장기근무 경력’</b>(20년 초과경력, 월 0.005점, 상한 0.30점)이 붙습니다. 5단계에서 항목을 추가해 넣으세요.</p>
+      <p class="a">경력평정 70점은 20년에서 만점이라 더 오르지 않습니다. 대신 <b>선택가산점의 ‘장기근무 경력’</b>(20년 초과경력, 월 0.005점, 상한 0.30점)이 붙습니다. 4단계에서 항목을 추가해 넣으세요.</p>
     </div>
   </div>
 
   <div class="gcard">
     <h3>이 계산기가 다루지 않는 것</h3>
     <ul class="exlist">
-      <li><b>이미 교감 자격증을 취득한 교감 승진 대상자</b> — 만점 구성(200점)은 같지만 자격연수성적을 교감 자격연수성적으로 계수 0.05를 적용해 계산합니다. 4단계에서 나온 점수와 <b>(100 − 자격연수성적) × 0.025</b>만큼 차이가 납니다.</li>
+      <li><b>이미 교감 자격증을 취득한 교감 승진 대상자</b> — 만점 구성(200점)은 같지만 자격연수성적을 교감 자격연수성적으로 계수 0.05를 적용해 계산합니다. 3단계에서 나온 점수와 <b>(100 − 자격연수성적) × 0.025</b>만큼 차이가 납니다.</li>
       <li><b>교장 승진·자격연수 대상자와 장학관·교육연구관 승진후보자</b> — 만점이 185점(경과조치 188점)으로 다르고 연수성적이 15점, 연구실적이 3점 구조입니다.</li>
-      <li><b>연구실적 평정(연구대회 입상·학위취득)</b> — 교감 승진·자격연수 대상자에게는 적용되지 않습니다. 경과조치 대상인 교장 트랙에만 해당합니다.</li>
       <li><b>대구광역시교육청 외 시·도</b> — 경력·근무성적·연수성적은 대통령령이라 전국 공통이지만, <b>선택가산점은 시·도교육청 규정</b>이라 항목과 점수가 다릅니다. 다른 교육청 소속이라면 1~4단계까지만 참고하세요.</li>
       <li><b>동석차·명부 순위</b> — 총평정점만 계산합니다. 실제 순위는 같은 명부에 오른 다른 대상자들의 점수에 따라 정해집니다.</li>
     </ul>
@@ -1062,7 +1063,7 @@ const CAREER_TYPES = [
 const COMMON_CAP = 3.5, SEL_CAP = 9.99;
 const SEL_ITEMS = [
   {id:"s1",  n:"1급 정교사의 보직교사 근무경력", m:0.015, d:0.0005, cap:1.17,
-   conf:["s4","s6","s9","s10b","s10d","s10e"]},
+   conf:["s4","s6","s9","s10b","s10b0","s10d","s10e"]},
   {id:"s2",  n:"장학사·교육연구사 근무경력", m:0.015, d:0.0005, cap:0.84, conf:["s3"]},
   {id:"s3",  n:"도서·벽지지역 근무경력", cap:1.20, conf:["s2","s4","s5a","s5b","s6","s9"],
    regions:[["가",0.0250,0.00083],["나",0.0205,0.00068],["다",0.0150,0.00050],["라",0.0102,0.00034]],
@@ -1091,15 +1092,18 @@ const SEL_ITEMS = [
    note:"파견 2002.1.1., 순회교사 2003.1.1., Wee센터 근무교사 2019.9.1.부터 인정"},
   {id:"s10a",n:"교육복지우선지원사업 학교 근무경력", m:0.005, d:0.00016, cap:0.50, grp:"G3",
    conf:["s7a","s7b","s9","s10f"], note:"2009.1.1.부터 인정"},
-  {id:"s10b",n:"학교교육력 제고 경력", m:0.007, d:0.00023, cap:0.30, grp:"G3",
-   conf:["s1","s10d","s10e"], star:["s5a","s5b"],
-   note:"2012.3.1.부터 인정. 2016.2.29. 이전은 월 0.005점 적용"},
+  {id:"s10b",n:"학교교육력 제고 경력 (2016.3.1. 이후)", m:0.007, d:0.00023, cap:0.30,
+   capWith:"s10b", grp:"G3", conf:["s1","s10d","s10e"], star:["s5a","s5b"],
+   note:"교무·연구·학생생활지도 관련 부장 및 학교장 추천 교사 2명. 아래 ‘2016.2.29. 이전’ 항목과 합쳐 상한 0.30점"},
+  {id:"s10b0",n:"학교교육력 제고 경력 (2016.2.29. 이전)", m:0.005, d:0.00016, cap:0.30,
+   capWith:"s10b", grp:"G3", conf:["s1","s10d","s10e"], star:["s5a","s5b"],
+   note:"2012.3.1.부터 인정. 이 기간은 월 0.005점(일 0.00016점)이 적용됩니다"},
   {id:"s10c",n:"농어촌전원학교 근무경력", m:0.003, d:0.0001, cap:0.25, grp:"G3",
    conf:["s7a","s7b","s9","s10f"], note:"2012.3.1.부터, 2019.2.28. 이전 경력에 한함"},
   {id:"s10d",n:"중·고등학교 담임교사 근무경력", m:0.003, d:0.0001, cap:0.25, grp:"G3",
-   conf:["s1","s10b","s10e"], note:"2012.3.1.부터 인정, 특수학교 포함"},
+   conf:["s1","s10b","s10b0","s10e"], note:"2012.3.1.부터 인정, 특수학교 포함"},
   {id:"s10e",n:"청소년단체 활동지도 경력", m:0.002, d:0.00006, cap:0.15, grp:"G3",
-   conf:["s1","s10b","s10d"], note:"2005.3.1.부터, 교육청이 확정한 지도교사에 한함"},
+   conf:["s1","s10b","s10b0","s10d"], note:"2005.3.1.부터, 교육청이 확정한 지도교사에 한함"},
   {id:"s10f",n:"미래학교(구 행복학교) 근무경력", m:0.005, d:0.00016, cap:0.50, grp:"G3",
    conf:["s4","s7a","s7b","s9","s10a","s10c"], note:"2015.9.1.부터 인정"},
   {id:"s10g",n:"장기근무 경력", m:0.005, d:0.00016, cap:0.30, grp:"G3",
@@ -1127,7 +1131,10 @@ function ymdSpan(sISO,eISO){
   let d=e.getUTCDate()-s.getUTCDate();
   if(d<0){ m--; const prev=new Date(Date.UTC(e.getUTCFullYear(),e.getUTCMonth(),0)); d+=prev.getUTCDate(); }
   if(m<0){ y--; m+=12; }
-  return {months:y*12+m, days:d};
+  // 월말 기산일(29·30·31일)에서는 보정 후에도 days가 음수로 남을 수 있다.
+  // 총량(월수×30+일수)은 그대로 두고 음수가 밖으로 새지 않도록 다시 나눈다.
+  const tot=Math.max(0,(y*12+m)*30+d);
+  return {months:Math.floor(tot/30), days:tot%30};
 }
 function spanPd(sISO,eISO){ const r=ymdSpan(sISO,eISO); return r.months*30+r.days; }
 function pdText(v){
@@ -1160,16 +1167,23 @@ function calcCareer(items, maxEach){
 
   // 기간이 겹치는 이력 검출 (중복 입력 실수)
   const overlaps=[];
-  for(let i=1;i<clipped.length;i++)
-    if(clipped[i].start<=clipped[i-1].end)
-      overlaps.push({a:clipped[i-1], b:clipped[i]});
+  let maxEnd=null, maxItem=null;
+  clipped.forEach(function(it){
+    if(maxEnd!==null && it.start<=maxEnd) overlaps.push({a:maxItem, b:it});
+    if(maxEnd===null || it.end>maxEnd){ maxEnd=it.end; maxItem=it; }
+  });
 
   const segs=[];
+  const typeUsed={};   // 상한이 있는 종류(군 복무 3년)는 이력 건별이 아니라 합계에 건다
   clipped.forEach(function(it){
     const def=CAREER_TYPES.find(function(t){ return t.v===it.type; });
     if(!def||!def.grade) return;
     let p=spanPd(it.start,it.end);
-    if(def.cap) p=Math.min(p,def.cap);
+    if(def.cap){
+      const used=typeUsed[it.type]||0;
+      p=Math.min(p, Math.max(0, def.cap-used));
+      typeUsed[it.type]=used+p;
+    }
     p=Math.floor(p*def.ratio);
     if(p>0) segs.push({grade:def.grade, pd:p, raw:spanPd(it.start,it.end),
                        start:it.start, end:it.end, type:it.type, label:def.t});
@@ -1236,7 +1250,11 @@ function calcCareer(items, maxEach){
 function calcPerf(years){
   // 실제로 평정한 학년도
   const real=years.map(function(y){
-    return (!y.none && y.score!==null && y.score!=="") ? clamp(y.score,0,100) : null; });
+    if(!y || y.none) return null;
+    const v=y.score;
+    if(v===null || v===undefined || String(v).trim()==="" || !isFinite(parseFloat(v))) return null;
+    return clamp(v,0,100);
+  });
   const realCount=real.filter(function(v){ return v!==null; }).length;
 
   // 「규정」제40조 : 5년 이내에 '평정한' 합산점 중에서 유리한 3년을 선택한다.
@@ -1255,7 +1273,11 @@ function calcPerf(years){
       for(let j=i-1;j>=0;j--) if(real[j]!==null){ after=real[j]; break; }
       for(let j=i+1;j<years.length;j++) if(real[j]!==null){ before=real[j]; break; }
       if(after===null&&before===null) return {year:y.year, v:null, src:"없음"};
-      return {year:y.year, v:((after!==null?after:85)+(before!==null?before:85))/2, src:"보정"};
+      // 「규정」제40조제5항 : 전후 평정점의 평균으로 하되, '전(과거)'의 평정점이 없으면 85점으로 본다.
+      // '후(최근)'가 없는 경우(가장 최근 학년도가 결측)는 규정에 정한 바가 없으므로
+      // 85점을 끌어오지 않고 '전'의 평정점을 그대로 쓴다.
+      if(after===null) return {year:y.year, v:before, src:"보정"};
+      return {year:y.year, v:(after+(before!==null?before:85))/2, src:"보정"};
     });
   }
   const idx=[]; filled.forEach(function(f,i){ if(f.v!==null) idx.push(i); });
@@ -1320,9 +1342,10 @@ function calcTraining(s){
     // 「규정」 : 교육성적이 만점의 80% 미만일 때(교육을 받았으나 성적이 없는 경우 포함)에는
     //           만점의 80%로 하여 평정하고, 60% 미만이면 평정하지 않는다.
     const pct = has ? (f>0 ? num(t.score)/f*100 : 0) : null;
+    const over = pct!==null && pct>100;
     const under60 = pct!==null && pct<60;
     const effPct = (pct===null || pct<80) ? 80 : pct;
-    valid.push({t:t, pct:pct, noScore:!has, under60:under60,
+    valid.push({t:t, pct:pct, noScore:!has, under60:under60, over:over,
                 conv: under60 ? 0 : convTrain(effPct)});
   });
   valid.sort(function(a,b){
@@ -1348,6 +1371,8 @@ function calcTraining(s){
   return { qual:r3(qScore), qualNote:qNote, qualPct:qPct, coef:coef,
     job:r3(jScore), jobNote:jNote, headConv:headConv, used:used, invalid:invalid,
     extra:Math.max(0, valid.length-3),
+    over: valid.filter(function(v){ return v.over; }),
+    hasUnder60: used.some(function(v){ return v.under60; }),
     total:r3(Math.min(30, r3(qScore)+r3(jScore))) };
 }
 
@@ -1368,7 +1393,7 @@ function calcResearch(s){
       base:base, v:r3(v), id:x.id});
   });
   // 「승진규정」제37조제2항 : 연구대회 입상실적은 1년에 1회에 한한다
-  const byYear={}, dropped=[];
+  const byYear=Object.create(null), dropped=[];
   rows.slice().sort(function(a,b){ return b.v-a.v; }).forEach(function(r){
     const k=r.year||"(연도 미상)";
     if(byYear[k]===undefined){ byYear[k]=r; r.used=true; }
@@ -1414,8 +1439,28 @@ function calcSelect(s, commonG1){
       const rg=(def.regions||[]).find(function(r){ return r[0]===x.region; });
       if(rg){ v=pos(x.months)*rg[1]+pos(x.days)*rg[2]; detail=rg[0]; }
     } else v=pos(x.months)*def.m+pos(x.days)*def.d;
-    rows.push({id:def.id, n:def.n, raw:r3(v), v:r3(Math.max(0,Math.min(def.cap,v))), cap:def.cap,
-      grp:def.grp, capped:v>def.cap+1e-9, detail:detail, def:def});
+    rows.push({id:def.id, n:def.n, raw:r3(Math.max(0,v)), v:0, cap:def.cap,
+      grp:def.grp, capped:false, detail:detail, def:def});
+  });
+
+  // 항목 상한 — capWith가 같은 항목끼리는 상한을 함께 쓴다(예: 학교교육력 제고 기간별 분리)
+  const capSets={};
+  rows.forEach(function(r){
+    const k=r.def.capWith||r.id;
+    (capSets[k]=capSets[k]||[]).push(r);
+  });
+  Object.keys(capSets).forEach(function(k){
+    const g=capSets[k], cap=g[0].cap;
+    const sum=g.reduce(function(a,r){ return a+r.raw; },0);
+    if(sum>cap+1e-9){
+      const kk=cap/sum;
+      g.forEach(function(r){ r.v=r3(r.raw*kk); r.capped=true; });
+      let s2=g.reduce(function(a,r){ return a+r.v; },0);
+      if(s2>cap+1e-9){
+        const big=g.slice().sort(function(a,b){ return b.v-a.v; })[0];
+        big.v=r3(Math.max(0, big.v-(s2-cap)));
+      }
+    } else g.forEach(function(r){ r.v=r.raw; });
   });
 
   const groups={};
@@ -1502,16 +1547,36 @@ function load(){
 }
 function applyState(d){
   const base=defaultState();
-  st=Object.assign(base, d);
-  st.qual=Object.assign(base.qual, d.qual||{});
-  st.common=Object.assign(base.common, d.common||{});
-  st.research=Object.assign(base.research, d.research||{});
-  if(!Array.isArray(st.research.contests)) st.research.contests=[];
-  if(!Array.isArray(st.career)) st.career=[];
-  if(!Array.isArray(st.trainings)) st.trainings=[];
-  if(!Array.isArray(st.select)) st.select=[];
-  if(!Array.isArray(st.common.credits)) st.common.credits=[];
-  if(!Array.isArray(st.perf)||st.perf.length!==5) st.perf=defaultState().perf;
+  d = (d && typeof d==="object") ? d : {};
+  st = Object.assign({}, base, d);
+  st.qual     = Object.assign({}, base.qual,     (d.qual&&typeof d.qual==="object")?d.qual:{});
+  st.common   = Object.assign({}, base.common,   (d.common&&typeof d.common==="object")?d.common:{});
+  st.research = Object.assign({}, base.research, (d.research&&typeof d.research==="object")?d.research:{});
+
+  // 손상된 저장 데이터(원소가 null·문자열 등)로 화면이 통째로 죽지 않도록 걸러낸다
+  const obj=function(a){ return (Array.isArray(a)?a:[]).filter(function(x){ return x && typeof x==="object"; }); };
+  st.career          = obj(st.career).map(function(x){ return Object.assign({id:nid()}, x); });
+  st.trainings       = obj(st.trainings).map(function(x){ return Object.assign({id:nid()}, x); });
+  st.research.contests = obj(st.research.contests).map(function(x){ return Object.assign({id:nid()}, x); });
+  st.common.credits  = obj(st.common.credits).map(function(x){ return Object.assign({id:nid()}, x); });
+
+  // 선택가산점은 같은 항목이 두 번 들어오면 상한이 두 배로 먹히므로 하나만 남긴다
+  const seen={};
+  st.select = obj(st.select).filter(function(x){
+    if(!x.itemId || !SEL_ITEMS.some(function(i){ return i.id===x.itemId; })) return false;
+    if(seen[x.itemId]) return false;
+    seen[x.itemId]=1; return true;
+  }).map(function(x){ return Object.assign({id:nid()}, x); });
+
+  const bp=defaultState().perf;
+  if(!Array.isArray(st.perf) || st.perf.length!==5) st.perf=bp;
+  else st.perf=st.perf.map(function(y,i){
+    if(!y || typeof y!=="object") return bp[i];
+    return { year: num(y.year)||bp[i].year,
+             score: (y.score===null||y.score===undefined)?"":String(y.score),
+             none: !!y.none };
+  });
+  if(typeof st.mode!=="undefined") delete st.mode;
 }
 
 /* ════════════════════ DOM 헬퍼 ════════════════════ */
@@ -1537,7 +1602,7 @@ function renderCareer(){
     box.appendChild(el("div",{class:"empty"},"근무 이력이 없습니다. 첫 발령일부터 순서대로 추가하세요."));
 
   st.career.forEach(function(it){
-    const d=el("div",{class:"item career"});
+    const d=el("div",{class:"item career","data-key":"career:"+it.id});
     const opts=CAREER_TYPES.map(function(t){
       return '<option value="'+t.v+'"'+(t.v===it.type?" selected":"")+'>'+esc(t.t)+'</option>'; }).join("");
     d.innerHTML=
@@ -1620,13 +1685,13 @@ function renderPerf(){
   const box=document.getElementById("perfList");
   box.innerHTML="";
   st.perf.forEach(function(y,i){
-    const d=el("div",{class:"item"});
+    const d=el("div",{class:"item","data-key":"perf:"+y.year});
     const g = (!y.none&&y.score!=="") ? grade(num(y.score)) : null;
     d.innerHTML=
-      '<label class="lbl">'+y.year+'학년도'+
+      '<label class="lbl">'+esc(y.year)+'학년도'+
         (i===0?' <span class="badge n">최근</span>':'')+
         (g?' <span class="badge '+(g==="수"?"ok":g==="양"?"err":"n")+'">'+g+'</span>':'')+'</label>'+
-      '<input type="number" step="0.01" min="0" max="100" data-f="score" value="'+esc(y.score)+
+      '<input type="text" inputmode="decimal" data-f="score" value="'+esc(y.score)+
         '" placeholder="합산점" '+(y.none?"disabled":"")+'>'+
       '<label class="chk"><input type="checkbox" data-f="none" '+(y.none?"checked":"")+
         '><span>평정점 없음</span></label>';
@@ -1655,11 +1720,11 @@ function renderPerf(){
     res.best.vals.map(function(v,i){ return f2(v)+" × "+W[i]; }).join(" + ")+" = "+f3(res.best.score)+'</div>';
 
   const skipped=res.filled.filter(function(f){ return f.src==="미평정"; });
-  if(skipped.length) h+='<div class="alert info">'+skipped.map(function(a){ return a.year+"학년도"; }).join(" · ")+
+  if(skipped.length) h+='<div class="alert info">'+skipped.map(function(a){ return esc(a.year)+"학년도"; }).join(" · ")+
     '는 평정점이 없어 선택 대상에서 제외했습니다. 「규정」제40조는 <b>5년 이내에 평정한 합산점 중에서</b> 유리한 3년을 고르도록 정하고 있어, 평정한 학년도가 3개 이상이면 없는 학년도는 채우지 않습니다.</div>';
   const adj=res.filled.filter(function(f){ return f.src==="보정"; });
   if(adj.length) h+='<div class="alert warn">평정한 학년도가 '+res.realCount+'개뿐이어서 「규정」제40조 제5항에 따라 '+
-    adj.map(function(a){ return a.year+"학년도를 "+f2(a.v)+"점"; }).join(", ")+
+    adj.map(function(a){ return esc(a.year)+"학년도를 "+f2(a.v)+"점"; }).join(", ")+
     '으로 보정했습니다(앞뒤 평정점의 평균, 직전 평정점이 없으면 85점). <b>이 경우 보정 방식이 사례마다 달라질 수 있으니 교육(지원)청 확인을 받으세요.</b></div>';
   const diff=r3(res.combos[0].score-res.combos[res.combos.length-1].score);
   if(diff>0.001) h+='<div class="alert ok">가장 유리한 조합과 가장 불리한 조합의 차이가 <b>'+f3(diff)+'점</b>입니다.</div>';
@@ -1682,16 +1747,16 @@ function renderTraining(){
     box.appendChild(el("div",{class:"empty"},"평정 대상 직무연수를 추가하세요. 3개를 채우면 12점이 확보됩니다."));
 
   st.trainings.forEach(function(t){
-    const d=el("div",{class:"item"});
+    const d=el("div",{class:"item","data-key":"train:"+t.id});
     d.innerHTML=
       '<div class="top"><input type="text" data-f="name" value="'+esc(t.name)+'" placeholder="연수명" aria-label="연수명">'+
       '<button class="iconbtn noprint" data-del="1" aria-label="이 연수 삭제">'+TRASH+'</button></div>'+
       '<div class="row2">'+
         '<div><label class="lbl">이수일</label><input type="date" data-f="date" value="'+esc(t.date)+'"></div>'+
-        '<div><label class="lbl">이수 시간</label><input type="number" data-f="hours" value="'+esc(t.hours)+'" placeholder="60"></div>'+
+        '<div><label class="lbl">이수 시간</label><input type="text" inputmode="numeric" data-f="hours" value="'+esc(t.hours)+'" placeholder="60"></div>'+
       '</div><div class="row2">'+
-        '<div><label class="lbl">연수 성적</label><input type="number" step="0.01" data-f="score" value="'+esc(t.score)+'" placeholder="기록 없으면 비움"></div>'+
-        '<div><label class="lbl">성적 만점</label><input type="number" step="0.01" data-f="full" value="'+esc(t.full)+'" placeholder="100"></div>'+
+        '<div><label class="lbl">연수 성적</label><input type="text" inputmode="decimal" data-f="score" value="'+esc(t.score)+'" placeholder="기록 없으면 비움"></div>'+
+        '<div><label class="lbl">성적 만점</label><input type="text" inputmode="decimal" data-f="full" value="'+esc(t.full)+'" placeholder="100"></div>'+
       '</div>';
     d.querySelectorAll("[data-f]").forEach(function(inp){
       inp.addEventListener("input",function(){ t[inp.getAttribute("data-f")]=inp.value; renderAll(); save(); });
@@ -1718,6 +1783,8 @@ function renderTraining(){
       h+='<div class="formula">9 − ('+f2(full)+' − '+f2(sc)+') × '+res.coef+' = '+f3(res.qual)+'</div>';
   }
   if(res.qualNote) h+='<div class="alert warn">'+esc(res.qualNote)+'</div>';
+  if(Math.abs((num(st.qual.full)||100)-100)>1e-9)
+    h+='<div class="alert warn">자격연수 만점을 '+f2(num(st.qual.full))+'점으로 넣으셨습니다. 계산식의 계수 0.025는 <b>100점 만점을 전제</b>로 한 값이라, 만점이 다르면 같은 백분율이어도 점수가 달라집니다. 성적표의 만점이 실제로 100점이 아닌지 확인하세요.</div>';
 
   h+='<div class="kv"><span class="k">직무연수 <span class="badge n">'+res.used.length+'개 반영</span></span>'+
      '<span class="v">'+f3(res.job)+' / 18</span></div>';
@@ -1741,6 +1808,12 @@ function renderTraining(){
          f3(6-6*res.headConv/100)+'점을 더 얻을 수 있습니다.</div>';
   }
   if(res.jobNote) h+='<div class="alert warn">'+esc(res.jobNote)+'</div>';
+  if(res.over && res.over.length)
+    h+='<div class="alert err">성적이 만점을 넘는 연수가 '+res.over.length+'건 있습니다 — '+
+      res.over.map(function(v){ return esc(v.t.name||"(이름 없음)")+" "+f2(num(v.t.score))+"/"+f2(num(v.t.full)||100); }).join(", ")+
+      '. 성적과 만점을 다시 확인하세요.</div>';
+  if(res.hasUnder60)
+    h+='<div class="alert warn">성적이 만점의 60% 미만인 연수는 「규정」에 따라 <b>성적평정(6점)에서 제외</b>했습니다. 다만 <b>이수 횟수에는 포함</b>했는데, 지침이 “평정하지 않음”의 범위를 밝히지 않아 해석이 갈릴 수 있는 부분입니다. 해당 연수가 있다면 교육(지원)청에 확인하세요.</div>';
   if(res.extra>0) h+='<div class="alert info">평정 대상은 3개까지입니다. 성적이 좋은 3개를 자동 선택하고 나머지 '+res.extra+'개는 제외했습니다.</div>';
   if(res.invalid.length)
     h+='<div class="alert warn">평정에서 제외된 연수 '+res.invalid.length+'건 — '+
@@ -1757,12 +1830,12 @@ function renderResearch(){
   const box=document.getElementById("contestList");
   box.innerHTML="";
   (st.research.contests||[]).forEach(function(c){
-    const d=el("div",{class:"item"});
+    const d=el("div",{class:"item","data-key":"contest:"+c.id});
     d.innerHTML=
       '<div class="top"><div class="nm">연구대회 입상실적</div>'+
       '<button class="iconbtn noprint" data-del="1" aria-label="삭제">'+TRASH+'</button></div>'+
       '<div class="row2">'+
-        '<div><label class="lbl">입상 연도</label><input type="number" data-f="year" value="'+esc(c.year)+'" placeholder="예: 2018"></div>'+
+        '<div><label class="lbl">입상 연도</label><input type="text" inputmode="numeric" data-f="year" value="'+esc(c.year)+'" placeholder="예: 2018"></div>'+
         '<div><label class="lbl">규모</label><select data-f="scale">'+
           ['전국','시·도'].map(function(x){ return '<option value="'+x+'"'+(c.scale===x?" selected":"")+'>'+x+'규모</option>'; }).join("")+
         '</select></div>'+
@@ -1787,6 +1860,9 @@ function renderResearch(){
 
   const res=calcResearch(st);
   let h="";
+  if(st.qual.method==="degree" && String(st.research.degree||"").indexOf("석사")===0 && !res.rows.length && res.degree>0){
+    // 아래 공통 분기에서 처리됨
+  }
   if(res.rows.length || res.degree>0){
     h='<div class="result"><div class="rt">연구실적 계산</div>';
     if(res.rows.length){
@@ -1806,6 +1882,8 @@ function renderResearch(){
       h+='<div class="alert info">같은 해에 입상실적이 둘 이상이면 「승진규정」제37조제2항에 따라 <b>1년에 1회</b>만 평정합니다. 유리한 실적을 남기고 '+res.dropped.length+'건을 제외했습니다.</div>';
     if(res.capped)
       h+='<div class="alert warn">합계 '+f3(res.raw)+'점이 상한 3점을 넘어 3.000점으로 평정합니다.</div>';
+    if(st.qual.method==="degree" && String(st.research.degree||"").indexOf("석사")===0)
+      h+='<div class="alert err">자격연수를 <b>석사학위 취득</b>으로 평정하면서 연구실적에도 <b>석사학위</b>를 넣었습니다. 「규정」제36조는 <b>자격연수성적으로 평정한 석사학위를 연구실적 평정대상에서 제외</b>하도록 정합니다. 둘 중 하나만 남기세요.</div>';
     h+='<div class="kv total"><span class="k">연구실적 평정점</span><span class="v">'+f3(res.total)+' / 3</span></div></div>';
   }
   document.getElementById("researchResult").innerHTML=h;
@@ -1817,9 +1895,9 @@ function renderCredits(){
   const box=document.getElementById("creditList");
   box.innerHTML="";
   (st.common.credits||[]).forEach(function(c){
-    const d=el("div",{class:"row2",style:"margin-bottom:8px"});
-    d.innerHTML='<input type="number" data-f="year" value="'+esc(c.year)+'" placeholder="연도" aria-label="연도">'+
-      '<div style="display:flex;gap:8px"><input type="number" data-f="hours" value="'+esc(c.hours)+
+    const d=el("div",{class:"row2",style:"margin-bottom:8px","data-key":"credit:"+c.id});
+    d.innerHTML='<input type="text" inputmode="numeric" data-f="year" value="'+esc(c.year)+'" placeholder="연도" aria-label="연도">'+
+      '<div style="display:flex;gap:8px"><input type="text" inputmode="numeric" data-f="hours" value="'+esc(c.hours)+
       '" placeholder="이수시간" aria-label="이수시간">'+
       '<button class="iconbtn noprint" data-del="1" aria-label="삭제">'+TRASH+'</button></div>';
     d.querySelectorAll("[data-f]").forEach(function(inp){
@@ -1844,7 +1922,7 @@ function renderSelect(){
   st.select.forEach(function(s){
     const def=SEL_ITEMS.find(function(i){ return i.id===s.itemId; });
     if(!def) return;
-    const d=el("div",{class:"item"});
+    const d=el("div",{class:"item","data-key":"sel:"+s.id});
     let inner='<div class="top"><div class="nm">'+esc(def.n)+'</div>'+
       '<button class="iconbtn noprint" data-del="1" aria-label="삭제">'+TRASH+'</button></div>';
     if(def.fixed){
@@ -1857,8 +1935,8 @@ function renderSelect(){
           def.regions.map(function(r){ return '<option value="'+r[0]+'"'+(s.region===r[0]?" selected":"")+'>'+
             r[0]+' — 월 '+r[1]+'점</option>'; }).join("")+'</select></div>';
       inner+='<div class="row2">'+
-        '<div><label class="lbl">개월 수</label><input type="number" min="0" data-f="months" value="'+esc(s.months)+'" placeholder="0"></div>'+
-        '<div><label class="lbl">잔여 일수</label><input type="number" min="0" max="29" data-f="days" value="'+esc(s.days)+'" placeholder="0"></div>'+
+        '<div><label class="lbl">개월 수</label><input type="text" inputmode="numeric" data-f="months" value="'+esc(s.months)+'" placeholder="0"></div>'+
+        '<div><label class="lbl">잔여 일수</label><input type="text" inputmode="numeric" data-f="days" value="'+esc(s.days)+'" placeholder="0"></div>'+
       '</div>';
     }
     inner+='<div class="hint">상한 '+def.cap.toFixed(2)+'점'+
@@ -1892,7 +1970,7 @@ function renderBonus(){
       '</span><span class="v">'+f3(r.v)+' / '+r.cap.toFixed(2)+'</span></div>';
     if(r.k==="c3"&&r.detail&&r.detail.length)
       ch+='<div class="formula">'+r.detail.map(function(x){
-        return (x.year||"?")+"년 "+x.hours+"시간 = "+x.credit+"학점 → "+f3(x.v)+"점"; }).join(" / ")+'</div>';
+        return esc(x.year||"?")+"년 "+x.hours+"시간 = "+x.credit+"학점 → "+f3(x.v)+"점"; }).join(" / ")+'</div>';
   });
   ch+='<div class="kv total"><span class="k">공통가산점 합계</span><span class="v">'+f3(cr.total)+' / 3.50</span></div>';
   if(cr.capped) ch+='<div class="alert warn">합계 '+f3(cr.raw)+'점이 상한 3.50점을 넘어 3.500점으로 평정합니다.</div>';
@@ -1906,6 +1984,7 @@ function renderBonus(){
     sh='<div class="result"><div class="rt">선택가산점</div>';
     sr.rows.forEach(function(r){
       sh+='<div class="kv"><span class="k">'+esc(r.n)+(r.detail?' <span class="badge n">'+esc(r.detail)+'</span>':'')+
+        (r.def.capWith?' <span class="badge n">상한 공유</span>':'')+
         (r.capped?' <span class="badge warn">항목 상한</span>':'')+
         (r.groupCut?' <span class="badge warn">통합 상한</span>':'')+
         '</span><span class="v">'+f3(r.applied)+' / '+r.cap.toFixed(2)+'</span></div>';
@@ -2141,6 +2220,33 @@ function setTab(t){
 }
 
 /* ════════════════════ 전체 렌더 ════════════════════ */
+// 입력 중에도 화면 전체를 다시 그리므로, 포커스와 커서 위치를 되살려야 타이핑이 끊기지 않는다
+function grabFocus(){
+  const a=document.activeElement;
+  if(!a || !/^(INPUT|SELECT)$/.test(a.tagName)) return null;
+  const box=a.closest("[data-key]");
+  let start=null,end=null;
+  try{ start=a.selectionStart; end=a.selectionEnd; }catch(e){}
+  return { key: box?box.getAttribute("data-key"):null,
+           f: a.getAttribute("data-f")||a.id||null, start:start, end:end };
+}
+function restoreFocus(k){
+  if(!k||!k.f) return;
+  let elm=null;
+  if(k.key){
+    const sel='[data-key="'+((window.CSS&&CSS.escape)?CSS.escape(k.key):k.key)+'"]';
+    let box=null;
+    try{ box=document.querySelector(sel); }catch(e){}
+    if(box) elm=box.querySelector('[data-f="'+k.f+'"]');
+  }
+  if(!elm) elm=document.getElementById(k.f);
+  if(!elm || elm===document.activeElement) return;
+  try{
+    elm.focus({preventScroll:true});
+    if(k.start!=null && elm.setSelectionRange) elm.setSelectionRange(k.start,k.end);
+  }catch(e){}
+}
+
 function setVal(n, text){
   const a=document.getElementById("v"+n); if(a) a.textContent=text;
   const b=document.getElementById("t"+n);
@@ -2155,12 +2261,14 @@ function renderAll(){
   ["c1m","c1d","c2m","c2d","c4y"].forEach(function(k){ document.getElementById(k).value=st.common[k]; });
   document.getElementById("optMaxEach").checked=!!st.maxEach;
 
+  const _focus=grabFocus();
   const career=renderCareer(), perf=renderPerf();
   const train=renderTraining(), research=renderResearch();
   const trainTotal=r3(Math.min(30, train.total+research.total));
   setVal("3", f3(trainTotal)+" / 30");
   const bonus=renderBonus();
   renderFinal(career, perf, {total:trainTotal, edu:train.total, research:research.total}, bonus);
+  restoreFocus(_focus);
 }
 
 /* ════════════════════ 이벤트 ════════════════════ */
