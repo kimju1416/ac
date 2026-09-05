@@ -179,6 +179,18 @@ textarea:focus{border-color:var(--ac)}
        공지도 여기서 고른 앱으로만 나간다(쌤집 공지가 TD2에 뜨면 안 된다). -->
   <div class="pick" id="pick"></div>
 
+  <!-- 새 판 알림의 근거(app_meta.latest). 저장소가 비공개이거나 학교망이 api.github.com 을
+       막으면 앱은 이 값만 보고 «새 판이 나왔다»를 안다 — 릴리스하고 여기를 안 올리면
+       알림이 조용히 안 뜬다. 손으로 콘솔을 열지 않아도 되게 여기에 두었다. -->
+  <h2>최신 판 번호 <span class="mut" id="mtFor"></span></h2>
+  <div class="chart">
+    <div class="ntrow2">
+      <input id="mtVer" placeholder="예: 0.7.75" style="flex:1;min-width:120px">
+      <button class="p" id="mtSave">저장</button>
+    </div>
+    <p class="mut" id="mtHint">지금 적혀 있는 값을 불러오는 중…</p>
+  </div>
+
   <h2>공지 <span class="mut" id="ntFor"></span></h2>
   <div class="chart">
     <textarea id="ntBody" rows="2" placeholder="(예) 급식이 월요일에 안 나오던 것을 고쳤습니다."></textarea>
@@ -308,7 +320,7 @@ async function load() {
   $('#asof').textContent = '불러오는 중…';
   // 뷰가 아직 안 깔린 채로도 화면은 돌아야 한다 — 없으면 null 로 받아 두고 아래에서 손수 센다
   const soft = r => (r.error ? null : (r.data || []));
-  const [sum, daily, fb, ver, ret, err, nt, nw, idle] = await Promise.all([
+  const [sum, daily, fb, ver, ret, err, nt, nw, idle, meta] = await Promise.all([
     sb.from('v_app_summary').select('*').then(r => r.data || []),
     sb.from('v_app_daily').select('*').then(r => r.data || []),
     sb.from('app_feedback').select('*').order('created_at', { ascending: false }).limit(500).then(r => r.data || []),
@@ -317,9 +329,10 @@ async function load() {
     sb.from('v_app_errors').select('*').limit(80).then(r => r.data || []),
     sb.from('app_notice').select('*').order('created_at', { ascending: false }).limit(40).then(r => r.data || []),
     sb.from('v_app_new').select('*').then(soft),
-    sb.from('v_app_idle').select('*').then(soft)
+    sb.from('v_app_idle').select('*').then(soft),
+    sb.from('app_meta').select('*').then(soft)   // 새 판 알림의 근거 — 읽기는 anon도 열려 있다
   ]);
-  DATA = { sum, daily, fb, ver, ret, err, nt, nw, idle, slow: false };
+  DATA = { sum, daily, fb, ver, ret, err, nt, nw, idle, meta: meta || [], slow: false };
   if (nw === null || idle === null) await lifeBySelf();
   if (err.length && !('first_at' in err[0])) await errFirstBySelf();
   drawPick(); drawAll();
@@ -393,6 +406,7 @@ async function errFirstBySelf() {
 function drawAll() {
   const only = rows => rows.filter(r => r.app === cur);
   drawCards(DATA.sum);
+  drawMeta();
   drawNotices(only(DATA.nt || []));
   drawChart(only(DATA.daily));
   drawFeedback();
@@ -400,6 +414,33 @@ function drawAll() {
   drawRetention(only(DATA.ret));
   drawErrors(only(DATA.err));
 }
+
+/* ─── 최신 판 번호 (app_meta.latest) ───
+   앱은 ①GitHub 릴리스 ②이 값 차례로 본다. 저장소가 비공개이거나 학교망이 api.github.com 을
+   막으면 ②만 남는다. 릴리스한 뒤 여기를 안 올리면 **알림이 조용히 안 뜬다** — 그래서
+   지금 적혀 있는 값을 늘 보여 주고, 고른 앱 것만 손대게 한다. */
+function drawMeta() {
+  $('#mtFor').textContent = '· ' + nm(cur);
+  const row = (DATA.meta || []).find(m => m.app === cur);
+  const now = row && row.latest ? String(row.latest) : '';
+  $('#mtVer').value = now;
+  $('#mtHint').innerHTML = now
+    ? `지금 적혀 있는 값: <b>${esc(now)}</b> — 새 판을 릴리스하면 이 번호도 함께 올려 주세요.`
+    : '아직 적혀 있지 않습니다. 릴리스한 판 번호를 넣어 주세요.';
+}
+$('#mtSave').addEventListener('click', async () => {
+  const v = $('#mtVer').value.trim().replace(/^v/i, '');
+  if (!/^\d+(\.\d+)*$/.test(v)) { alert('판 번호만 넣어 주세요 (예: 0.7.75)'); $('#mtVer').focus(); return; }
+  const b = $('#mtSave'); b.disabled = true; b.textContent = '저장 중…';
+  // 이미 줄이 있으면 고치고, 없으면 새로 넣는다 — 앱마다 한 줄이다
+  const has = (DATA.meta || []).some(m => m.app === cur);
+  const { error } = has
+    ? await sb.from('app_meta').update({ latest: v }).eq('app', cur)
+    : await sb.from('app_meta').insert({ app: cur, latest: v });
+  b.disabled = false; b.textContent = '저장';
+  if (error) return alert('저장하지 못했습니다: ' + error.message);
+  await load();
+});
 
 /* ─── 공지 쓰기 ───
    예전에는 GitHub의 JSON 파일을 고쳐야 했다. 공지 한 줄 쓰려고 저장소를 여는 건
