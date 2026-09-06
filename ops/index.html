@@ -524,6 +524,30 @@ function drawCards(rows) {
       <div class="foot">${r.last_day ? '마지막 신호 ' + esc(r.last_day) : '아직 신호가 없습니다'}${
         id && id.idle7 ? ' · 7일 넘게 조용한 컴퓨터 <b>' + id.idle7 + '대</b>' : ''}</div></div>`;
   }).join('');
+  drawSlowNote();
+}
+
+/* ── «이 숫자는 브라우저가 직접 센 것» ──
+   뷰(v_app_new·v_app_idle)가 없으면 app_ping 원본을 1,000줄씩 긁어와 화면에서 손수 센다.
+   🔴 그 사실을 화면에 안 적으면 «새로 N»·«조용한 컴퓨터 N대»가 정확한 값인지 어림한 값인지
+      구별할 방법이 없다. 실제로 2026-09-06 점검에서 두 뷰가 없는 줄 모르고 몇 달을 썼다.
+   핑이 쌓일수록 느려지므로 고치는 법(SQL 한 번)까지 함께 적는다. */
+function drawSlowNote() {
+  const box = $('#cards');
+  if (!box) return;
+  let el = $('#slowNote');
+  if (!DATA || !DATA.slow) { if (el) el.remove(); return; }
+  if (!el) {
+    el = document.createElement('p');
+    el.id = 'slowNote';
+    el.className = 'mut';
+    el.style.cssText = 'margin:10px 0 0;padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:var(--soft)';
+    box.insertAdjacentElement('afterend', el);
+  }
+  el.innerHTML = '<b>새로 N</b>·<b>조용한 컴퓨터</b> 두 값은 <b>브라우저가 직접 센 것</b>입니다 — '
+    + '집계 뷰(<code>v_app_new</code>·<code>v_app_idle</code>)가 아직 안 깔려 있어 '
+    + '기록 원본을 통째로 읽어 세는 중이라, 자료가 쌓일수록 이 화면이 느려집니다. '
+    + '<code>db/add-missing-views.sql</code>을 Supabase 콘솔에서 한 번 실행하면 이 줄은 사라집니다.';
 }
 
 function drawChart(rows) {
