@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>학교 안전교육 게임 모음 | kimju.zip</title>
+  <meta name="description" content="학교 안전교육 시간에 바로 쓰는 게임 8종. QR을 교실 TV에 띄우면 학생 폰에서 바로 시작합니다.">
+  <meta property="og:title" content="학교 안전교육 게임 모음 | kimju.zip">
+  <meta property="og:description" content="학교 안전교육 시간에 바로 쓰는 게임 8종. QR을 교실 TV에 띄우면 학생 폰에서 바로 시작합니다.">
+  <meta property="og:url" content="https://kimju.kr/safety">
+  <meta property="og:image" content="https://kimju.kr/safety/shots/school-fire-drill.jpg">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://kimju.kr/safety">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.css">
+  <style>
+    :root { --red:#C0392B; --red-dark:#9E2E22; --page:#FAF7F5; --card:#fff; --line:#EAE1DC; --ink:#2A2320; --muted:#7C6E68; --shadow:0 1px 3px rgba(0,0,0,.06); }
+    * { box-sizing:border-box; }
+    html { background:var(--page); color:var(--ink); font-family:Pretendard,-apple-system,"Malgun Gothic",sans-serif; word-break:keep-all; }
+    body { margin:0; overflow-x:hidden; font-size:15px; line-height:1.6; }
+    button, a { font:inherit; }
+    button { cursor:pointer; }
+    .wrap { max-width:1320px; margin:0 auto; padding:0 20px 48px; }
+    .site-header { display:flex; flex-wrap:wrap; align-items:center; gap:12px 16px; padding:20px 0 16px; border-bottom:1px solid var(--line); }
+    .head-copy { min-width:0; flex:1 1 240px; }
+    h1 { margin:0; font-size:24px; line-height:1.35; font-weight:700; letter-spacing:-.02em; }
+    .head-copy p { margin:4px 0 0; color:var(--muted); font-size:14px; line-height:1.5; }
+    .hub-qr { display:flex; align-items:center; gap:8px; margin-left:auto; color:var(--muted); font-size:12px; line-height:1.35; text-align:right; }
+    .hub-qr img { width:52px; height:52px; border:1px solid var(--line); border-radius:10px; background:#fff; padding:3px; }
+    .print-button { min-width:44px; min-height:44px; padding:0 12px; color:var(--red); background:#fff; border:1px solid var(--red); border-radius:10px; font-weight:600; white-space:nowrap; }
+    .print-button:hover, .print-button:focus-visible { background:var(--red); color:#fff; }
+    main { padding-top:20px; }
+    .section-label { margin:0 0 8px; color:var(--muted); font-size:13px; font-weight:600; letter-spacing:.02em; }
+    .catalogue-top { display:flex; align-items:end; justify-content:space-between; gap:12px; margin-bottom:12px; }
+    .catalogue-top h2, .guide h2 { margin:0; font-size:20px; line-height:1.4; letter-spacing:-.02em; }
+    .result-count { color:var(--muted); font-size:14px; white-space:nowrap; }
+    .filters { display:flex; gap:8px; overflow-x:auto; padding:0 0 4px; margin-bottom:16px; scrollbar-width:thin; }
+    .filter { display:inline-flex; align-items:center; gap:6px; min-height:44px; flex:0 0 auto; padding:0 14px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink); font-weight:600; }
+    .filter-count { color:var(--muted); font-size:13px; font-weight:600; }
+    .filter[aria-pressed="true"] .filter-count { color:rgba(255,255,255,.75); }
+    .filter[aria-pressed="true"] { background:var(--red); border-color:var(--red); color:#fff; }
+    .filter:hover:not([aria-pressed="true"]), .filter:focus-visible:not([aria-pressed="true"]) { border-color:var(--red); color:var(--red); }
+    .game-grid { display:grid; grid-template-columns:1fr; gap:16px; }
+    .game-card { position:relative; display:flex; flex-direction:column; min-width:0; overflow:hidden; background:var(--card); border:1px solid var(--line); border-radius:14px; }
+    .game-card[data-series-color]::before { content:""; height:4px; background:var(--series-color); flex:0 0 4px; }
+    .game-card[hidden] { display:none; }
+    .shot { display:block; width:100%; aspect-ratio:1.6; object-fit:cover; border-bottom:1px solid var(--line); }
+    .card-body { display:flex; flex:1; flex-direction:column; padding:16px; }
+    .series { display:flex; align-items:center; gap:6px; margin:0 0 4px; color:var(--muted); font-size:13px; line-height:1.5; }
+    .series-dot { display:none; width:8px; height:8px; flex:0 0 8px; border-radius:50%; }
+    .game-card[data-series-color] .series-dot { display:block; background:var(--series-color); }
+    .card-title-row { display:flex; align-items:flex-start; gap:8px; }
+    .card-title { flex:1; margin:0; font-size:17px; line-height:1.45; letter-spacing:-.01em; }
+    .badge { flex:0 0 auto; padding:2px 7px; border:1px solid var(--line); border-radius:10px; color:var(--muted); background:#F3EFEC; font-size:12px; font-weight:600; line-height:1.45; }
+    .subtitle { margin:4px 0 0; color:var(--muted); font-size:14px; line-height:1.5; }
+    .desc { margin:12px 0 0; overflow-wrap:anywhere; }
+    .tags { display:flex; flex-wrap:wrap; gap:6px; margin:16px 0; padding:0; list-style:none; }
+    .tags li { padding:3px 8px; border:1px solid var(--line); border-radius:10px; color:var(--muted); font-size:12px; line-height:1.45; }
+    .card-actions { display:flex; align-items:center; gap:8px; margin-top:auto; }
+    .open-link, .qr-button { display:inline-flex; align-items:center; justify-content:center; min-height:44px; border-radius:10px; font-weight:600; text-decoration:none; }
+    .open-link { flex:1 1 auto; min-width:0; color:#fff; background:var(--red); border:1px solid var(--red); }
+    .open-link:hover, .open-link:focus-visible { background:var(--red-dark); border-color:var(--red-dark); }
+    .qr-button { flex:0 0 auto; gap:8px; padding:0 12px; border:1px solid var(--line); background:#fff; color:var(--ink); }
+    .qr-button:hover, .qr-button:focus-visible { border-color:var(--red); color:var(--red); }
+    .qr-button img { width:26px; height:26px; }
+    .guide { margin-top:32px; padding-top:24px; border-top:1px solid var(--line); }
+    .guide p { margin:8px 0 0; color:var(--muted); }
+    .guide ol { display:grid; gap:8px; margin:16px 0 0; padding-left:24px; }
+    .guide li { padding-left:4px; }
+    .dialog-backdrop { position:fixed; z-index:20; inset:0; display:grid; place-items:center; padding:20px; background:rgba(42,35,32,.5); }
+    .dialog-backdrop[hidden] { display:none; }
+    .dialog { position:relative; width:min(100%, 680px); max-height:calc(100dvh - 40px); overflow:auto; padding:24px; background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:0 12px 32px rgba(42,35,32,.24); text-align:center; }
+    .dialog-close { position:absolute; top:12px; right:12px; display:grid; place-items:center; width:44px; height:44px; border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink); }
+    .dialog-close:hover, .dialog-close:focus-visible { color:var(--red); border-color:var(--red); }
+    .dialog h2 { margin:8px 52px 4px 0; text-align:left; font-size:20px; line-height:1.4; }
+    .dialog p { margin:0 52px 20px 0; color:var(--muted); text-align:left; font-size:14px; }
+    .dialog-qr { display:block; width:max(300px, min(480px, 62vmin)); max-width:100%; margin:0 auto 20px; border:1px solid var(--line); border-radius:14px; background:#fff; padding:12px; }
+    .dialog-url { display:block; color:var(--ink); font-size:14px; overflow-wrap:anywhere; word-break:break-all; }
+    body.modal-open { overflow:hidden; }
+    .print-sheet { display:none; }
+    .visually-hidden { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+    svg { display:block; }
+    @media (min-width:768px) { .site-header { gap:20px; padding:24px 0 20px; } main { padding-top:24px; } .game-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; } .guide ol { grid-template-columns:repeat(2,minmax(0,1fr)); column-gap:32px; } }
+    @media (min-width:1200px) { .game-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+    @media print {
+      @page { size:A4 portrait; margin:12mm; }
+      body { background:#fff; color:#000; }
+      .screen { display:none !important; }
+      .print-sheet { display:block; }
+      .print-head { display:flex; align-items:flex-start; justify-content:space-between; gap:8mm; margin:0 0 5mm; }
+      .print-head h1 { margin:0 0 2mm; font-size:15pt; }
+      .print-head p { margin:0; color:#333; font-size:9pt; }
+      .print-hub { display:flex; align-items:center; gap:3mm; text-align:right; font-size:8pt; color:#333; line-height:1.35; }
+      .print-hub img { width:18mm; height:18mm; }
+      .print-grid { display:grid; grid-template-columns:repeat(2,1fr); grid-template-rows:repeat(4,1fr); gap:4mm 6mm; height:250mm; }
+      .print-item { display:flex; align-items:center; gap:5mm; min-height:0; padding:3mm; border:1px solid #bbb; break-inside:avoid; }
+      .print-item img { width:30mm; height:30mm; flex:0 0 30mm; }
+      .print-item h2 { margin:0 0 1mm; font-size:11pt; line-height:1.3; }
+      .print-item .print-sub { display:block; margin:0 0 2mm; color:#000; font-size:9pt; line-height:1.3; }
+      .print-item .print-url { display:block; color:#444; font-size:8.5pt; line-height:1.3; overflow-wrap:anywhere; word-break:break-all; }
+    }
+  </style>
+</head>
+<body>
+  <div class="screen wrap">
+    <header class="site-header">
+      <div class="head-copy">
+        <h1>학교 안전교육 게임 모음</h1>
+        <p>교실 TV에서 QR을 띄운 뒤, 학생이 각자 휴대폰으로 접속합니다.</p>
+      </div>
+      <div class="hub-qr">
+        <span>이 페이지 주소</span>
+        <img src="qr/safety-hub.svg" alt="학교 안전교육 게임 모음 페이지 QR 코드">
+      </div>
+      <button class="print-button" type="button" onclick="window.print()">인쇄</button>
+    </header>
+    <main>
+      <section aria-labelledby="catalogue-title">
+        <div class="catalogue-top">
+          <div><p class="section-label">게임 목록</p><h2 id="catalogue-title">수업에서 사용할 게임 선택</h2></div>
+          <span class="result-count" id="resultCount" aria-live="polite"></span>
+        </div>
+        <div class="filters" id="filters" aria-label="게임 분류 필터"></div>
+        <div class="game-grid" id="gameGrid"></div>
+      </section>
+      <section class="guide" aria-labelledby="guide-title">
+        <p class="section-label">수업 활용 안내</p>
+        <h2 id="guide-title">진행 방법</h2>
+        <ol>
+          <li>목록에서 사용할 게임을 고르고 QR 띄우기를 선택합니다.</li>
+          <li>교실 TV에 QR 코드를 띄웁니다.</li>
+          <li>학생이 각자 휴대폰으로 QR 코드를 스캔해 게임을 시작합니다.</li>
+          <li>게임 후 오답 장면을 함께 확인하고 안전 행동을 정리합니다.</li>
+        </ol>
+      </section>
+    </main>
+  </div>
+  <div class="dialog-backdrop screen" id="qrDialog" hidden>
+    <section class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle" aria-describedby="dialogDescription">
+      <button class="dialog-close" type="button" id="dialogClose" aria-label="QR 창 닫기">
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+      <h2 id="dialogTitle"></h2>
+      <p id="dialogDescription">휴대폰 카메라로 QR 코드를 스캔하세요.</p>
+      <img class="dialog-qr" id="dialogQr" alt="">
+      <span class="dialog-url" id="dialogUrl"></span>
+    </section>
+  </div>
+  <section class="print-sheet" aria-label="인쇄용 게임 QR 시트">
+    <div class="print-head">
+      <div>
+        <h1>학교 안전교육 게임 QR 시트</h1>
+        <p>휴대폰 카메라로 QR 코드를 비추면 해당 게임이 바로 열립니다.</p>
+      </div>
+      <div class="print-hub">
+        <span>전체 목록<br>kimju.kr/safety</span>
+        <img src="qr/safety-hub.svg" alt="학교 안전교육 게임 모음 페이지 QR 코드">
+      </div>
+    </div>
+    <div class="print-grid" id="printGrid"></div>
+  </section>
+  <script>
+    const games = [
+      { slug:'school-fire-drill', group:'실사영상 판단훈련', series:'학교 모의 대피훈련 ①', color:'#FF6B35', title:'살아서 운동장까지', subtitle:'학교 화재 탈출 판단훈련', desc:'수업 중 화재경보가 울린 교실에서 운동장까지, 4초 안에 여섯 번을 판단한다. 오답과 머뭇거림마다 산소 게이지가 깎이고, 왜 틀렸는지 그 자리에서 확인한다.', tags:['AI 실사 영상 8컷','6장면','제한시간 4초'], url:'https://kimju1416.github.io/school-fire-drill/' },
+      { slug:'school-earthquake-drill', group:'실사영상 판단훈련', series:'학교 모의 대피훈련 ②', color:'#F2A93C', title:'흔들림이 멈출 때까지', subtitle:'학교 지진 대피 판단훈련', desc:'땅이 흔들리는 교실에서 운동장까지, 여섯 갈림길을 통과한다. 책상 밑 대피부터 계단 이동까지 실제 훈련 전에 판단력을 점검한다.', tags:['AI 실사 영상 8컷','6장면','제한시간 4초'], url:'https://kimju1416.github.io/school-earthquake-drill/' },
+      { slug:'school-civildefense-drill', group:'실사영상 판단훈련', series:'학교 모의 대피훈련 ③', color:'#4A7C9E', title:'질서있게, 안전하게', subtitle:'학교 민방위 대피 판단훈련', desc:'수업 중 공습경보 사이렌이 울리면 대피소까지 여섯 번을 판단한다. 교육부 「학교현장 재난유형별 교육·훈련 매뉴얼」 기준으로 만들었다.', tags:['AI 실사 영상 8컷','6장면','교육부 매뉴얼 기준'], url:'https://kimju1416.github.io/school-civildefense-drill/' },
+      { slug:'school-water-drill', group:'실사영상 판단훈련', series:'여름 물놀이 안전', color:'#00B4A6', title:'발이 닿는 곳까지', subtitle:'여름 물놀이 안전 판단훈련', desc:'여름 바다에서 마주치는 여섯 번의 선택. 안전구역·구명조끼·안전요원 지시부터 익수자를 발견했을 때까지, 행정안전부 국민안전24 「여름철 물놀이」 국민행동요령 기준.', tags:['AI 실사 영상 8컷','6장면','행안부 행동요령 기준'], url:'https://kimju1416.github.io/school-water-drill/' },
+      { slug:'safe-school-game', group:'탐색·방탈출', series:'학교 6구역', color:null, title:'학교 안전 탈출작전', subtitle:'학교 안전교육 방탈출', desc:'교실·복도·통학로·체육관·수영장·과학실 6구역에 숨은 위험요소를 찾아 해결한다. 안전 히어로 6종 중 하나를 골라 스캔 힌트·암호 자물쇠·순서 퍼즐을 풀고 구역마다 안전 배지를 모은다.', tags:['6구역','안전 배지 6개','OX 퀴즈'], url:'https://kimju1416.github.io/safe-school-game/' },
+      { slug:'trip-escape', group:'탐색·방탈출', series:'현장체험학습 · 초등', color:null, title:'현장체험학습 안전 대탈출', subtitle:'초등학생용', desc:'버스·휴게소·놀이공원·박물관·숙소·한밤 대피 6곳을 돌며 숨은 위험을 직접 찾아낸다. 손전등 대피와 119 신고 순서까지 통과하면 안전 지킴이 수료증을 이미지로 저장한다.', tags:['6장소','안전 배지 6개','수료증 발급'], url:'https://kimju1416.github.io/trip-escape/' },
+      { slug:'trip-escape-teen', group:'탐색·방탈출', series:'현장체험학습 · 중고', color:null, title:'현장체험학습 안전 대탈출', subtitle:'중·고등학생용 수학여행판', desc:'2박 3일 수학여행을 배경으로 전세버스·휴게소·경복궁·아쿠아리움·숙소·새벽 화재 6곳의 위험을 판단한다. 심폐소생술 순서까지 통과하면 안전 리더 인증서를 받는다.', tags:['6장소','심폐소생술','인증서 발급'], url:'https://kimju1416.github.io/trip-escape-teen/' },
+      { slug:'trip-escape-reflex', group:'반응훈련', series:'현장체험학습 · 중고', color:null, title:'순간반응 0.5초', subtitle:'현장체험학습 반응훈련', desc:'영상이 멈추지 않는 상태에서 신호가 뜨면 제한시간 안에 스와이프하거나 탭한다. 같은 상황이 예고 없이 한 번 더 온다 — 이번엔 몸이 기억해야 한다.', tags:['체험판 · 버스 구간','2회차 반복','반응속도 판정'], badge:'체험판', url:'https://kimju1416.github.io/trip-escape-reflex/' }
+    ];
+    const grid = document.getElementById('gameGrid');
+    const filters = document.getElementById('filters');
+    const resultCount = document.getElementById('resultCount');
+    const dialog = document.getElementById('qrDialog');
+    const closeDialog = document.getElementById('dialogClose');
+    let activeGroup = '전체';
+    let lastTrigger;
+    const groups = ['전체', ...new Set(games.map(game => game.group))];
+    const esc = value => String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
+    const gameCard = game => `
+      <article class="game-card" ${game.color ? `data-series-color style="--series-color:${game.color}"` : ''}>
+        <img class="shot" src="shots/${game.slug}.jpg" alt="${esc(game.title)} 게임 화면">
+        <div class="card-body">
+          <p class="series"><span class="series-dot" aria-hidden="true"></span>${esc(game.series)}</p>
+          <div class="card-title-row"><h3 class="card-title">${esc(game.title)}</h3>${game.badge ? `<span class="badge">${esc(game.badge)}</span>` : ''}</div>
+          <p class="subtitle">${esc(game.subtitle)}</p>
+          <p class="desc">${esc(game.desc)}</p>
+          <ul class="tags">${game.tags.map(tag => `<li>${esc(tag)}</li>`).join('')}</ul>
+          <div class="card-actions">
+            <a class="open-link" href="${esc(game.url)}" target="_blank" rel="noopener">게임 열기<span class="visually-hidden">: ${esc(game.title)}</span></a>
+            <button class="qr-button" type="button" data-slug="${esc(game.slug)}" aria-label="${esc(game.title)} QR 코드 띄우기"><img src="qr/${esc(game.slug)}.svg" alt="">QR 띄우기</button>
+          </div>
+        </div>
+      </article>`;
+    function renderCards() {
+      grid.innerHTML = games.map(gameCard).join('');
+      grid.querySelectorAll('.qr-button').forEach(button => button.addEventListener('click', () => openQr(button.dataset.slug, button)));
+      updateResult();
+    }
+    function renderFilters() {
+      filters.innerHTML = groups.map(group => {
+        const count = group === '전체' ? games.length : games.filter(game => game.group === group).length;
+        return `<button class="filter" type="button" data-group="${esc(group)}" aria-pressed="${group === activeGroup}">${esc(group)}<span class="filter-count">${count}</span></button>`;
+      }).join('');
+      filters.querySelectorAll('.filter').forEach(button => button.addEventListener('click', () => {
+        activeGroup = button.dataset.group;
+        grid.querySelectorAll('.game-card').forEach((card, index) => { card.hidden = activeGroup !== '전체' && games[index].group !== activeGroup; });
+        renderFilters(); updateResult();
+      }));
+    }
+    function updateResult() { const count = activeGroup === '전체' ? games.length : games.filter(game => game.group === activeGroup).length; resultCount.textContent = `${count}종 표시`; }
+    function openQr(slug, trigger) {
+      const game = games.find(item => item.slug === slug); if (!game) return;
+      lastTrigger = trigger;
+      document.getElementById('dialogTitle').textContent = game.title;
+      document.getElementById('dialogQr').src = `qr/${game.slug}.svg`;
+      document.getElementById('dialogQr').alt = `${game.title} 접속 QR 코드`;
+      document.getElementById('dialogUrl').textContent = game.url;
+      dialog.hidden = false; document.body.classList.add('modal-open'); closeDialog.focus();
+    }
+    function closeQr() { if (dialog.hidden) return; dialog.hidden = true; document.body.classList.remove('modal-open'); if (lastTrigger) lastTrigger.focus(); }
+    closeDialog.addEventListener('click', closeQr);
+    /* 바깥 클릭 닫기는 «뗀 자리»가 아니라 «누른 자리»로 판단한다 — 카드 안에서 드래그해 밖에서 떼면 닫히면 안 된다 */
+    let pressedOutside = false;
+    dialog.addEventListener('mousedown', event => { pressedOutside = event.target === dialog; });
+    dialog.addEventListener('click', event => { if (event.target === dialog && pressedOutside) closeQr(); });
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') closeQr(); });
+    document.getElementById('printGrid').innerHTML = games.map(game => `<article class="print-item"><img src="qr/${esc(game.slug)}.svg" alt="${esc(game.title)} QR 코드"><div><h2>${esc(game.title)}</h2><span class="print-sub">${esc(game.subtitle)}</span><span class="print-url">${esc(game.url)}</span></div></article>`).join('');
+    renderCards(); renderFilters();
+  </script>
+</body>
+</html>
