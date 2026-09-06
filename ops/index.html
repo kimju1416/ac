@@ -887,8 +887,13 @@ async function drawDiag() {
   for (const [name, kind, why] of NEED) {
     let ok = true, msg = '';
     try {
-      const r = await sb.from(name).select('*', { count: 'exact', head: true });
+      /* 🔴 `head:true`로 개수만 물으면 **없는 뷰도 오류를 안 낸다**(count가 null로 올 뿐).
+         그래서 첫 판에 v_app_new·v_app_idle이 없는데도 «있음»으로 찍혔다 — 없는 것을
+         있다고 말하는 점검은 없느니만 못하다. 그러니 **실제로 한 줄 읽어 본다.**
+         [[silent-pass-test-trap]] */
+      const r = await sb.from(name).select('*', { count: 'exact' }).limit(1);
       if (r.error) { ok = false; msg = r.error.message; }
+      else if (r.count == null && !(r.data && r.data.length)) { ok = false; msg = '응답이 비어 있습니다(권한이나 이름을 확인하십시오)'; }
       else rows.push({ name, kind, why, ok: true, n: r.count });
     } catch (e) { ok = false; msg = (e && e.message) || '알 수 없음'; }
     if (!ok) rows.push({ name, kind, why, ok: false, msg });
