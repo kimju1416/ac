@@ -46,7 +46,10 @@
     .game-card:focus-visible { outline:2px solid var(--red); outline-offset:3px; }
     .game-card[data-series-color]::before { content:""; height:4px; background:var(--series-color); flex:0 0 4px; }
     .game-card[hidden] { display:none; }
+    .shot-wrap { position:relative; }
     .shot { display:block; width:100%; aspect-ratio:1.6; object-fit:cover; border-bottom:1px solid var(--line); }
+    /* 재난 유형(화재·지진·민방위)이 카드에서 가장 먼저 읽히게 썸네일 위에 얹는다 */
+    .hazard { position:absolute; top:12px; left:12px; padding:6px 13px; border-radius:10px; background:var(--hz,#4A403C); color:#fff; font-size:16px; font-weight:700; line-height:1.3; letter-spacing:-.01em; white-space:nowrap; box-shadow:0 1px 4px rgba(0,0,0,.3); }
     .card-body { display:flex; flex:1; flex-direction:column; padding:18px; }
     .series { margin:0 0 4px; color:var(--muted); font-size:13px; line-height:1.5; }
     .card-title-row { display:flex; align-items:flex-start; gap:8px; }
@@ -97,6 +100,7 @@
       .print-grid { display:grid; grid-template-columns:repeat(2,1fr); grid-auto-rows:52mm; gap:5mm 6mm; }
       .print-item { display:flex; align-items:center; gap:5mm; min-height:0; padding:3mm; border:1px solid #bbb; break-inside:avoid; }
       .print-item img { width:30mm; height:30mm; flex:0 0 30mm; }
+      .print-item .print-hz { display:inline-block; margin:0 0 1.5mm; padding:0.6mm 2mm; border:1pt solid #000; border-radius:1mm; font-size:9.5pt; font-weight:700; line-height:1.3; }
       .print-item h2 { margin:0 0 1mm; font-size:11pt; line-height:1.3; }
       .print-item .print-sub { display:block; margin:0 0 2mm; color:#000; font-size:9pt; line-height:1.3; }
       .print-item .print-url { display:block; color:#444; font-size:8.5pt; line-height:1.3; overflow-wrap:anywhere; word-break:break-all; }
@@ -108,7 +112,7 @@
     <header class="site-header">
       <div class="head-copy">
         <h1>학교 안전교육 게임 모음</h1>
-        <p>교실 TV에서 QR을 띄운 뒤, 학생이 각자 휴대폰으로 접속합니다.</p>
+        <p>화재 · 지진 · 민방위 대피훈련과 안전 방탈출. 교실 TV에 QR을 띄우면 학생이 각자 휴대폰으로 접속합니다.</p>
       </div>
       <div class="header-actions">
         <div class="hub-qr">
@@ -165,12 +169,12 @@
   </section>
   <script>
     const games = [
-      { slug:'school-fire-drill', group:'실사영상 판단훈련', series:'학교 모의 대피훈련 ①', color:'#FF6B35', title:'살아서 운동장까지', subtitle:'학교 화재 탈출 판단훈련', desc:'수업 중 화재경보가 울린 교실에서 운동장까지, 4초 안에 여섯 번을 판단한다. 오답과 머뭇거림마다 산소 게이지가 깎이고, 왜 틀렸는지 그 자리에서 확인한다.', tags:['AI 실사 영상 8컷','6장면','제한시간 4초'], url:'https://kimju1416.github.io/school-fire-drill/' },
-      { slug:'school-earthquake-drill', group:'실사영상 판단훈련', series:'학교 모의 대피훈련 ②', color:'#F2A93C', title:'흔들림이 멈출 때까지', subtitle:'학교 지진 대피 판단훈련', desc:'땅이 흔들리는 교실에서 운동장까지, 여섯 갈림길을 통과한다. 책상 밑 대피부터 계단 이동까지 실제 훈련 전에 판단력을 점검한다.', tags:['AI 실사 영상 8컷','6장면','제한시간 4초'], url:'https://kimju1416.github.io/school-earthquake-drill/' },
-      { slug:'school-civildefense-drill', group:'실사영상 판단훈련', series:'학교 모의 대피훈련 ③', color:'#4A7C9E', title:'질서있게, 안전하게', subtitle:'학교 민방위 대피 판단훈련', desc:'수업 중 공습경보 사이렌이 울리면 대피소까지 여섯 번을 판단한다. 교육부 「학교현장 재난유형별 교육·훈련 매뉴얼」 기준으로 만들었다.', tags:['AI 실사 영상 8컷','6장면','교육부 매뉴얼 기준'], url:'https://kimju1416.github.io/school-civildefense-drill/' },
-      { slug:'safe-school-game', group:'탐색·방탈출', series:'학교 6구역', color:null, title:'학교 안전 탈출작전', subtitle:'학교 안전교육 방탈출', desc:'교실·복도·통학로·체육관·수영장·과학실 6구역에 숨은 위험요소를 찾아 해결한다. 안전 히어로 6종 중 하나를 골라 스캔 힌트·암호 자물쇠·순서 퍼즐을 풀고 구역마다 안전 배지를 모은다.', tags:['6구역','안전 배지 6개','OX 퀴즈'], url:'https://kimju1416.github.io/safe-school-game/' },
-      { slug:'trip-escape', group:'탐색·방탈출', series:'현장체험학습 · 초등', color:null, title:'현장체험학습 안전 대탈출', subtitle:'초등학생용', desc:'버스·휴게소·놀이공원·박물관·숙소·한밤 대피 6곳을 돌며 숨은 위험을 직접 찾아낸다. 손전등 대피와 119 신고 순서까지 통과하면 안전 지킴이 수료증을 이미지로 저장한다.', tags:['6장소','안전 배지 6개','수료증 발급'], url:'https://kimju1416.github.io/trip-escape/' },
-      { slug:'trip-escape-teen', group:'탐색·방탈출', series:'현장체험학습 · 중고', color:null, title:'현장체험학습 안전 대탈출', subtitle:'중·고등학생용 수학여행판', desc:'2박 3일 수학여행을 배경으로 전세버스·휴게소·경복궁·아쿠아리움·숙소·새벽 화재 6곳의 위험을 판단한다. 심폐소생술 순서까지 통과하면 안전 리더 인증서를 받는다.', tags:['6장소','심폐소생술','인증서 발급'], url:'https://kimju1416.github.io/trip-escape-teen/' }
+      { slug:'school-fire-drill', hazard:'화재', group:'실사영상 판단훈련', series:'학교 모의 대피훈련 ①', color:'#FF6B35', title:'살아서 운동장까지', subtitle:'학교 화재 탈출 판단훈련', desc:'수업 중 화재경보가 울린 교실에서 운동장까지, 4초 안에 여섯 번을 판단한다. 오답과 머뭇거림마다 산소 게이지가 깎이고, 왜 틀렸는지 그 자리에서 확인한다.', tags:['AI 실사 영상 8컷','6장면','제한시간 4초'], url:'https://kimju1416.github.io/school-fire-drill/' },
+      { slug:'school-earthquake-drill', hazard:'지진', group:'실사영상 판단훈련', series:'학교 모의 대피훈련 ②', color:'#F2A93C', title:'흔들림이 멈출 때까지', subtitle:'학교 지진 대피 판단훈련', desc:'땅이 흔들리는 교실에서 운동장까지, 여섯 갈림길을 통과한다. 책상 밑 대피부터 계단 이동까지 실제 훈련 전에 판단력을 점검한다.', tags:['AI 실사 영상 8컷','6장면','제한시간 4초'], url:'https://kimju1416.github.io/school-earthquake-drill/' },
+      { slug:'school-civildefense-drill', hazard:'민방위', group:'실사영상 판단훈련', series:'학교 모의 대피훈련 ③', color:'#4A7C9E', title:'질서있게, 안전하게', subtitle:'학교 민방위 대피 판단훈련', desc:'수업 중 공습경보 사이렌이 울리면 대피소까지 여섯 번을 판단한다. 교육부 「학교현장 재난유형별 교육·훈련 매뉴얼」 기준으로 만들었다.', tags:['AI 실사 영상 8컷','6장면','교육부 매뉴얼 기준'], url:'https://kimju1416.github.io/school-civildefense-drill/' },
+      { slug:'safe-school-game', hazard:'학교 생활안전', group:'탐색·방탈출', series:'학교 6구역', color:null, title:'학교 안전 탈출작전', subtitle:'학교 안전교육 방탈출', desc:'교실·복도·통학로·체육관·수영장·과학실 6구역에 숨은 위험요소를 찾아 해결한다. 안전 히어로 6종 중 하나를 골라 스캔 힌트·암호 자물쇠·순서 퍼즐을 풀고 구역마다 안전 배지를 모은다.', tags:['6구역','안전 배지 6개','OX 퀴즈'], url:'https://kimju1416.github.io/safe-school-game/' },
+      { slug:'trip-escape', hazard:'현장체험학습', group:'탐색·방탈출', series:'현장체험학습 · 초등', color:null, title:'현장체험학습 안전 대탈출', subtitle:'초등학생용', desc:'버스·휴게소·놀이공원·박물관·숙소·한밤 대피 6곳을 돌며 숨은 위험을 직접 찾아낸다. 손전등 대피와 119 신고 순서까지 통과하면 안전 지킴이 수료증을 이미지로 저장한다.', tags:['6장소','안전 배지 6개','수료증 발급'], url:'https://kimju1416.github.io/trip-escape/' },
+      { slug:'trip-escape-teen', hazard:'수학여행', group:'탐색·방탈출', series:'현장체험학습 · 중고', color:null, title:'현장체험학습 안전 대탈출', subtitle:'중·고등학생용 수학여행판', desc:'2박 3일 수학여행을 배경으로 전세버스·휴게소·경복궁·아쿠아리움·숙소·새벽 화재 6곳의 위험을 판단한다. 심폐소생술 순서까지 통과하면 안전 리더 인증서를 받는다.', tags:['6장소','심폐소생술','인증서 발급'], url:'https://kimju1416.github.io/trip-escape-teen/' }
     ];
     const grid = document.getElementById('gameGrid');
     const filters = document.getElementById('filters');
@@ -183,7 +187,10 @@
     const esc = value => String(value).replace(/[&<>'"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
     const gameCard = game => `
       <article class="game-card" ${game.color ? `data-series-color style="--series-color:${game.color}"` : ''}>
-        <img class="shot" src="shots/${game.slug}.jpg" alt="${esc(game.title)} 게임 화면">
+        <div class="shot-wrap">
+          <img class="shot" src="shots/${game.slug}.jpg" alt="${esc(game.title)} 게임 화면">
+          <span class="hazard"${game.color ? ` style="--hz:${game.color}"` : ''}>${esc(game.hazard)}</span>
+        </div>
         <div class="card-body">
           <p class="series">${esc(game.series)}</p>
           <div class="card-title-row"><h3 class="card-title">${esc(game.title)}</h3>${game.badge ? `<span class="badge">${esc(game.badge)}</span>` : ''}</div>
@@ -238,7 +245,7 @@
     dialog.addEventListener('mousedown', event => { pressedOutside = event.target === dialog; });
     dialog.addEventListener('click', event => { if (event.target === dialog && pressedOutside) closeQr(); });
     document.addEventListener('keydown', event => { if (event.key === 'Escape') closeQr(); });
-    document.getElementById('printGrid').innerHTML = games.map(game => `<article class="print-item"><img src="qr/${esc(game.slug)}.svg" alt="${esc(game.title)} QR 코드"><div><h2>${esc(game.title)}</h2><span class="print-sub">${esc(game.subtitle)}</span><span class="print-url">${esc(game.url)}</span></div></article>`).join('');
+    document.getElementById('printGrid').innerHTML = games.map(game => `<article class="print-item"><img src="qr/${esc(game.slug)}.svg" alt="${esc(game.title)} QR 코드"><div><span class="print-hz">${esc(game.hazard)}</span><h2>${esc(game.title)}</h2><span class="print-sub">${esc(game.subtitle)}</span><span class="print-url">${esc(game.url)}</span></div></article>`).join('');
     renderCards(); renderFilters();
   </script>
 </body>
