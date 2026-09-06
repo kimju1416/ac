@@ -133,6 +133,8 @@ td.body{white-space:pre-wrap}   /* 여러 줄로 적어 보내신 의견이 한 
 /* 버전 비율 — 숫자만 있으면 어느 판이 주력인지 한눈에 안 들어온다 */
 .sharewrap{display:block;height:5px;background:var(--soft);border-radius:3px;margin-top:5px;overflow:hidden}
 .share{display:block;height:100%;background:var(--ac);opacity:.7;border-radius:3px}
+/* 닿은 정도를 가르는 두 색 — 초록은 «앞으로 닿을 수 있다», 주황은 «손으로 받아야 한다» */
+.share.ok{background:var(--ok)} .share.warn{background:var(--warn)}
 tr.old td:first-child{color:var(--tx3)}
 
 /* 공지 쓰기 */
@@ -178,6 +180,12 @@ textarea:focus{border-color:var(--ac)}
   <!-- 두 앱을 섞으면 어느 쪽 숫자인지 알 수 없다 — 아래는 고른 앱 하나만 본다.
        공지도 여기서 고른 앱으로만 나간다(쌤집 공지가 TD2에 뜨면 안 된다). -->
   <div class="pick" id="pick"></div>
+
+  <!-- 「고쳐서 냈는데 안 닿는다」가 이 앱들의 가장 큰 구멍이다(2026-09-06: psHelper 오류를
+       v3.21.1에서 고쳤는데 그 판이 0.9%뿐이라 421대가 그대로 겪고 있었다).
+       그 판단을 손으로 계산하지 않아도 되게 맨 위에 둔다. -->
+  <h2>새 판이 얼마나 닿았나 <span class="mut" id="reachFor"></span></h2>
+  <div id="reach"></div>
 
   <!-- 새 판 알림의 근거(app_meta.latest). 저장소가 비공개이거나 학교망이 api.github.com 을
        막으면 앱은 이 값만 보고 «새 판이 나왔다»를 안다 — 릴리스하고 여기를 안 올리면
@@ -233,6 +241,11 @@ textarea:focus{border-color:var(--ac)}
 
   <h2>오류</h2>
   <div class="tw" id="err"></div>
+
+  <!-- 🔴 2026-09-06: 집계 뷰 두 개가 없는 채로 몇 달을 썼다. 화면이 대비책으로 조용히
+       버텨 주는 바람에 아무도 몰랐다. 「없으면 없다고 말하는 자리」를 만들어 둔다. -->
+  <h2>시스템 점검 <span class="mut">· 이 화면이 기대는 것들</span></h2>
+  <div class="tw" id="diag"><div class="empty">확인하는 중…</div></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -406,6 +419,7 @@ async function errFirstBySelf() {
 function drawAll() {
   const only = rows => rows.filter(r => r.app === cur);
   drawCards(DATA.sum);
+  drawReach(only(DATA.ver));      // 맨 위 — «고쳐서 냈는데 닿았나»가 가장 먼저 볼 것이다
   drawMeta();
   drawNotices(only(DATA.nt || []));
   drawChart(only(DATA.daily));
@@ -413,6 +427,9 @@ function drawAll() {
   drawVersions(only(DATA.ver));
   drawRetention(only(DATA.ret));
   drawErrors(only(DATA.err));
+  /* 점검은 서버를 열두 번 더 두드리므로 화면을 다 그린 뒤에 따로 돌린다 —
+     이것 때문에 본 화면이 늦어지면 안 된다. */
+  drawDiag();
 }
 
 /* ─── 최신 판 번호 (app_meta.latest) ───
@@ -713,6 +730,64 @@ $('#fbPurge').addEventListener('click', async () => {
   drawFeedback();
 });
 
+/* ─── 새 판이 얼마나 닿았나 ───
+   이 앱들의 가장 큰 구멍은 «만드는 것»이 아니라 «닿는 것»이다.
+   2026-09-06에 실제로 이랬다 — psHelper 오류를 v3.21.1에서 고쳐 냈는데 그 판이 22대(0.9%)뿐이라
+   **421대가 고쳐진 줄도 모르고 그대로 겪고 있었다.** 그날 나는 이 숫자들을 손으로 계산했다.
+   그런 계산을 매번 손으로 하지 않게 화면에 둔다.
+
+   세 가지를 가른다.
+     ① 낸 판(app_meta.latest)을 실제로 쓰는 분 — 이게 «닿은» 것이다
+     ② 자동 업데이트를 가진 판 이상 — 앞으로 «닿을 수 있는» 분(그 아래는 손으로 받아야 한다)
+     ③ 그 아래 옛 판 — 알림조차 못 받는 분
+   ⚠️ ②의 기준은 앱마다 다르다. TD2는 v3.15(받아서 설치 도입), 쌤집은 v0.7.74다. */
+const AUTO_FROM = { td2: '3.15.0', ssam: '0.7.74' };
+function drawReach(rows) {
+  const box = $('#reach');
+  if (!box) return;
+  $('#reachFor').textContent = '· ' + nm(cur);
+  const meta = (DATA.meta || []).find(m => m.app === cur);
+  const want = meta && meta.latest ? String(meta.latest) : '';
+  if (!rows.length) { box.innerHTML = `<div class="tw"><div class="empty">${esc(nm(cur))} — 아직 버전 자료가 없습니다.</div></div>`; return; }
+
+  const tot = rows.reduce((s, r) => s + r.machines, 0);
+  const num = rows.filter(r => /^\d/.test(r.version));          // '옛기록' 같은 줄은 빼고 견준다
+  const newest = num.map(r => r.version).sort(cmpVer).pop() || '';
+  const auto = AUTO_FROM[cur] || '';
+  const sum = f => num.filter(f).reduce((s, r) => s + r.machines, 0);
+
+  // 낸 판이 분포에 아직 안 보이면 «막 냈다»는 뜻이다 — 0대라고 잘라 말하지 않는다
+  const onWant = want ? sum(r => cmpVer(r.version, want) >= 0) : 0;
+  const canGet = auto ? sum(r => cmpVer(r.version, auto) >= 0) : 0;
+  const tooOld = auto ? sum(r => cmpVer(r.version, auto) < 0) : 0;
+  const behind = want ? sum(r => cmpVer(r.version, want) < 0) : 0;
+
+  /* 색으로 재촉하지 않는다 — 숫자가 낮은 것은 잘못이 아니라 «시간이 필요하다»는 뜻일 때가 많다
+     (주말엔 평일의 11분의 1만 켠다). 대신 무엇을 보고 판단할지 문장으로 적는다. */
+  const bar = (n, cls) => `<span class="sharewrap"><span class="share${cls ? ' ' + cls : ''}" style="width:${tot ? n / tot * 100 : 0}%"></span></span>`;
+  box.innerHTML = `<div class="tw"><table><tbody>
+    <tr><td>낸 판 <b>${want ? 'v' + esc(want) : '(안 적힘)'}</b>을 쓰는 분${
+      want && newest && cmpVer(newest, want) > 0 ? ` <span class="tag">분포에는 v${esc(newest)}까지 보임</span>` : ''}
+      ${bar(onWant)}</td>
+      <td class="num"><b>${onWant}</b>대</td><td class="num mut">${pct(onWant, tot)}</td></tr>
+    <tr><td>앞으로 <b>알림이 닿을 수 있는</b> 분 <span class="mut">(v${esc(auto || '?')} 이상 — 앱이 받아서 설치)</span>
+      ${bar(canGet, 'ok')}</td>
+      <td class="num"><b>${canGet}</b>대</td><td class="num mut">${pct(canGet, tot)}</td></tr>
+    <tr><td>그 아래 옛 판 <span class="mut">(알림을 받아도 손으로 받아 설치해야 합니다)</span>
+      ${bar(tooOld, 'warn')}</td>
+      <td class="num"><b>${tooOld}</b>대</td><td class="num mut">${pct(tooOld, tot)}</td></tr>
+  </tbody></table>
+  <div class="empty" style="text-align:left">최근 14일에 신호가 있던 <b>${tot}대</b> 기준입니다. `
+    + (!want ? '먼저 아래 <b>최신 판 번호</b>를 채워 주세요 — 그 값이 없으면 무엇에 견줄지 알 수 없습니다.'
+      : behind === 0 ? '모두 낸 판을 쓰고 계십니다.'
+        : `아직 <b>${behind}대</b>가 낸 판보다 옛것을 쓰고 있습니다. `
+          + (canGet > onWant
+            ? `그중 <b>${canGet - onWant}대</b>는 앱이 알아서 받아 설치할 수 있는 판이라, <b>앱을 켜기만 하면</b> 따라옵니다 — 주말이면 월요일까지 기다려 보십시오.`
+            : '')
+          + (tooOld ? ` 나머지 <b>${tooOld}대</b>는 자동 설치가 없던 판이라 손으로 받아야 합니다 — 공지로 한 번 알리는 편이 빠릅니다.` : ''))
+    + `</div></div>`;
+}
+
 /* ─── 버전 ───
    판을 낼수록 줄이 늘어난다. 정작 볼 것은 "최신이 얼마나 퍼졌나"와
    "아직 옛 판에 남은 분이 몇인가" 둘뿐이라, 주력 몇 줄만 펴 두고 나머지는 접는다. */
@@ -786,10 +861,77 @@ function drawRetention(rows) {
     <div class="empty" style="text-align:left;padding-top:0">설치한 지 그만큼 지난 분만 셉니다 — 어제 설치한 분을 넣으면 숫자가 늘 나빠 보입니다.</div>` + idleBox();
 }
 
+/* ─── 시스템 점검 ───
+   🔴 왜 만들었나 — 집계 뷰 두 개(v_app_new·v_app_idle)가 **몇 달 동안 없는 채로** 돌고 있었다.
+      화면이 대비책으로 조용히 버텨 주는 바람에 아무도 몰랐고, 2026-09-06에 콘솔 404를
+      들여다보고서야 드러났다. **조용한 실패는 결국 사람을 속인다** — 없으면 없다고 말하게 한다.
+   ⚠️ 한 번에 다 물어보되, 실패해도 화면 전체를 죽이지 않는다(각각 try). */
+const NEED = [
+  ['app_ping', '표', '설치·실행 기록 — 모든 숫자의 원본'],
+  ['app_feedback', '표', '보내 주신 의견'],
+  ['app_error', '표', '오류 보고'],
+  ['app_notice', '표', '공지'],
+  ['app_meta', '표', '새 판 알림의 근거(최신 판 번호)'],
+  ['v_app_summary', '뷰', '설치·오늘·최근 7일'],
+  ['v_app_daily', '뷰', '30일 그래프'],
+  ['v_app_versions', '뷰', '버전 분포'],
+  ['v_app_retention', '뷰', '계속 쓰시는가'],
+  ['v_app_errors', '뷰', '오류 묶음'],
+  ['v_app_new', '뷰', '새로 오신 분'],
+  ['v_app_idle', '뷰', '잠잠한 컴퓨터']
+];
+async function drawDiag() {
+  const box = $('#diag');
+  if (!box) return;
+  const rows = [];
+  for (const [name, kind, why] of NEED) {
+    let ok = true, msg = '';
+    try {
+      const r = await sb.from(name).select('*', { count: 'exact', head: true });
+      if (r.error) { ok = false; msg = r.error.message; }
+      else rows.push({ name, kind, why, ok: true, n: r.count });
+    } catch (e) { ok = false; msg = (e && e.message) || '알 수 없음'; }
+    if (!ok) rows.push({ name, kind, why, ok: false, msg });
+  }
+  const bad = rows.filter(r => !r.ok);
+  box.innerHTML = `<table><thead><tr><th>이름</th><th>무엇에 쓰나</th><th class="num">줄</th><th>상태</th></tr></thead><tbody>${
+    rows.map(r => `<tr class="${r.ok ? '' : 'old'}">
+      <td><code>${esc(r.name)}</code> <span class="mut">${r.kind}</span></td>
+      <td class="mut">${esc(r.why)}</td>
+      <td class="num">${r.ok && r.n != null ? r.n.toLocaleString() : '—'}</td>
+      <td>${r.ok ? '<span class="tag thanks">있음</span>'
+        : '<span class="tag bug">없음</span> <span class="mut">' + esc(String(r.msg).slice(0, 46)) + '</span>'}</td>
+    </tr>`).join('')}</tbody></table>
+    <div class="empty" style="text-align:left">`
+    + (bad.length
+      ? `<b>${bad.length}가지가 빠져 있습니다.</b> 빠진 것이 뷰라면 화면은 원본을 긁어 대신 세느라 느려지고, 표라면 그 기능이 통째로 멎습니다. `
+      + `<code>teacherdesk2/db/add-missing-views.sql</code>(또는 <code>telemetry.sql</code>)을 Supabase 콘솔 <b>SQL Editor</b>에서 실행하십시오.<br>`
+      + `⚠️ 실행했는데도 계속 «없음»이면 <b>스키마 캐시</b>가 아직 안 바뀐 것입니다 — 콘솔에서 <code>notify pgrst, 'reload schema';</code> 한 줄을 더 실행하거나 1~2분 뒤 새로고침해 보십시오.`
+      : '모두 제자리에 있습니다. 이 화면의 숫자는 모두 서버가 미리 세어 둔 값입니다.')
+    + `</div>`;
+}
+
 /* ─── 오류 ───
    고친 오류가 표에 계속 남아 있으면 새로 난 것이 묻힌다. 묶음째 지운다
    (같은 sig = 같은 오류. 한 줄만 지워 봐야 나머지가 그대로 남는다). */
 const ERR = { step: 6, show: 6 };
+/* 오류 한 줄이 «지금 급한가»를 가르는 것은 횟수가 아니라 **낸 판에서도 나는가**이다.
+   2026-09-06에 실제로 필요했다 — 703회·421대짜리 1위 오류가 이미 v3.21.1에서 고쳐져
+   있었는데, 표만 봐서는 그걸 알 수 없어 소스를 뒤져야 했다.
+   ⚠️ 단정하지 않는다. 낸 판을 쓰는 분이 아직 적으면 «안 났다»가 아니라 «아직 모른다»이다. */
+function errWhere(r) {
+  const meta = (DATA.meta || []).find(m => m.app === cur);
+  const want = meta && meta.latest ? String(meta.latest) : '';
+  if (!want || !r.version || !/^\d/.test(r.version)) return '';
+  const vs = (DATA.ver || []).filter(x => x.app === cur && /^\d/.test(x.version));
+  const onWant = vs.filter(x => cmpVer(x.version, want) >= 0).reduce((s, x) => s + x.machines, 0);
+  if (cmpVer(r.version, want) >= 0) {
+    return ` <span class="tag bug">낸 판에서도 남</span>`;
+  }
+  return onWant >= 30
+    ? ` <span class="tag thanks">낸 판(v${esc(want)})에서는 안 남</span>`
+    : ` <span class="tag">낸 판은 아직 ${onWant}대뿐 — 더 지켜봐야 함</span>`;
+}
 function drawErrors(rows) {
   if (!rows.length) { $('#err').innerHTML = `<div class="empty">${esc(nm(cur))} — 최근 30일 동안 들어온 오류가 없습니다.</div>`; return; }
   const shown = rows.slice(0, ERR.show);
@@ -802,7 +944,7 @@ function drawErrors(rows) {
       <td class="mut cfirst">${r.first_at ? esc(when(r.first_at)) : '—'}${fresh(r) ? ' <span class="tag new">새로</span>' : ''}</td>
       <td class="mut">${esc(when(r.last_at))}<span class="mfirst">${
         r.first_at ? '처음 ' + esc(when(r.first_at)) : ''}${fresh(r) ? ' <span class="tag new">새로</span>' : ''}</span></td>
-      <td class="body">${esc(r.sample)}</td>
+      <td class="body">${esc(r.sample)}${errWhere(r)}</td>
       <td class="mut">v${esc(r.version || '?')}</td>
       <td class="num">${r.hits}</td><td class="num">${r.machines}</td>
       <td class="num"><button class="x" title="이 오류 묶음 지우기">✕</button></td></tr>`).join('')}</tbody></table>`
