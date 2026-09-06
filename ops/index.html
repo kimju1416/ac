@@ -363,25 +363,54 @@ function dayShift(s, n) {
   return d.toISOString().slice(0, 10);
 }
 
+/* 한 번 센 것은 기억해 둔다 — 핑은 **덧붙기만 하고 옛 줄은 안 바뀐다.**
+   그래서 어제까지의 «첫날·마지막날»은 다시 셀 필요가 없다. 다음부터는 그날 이후만 읽어
+   덧댄다. 첫 한 번만 무겁고 그 뒤로는 하루치(수천 줄)만 읽는다.
+   🔴 뷰를 못 까는 동안 이 화면이 점점 느려지는 것을 막는 자리다(2026-09-06).
+   ⚠️ 기억한 값이 **부분만 읽은 것이면 «첫날»이 틀어진다** — 그래서 전부 읽어 낸 판에만
+      기억을 남기고(full=true), 중간에 끊겼으면 기억하지 않는다.
+   ⚠️ 저장이 막힌 브라우저(사생활 보호 창 등)에서도 그냥 예전처럼 전부 읽으면 된다. */
+const LIFE_KEY = 'ops.life.v1';
+function lifeCacheRead() {
+  try {
+    const j = JSON.parse(localStorage.getItem(LIFE_KEY) || 'null');
+    return (j && j.full && j.upto && j.life) ? j : null;
+  } catch (e) { return null; }
+}
+function lifeCacheWrite(upto, life) {
+  try { localStorage.setItem(LIFE_KEY, JSON.stringify({ full: true, upto, life })); }
+  catch (e) { /* 저장이 막혔으면 다음에도 전부 읽으면 그만이다 */ }
+}
+
 async function lifeBySelf() {
-  const rows = [];
+  const cached = lifeCacheRead();
+  const life = {};                            // 컴퓨터마다 첫날·마지막날
+  let readRows = 0, partial = false;
+  if (cached) for (const k of Object.keys(cached.life)) life[k] = { ...cached.life[k] };
+
   const STEP = 1000, CAP = 120000;          // 넉넉히 잡되 끝은 둔다 — 브라우저가 멎으면 안 된다
   for (let from = 0; from < CAP; from += STEP) {
-    const { data, error } = await sb.from('app_ping').select('app,install_id,day')
-      .range(from, from + STEP - 1);
-    if (error || !data || !data.length) break;
-    for (let i = 0; i < data.length; i++) rows.push(data[i]);
+    /* 🔴 정렬을 못 박는다 — 없으면 페이지 경계에서 줄이 겹치거나 빠질 수 있다(순서 미보장).
+       기억해 둔 날 **이후만** 읽되, 그날 하루는 다시 읽는다(그날 중간에 멈췄을 수 있다). */
+    let q = sb.from('app_ping').select('app,install_id,day').order('day', { ascending: true });
+    if (cached) q = q.gte('day', cached.upto);
+    const { data, error } = await q.range(from, from + STEP - 1);
+    if (error) { partial = true; break; }
+    if (!data || !data.length) break;
+    readRows += data.length;
+    for (const r of data) {
+      const k = r.app + '|' + r.install_id, v = life[k];
+      if (!v) life[k] = { app: r.app, first: r.day, last: r.day };
+      else { if (r.day < v.first) v.first = r.day; if (r.day > v.last) v.last = r.day; }
+    }
     if (data.length < STEP) break;
+    if (from + STEP >= CAP) partial = true;   // 끝까지 못 읽었으면 기억하지 않는다
   }
   DATA.slow = true;
-  if (!rows.length) { DATA.nw = DATA.nw || []; DATA.idle = DATA.idle || []; return; }
-
-  const life = {};                            // 컴퓨터마다 첫날·마지막날
-  rows.forEach(r => {
-    const k = r.app + '|' + r.install_id, v = life[k];
-    if (!v) life[k] = { app: r.app, first: r.day, last: r.day };
-    else { if (r.day < v.first) v.first = r.day; if (r.day > v.last) v.last = r.day; }
-  });
+  DATA.slowRead = readRows;
+  DATA.slowCached = !!cached;
+  if (!Object.keys(life).length) { DATA.nw = DATA.nw || []; DATA.idle = DATA.idle || []; return; }
+  if (!partial) lifeCacheWrite(kstToday(), life);
 
   const today = kstToday(), from30 = dayShift(today, -29);
   const c7 = dayShift(today, -7), c14 = dayShift(today, -14), c30 = dayShift(today, -30);
@@ -561,10 +590,13 @@ function drawSlowNote() {
     el.style.cssText = 'margin:10px 0 0;padding:9px 12px;border:1px solid var(--line);border-radius:9px;background:var(--soft)';
     box.insertAdjacentElement('afterend', el);
   }
+  const n = DATA.slowRead == null ? null : DATA.slowRead.toLocaleString();
   el.innerHTML = '<b>새로 N</b>·<b>조용한 컴퓨터</b> 두 값은 <b>브라우저가 직접 센 것</b>입니다 — '
-    + '집계 뷰(<code>v_app_new</code>·<code>v_app_idle</code>)가 아직 안 깔려 있어 '
-    + '기록 원본을 통째로 읽어 세는 중이라, 자료가 쌓일수록 이 화면이 느려집니다. '
-    + '<code>db/add-missing-views.sql</code>을 Supabase 콘솔에서 한 번 실행하면 이 줄은 사라집니다.';
+    + '집계 뷰(<code>v_app_new</code>·<code>v_app_idle</code>)가 아직 안 깔려 있기 때문입니다. '
+    + (DATA.slowCached
+      ? `한 번 센 것은 기억해 두므로 이번에는 <b>${n}줄</b>만 새로 읽었습니다(어제까지는 안 다시 셉니다).`
+      : `이번에는 <b>${n}줄</b>을 처음부터 읽었고, 다음부터는 그날 이후만 읽습니다.`)
+    + ' <code>db/add-missing-views.sql</code>을 Supabase 콘솔에서 한 번 실행하면 이 줄은 사라지고 서버가 대신 셉니다.';
 }
 
 function drawChart(rows) {
