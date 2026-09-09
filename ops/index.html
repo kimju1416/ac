@@ -92,6 +92,18 @@ td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
 tr:last-child td{border-bottom:none}
 td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
 td.body{white-space:pre-wrap}   /* 여러 줄로 적어 보내신 의견이 한 줄로 뭉치지 않게 */
+/* ─── 답장 (2026-09-10) ───
+   「있는 기능을 만들어 달라」는 제보가 자꾸 오는데 답할 길이 없었다. 그분은 깜깜무소식이니
+   기능이 없는 줄 알고 앱을 지운다. 여기 적으면 그분 앱 [의견] 탭에 그대로 보인다.
+   🔴 익명은 그대로다 — 나는 누구인지 모르고, install_id로만 그분 앱에 닿는다. */
+.rp{margin-top:8px;display:flex;gap:6px;align-items:flex-start;flex-wrap:wrap}
+.rp textarea{flex:1 1 260px;min-width:200px;box-sizing:border-box;resize:vertical;
+  font:inherit;line-height:1.5;padding:6px 8px;border:1px solid var(--line);
+  border-radius:7px;background:var(--card);color:var(--tx);white-space:pre-wrap}
+.rp button{white-space:nowrap}
+.rpat{font-size:11px;align-self:center}
+/* 이미 보낸 답장은 한눈에 — 답장한 것과 안 한 것을 못 가르면 같은 사람에게 두 번 쓴다 */
+.rp.sent textarea{border-left:3px solid var(--ok)}
 .tag{display:inline-block;font-size:10.5px;padding:2px 7px;border-radius:5px;
   background:var(--soft);color:var(--tx2);white-space:nowrap}
 .tag.bug{background:rgba(194,65,12,.12);color:var(--warn)}
@@ -722,7 +734,12 @@ function drawFeedback() {
     <tr class="${r.handled ? 'done' : ''}" data-id="${r.id}">
       <td class="mut">${esc(when(r.created_at))}</td>
       <td><span class="tag ${esc(r.kind)}">${esc(KIND[r.kind] || r.kind)}</span></td>
-      <td class="body">${esc(r.body)}</td>
+      <td class="body">${esc(r.body)}
+        <div class="rp${r.replied_at ? ' sent' : ''}">
+          <textarea rows="2" placeholder="답장 — 그분 앱 [의견] 탭에 그대로 보입니다">${esc(r.reply || '')}</textarea>
+          <button class="rpsend">${r.reply ? '답장 고치기' : '답장 보내기'}</button>
+          <span class="rpat mut">${r.replied_at ? esc(when(r.replied_at)) + '에 보냄' : ''}</span>
+        </div></td>
       <td class="mut">v${esc(r.version || '?')}<br>${esc(r.os || '')}${fbWho(r)}</td>
       <td class="num"><input type="checkbox" style="width:auto" ${r.handled ? 'checked' : ''}></td>
       <td class="num"><button class="x" title="이 의견 지우기">✕</button></td>
@@ -752,6 +769,33 @@ function drawFeedback() {
       // '안 읽음'만 보는 중이면 방금 처리한 줄은 목록에서 빠져야 한다 — 세어 둔 숫자도 함께 갱신된다
       drawFeedback();
     });
+    /* 답장 보내기 — 표에 적으면 그분 앱이 다음에 켤 때 받아 간다(get_my_replies).
+       🔴 replied_at을 **반드시 함께** 갱신한다. 그게 없으면 답장을 고쳐도 그분 앱은
+          「이미 본 답장」으로 알고 다시 안 알린다(앱 쪽 repIsNew가 이 시각으로 가른다).
+       🔴 보냈으면 자동으로 «읽음»이다 — 답장까지 썼는데 안 읽음으로 남아 있으면 또 붙잡고 앉는다. */
+    const rp = tr.querySelector('.rp'), rpT = rp.querySelector('textarea'), rpB = rp.querySelector('.rpsend');
+    rpB.addEventListener('click', async () => {
+      const text = (rpT.value || '').trim();
+      if (!text) { alert('답장 내용을 적어 주세요.'); rpT.focus(); return; }
+      if (text.length > 2000) { alert('답장이 너무 깁니다 (2,000자까지).'); return; }
+      rpB.disabled = true; rpB.textContent = '보내는 중…';
+      const at = new Date().toISOString();
+      const { error } = await sb.from('app_feedback')
+        .update({ reply: text, replied_at: at, handled: true }).eq('id', id);
+      rpB.disabled = false;
+      if (error) {
+        rpB.textContent = '다시 보내기';
+        /* 칼럼이 아직 없으면 여기서 걸린다 — 무슨 일인지 정확히 말해 준다(짐작하게 두지 않는다) */
+        alert('보내지 못했습니다: ' + error.message
+          + (/replied_at|reply/.test(error.message || '')
+            ? '\n\ndb/telemetry.sql 의 «7. 답장» 부분을 먼저 실행해 주세요.' : ''));
+        return;
+      }
+      const row = (DATA.fb || []).find(r => r.id === id);
+      if (row) { row.reply = text; row.replied_at = at; row.handled = true; }
+      drawFeedback();
+    });
+
     tr.querySelector('.x').addEventListener('click', async () => {
       if (!confirm('이 의견을 아주 지울까요? 되돌릴 수 없습니다.')) return;
       if (!await wipe(sb.from('app_feedback').delete().eq('id', id), '의견을')) return;
