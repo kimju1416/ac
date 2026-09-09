@@ -430,18 +430,44 @@ async function lifeBySelf() {
   DATA.idle = Object.keys(idleBy).map(k => idleBy[k]);
 }
 
-/* 오류가 처음 난 날 — 뷰에 first_at 이 없으면 원본에서 묶음마다 가장 이른 것을 찾는다 */
+/* 오류가 처음 난 날 + **판별 건수** — 뷰에 first_at 이 없으면 원본에서 묶음마다 가장 이른 것을 찾는다.
+   🔴 판별 건수를 함께 세는 까닭 (2026-09-09):
+      뷰가 주는 version은 «그 묶음에서 가장 최근에 보고한 판» 하나뿐이다. 그래서
+      옛 판에서 150건 나고 낸 판에서 2건 난 묶음이 «v3.26.0 · 낸 판에서도 남»으로 찍혔다.
+      실제로는 3.18~3.21(도우미를 무조건 띄우고 종료 가드도 없던 판)이 퇴근 시각에 보내는
+      잡음이었는데, 표만 보면 **방금 낸 판이 107대를 망가뜨린 것처럼** 읽힌다.
+      한 줄을 잘못 읽으면 급하지도 않은 것에 하루를 쓴다 — 그래서 섞임을 그대로 보여 준다. */
 async function errFirstBySelf() {
   const since = new Date(Date.now() - 31 * 864e5).toISOString();
-  const { data } = await sb.from('app_error').select('app,sig,created_at')
+  const { data } = await sb.from('app_error').select('app,sig,created_at,version')
     .gte('created_at', since).limit(8000);
   if (!data || !data.length) return;
-  const min = {};
+  const min = {}, mix = {};
   data.forEach(r => {
     const k = r.app + '|' + r.sig;
     if (!min[k] || r.created_at < min[k]) min[k] = r.created_at;
+    const v = r.version || '?';
+    (mix[k] = mix[k] || {})[v] = (mix[k][v] || 0) + 1;
   });
-  (DATA.err || []).forEach(r => { r.first_at = min[r.app + '|' + r.sig] || null; });
+  (DATA.err || []).forEach(r => {
+    const k = r.app + '|' + r.sig;
+    r.first_at = min[k] || null;
+    r.mix = mix[k] || null;
+  });
+}
+
+/* 묶음 하나의 판 섞임 — 낸 판에서 몇 건, 옛 판에서 몇 건, 제일 많이 난 판은 무엇인가 */
+function errMix(r) {
+  if (!r.mix) return null;
+  const meta = (DATA.meta || []).find(m => m.app === cur);
+  const want = meta && meta.latest ? String(meta.latest) : '';
+  let onNew = 0, onOld = 0, top = '', topN = 0;
+  for (const v of Object.keys(r.mix)) {
+    const n = r.mix[v];
+    if (n > topN) { topN = n; top = v; }
+    if (want && /^\d/.test(v) && cmpVer(v, want) >= 0) onNew += n; else onOld += n;
+  }
+  return { onNew, onOld, top, topN, total: onNew + onOld };
 }
 
 /* 카드는 두 앱 모두, 나머지는 고른 앱만 */
@@ -962,12 +988,23 @@ function errWhere(r) {
   if (!want || !r.version || !/^\d/.test(r.version)) return '';
   const vs = (DATA.ver || []).filter(x => x.app === cur && /^\d/.test(x.version));
   const onWant = vs.filter(x => cmpVer(x.version, want) >= 0).reduce((s, x) => s + x.machines, 0);
-  if (cmpVer(r.version, want) >= 0) {
-    return ` <span class="tag bug">낸 판에서도 남</span>`;
-  }
-  return onWant >= 30
+  const notYet = onWant >= 30
     ? ` <span class="tag thanks">낸 판(v${esc(want)})에서는 안 남</span>`
     : ` <span class="tag">낸 판은 아직 ${onWant}대뿐 — 더 지켜봐야 함</span>`;
+
+  /* 🔴 판별 건수로 가른다. 예전에는 «가장 최근에 보고한 판»만 보고 빨간 배지를 붙여서,
+     152건 중 2건만 낸 판인 묶음도 «낸 판에서도 남»으로 읽혔다(2026-09-09).
+     빨간 배지는 **낸 판에서 실제로 여러 번, 그리고 무시 못 할 비중으로** 날 때만 붙인다. */
+  const m = errMix(r);
+  if (m && m.total) {
+    if (!m.onNew) return notYet;
+    const share = m.onNew / m.total;
+    return (m.onNew >= 5 && share >= 0.2)
+      ? ` <span class="tag bug">낸 판에서도 남 — ${m.onNew}건</span>`
+      : ` <span class="tag">낸 판 ${m.onNew}건 · 옛 판 ${m.onOld}건</span>`;
+  }
+  // 섞임을 아직 못 읽었을 때(원본 조회 전)는 예전처럼 판 하나로 가른다
+  return cmpVer(r.version, want) >= 0 ? ` <span class="tag bug">낸 판에서도 남</span>` : notYet;
 }
 function drawErrors(rows) {
   if (!rows.length) { $('#err').innerHTML = `<div class="empty">${esc(nm(cur))} — 최근 30일 동안 들어온 오류가 없습니다.</div>`; return; }
@@ -982,13 +1019,18 @@ function drawErrors(rows) {
       <td class="mut">${esc(when(r.last_at))}<span class="mfirst">${
         r.first_at ? '처음 ' + esc(when(r.first_at)) : ''}${fresh(r) ? ' <span class="tag new">새로</span>' : ''}</span></td>
       <td class="body">${esc(r.sample)}${errWhere(r)}</td>
-      <td class="mut">v${esc(r.version || '?')}</td>
+      <td class="mut">${(() => {
+      /* 제일 많이 난 판을 적는다 — «가장 최근에 보고한 판»을 적으면 한 대에서 한 번 난 새 판이
+         150건짜리 옛 판을 가린다. 옆의 건수가 «어느 판 이야기인지»를 말해 준다. */
+      const m = errMix(r);
+      return m && m.top ? `v${esc(m.top)} <span class="mfirst">${m.topN}건</span>` : 'v' + esc(r.version || '?');
+    })()}</td>
       <td class="num">${r.hits}</td><td class="num">${r.machines}</td>
       <td class="num"><button class="x" title="이 오류 묶음 지우기">✕</button></td></tr>`).join('')}</tbody></table>`
     + (rows.length > ERR.show
       ? `<div class="morewrap"><button id="errMore">${rows.length - ERR.show}가지 더 보기</button></div>`
       : (ERR.show > ERR.step ? `<div class="morewrap"><button id="errLess">접기</button></div>` : ''))
-    + `<div class="empty" style="text-align:left;padding-top:10px">파일 경로는 앱에서 이미 버리고 보냅니다. <b>대수</b>가 많을수록 급한 것입니다 — 한 대에서만 나면 그 컴퓨터 사정일 수 있습니다. 고쳐서 낸 판이 퍼진 뒤에 ✕로 치우면 새로 난 것이 눈에 띕니다.`
+    + `<div class="empty" style="text-align:left;padding-top:10px">파일 경로는 앱에서 이미 버리고 보냅니다. <b>대수</b>가 많을수록 급한 것입니다 — 한 대에서만 나면 그 컴퓨터 사정일 수 있습니다. 고쳐서 낸 판이 퍼진 뒤에 ✕로 치우면 새로 난 것이 눈에 띕니다. <b>버전 칸은 «제일 많이 난 판»</b>이고, 옆 딱지의 «낸 판 N건 · 옛 판 M건»이 어느 판 이야기인지를 말해 줍니다 — 옛 판에서 잔뜩 나고 낸 판에서 한두 번 난 것을 «낸 판 고장»으로 읽지 않게 하려는 것입니다.`
     + (newCnt ? ` <b>사흘 안에 처음 난 것이 ${newCnt}가지</b> 있습니다 — 방금 낸 판을 의심할 자리입니다.`
        : ' 사흘 안에 새로 생긴 오류는 없습니다 — 남은 것은 예전부터 있던 것들입니다.') + `</div>`;
 
