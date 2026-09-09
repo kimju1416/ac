@@ -599,6 +599,7 @@
             <div class="fgroup"><h4>학교 연동 · 업무 · 자료</h4>
               <div class="fx" data-k="급식 안 나옴 학사일정 일부만 neis 키"><span class="fn">NEIS 키 넣기</span><span class="fw">설정 [학교] 맨 아래 — <b>키가 없으면 나이스가 자료를 조금만 줍니다</b>(학급 11개 중 5개만 오는 식). 무료이고 몇 분이면 받습니다 → 03번</span></div>
               <div class="fx" data-k="업무포털 자동 로그인 인증서 나이스"><span class="fn">업무포털 자동 로그인 <span class="ftag off">기본 꺼짐</span></span><span class="fw">설정 [업무포털] — 컴퓨터를 켜면 인증서 로그인까지 마친 창을 열어 둡니다. <b>공용 컴퓨터에서는 켜지 마세요</b> → 10번</span></div>
+              <div class="fx" data-k="업무포털 로그인 안 됨 안돼요 실패 기록 로그 원인 경남 충북 대구 광주"><span class="fn">업무포털이 안 될 때 기록 보내기 <span class="ftag hid">v3.32~</span></span><span class="fw">설정 [업무포털] → <b>[기록 열기]</b> — 어느 단계에서 멈췄는지가 적혀 있습니다. 그 파일을 [의견]으로 보내 주시면 원인을 짚을 수 있어요(인증서 아이디·비밀번호·학교 이름은 안 적힙니다)</span></div>
               <div class="fx" data-k="업무포털 버튼 바탕화면 누를 때만"><span class="fn">업무포털을 누를 때만 <span class="ftag off">기본 꺼짐</span></span><span class="fw">설정 [위젯] → <b>업무포털 로그인</b>을 켜면 바탕화면에 단추 카드가 붙습니다. 자동 실행을 꺼 두어도 이 단추는 됩니다</span></div>
               <div class="fx" data-k="백업 내보내기 다른 컴퓨터 옮기기 이사"><span class="fn">다른 컴퓨터로 옮기기</span><span class="fw">설정 [데이터] → <b>설정 내보내기 / 불러오기</b>. 다만 <b>API 키와 캘린더 주소는 빠집니다</b>(백업 파일은 열면 그대로 보이는 글자 파일이라서요) — 새 컴퓨터에서 그 둘만 다시 넣으세요</span></div>
               <div class="fx" data-k="지난 일정 지우기 완료 정리 청소"><span class="fn">묵은 것 정리하기</span><span class="fw">설정 [데이터] → [지난 일정 지우기] · [완료한 할 일 지우기]</span></div>
@@ -606,6 +607,7 @@
               <div class="fx" data-k="자동 실행 부팅 시작 프로그램"><span class="fn">컴퓨터를 켤 때 자동 실행</span><span class="fw">설정 [화면] → 시작 — 설치하면 보통 켜져 있습니다</span></div>
               <div class="fx" data-k="작업표시줄 자동 숨김 가림"><span class="fn">작업표시줄 자동 숨김</span><span class="fw">설정 [화면] — <b>처음 설치하면 켜집니다</b>(화면을 세로로 더 쓰려고). 한 번 끄면 앱이 다시 켜지 않습니다</span></div>
               <div class="fx" data-k="의견 보내기 건의 오류 제보"><span class="fn">만든 사람에게 한마디</span><span class="fw">설정 [의견] — 익명으로 갑니다. <b>학생 이름은 적지 마세요</b>(적으면 그대로 전송됩니다)</span></div>
+              <div class="fx" data-k="답장 회신 답변 내 의견 확인 답 왔나"><span class="fn">보내신 의견에 답장 <span class="ftag hid">v3.32~</span></span><span class="fw">설정 [의견] → <b>보내신 의견과 답장</b>. 답장이 오면 앱을 켤 때 한 줄로 알려드립니다. 익명은 그대로예요 — <b>이 컴퓨터가 보낸 것만</b> 보입니다</span></div>
               <div class="fx" data-k="업데이트 새 버전 알림 설치"><span class="fn">새 버전 받기</span><span class="fw">앱이 켤 때 여쭙고 <b>받아서 설치까지</b> 합니다(v3.15~). 설정 [의견] → [지금 확인]으로도 → 11번</span></div>
             </div>
 
@@ -623,15 +625,24 @@
           <div class="log-h"><h3>업데이트 일지</h3><span>새 판에서 달라진 것만 적어 둡니다.</span></div>
 
           <div class="log-item">
-            <div class="log-top"><span class="log-ver">v3.31</span><span class="log-date">2026. 9. 10.</span><span class="log-new">최신</span></div>
+            <div class="log-top"><span class="log-ver">v3.32</span><span class="log-date">2026. 9. 10.</span><span class="log-new">최신</span></div>
             <ul>
-              <li><b>안내문을 짧게 적어도 됩니다</b> — 「내일 00 제출」처럼 한 줄만 적으면 받는 사람에 맞게 늘려 씁니다. 학생에게는 쉽고 또렷하게, 학부모님께는 인사와 맺음말까지 붙습니다(공문을 붙여넣던 방식은 그대로입니다)</li>
-              <li>원문에 없는 <b>날짜·시각·장소·준비물은 지어내지 않습니다.</b> 교직원 전용 공지는 학생·학부모용으로 만들지 않습니다</li>
+              <li><b>보내 주신 의견에 답장이 옵니다</b> — 설정 [의견] 탭에 「보내신 의견과 답장」이 생겼습니다. 답장이 오면 앱을 켤 때 한 줄로 알려드립니다(익명은 그대로입니다)</li>
+              <li><b>광주광역시교육청</b>을 다시 고를 수 있습니다. 업무포털이 안 열리면 다른 주소로 한 번 더 시도합니다</li>
+              <li><b>업무포털 자동 로그인이 어디서 멈췄는지</b>를 남깁니다 — 설정 [업무포털]의 <b>[기록 열기]</b>. 안 되시는 분은 이 파일을 보내 주시면 원인을 짚을 수 있습니다</li>
             </ul>
           </div>
 
           <details class="log-more">
             <summary>지난 판 더 보기</summary>
+
+          <div class="log-item">
+            <div class="log-top"><span class="log-ver">v3.31</span><span class="log-date">2026. 9. 10.</span></div>
+            <ul>
+              <li><b>안내문을 짧게 적어도 됩니다</b> — 「내일 00 제출」처럼 한 줄만 적으면 받는 사람에 맞게 늘려 씁니다. 학생에게는 쉽고 또렷하게, 학부모님께는 인사와 맺음말까지 붙습니다(공문을 붙여넣던 방식은 그대로입니다)</li>
+              <li>원문에 없는 <b>날짜·시각·장소·준비물은 지어내지 않습니다.</b> 교직원 전용 공지는 학생·학부모용으로 만들지 않습니다</li>
+            </ul>
+          </div>
 
           <div class="log-item">
             <div class="log-top"><span class="log-ver">v3.30</span><span class="log-date">2026. 9. 9.</span></div>
@@ -1983,14 +1994,14 @@
         <div class="steps">
           <div class="step"><h4>1. 켜기</h4><p>설정 → <strong>[업무포털]</strong> → 맨 위 스위치를 켭니다.</p></div>
           <div class="step"><h4>2. 어디에 로그인할지</h4><p><strong>나이스</strong> 또는 <strong>K-에듀파인</strong>을 고릅니다.</p></div>
-          <div class="step"><h4>3. 교육청 · 인증서</h4><p>교육청을 고르고, <strong>인증서 아이디</strong>와 <strong>인증서 비밀번호</strong>를 넣습니다. 브라우저(<strong>크롬 · 엣지 · 웨일</strong>)도 고릅니다. 전남·광주는 포털이 합쳐져 <strong>전남광주통합특별시교육청</strong> 한 줄로 나옵니다.</p></div>
+          <div class="step"><h4>3. 교육청 · 인증서</h4><p>교육청을 고르고, <strong>인증서 아이디</strong>와 <strong>인증서 비밀번호</strong>를 넣습니다. 브라우저(<strong>크롬 · 엣지 · 웨일</strong>)도 고릅니다. 광주와 전남은 <strong>따로</strong> 고르시면 되고, 그 주소로 안 열리면 앱이 <strong>다른 쪽 주소로 한 번 더</strong> 해 봅니다.</p></div>
           <div class="step"><h4>4. 확인</h4><p><strong>[지금 한 번 해 보기]</strong>를 눌러 정말 되는지 봅니다. 잘 되면 다음부터는 컴퓨터를 켤 때 알아서 합니다.</p></div>
           <div class="step"><h4>5. 바탕화면 버튼 <span style="font-size:.8em;opacity:.7">(v2.9.6)</span></h4><p><strong>설정 → [위젯] → 업무포털 로그인</strong>을 켜면(기본 꺼짐) 바탕화면에 버튼 카드가 하나 붙습니다. 필요할 때 <strong>눌러서 언제든</strong> 열 수 있어요.</p></div>
         </div>
         <div class="note tip"><span class="ic"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m9 12 2 2 4-4"/></svg></span><div><b>자동 실행이 부담스러우면 버튼만 쓰세요 <span style="font-size:.85em;opacity:.7">(v2.9.6)</span></b><p>맨 위 스위치를 <strong>꺼 두어도 바탕화면 버튼은 그대로 동작합니다.</strong> 아침마다 창이 저절로 뜨는 게 부담스러우신 분은 스위치는 끄고, 필요할 때만 버튼을 누르시면 돼요. 카드 제목 옆에 <strong>마지막 결과</strong>가 작게 뜨고(<code>어제 08:12 완료</code>), 실패하면 빨갛게 <strong>실패</strong>로 바뀝니다. 인증서·비밀번호를 아직 안 넣었으면 버튼이 <strong>[설정에서 준비하기]</strong>로 바뀌어 그 탭을 열어 줍니다 — 눌렀는데 아무 일도 안 일어나는 일은 없어요.</p></div></div>
         <div class="note lock"><span class="ic"><svg class="ic" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="9.5" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/><circle cx="12" cy="15" r="1.2"/></svg></span><div><b>인증서 비밀번호는 이 컴퓨터에만 저장됩니다</b><p>윈도우 계정에 묶인 암호로 잠가 두기 때문에, 파일을 복사해 가도 <strong>다른 컴퓨터·다른 계정에서는 풀 수 없습니다.</strong> 프로그램 안에서도 저장된 비밀번호를 다시 꺼내 볼 수 없게 막아 두었습니다(넣기와 지우기만 됩니다).</p><p><strong>공용 컴퓨터에서는 켜지 마세요.</strong> 지울 때는 [업무포털] 탭의 <strong>[비밀번호 지우기]</strong>를 누르시면 됩니다.</p></div></div>
         <div class="note tip"><span class="ic"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><b>컴퓨터를 켠 직후에는 조금 기다렸다 엽니다</b><p>부팅 직후에는 인터넷이 아직 안 붙었거나, <strong>인증서 보안 프로그램</strong>(AnySign 등)이 아직 뜨는 중이라 실패할 수 있어요. 그래서 기본으로 <strong>20초 뒤</strong>에 열고, 보안 프로그램이 준비될 때까지 더 기다립니다. 컴퓨터가 느리면 <strong>45초 뒤</strong>로 바꿔 보세요.</p><p>자동으로 하지 않고 필요할 때만 쓰시려면 <strong>[직접 누를 때만]</strong>으로 두시면 됩니다.</p></div></div>
-        <div class="note info"><span class="ic"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.6h.01"/></svg></span><div><b>이런 점을 알아 두세요</b><p>로그인하는 모습이 <strong>화면에 그대로 보입니다</strong>(몰래 하지 않습니다, 5~10초). 평소 쓰시던 브라우저 창은 건드리지 않고 <strong>새 창</strong>이 하나 열립니다 — 크롬을 켜 두셨어도 괜찮습니다.</p><p>교육청이 포털 화면을 바꾸면 실패할 수 있는데, 그때는 열린 창에서 <strong>평소처럼 직접 로그인</strong>하시면 됩니다. 인증서 자체와 보안 프로그램은 원래 쓰시던 그대로입니다.</p></div></div>
+        <div class="note info"><span class="ic"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.5"/><path d="M12 7.6h.01"/></svg></span><div><b>이런 점을 알아 두세요</b><p>로그인하는 모습이 <strong>화면에 그대로 보입니다</strong>(몰래 하지 않습니다, 5~10초). 평소 쓰시던 브라우저 창은 건드리지 않고 <strong>새 창</strong>이 하나 열립니다 — 크롬을 켜 두셨어도 괜찮습니다.</p><p>교육청이 포털 화면을 바꾸면 실패할 수 있는데, 그때는 열린 창에서 <strong>평소처럼 직접 로그인</strong>하시면 됩니다. 인증서 자체와 보안 프로그램은 원래 쓰시던 그대로입니다.</p><p><strong>안 되시면 [기록 열기]</strong> — 설정 [업무포털] 아래 단추입니다. 어느 단계에서 멈췄는지가 적혀 있으니, 그 내용을 <strong>[의견]</strong>으로 보내 주시면 원인을 짚어 고칠 수 있습니다. 인증서 아이디·비밀번호·학교 이름은 적히지 않습니다.</p></div></div>
       </section>
 
       <section id="s9">
@@ -2039,7 +2050,9 @@
           <li><strong>사용 집계</strong> — 하루에 한 번, <strong>무작위 번호 하나 · 앱 이름 · 앱 버전 · 윈도우 버전</strong>만 보냅니다. 몇 분이 쓰고 계신지, 옛 버전에 몇 분이 남아 계신지를 알기 위한 것입니다. 무작위 번호는 그 컴퓨터에서 만든 것이라 <strong>누구인지 되짚을 수 없습니다.</strong> 설정 → <strong>의견</strong> 탭에서 끌 수 있고, 꺼도 모든 기능이 그대로 동작합니다. (v2.2.56부터)</li>
           <li><strong>의견 보내기</strong> — <strong>[보내기]를 누르셨을 때만</strong> 적으신 내용과 앱 버전이 갑니다. <strong>모두 익명</strong>이라 누가 보내셨는지는 알 수 없습니다.</li>
           <li><strong>오류 기록</strong> — 앱이 예상 못 한 오류로 꺼지면, <strong>다음에 켤 때</strong> 그 기록을 보냅니다. <strong>파일 경로는 통째로 버리고 확장자만 남깁니다</strong>(파일 이름이 곧 학생 이름인 경우가 많아서입니다). 하루 5건까지, 같은 오류는 한 번만. 무엇이 나갔는지는 <strong>설정 → 도움말</strong>에서 직접 보실 수 있습니다.</li>
+          <li><strong>업무포털 자동 로그인이 실패했을 때</strong> — 하루 한 번, <strong>어느 단계에서 멈췄는지와 그때 뜬 문구</strong>가 오류 기록에 함께 갑니다. <strong>인증서 아이디·비밀번호·학교 이름·주소는 나가지 않습니다</strong>(이름과 학교 이름은 보내기 전에 지웁니다). 성공했을 때는 아무것도 보내지 않습니다. 더 자세한 기록은 이 컴퓨터의 <code>portal.log</code>에만 남고, 설정 → <strong>업무포털 → [기록 열기]</strong>로 직접 보실 수 있습니다. (v3.32부터)</li>
           <li><strong>공지</strong> — 받아만 옵니다. 이 길로 나가는 것은 없습니다.</li>
+          <li><strong>보내신 의견의 답장</strong> — 의견을 보내신 적이 있으면, 앱을 켤 때 <strong>그 컴퓨터의 무작위 번호로</strong> 답장이 왔는지 물어봅니다. 서버는 <strong>그 번호로 보낸 의견만</strong> 돌려주게 되어 있어, 다른 분의 의견은 구조적으로 볼 수 없습니다. (v3.32부터)</li>
         </ul>
         <p class="body">사용 집계와 오류 기록은 설정 → <strong>의견</strong> 탭의 <strong>체크 하나로 함께 꺼집니다.</strong> 꺼도 모든 기능이 그대로 동작합니다.</p>
 
