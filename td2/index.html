@@ -604,6 +604,7 @@
               <div class="fx" data-k="급식 안 나옴 학사일정 일부만 neis 키"><span class="fn">NEIS 키 넣기</span><span class="fw">설정 [학교] 맨 아래 — 키가 없어도 급식·일정·시간표는 나오지만(v3.22~) <b>받는 게 느리고 학교 검색이 5곳에서 잘립니다</b>. 무료이고 몇 분이면 받습니다 → 03번</span></div>
               <div class="fx" data-k="업무포털 자동 로그인 인증서 나이스"><span class="fn">업무포털 자동 로그인 <span class="ftag off">기본 꺼짐</span></span><span class="fw">설정 [업무포털] — 컴퓨터를 켜면 인증서 로그인까지 마친 창을 열어 둡니다. <b>공용 컴퓨터에서는 켜지 마세요</b> → 10번</span></div>
               <div class="fx" data-k="업무포털 로그인 안 됨 안돼요 실패 기록 로그 원인 경남 충북 대구 광주"><span class="fn">업무포털이 안 될 때 기록 보내기 <span class="ftag hid">v3.32~</span></span><span class="fw">설정 [업무포털] → <b>[기록 열기]</b> — 어느 단계에서 멈췄는지가 적혀 있습니다. 그 파일을 [의견]으로 보내 주시면 원인을 짚을 수 있어요(인증서 아이디·비밀번호·학교 이름은 안 적힙니다)</span></div>
+              <div class="fx" data-k="메신저 자동 로그인 지비톡 gbee talk 경북 인증서 업무용 메신저"><span class="fn">업무 메신저 자동 로그인 — 경북 GBee TALK 전용 <span class="ftag off">기본 꺼짐</span> <span class="ftag hid">v3.35~</span></span><span class="fw">설정 [업무포털] 맨 아래 — 컴퓨터를 켜면 GBee TALK의 <b>[인증서 로그인] → 인증서 비밀번호 → [확인]</b>까지 대신 누릅니다. <b>경상북도교육청 메신저 전용</b>입니다(다른 교육청 메신저는 메신저 안의 자동 로그인을 쓰세요)</span></div>
               <div class="fx" data-k="업무포털 버튼 바탕화면 누를 때만"><span class="fn">업무포털을 누를 때만 <span class="ftag off">기본 꺼짐</span></span><span class="fw">설정 [위젯] → <b>업무포털 로그인</b>을 켜면 바탕화면에 단추 카드가 붙습니다. 자동 실행을 꺼 두어도 이 단추는 됩니다</span></div>
               <div class="fx" data-k="백업 내보내기 다른 컴퓨터 옮기기 이사"><span class="fn">다른 컴퓨터로 옮기기</span><span class="fw">설정 [데이터] → <b>설정 내보내기 / 불러오기</b>. 다만 <b>API 키와 캘린더 주소는 빠집니다</b>(백업 파일은 열면 그대로 보이는 글자 파일이라서요) — 새 컴퓨터에서 그 둘만 다시 넣으세요</span></div>
               <div class="fx" data-k="지난 일정 지우기 완료 정리 청소"><span class="fn">묵은 것 정리하기</span><span class="fw">설정 [데이터] → [지난 일정 지우기] · [완료한 할 일 지우기]</span></div>
@@ -629,16 +630,24 @@
           <div class="log-h"><h3>업데이트 일지</h3><span>새 판에서 달라진 것만 적어 둡니다.</span></div>
 
           <div class="log-item">
-            <div class="log-top"><span class="log-ver">v3.34</span><span class="log-date">2026. 9. 11.</span><span class="log-new">최신</span></div>
+            <div class="log-top"><span class="log-ver">v3.35</span><span class="log-date">2026. 9. 11.</span><span class="log-new">최신</span></div>
+            <ul>
+              <li><b>품의 만들기</b>가 한 장에 찍힌 <b>여러 품목을 한 번에</b> 읽습니다 — 강사비·인건비·용역 같은 줄도 읽고, 합계·배송비 줄은 거릅니다</li>
+              <li><b>업무 메신저 자동 로그인 (경북 GBee TALK 전용)</b> — 설정 [업무포털] 탭 맨 아래에서 켜면 컴퓨터를 켤 때 메신저 로그인까지 해 둡니다</li>
+            </ul>
+          </div>
+
+          <details class="log-more">
+            <summary>지난 판 더 보기</summary>
+
+          <div class="log-item">
+            <div class="log-top"><span class="log-ver">v3.34</span><span class="log-date">2026. 9. 11.</span></div>
             <ul>
               <li><b>🧾 품의 만들기</b> — 쇼핑몰 장바구니를 단축키로 오려 찍으면 AI가 품목·규격·수량·단가를 읽어 <b>나이스 품목내역 엑셀</b>로 만들어 줍니다(AI 도우미)</li>
               <li><b>학반 시간표</b> — 주간 시간표 제목 옆 <b>[나 | 학반]</b>으로 한 학급의 한 주를 봅니다. 따로 켜서 내 시간표와 나란히 둘 수도 있어요</li>
               <li>월간 진도의 <b>「시험 때 N차시」</b>가 시험이 지나면 다음 시험으로 넘어가고, 학년마다 제 시험(「3학년 2회 정기시험」 등)까지 셉니다</li>
             </ul>
           </div>
-
-          <details class="log-more">
-            <summary>지난 판 더 보기</summary>
 
           <div class="log-item">
             <div class="log-top"><span class="log-ver">v3.33</span><span class="log-date">2026. 9. 10.</span></div>
@@ -2010,6 +2019,7 @@
               <dt>언제 실행할까요</dt><dd>바로 · <b>20초 뒤</b> · 45초 뒤 · 직접 누를 때만 <span class="val">(기본 20초 뒤)</span> — 부팅 직후엔 인터넷이나 인증서 보안 프로그램이 아직 준비 전이라 실패할 수 있어서요.</dd>
               <dt>[지금 한 번 해 보기]</dt><dd>정말 되는지 그 자리에서 확인. 아래에 마지막 실행 결과가 뜹니다. 자세한 것은 10번.</dd>
               <dt>[기록 열기]</dt><dd>자동 로그인이 <b>어느 단계에서 멈췄는지</b> 적힌 기록입니다. 안 되실 때 그 내용을 [의견]으로 보내 주세요 — 인증서 아이디·비밀번호·학교 이름은 적히지 않습니다(v3.32~).</dd>
+              <dt>업무 메신저 자동 로그인 · 경북 GBee TALK 전용</dt><dd><span class="val">(기본 꺼짐 · v3.35~)</span> — 탭 맨 아래 칸. 켜면 컴퓨터를 켤 때 GBee TALK 로그인 창의 <b>[인증서 로그인] → 인증서 비밀번호 → [확인]</b>을 대신 누릅니다. 비밀번호는 <b>업무포털과 같은 것</b>을 쓰거나 따로 넣습니다. <b>경상북도교육청 메신저 전용</b>이라 GBee TALK가 없는 컴퓨터에서는 스위치가 나오지 않습니다. 비밀번호가 한 번이라도 틀리면 다시 넣지 않고 자동 실행을 꺼 둡니다. 기록은 위 [기록 열기]에 <b>[메신저]</b> 줄로 함께 남습니다.</dd>
             </dl>
           </div>
           <details class="tabshot">
