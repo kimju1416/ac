@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TeacherDesk 2 — 개인정보 처리방침</title>
+<meta name="description" content="TeacherDesk 2가 무엇을 저장하고, 무엇을 밖으로 보내는지 밝힌 개인정보 처리방침입니다.">
+<link rel="canonical" href="https://kimju.kr/td2/privacy/">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+  :root{
+    --clay:#3B7DD8; --clay-dark:#2C5FA8; --clay-soft:#E5EEFB;
+    --ink:#232A33; --ink-soft:#57616E; --line:#E4E9EF;
+    --bg:#F6F8FB; --card:#FFFFFF; --good:#2E9E6B; --good-soft:#E4F4EC;
+    --warn:#C07A2B; --warn-soft:#FBEFDD;
+    --radius:18px; --shadow:0 1px 2px rgba(30,40,55,.04),0 8px 28px rgba(30,40,55,.07);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Pretendard Variable",Pretendard,system-ui,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.85;word-break:keep-all;
+    -webkit-font-smoothing:antialiased}
+  a{color:var(--clay-dark);text-decoration:none;font-weight:700}
+  a:hover{text-decoration:underline}
+  .wrap{max-width:760px;margin:0 auto;padding:0 22px 100px}
+  header{padding:52px 0 30px;border-bottom:1px solid var(--line);margin-bottom:34px}
+  .back{font-size:13px;color:var(--ink-soft);font-weight:700;display:inline-block;margin-bottom:20px}
+  h1{font-size:27px;font-weight:800;letter-spacing:-.02em;line-height:1.35}
+  header p{margin-top:12px;color:var(--ink-soft);font-size:14.5px}
+  .stamp{margin-top:16px;font-size:12.5px;color:var(--ink-soft);font-weight:600}
+  section{margin-bottom:40px}
+  h2{font-size:18.5px;font-weight:800;letter-spacing:-.01em;margin-bottom:6px;
+    display:flex;align-items:center;gap:10px}
+  h2 .n{width:27px;height:27px;border-radius:9px;background:var(--clay);color:#fff;
+    font-size:13px;display:grid;place-items:center;flex:none}
+  h3{font-size:15px;font-weight:800;margin:22px 0 8px}
+  p,li{font-size:14.5px;color:var(--ink)}
+  p{margin-bottom:10px}
+  ul{margin:0 0 12px 2px;list-style:none}
+  li{padding-left:16px;position:relative;margin-bottom:7px}
+  li::before{content:"";position:absolute;left:2px;top:12px;width:5px;height:5px;
+    border-radius:50%;background:var(--clay);opacity:.5}
+  .lead{color:var(--ink-soft)}
+  code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;
+    background:#EDF1F6;padding:2px 7px;border-radius:6px;word-break:break-all}
+  .note{border-radius:14px;padding:16px 18px;margin:16px 0;font-size:14px;line-height:1.75}
+  .note b{display:block;margin-bottom:4px}
+  .note.good{background:var(--good-soft);color:#1E6B48}
+  .note.warn{background:var(--warn-soft);color:#8A5417}
+  .tbl{overflow-x:auto;margin:14px 0}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;background:var(--card);
+    border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:800;font-size:12.5px;color:var(--ink-soft);background:#F1F5F9;white-space:nowrap}
+  tr:last-child td{border-bottom:none}
+  td b{font-weight:800}
+  footer{border-top:1px solid var(--line);padding-top:26px;margin-top:50px;
+    font-size:13px;color:var(--ink-soft);line-height:1.9}
+  @media(max-width:600px){
+    .wrap{padding:0 16px 70px} h1{font-size:22px} header{padding:34px 0 24px}
+    th,td{padding:9px 8px;font-size:12.5px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="back" href="/td2/">← TeacherDesk 2 설명서로</a>
+    <h1>개인정보 처리방침</h1>
+    <p>TeacherDesk 2가 무엇을 저장하고, 무엇을 밖으로 보내는지 밝힌 문서입니다.
+      학교에 설명하셔야 할 때 이 주소를 그대로 보여 주시면 됩니다.</p>
+    <div class="stamp">TeacherDesk 2 · 시행일 2026년 9월 13일 · 만든 사람 김주현(광평중학교)</div>
+  </header>
+
+  <section>
+    <h2><span class="n">1</span>한 줄로 말하면</h2>
+    <div class="note good">
+      <b>기본은 선생님 컴퓨터에만 저장됩니다.</b>
+      명렬·출결·일정·메모 같은 기록은 이 프로그램을 만든 사람도 볼 수 없습니다. 만든 사람의 서버에 올리지 않기 때문입니다.
+    </div>
+    <p>선생님이 <b>「PC 사이 맞추기」에 구글 계정으로 로그인하신 경우에만</b>, 같은 기록이
+      <b>선생님 본인 구글 드라이브의 앱 전용 칸</b>에도 저장됩니다(3번 항목). 이것도 만든 사람은 볼 수 없습니다.</p>
+    <p>급식·학사일정·날씨는 인터넷을 씁니다 — 나가는 것은 학교 코드와 지역 이름뿐입니다(4번 항목).
+      여기에 더해 몇 분이 쓰시는지 세는 <b>익명 집계</b>가 하루 한 번 있고, 설정에서 끌 수 있습니다(5번 항목).</p>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>컴퓨터에 저장되는 것</h2>
+    <p class="lead">전부 <code>%APPDATA%\TeacherDesk2</code> 폴더에 저장됩니다.</p>
+    <div class="tbl"><table>
+      <tr><th>무엇</th><th>예</th></tr>
+      <tr><td><b>명렬</b></td><td>학생 번호·이름·비고, 넣으셨다면 학생·부모 연락처와 선택과목</td></tr>
+      <tr><td><b>학급 기록</b></td><td>출결, 누가기록(활동·상담), 생기부 저장글</td></tr>
+      <tr><td><b>학교 업무</b></td><td>할 일, D-Day, 일정, 메모, 진도, 시간표, 주간학습안내, 내선번호</td></tr>
+      <tr><td><b>설정</b></td><td>학교 정보, 화면 배치·디자인, API 키, 구글 캘린더 주소, 앨범 사진</td></tr>
+      <tr><td><b>서랍</b></td><td>바탕화면의 실제 폴더입니다. 프로그램은 위치만 기억합니다</td></tr>
+    </table></div>
+    <p>파일 자체는 암호로 잠겨 있지 않습니다. 컴퓨터 로그인 암호가 1차 보호막이니, 학교 공용 PC라면 윈도우 계정을 나눠 쓰시길 권합니다.
+      다만 <b>API 키·구글 캘린더 주소·업무포털 인증서 비밀번호·구글 로그인 정보는 암호화</b>해 두어, 파일을 복사해 다른 계정·다른 컴퓨터로 옮기면 풀리지 않습니다.</p>
+  </section>
+
+  <section id="sync">
+    <h2><span class="n">3</span>PC 사이 맞추기 (구글 드라이브)</h2>
+    <p>학교 PC와 집 PC처럼 여러 컴퓨터에서 같은 기록을 쓰고 싶은 분을 위한 기능입니다.
+      <b>기본은 꺼져 있고</b>, 설정 → [데이터] 탭에서 <b>[구글로 로그인]</b>을 누르셨을 때만 켜집니다.</p>
+
+    <h3>어디에 저장되나요</h3>
+    <ul>
+      <li><b>로그인한 선생님 본인의 구글 드라이브 안 «앱 전용 칸»</b>(appDataFolder)입니다. 드라이브 목록에는 보이지 않습니다.</li>
+      <li>이 프로그램은 그 칸만 쓸 수 있고, <b>선생님의 다른 드라이브 파일은 볼 수 없습니다.</b></li>
+      <li>만든 사람의 서버를 거치지 않습니다. 저장 공간은 선생님 구글 계정 용량을 씁니다.</li>
+    </ul>
+
+    <h3>구글에 요청하는 권한 (이 셋이 전부입니다)</h3>
+    <div class="tbl"><table>
+      <tr><th>권한</th><th>쓰는 곳</th></tr>
+      <tr><td><code>drive.appdata</code></td><td>앱 전용 칸에 맞춤 자료를 저장하고 읽기</td></tr>
+      <tr><td><code>email</code></td><td>어느 계정으로 맞추고 있는지 설정 화면에 보여 드리기</td></tr>
+      <tr><td><code>openid</code></td><td>로그인 확인</td></tr>
+    </table></div>
+
+    <h3>함께 옮겨지는 것</h3>
+    <ul>
+      <li>할 일·일정·메모·진도·시간표·출결·명렬(연락처 포함)·누가기록·생기부 저장글</li>
+      <li>설정·위젯 위치·디자인, API 키·나이스 키·구글 캘린더 주소</li>
+      <li>앨범 사진·주간학습안내 원본 파일(한 파일 10MB까지)</li>
+    </ul>
+    <h3>옮기지 않고 컴퓨터마다 남는 것</h3>
+    <ul>
+      <li>업무포털·업무 메신저 자동 로그인 설정과 인증서 비밀번호</li>
+      <li>독에 꽂은 프로그램·파일, 서랍 폴더, 창 모드·쓸 모니터</li>
+    </ul>
+
+    <h3>구글에서 받은 정보를 쓰는 원칙</h3>
+    <p>TeacherDesk 2가 구글 API로 받은 정보를 쓰고 옮기는 방식은
+      <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API 서비스 사용자 데이터 정책</a>의
+      제한적 사용(Limited Use) 요건을 따릅니다. 받은 정보는 선생님의 컴퓨터끼리 기록을 맞추는 데에만 쓰고,
+      광고에 쓰거나 다른 사람에게 넘기거나 팔지 않으며, 만든 사람을 포함해 누구도 사람이 직접 읽지 않습니다.</p>
+
+    <h3>끄고 지우는 방법</h3>
+    <ul>
+      <li><b>[로그아웃]</b> — 그 컴퓨터의 기록은 그대로 남고, 그때부터 다시 그 컴퓨터에만 저장됩니다.</li>
+      <li><b>[드라이브에 올린 자료 지우기]</b> — 구글 드라이브의 맞춤 자료를 모두 지우고 로그아웃합니다.
+        다른 컴퓨터에서도 로그아웃해 주셔야 그 컴퓨터가 다시 올리지 않습니다.</li>
+      <li>구글 계정에서 직접 끊으실 수도 있습니다 —
+        <a href="https://myaccount.google.com/connections" target="_blank" rel="noopener">구글 계정 → 연결된 앱</a>에서 TeacherDesk2의 액세스를 삭제하세요.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">4</span>밖으로 나가는 것</h2>
+    <h3>가. 급식 · 학사일정 · 시간표 (NEIS)</h3>
+    <p>학교 코드만 나갑니다. 학생 정보는 나가지 않습니다.</p>
+    <h3>나. 날씨</h3>
+    <p>지역을 찾을 때 학교 주소 일부·학교 이름(또는 넣으신 지역명)이, 그 뒤로는 좌표만 나갑니다.</p>
+    <h3>다. 구글 캘린더 · 전광판 시트 · 컴시간 · 새 버전 확인</h3>
+    <p>넣으신 주소·학교로 받아 오기만 합니다.</p>
+    <h3>라. PC 사이 맞추기</h3>
+    <p>로그인하신 경우에만, 3번 항목의 기록이 선생님 본인 구글 드라이브로 갑니다.</p>
+    <h3>마. 익명 사용 집계</h3>
+    <p>하루에 한 번 <b>무작위 번호 · 앱 이름 · 앱 버전 · 윈도우 버전</b> 네 가지만 보냅니다.
+      무작위 번호는 그 컴퓨터에서 만든 난수라 누구인지 되짚을 수 없습니다.</p>
+    <h3>바. 오류 기록</h3>
+    <p>프로그램이 예상 못 한 오류로 꺼지면, 다음에 켤 때 그 기록을 보냅니다.
+      <b>파일 경로는 통째로 버리고 확장자만 남깁니다</b> — 파일 이름이 곧 학생 이름인 경우가 많기 때문입니다.
+      하루 5건까지만 보내고 같은 오류는 한 번만 셉니다.
+      업무포털 자동 로그인이 실패했을 때는 어느 단계에서 멈췄는지와 그때 뜬 문구가 함께 갑니다(인증서 아이디·비밀번호·학교 이름은 나가지 않습니다).</p>
+    <h3>사. 의견 보내기와 답장</h3>
+    <p>[보내기]를 누르셨을 때만 적으신 내용과 앱 버전·윈도우 버전이 갑니다.
+      답장은 그 컴퓨터의 무작위 번호로 보낸 의견에만 돌아오므로 다른 분의 의견은 볼 수 없습니다.</p>
+    <h3>아. 공지</h3>
+    <p>받아만 옵니다. 이 길로 나가는 것은 없습니다.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">5</span>끄는 방법</h2>
+    <ul>
+      <li><b>사용 집계·오류 기록</b> — 설정 → [의견] 탭의 체크 하나로 함께 꺼집니다. 꺼도 모든 기능이 그대로 동작합니다.</li>
+      <li><b>PC 사이 맞추기</b> — 설정 → [데이터] 탭 → [로그아웃].</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">6</span>얼마나 보관하나요</h2>
+    <div class="tbl"><table>
+      <tr><th>어디</th><th>무엇</th><th>언제까지</th></tr>
+      <tr><td>선생님 컴퓨터</td><td>모든 기록</td><td>선생님이 지우실 때까지</td></tr>
+      <tr><td>선생님 구글 드라이브<br>(로그인하신 경우)</td><td>맞춤 자료·사진</td><td>[드라이브에 올린 자료 지우기]를 누르실 때까지</td></tr>
+      <tr><td>집계 서버</td><td>사용 집계(무작위 번호·버전)</td><td>2년</td></tr>
+      <tr><td></td><td>오류 기록</td><td>90일 뒤 자동 삭제</td></tr>
+      <tr><td></td><td>보내주신 의견</td><td>2년</td></tr>
+    </table></div>
+    <p>컴퓨터에 있는 것을 지우려면 설정 → [데이터] 탭 → <b>[처음 상태로 되돌리기]</b>를 누르세요.
+      프로그램을 삭제해도 설정 폴더는 남으니 <code>%APPDATA%\TeacherDesk2</code>를 함께 지우시면 됩니다.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">7</span>파일로 내보낼 때</h2>
+    <div class="note warn"><b>내보낸 파일은 개인정보 파일입니다.</b>
+      설정 백업(.tdbk)에는 명렬·생기부 저장글·누가기록(상담 포함)·출결이 들어가고, 엑셀·한글·CSV에도 학반·이름이 들어갑니다.
+      USB·메신저로 옮기실 때는 그렇게 다루시고, 옮긴 뒤에는 지워 주세요.</div>
+  </section>
+
+  <section>
+    <h2><span class="n">8</span>학교에 설명하실 때</h2>
+    <p>“교사 개인 PC에 설치해 쓰는 프로그램이며, 기록은 이 컴퓨터에 저장되고 만든 사람의 서버로 전송되지 않습니다.
+      여러 PC에서 쓰려고 로그인한 경우에만 교사 본인 구글 드라이브의 앱 전용 공간에도 저장됩니다.
+      급식·학사일정은 학교 코드만, 날씨는 지역명만 조회하며, 사용 집계는 무작위 번호와 버전뿐이고 설정에서 끌 수 있습니다.”</p>
+    <p class="lead">학교마다 규정이 다릅니다. 업무용 컴퓨터에 프로그램을 설치하는 기준이나 개인 클라우드에 학생 정보를 두는 것에 대한
+      교육청·학교 지침이 따로 있을 수 있으니, 쓰셔도 되는지는 소속 학교의 정보 담당 선생님께 확인해 주세요.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">9</span>만 14세 미만</h2>
+    <p>이 프로그램은 교사가 쓰는 업무 도구입니다. 학생이 직접 설치해 쓰거나 학생에게서 정보를 직접 수집하지 않습니다.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">10</span>물어보실 곳</h2>
+    <p>프로그램 안에서 바로 보내실 수 있습니다 — 설정 → [의견] 탭. 또는 인스타그램
+      <a href="https://instagram.com/kimju.zip" target="_blank" rel="noopener">@kimju.zip</a>으로 알려 주세요.</p>
+    <p class="lead">이 처리방침이 바뀌면 이 쪽에 새 시행일을 적고, 프로그램 안 [의견] 탭 공지로도 알려드립니다.</p>
+  </section>
+
+  <footer>
+    TeacherDesk 2 · 선생님 바탕화면 위젯 대시보드<br>
+    <a href="/td2/">설치 · 사용 설명서</a> · <a href="/td2/terms/">이용약관</a> · <a href="https://instagram.com/kimju.zip" target="_blank" rel="noopener">kimju.zip</a>
+  </footer>
+</div>
+</body>
+</html>
