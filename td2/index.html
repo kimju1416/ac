@@ -321,14 +321,15 @@
   .feat-b ul li strong{color:var(--ink)}
 
   /* ── 위젯·독 소제목과 바로가기 ─────────────────────── */
-  .toc a.s2{padding:5px 12px 5px 34px;font-size:12.5px;font-weight:700;opacity:.9}
+  .toc a.s2{padding:5px 12px 5px 22px;font-size:12.5px;font-weight:700;opacity:.9}
+  .toc a.s2 .num{width:36px;font-size:11.5px}
   .m-toc .toc a.s2{padding-left:30px;font-size:13px}
   .wnav{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:14px 0 24px}
   .wnav a{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:12px;
     padding:10px 12px;font-size:13.5px;font-weight:800;color:var(--ink);transition:.14s;word-break:keep-all;line-height:1.35}
   .wnav a:hover{border-color:var(--clay);color:var(--clay-dark);transform:translateY(-1px)}
   .wnav a small{display:block;font-size:11px;font-weight:700;color:var(--ink-soft)}
-  .wnav .n{flex:none;width:24px;height:24px;border-radius:8px;background:var(--clay-soft);color:var(--clay-dark);
+  .wnav .n{flex:none;min-width:34px;padding:0 5px;height:24px;border-radius:8px;background:var(--clay-soft);color:var(--clay-dark);
     display:grid;place-items:center;font-size:11.5px;font-weight:800}
   h3.wh{scroll-margin-top:18px;font-size:21px;margin:54px 0 6px;padding-top:26px;border-top:2px solid var(--line)}
   h3.wh .n{flex:none;min-width:34px;height:28px;padding:0 8px;border-radius:9px;background:var(--clay);color:#fff;
@@ -399,20 +400,38 @@
       <a href="#s4"><span class="num">04</span>AI 기능 켜기 · Gemini 키</a>
       <a href="#s5"><span class="num">05</span>화면 꾸미기</a>
       <a href="#s6"><span class="num">06</span>위젯 하나하나</a>
-      <a class="s2" href="#w-tt">시간표</a>
-      <a class="s2" href="#w-prog">진도</a>
-      <a class="s2" href="#w-cal">달력</a>
-      <a class="s2" href="#w-todo">할 일</a>
-      <a class="s2" href="#w-sched">학사일정 · D-Day · 메모</a>
-      <a class="s2" href="#w-meal">급식 · 시계 · 날씨</a>
-      <a class="s2" href="#w-weekly">주간학습 · 출결 카드</a>
-      <a class="s2" href="#w-big">[전체] · 비서 · 찾기</a>
+      <a class="s2" href="#w-tt"><span class="num">6-1</span>시간표</a>
+      <a class="s2" href="#w-prog"><span class="num">6-2</span>진도</a>
+      <a class="s2" href="#w-cal"><span class="num">6-3</span>달력</a>
+      <a class="s2" href="#w-todo"><span class="num">6-4</span>할 일</a>
+      <a class="s2" href="#w-sched"><span class="num">6-5</span>학사일정</a>
+      <a class="s2" href="#w-dday"><span class="num">6-6</span>D-Day</a>
+      <a class="s2" href="#w-memo"><span class="num">6-7</span>메모</a>
+      <a class="s2" href="#w-meal"><span class="num">6-8</span>급식</a>
+      <a class="s2" href="#w-now"><span class="num">6-9</span>지금 이 시간 · 시계</a>
+      <a class="s2" href="#w-weather"><span class="num">6-10</span>날씨</a>
+      <a class="s2" href="#w-weekly"><span class="num">6-11</span>주간학습안내</a>
+      <a class="s2" href="#w-attend"><span class="num">6-12</span>출결 카드</a>
+      <a class="s2" href="#w-album"><span class="num">6-13</span>앨범 · 업무포털</a>
+      <a class="s2" href="#w-big"><span class="num">6-14</span>[전체] 큰 창</a>
+      <a class="s2" href="#w-brief"><span class="num">6-15</span>오늘의 비서</a>
+      <a class="s2" href="#w-search"><span class="num">6-16</span>빠른 찾기</a>
       <a href="#s6b"><span class="num">07</span>독에서 여는 것들</a>
-      <a class="s2" href="#d-ai">AI 도우미</a>
-      <a class="s2" href="#d-buy">품의 만들기</a>
-      <a class="s2" href="#d-sgb">생기부</a>
-      <a class="s2" href="#d-roster">명렬 · 출결 · 누가기록</a>
-      <a class="s2" href="#d-ext">내선 · 즐겨찾기 · 전광판 · 서랍</a>
+      <a class="s2" href="#d-ai"><span class="num">7-1</span>AI 도우미</a>
+      <a class="s2" href="#d-buy"><span class="num">7-2</span>품의 만들기</a>
+      <a class="s2" href="#d-quick"><span class="num">7-3</span>빠른 입력</a>
+      <a class="s2" href="#d-msg"><span class="num">7-4</span>메신저 분석</a>
+      <a class="s2" href="#d-notice"><span class="num">7-5</span>안내문</a>
+      <a class="s2" href="#d-doc"><span class="num">7-6</span>공문서 다듬기</a>
+      <a class="s2" href="#d-import"><span class="num">7-7</span>파일에서 불러오기</a>
+      <a class="s2" href="#d-sgb"><span class="num">7-8</span>생기부 도우미</a>
+      <a class="s2" href="#d-roster"><span class="num">7-9</span>명렬</a>
+      <a class="s2" href="#d-attend"><span class="num">7-10</span>출결</a>
+      <a class="s2" href="#d-note"><span class="num">7-11</span>누가기록</a>
+      <a class="s2" href="#d-ext"><span class="num">7-12</span>내선번호</a>
+      <a class="s2" href="#d-fav"><span class="num">7-13</span>즐겨찾기</a>
+      <a class="s2" href="#d-sign"><span class="num">7-14</span>전광판</a>
+      <a class="s2" href="#d-drawer"><span class="num">7-15</span>서랍 · 고정 파일</a>
       <a href="#scfg"><span class="num">08</span>설정 낱낱이</a>
       <a href="#s7"><span class="num">09</span>위젯 모드 · 단축키</a>
       <a href="#s8"><span class="num">10</span>업무포털 · 메신저 로그인</a>
@@ -471,15 +490,38 @@
         <a href="#s4">04 · AI 기능 켜기 · Gemini 키</a>
         <a href="#s5">05 · 화면 꾸미기</a>
         <a href="#s6">06 · 위젯 하나하나</a>
-        <a class="s2" href="#w-tt">시간표</a>
-        <a class="s2" href="#w-prog">진도</a>
-        <a class="s2" href="#w-cal">달력</a>
-        <a class="s2" href="#w-todo">할 일</a>
-        <a class="s2" href="#w-weekly">주간학습 · 출결 카드</a>
+        <a class="s2" href="#w-tt">6-1 · 시간표</a>
+        <a class="s2" href="#w-prog">6-2 · 진도</a>
+        <a class="s2" href="#w-cal">6-3 · 달력</a>
+        <a class="s2" href="#w-todo">6-4 · 할 일</a>
+        <a class="s2" href="#w-sched">6-5 · 학사일정</a>
+        <a class="s2" href="#w-dday">6-6 · D-Day</a>
+        <a class="s2" href="#w-memo">6-7 · 메모</a>
+        <a class="s2" href="#w-meal">6-8 · 급식</a>
+        <a class="s2" href="#w-now">6-9 · 지금 이 시간 · 시계</a>
+        <a class="s2" href="#w-weather">6-10 · 날씨</a>
+        <a class="s2" href="#w-weekly">6-11 · 주간학습안내</a>
+        <a class="s2" href="#w-attend">6-12 · 출결 카드</a>
+        <a class="s2" href="#w-album">6-13 · 앨범 · 업무포털</a>
+        <a class="s2" href="#w-big">6-14 · [전체] 큰 창</a>
+        <a class="s2" href="#w-brief">6-15 · 오늘의 비서</a>
+        <a class="s2" href="#w-search">6-16 · 빠른 찾기</a>
         <a href="#s6b">07 · 독에서 여는 것들</a>
-        <a class="s2" href="#d-buy">품의 만들기</a>
-        <a class="s2" href="#d-sgb">생기부</a>
-        <a class="s2" href="#d-roster">명렬 · 출결</a>
+        <a class="s2" href="#d-ai">7-1 · AI 도우미</a>
+        <a class="s2" href="#d-buy">7-2 · 품의 만들기</a>
+        <a class="s2" href="#d-quick">7-3 · 빠른 입력</a>
+        <a class="s2" href="#d-msg">7-4 · 메신저 분석</a>
+        <a class="s2" href="#d-notice">7-5 · 안내문</a>
+        <a class="s2" href="#d-doc">7-6 · 공문서 다듬기</a>
+        <a class="s2" href="#d-import">7-7 · 파일에서 불러오기</a>
+        <a class="s2" href="#d-sgb">7-8 · 생기부 도우미</a>
+        <a class="s2" href="#d-roster">7-9 · 명렬</a>
+        <a class="s2" href="#d-attend">7-10 · 출결</a>
+        <a class="s2" href="#d-note">7-11 · 누가기록</a>
+        <a class="s2" href="#d-ext">7-12 · 내선번호</a>
+        <a class="s2" href="#d-fav">7-13 · 즐겨찾기</a>
+        <a class="s2" href="#d-sign">7-14 · 전광판</a>
+        <a class="s2" href="#d-drawer">7-15 · 서랍 · 고정 파일</a>
         <a href="#scfg">08 · 설정 낱낱이</a>
         <a href="#s7">09 · 위젯 모드 · 단축키</a>
         <a href="#s8">10 · 업무포털 · 메신저 로그인</a>
@@ -1425,22 +1467,22 @@
         </div>
 
         <nav class="wnav" aria-label="위젯 바로가기">
-          <a href="#w-tt"><span class="n">1</span><span>시간표<small>주간·오늘·학반·전체</small></span></a>
-          <a href="#w-prog"><span class="n">2</span><span>진도<small>수업 기록·월간</small></span></a>
-          <a href="#w-cal"><span class="n">3</span><span>달력<small>일정·알림·초과근무</small></span></a>
-          <a href="#w-todo"><span class="n">4</span><span>할 일<small>마감·반복·분류</small></span></a>
-          <a href="#w-sched"><span class="n">5</span><span>학사일정</span></a>
-          <a href="#w-dday"><span class="n">6</span><span>D-Day</span></a>
-          <a href="#w-memo"><span class="n">7</span><span>메모<small>포스트잇 1~4</small></span></a>
-          <a href="#w-meal"><span class="n">8</span><span>급식<small>알레르기·끼니</small></span></a>
-          <a href="#w-now"><span class="n">9</span><span>지금 이 시간<small>시계</small></span></a>
-          <a href="#w-weather"><span class="n">10</span><span>날씨<small>시간대별</small></span></a>
-          <a href="#w-weekly"><span class="n">11</span><span>주간학습안내</span></a>
-          <a href="#w-attend"><span class="n">12</span><span>출결 카드</span></a>
-          <a href="#w-album"><span class="n">13</span><span>앨범 · 업무포털</span></a>
-          <a href="#w-big"><span class="n">14</span><span>[전체] 큰 창</span></a>
-          <a href="#w-brief"><span class="n">15</span><span>오늘의 비서</span></a>
-          <a href="#w-search"><span class="n">16</span><span>빠른 찾기</span></a>
+          <a href="#w-tt"><span class="n">6-1</span><span>시간표<small>주간·오늘·학반·전체</small></span></a>
+          <a href="#w-prog"><span class="n">6-2</span><span>진도<small>수업 기록·월간</small></span></a>
+          <a href="#w-cal"><span class="n">6-3</span><span>달력<small>일정·알림·초과근무</small></span></a>
+          <a href="#w-todo"><span class="n">6-4</span><span>할 일<small>마감·반복·분류</small></span></a>
+          <a href="#w-sched"><span class="n">6-5</span><span>학사일정</span></a>
+          <a href="#w-dday"><span class="n">6-6</span><span>D-Day</span></a>
+          <a href="#w-memo"><span class="n">6-7</span><span>메모<small>포스트잇 1~4</small></span></a>
+          <a href="#w-meal"><span class="n">6-8</span><span>급식<small>알레르기·끼니</small></span></a>
+          <a href="#w-now"><span class="n">6-9</span><span>지금 이 시간<small>시계</small></span></a>
+          <a href="#w-weather"><span class="n">6-10</span><span>날씨<small>시간대별</small></span></a>
+          <a href="#w-weekly"><span class="n">6-11</span><span>주간학습안내</span></a>
+          <a href="#w-attend"><span class="n">6-12</span><span>출결 카드</span></a>
+          <a href="#w-album"><span class="n">6-13</span><span>앨범 · 업무포털</span></a>
+          <a href="#w-big"><span class="n">6-14</span><span>[전체] 큰 창</span></a>
+          <a href="#w-brief"><span class="n">6-15</span><span>오늘의 비서</span></a>
+          <a href="#w-search"><span class="n">6-16</span><span>빠른 찾기</span></a>
         </nav>
 
         <!-- ── 6-1 시간표 ── -->
@@ -2370,21 +2412,21 @@
         </div>
 
         <nav class="wnav" aria-label="독 바로가기">
-          <a href="#d-ai"><span class="n">1</span><span>AI 도우미<small>공통·사용량</small></span></a>
-          <a href="#d-buy"><span class="n">2</span><span>품의 만들기<small>찍기→엑셀→나이스</small></span></a>
-          <a href="#d-quick"><span class="n">3</span><span>빠른 입력</span></a>
-          <a href="#d-msg"><span class="n">4</span><span>메신저 분석</span></a>
-          <a href="#d-notice"><span class="n">5</span><span>안내문<small>학생·교사·학부모</small></span></a>
-          <a href="#d-doc"><span class="n">6</span><span>공문서 다듬기</span></a>
-          <a href="#d-import"><span class="n">7</span><span>파일에서 불러오기</span></a>
-          <a href="#d-sgb"><span class="n">8</span><span>생기부 도우미</span></a>
-          <a href="#d-roster"><span class="n">9</span><span>명렬</span></a>
-          <a href="#d-attend"><span class="n">10</span><span>출결</span></a>
-          <a href="#d-note"><span class="n">11</span><span>누가기록</span></a>
-          <a href="#d-ext"><span class="n">12</span><span>내선번호</span></a>
-          <a href="#d-fav"><span class="n">13</span><span>즐겨찾기</span></a>
-          <a href="#d-sign"><span class="n">14</span><span>전광판</span></a>
-          <a href="#d-drawer"><span class="n">15</span><span>서랍 · 고정 파일</span></a>
+          <a href="#d-ai"><span class="n">7-1</span><span>AI 도우미<small>공통·사용량</small></span></a>
+          <a href="#d-buy"><span class="n">7-2</span><span>품의 만들기<small>찍기→엑셀→나이스</small></span></a>
+          <a href="#d-quick"><span class="n">7-3</span><span>빠른 입력</span></a>
+          <a href="#d-msg"><span class="n">7-4</span><span>메신저 분석</span></a>
+          <a href="#d-notice"><span class="n">7-5</span><span>안내문<small>학생·교사·학부모</small></span></a>
+          <a href="#d-doc"><span class="n">7-6</span><span>공문서 다듬기</span></a>
+          <a href="#d-import"><span class="n">7-7</span><span>파일에서 불러오기</span></a>
+          <a href="#d-sgb"><span class="n">7-8</span><span>생기부 도우미</span></a>
+          <a href="#d-roster"><span class="n">7-9</span><span>명렬</span></a>
+          <a href="#d-attend"><span class="n">7-10</span><span>출결</span></a>
+          <a href="#d-note"><span class="n">7-11</span><span>누가기록</span></a>
+          <a href="#d-ext"><span class="n">7-12</span><span>내선번호</span></a>
+          <a href="#d-fav"><span class="n">7-13</span><span>즐겨찾기</span></a>
+          <a href="#d-sign"><span class="n">7-14</span><span>전광판</span></a>
+          <a href="#d-drawer"><span class="n">7-15</span><span>서랍 · 고정 파일</span></a>
         </nav>
 
         <!-- ── 7-1 AI 도우미 ── -->
