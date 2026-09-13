@@ -195,6 +195,7 @@ const GUIDE = !qs0.has('full') && (ios || !!lsGet('guide', 0));
 if (GUIDE) {
   ['lead', 'secEnv', 'secOrder', 'secLogin', 'secDrive', 'secSilent'].forEach(id => { $(id).hidden = true; });
   $('guide').hidden = false;
+  $('bCopy').classList.remove('main');   // 파란 단추는 안내 칸의 «지금 할 것»에만
   if (standalone) $('gTitle').textContent = '아이콘으로 열었어요 — 한 번만 더 부탁드려요';
   if (ios && browser !== '사파리' && !inapp) {
     $('gBrowserNote').hidden = false;
