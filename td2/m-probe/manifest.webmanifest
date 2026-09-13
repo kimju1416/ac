@@ -1,0 +1,9 @@
+{
+  "name": "TD2 폰 연결 시험",
+  "short_name": "TD2 시험",
+  "start_url": "/td2/m-probe/",
+  "scope": "/td2/m-probe/",
+  "display": "standalone",
+  "background_color": "#f6f7f9",
+  "theme_color": "#ffffff"
+}

@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TD2 시험">
+<meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="manifest.webmanifest">
+<title>TD2 폰 연결 시험</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+  :root { --ink:#1f2937; --sub:#6b7280; --line:#e5e7eb; --bg:#f6f7f9; --card:#fff; --ok:#15803d; --no:#b91c1c; --key:#1d4ed8; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.55 Pretendard, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; word-break:keep-all; }
+  main { max-width:560px; margin:0 auto; padding:calc(16px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom)); }
+  h1 { font-size:22px; margin:4px 0 4px; }
+  .lead { color:var(--sub); margin:0 0 16px; }
+  section { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 14px 12px; margin:0 0 12px; }
+  h2 { font-size:15px; margin:0 0 8px; }
+  dl { display:grid; grid-template-columns:auto 1fr; gap:4px 12px; margin:0; }
+  dt { color:var(--sub); } dd { margin:0; }
+  ol { margin:0; padding-left:20px; } ol li { margin:2px 0; }
+  .btns { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .btns.one { grid-template-columns:1fr; }
+  button { font:inherit; font-weight:600; min-height:46px; padding:8px 10px; border-radius:10px; border:1px solid var(--line); background:#fff; color:var(--ink); }
+  button.main { background:var(--key); border-color:var(--key); color:#fff; }
+  button:active { transform:translateY(1px); }
+  .note { color:var(--sub); font-size:13px; margin:8px 0 0; }
+  .keyline { margin:0 0 10px; font-weight:600; }
+  .warn { background:#fff7ed; border-color:#fed7aa; }
+  #log { list-style:none; margin:0; padding:0; }
+  #log li { border-top:1px solid var(--line); padding:8px 0; }
+  #log li:first-child { border-top:0; }
+  #log .ok { color:var(--ok); font-weight:700; } #log .no { color:var(--no); font-weight:700; }
+  #log .meta { color:var(--sub); font-size:12px; }
+  textarea { width:100%; min-height:160px; font:12px/1.5 ui-monospace, Menlo, monospace; margin-top:8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>TD2 폰 연결 시험</h1>
+  <p class="lead">PC 간 동기화 자료를 폰에서 읽을 수 있는지 재는 시험 페이지입니다. 학생 자료 내용은 화면에 띄우지도, 어디로 보내지도 않습니다.</p>
+
+  <section id="inapp" class="warn" hidden>
+    <h2>카카오톡 안에서 열렸습니다</h2>
+    <p style="margin:0 0 8px">구글은 앱 안 브라우저 로그인을 막습니다. 이 상태 그대로 한 번 로그인을 눌러 막히는지 보고, 그다음 사파리로 열어 주세요.</p>
+    <div class="btns one"><button id="bExt">사파리(기본 브라우저)로 열기</button></div>
+  </section>
+
+  <section>
+    <h2>지금 이 폰</h2>
+    <dl>
+      <dt>기기</dt><dd id="eDev"></dd>
+      <dt>여는 곳</dt><dd id="eMode"></dd>
+      <dt>저장 자료</dt><dd id="eStore"></dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>순서</h2>
+    <ol>
+      <li>사파리에서 <b>팝업으로 로그인</b> → <b>드라이브 시험</b></li>
+      <li><b>이동해서 로그인</b>도 한 번 → <b>드라이브 시험</b></li>
+      <li>공유 단추 → <b>홈 화면에 추가</b> → 생긴 아이콘으로 열어 1·2를 다시</li>
+      <li>한 시간 뒤, 하루 뒤에 아이콘으로 다시 열어 <b>조용히 다시 받기</b></li>
+      <li>그때마다 <b>결과 복사</b>해서 보내 주기</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>1. 로그인</h2>
+    <p class="keyline" id="keyState"></p>
+    <div class="btns">
+      <button class="main" id="bPopup">팝업으로 로그인</button>
+      <button class="main" id="bRedir">이동해서 로그인</button>
+    </div>
+    <p class="note">PC 동기화에 쓰는 구글 계정으로 로그인하세요. 권한은 «앱 전용 숨김 칸»만 요청합니다.</p>
+  </section>
+
+  <section>
+    <h2>2. 드라이브 시험</h2>
+    <div class="btns one"><button class="main" id="bDrive">계정 확인 → 목록 → 읽기 → 쓰기</button></div>
+    <p class="note">쓰기 시험은 <code>m-probe.json</code> 작은 파일을 만들었다가 바로 지웁니다. PC 동기화 파일은 읽기만 합니다.</p>
+  </section>
+
+  <section>
+    <h2>3. 조용히 다시 받기</h2>
+    <div class="btns">
+      <button id="bSilentPopup">팝업으로 조용히</button>
+      <button id="bSilentRedir">이동해서 조용히</button>
+    </div>
+    <div class="btns one" style="margin-top:8px"><button id="bNoGesture">누르지 않고 3초 뒤 자동으로</button></div>
+    <p class="note">로그인 화면 없이 새 열쇠를 받는지 봅니다. 열쇠는 한 시간이면 끝납니다.</p>
+  </section>
+
+  <section>
+    <h2>기록</h2>
+    <ul id="log"></ul>
+    <div class="btns" style="margin-top:10px">
+      <button class="main" id="bCopy">결과 복사</button>
+      <button id="bClear">기록 지우기</button>
+    </div>
+    <textarea id="copyBox" hidden readonly></textarea>
+  </section>
+</main>
+
+<script src="https://accounts.google.com/gsi/client" async></script>
+<script>
+'use strict';
+const CLIENT_ID = '__WEB_CLIENT_ID__';
+const SCOPE = 'openid email https://www.googleapis.com/auth/drive.appdata';
+const DOC_NAME = 'td2-sync.json';
+const PROBE_NAME = 'm-probe.json';
+const HERE = location.hostname === 'kimju.kr' ? 'https://kimju.kr/td2/m-probe/' : location.origin + location.pathname;
+const $ = id => document.getElementById(id);
+
+/* ─── 저장 ─── */
+const K = k => 'td2mp.' + k;
+function lsGet(k, d) { try { const v = localStorage.getItem(K(k)); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }
+function lsSet(k, v) { try { if (v == null) localStorage.removeItem(K(k)); else localStorage.setItem(K(k), JSON.stringify(v)); return true; } catch (e) { return false; } }
+
+/* ─── 환경 ─── */
+const ua = navigator.userAgent;
+const ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const iosVer = (ua.match(/OS (\d+)_(\d+)(?:_(\d+))?/) || []).slice(1).filter(Boolean).join('.');
+const android = /Android/.test(ua);
+const kakao = /KAKAOTALK/i.test(ua);
+const naverApp = /NAVER\(inapp/i.test(ua);
+const inapp = kakao || naverApp || /Instagram|FBAN|FBAV|Line\//i.test(ua);
+const standalone = navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
+const browser = kakao ? '카카오톡 안' : naverApp ? '네이버 앱 안' : inapp ? '앱 안 브라우저'
+  : /CriOS/.test(ua) ? '크롬(iOS)' : /EdgiOS/.test(ua) ? '엣지(iOS)' : /SamsungBrowser/.test(ua) ? '삼성 인터넷'
+  : android && /Chrome/.test(ua) ? '크롬' : ios && /Safari/.test(ua) ? '사파리' : '기타';
+const MODE = standalone ? '홈 화면 아이콘' : browser;
+const DEV = ios ? '아이폰 iOS ' + (iosVer || '?') : android ? '안드로이드 ' + ((ua.match(/Android ([\d.]+)/) || [])[1] || '') : '기타(' + navigator.platform + ')';
+
+const pad = n => String(n).padStart(2, '0');
+const stamp = t => { const d = new Date(t); return `${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`; };
+const ago = ms => ms < 90e3 ? Math.round(ms / 1e3) + '초' : ms < 90 * 60e3 ? Math.round(ms / 60e3) + '분' : ms < 36 * 3600e3 ? (ms / 3600e3).toFixed(1) + '시간' : (ms / 86400e3).toFixed(1) + '일';
+const kb = n => n < 1024 ? n + 'B' : n < 1048576 ? (n / 1024).toFixed(0) + 'KB' : (n / 1048576).toFixed(1) + 'MB';
+
+/* 저장 자료가 살아 있는지 — 방문 기록으로 잰다 */
+const now0 = Date.now();
+const visit = lsGet('visit', null);
+let storeText;
+if (!visit) storeText = '처음 방문(또는 지워짐)';
+else storeText = `처음 ${stamp(visit.first)} · 지난번 ${ago(now0 - visit.last)} 전 · ${visit.count + 1}번째`;
+if (!lsSet('visit', { first: visit ? visit.first : now0, last: now0, count: visit ? visit.count + 1 : 1 })) storeText = '이 브라우저는 저장을 막음';
+$('eDev').textContent = DEV;
+$('eMode').textContent = MODE + (standalone ? '' : ' (홈 화면 아이콘 아님)');
+$('eStore').textContent = storeText;
+if (inapp) $('inapp').hidden = false;
+
+/* ─── 기록 ─── */
+function addLog(test, ok, detail) {
+  const log = lsGet('log', []);
+  log.push({ t: Date.now(), mode: MODE, test, ok, detail });
+  lsSet('log', log.slice(-80));
+  renderLog();
+}
+function renderLog() {
+  const log = lsGet('log', []);
+  const ul = $('log');
+  ul.textContent = '';
+  if (!log.length) { const li = document.createElement('li'); li.className = 'meta'; li.textContent = '아직 기록이 없습니다.'; ul.appendChild(li); return; }
+  for (const r of log.slice().reverse()) {
+    const li = document.createElement('li');
+    const head = document.createElement('div');
+    const mark = document.createElement('span');
+    mark.className = r.ok ? 'ok' : 'no';
+    mark.textContent = r.ok ? '✓ ' : '✗ ';
+    head.appendChild(mark);
+    head.appendChild(document.createTextNode(r.test + ' — ' + r.detail));
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    meta.textContent = stamp(r.t) + ' · ' + r.mode;
+    li.appendChild(head); li.appendChild(meta);
+    ul.appendChild(li);
+  }
+}
+
+/* ─── 열쇠 ─── */
+function getTok() { const t = lsGet('tok', null); return t && t.exp > Date.now() + 5000 ? t : null; }
+function saveTok(access, expiresIn, via) { lsSet('tok', { access, exp: Date.now() + (Math.max(60, +expiresIn || 3600) * 1000), via, at: Date.now(), mode: MODE }); showKey(); }
+function showKey() {
+  const t = getTok();
+  const old = lsGet('tok', null);
+  $('keyState').textContent = t ? `열쇠 있음 — ${ago(t.exp - Date.now())} 남음 (${t.via}, ${t.mode})`
+    : old ? `열쇠 끝남 — ${ago(Date.now() - old.exp)} 전에 만료` : '열쇠 없음 — 로그인해 주세요';
+}
+setInterval(showKey, 30000);
+
+const rand = () => Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(16).padStart(2, '0')).join('');
+
+/* 팝업 방식 — 구글 로그인 스크립트(GIS) */
+function popupLogin(prompt, label) {
+  if (!(window.google && google.accounts && google.accounts.oauth2)) { addLog(label, false, '구글 로그인 스크립트를 아직 못 불러옴(몇 초 뒤 다시)'); return; }
+  const t0 = Date.now();
+  let done = false;
+  const finish = (ok, detail) => { if (done) return; done = true; clearTimeout(guard); addLog(label, ok, detail); };
+  const guard = setTimeout(() => finish(false, '90초 동안 돌아오지 않음'), 90000);
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: CLIENT_ID, scope: SCOPE, prompt,
+    callback: r => {
+      if (r.error) return finish(false, '거절: ' + r.error + (r.error_description ? ' ' + r.error_description : ''));
+      saveTok(r.access_token, r.expires_in, label.replace(/로그인|다시 받기/, '').trim() || label);
+      finish(true, `${((Date.now() - t0) / 1000).toFixed(1)}초 · 열쇠 받음(${Math.round((+r.expires_in || 3600) / 60)}분짜리)`);
+    },
+    error_callback: e => finish(false, '창 오류: ' + ((e && (e.type || e.message)) || '알 수 없음'))
+  });
+  client.requestAccessToken({ prompt });
+}
+
+/* 이동 방식 — 페이지를 떠났다 돌아온다 */
+function redirectLogin(prompt, label) {
+  const state = rand();
+  lsSet('rd', { state, t0: Date.now(), label, mode: MODE });
+  const q = new URLSearchParams({ client_id: CLIENT_ID, redirect_uri: HERE, response_type: 'token', scope: SCOPE, state, include_granted_scopes: 'true' });
+  if (prompt) q.set('prompt', prompt);
+  location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + q.toString();
+}
+function catchRedirect() {
+  if (location.hash.length < 2) return;
+  const h = new URLSearchParams(location.hash.slice(1));
+  if (!h.get('access_token') && !h.get('error')) return;
+  history.replaceState(null, '', location.pathname + location.search);
+  const rd = lsGet('rd', null);
+  lsSet('rd', null);
+  if (!rd) { addLog('이동 방식 돌아옴', false, `떠날 때 적어 둔 표시가 없음 — 다른 저장 공간(${MODE})으로 돌아옴`); if (h.get('access_token')) saveTok(h.get('access_token'), h.get('expires_in'), '이동(표시 없음)'); return; }
+  if (rd.state !== h.get('state')) { addLog(rd.label, false, 'state가 맞지 않음'); return; }
+  if (h.get('error')) { addLog(rd.label, false, '거절: ' + h.get('error')); return; }
+  saveTok(h.get('access_token'), h.get('expires_in'), rd.label.replace(/로그인|다시 받기/, '').trim());
+  addLog(rd.label, true, `${((Date.now() - rd.t0) / 1000).toFixed(1)}초 · 떠난 곳 ${rd.mode} → 돌아온 곳 ${MODE}`);
+}
+
+/* ─── 드라이브 ─── */
+async function api(url, opt = {}) {
+  const t = getTok();
+  if (!t) throw new Error('열쇠 없음 — 먼저 로그인');
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 60000);
+  try {
+    const r = await fetch(url, { ...opt, signal: ctrl.signal, headers: { ...(opt.headers || {}), Authorization: 'Bearer ' + t.access } });
+    if (!r.ok) { let why = ''; try { const j = await r.json(); why = (j.error && (j.error.message || j.error)) || ''; } catch (e) { } throw new Error('HTTP ' + r.status + (why ? ' ' + String(why).slice(0, 90) : '')); }
+    return r;
+  } catch (e) {
+    if (ctrl.signal.aborted) throw new Error('60초 응답 없음');
+    throw e;
+  } finally { clearTimeout(timer); }
+}
+const mask = e => { const [a, d] = String(e).split('@'); return d ? a.slice(0, 2) + '***' + a.slice(-1) + '@' + d : '(없음)'; };
+
+let running = false;
+async function driveTest() {
+  if (running) return;
+  running = true;
+  try {
+    if (!getTok()) { addLog('드라이브 시험', false, '열쇠 없음 — 먼저 로그인'); return; }
+    // ① 계정
+    try {
+      const j = await (await api('https://openidconnect.googleapis.com/v1/userinfo')).json();
+      addLog('계정 확인', true, mask(j.email));
+    } catch (e) { addLog('계정 확인', false, e.message); }
+    // ② 목록
+    let files = [];
+    try {
+      const t0 = Date.now();
+      const q = new URLSearchParams({ spaces: 'appDataFolder', pageSize: '1000', fields: 'files(id,name,size,modifiedTime)' });
+      const j = await (await api('https://www.googleapis.com/drive/v3/files?' + q)).json();
+      files = j.files || [];
+      const doc = files.filter(f => f.name === DOC_NAME).sort((a, b) => Date.parse(b.modifiedTime) - Date.parse(a.modifiedTime))[0];
+      const photos = files.filter(f => f.name.startsWith('f-')).length;
+      if (doc) addLog('숨김 칸 목록', true, `${DOC_NAME} 보임 · ${kb(+doc.size || 0)} · PC가 ${ago(Date.now() - Date.parse(doc.modifiedTime))} 전에 올림 · 사진 등 ${photos}개 · ${((Date.now() - t0) / 1000).toFixed(1)}초`);
+      else addLog('숨김 칸 목록', false, `${DOC_NAME} 안 보임(파일 ${files.length}개) — PC 동기화를 켠 계정인지, 같은 프로젝트 공유가 안 되는지`);
+      files._doc = doc;
+    } catch (e) { addLog('숨김 칸 목록', false, e.message); }
+    // ③ 읽기 — 크기·모양만 확인, 내용은 안 띄운다
+    if (files._doc) {
+      try {
+        const t0 = Date.now();
+        const buf = await (await api(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(files._doc.id)}?alt=media`)).arrayBuffer();
+        const ms = Date.now() - t0;
+        let shape = '모양 확인 못 함';
+        try { const j = JSON.parse(new TextDecoder().decode(buf)); shape = j.app === 'TeacherDesk2' && j.kind === 'sync' ? `TD2 동기화 문서 v${j.v}` : '다른 모양'; } catch (e) { shape = 'JSON 아님'; }
+        addLog('동기화 파일 읽기', /TD2/.test(shape), `${kb(buf.byteLength)} · ${(ms / 1000).toFixed(1)}초 · ${shape}`);
+      } catch (e) { addLog('동기화 파일 읽기', false, e.message); }
+    }
+    // ④ 쓰기 → 다시 읽기 → 지우기 (시험 파일만)
+    try {
+      const t0 = Date.now();
+      const B = 'td2m' + rand();
+      const meta = JSON.stringify({ name: PROBE_NAME, parents: ['appDataFolder'] });
+      const payload = JSON.stringify({ probe: true, at: new Date().toISOString(), mode: MODE, dev: DEV });
+      const body = `--${B}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${meta}\r\n--${B}\r\nContent-Type: application/json\r\n\r\n${payload}\r\n--${B}--`;
+      const made = await (await api('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id', { method: 'POST', body, headers: { 'Content-Type': 'multipart/related; boundary=' + B } })).json();
+      const back = await (await api(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(made.id)}?alt=media`)).text();
+      await api(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(made.id)}`, { method: 'DELETE' });
+      addLog('쓰기·지우기', back === payload, `${back === payload ? '쓴 그대로 읽힘' : '읽은 값이 다름'} · 지움 · ${((Date.now() - t0) / 1000).toFixed(1)}초`);
+    } catch (e) { addLog('쓰기·지우기', false, e.message); }
+  } finally { running = false; }
+}
+
+/* ─── 결과 복사 ─── */
+function resultText() {
+  const lines = [`TD2 폰 연결 시험 결과 (${stamp(Date.now())})`, `기기: ${DEV} · 여는 곳: ${MODE}`, `저장 자료: ${storeText}`, $('keyState').textContent];
+  for (const r of lsGet('log', [])) lines.push(`[${stamp(r.t)} ${r.mode}] ${r.ok ? '✓' : '✗'} ${r.test} — ${r.detail}`);
+  return lines.join('\n');
+}
+async function copyResult() {
+  const text = resultText();
+  const box = $('copyBox');
+  try { await navigator.clipboard.writeText(text); box.hidden = true; $('bCopy').textContent = '복사했습니다'; setTimeout(() => { $('bCopy').textContent = '결과 복사'; }, 2000); }
+  catch (e) { box.hidden = false; box.value = text; box.focus(); box.select(); $('bCopy').textContent = '아래 글을 길게 눌러 복사'; }
+}
+
+/* ─── 단추 ─── */
+$('bPopup').onclick = () => popupLogin('select_account', '팝업 로그인');
+$('bRedir').onclick = () => redirectLogin('select_account', '이동 로그인');
+$('bSilentPopup').onclick = () => popupLogin('none', '팝업 조용히 다시 받기');
+$('bSilentRedir').onclick = () => redirectLogin('none', '이동 조용히 다시 받기');
+$('bNoGesture').onclick = () => { $('bNoGesture').textContent = '3초 기다리는 중…'; setTimeout(() => { $('bNoGesture').textContent = '누르지 않고 3초 뒤 자동으로'; popupLogin('none', '누르지 않고 자동 받기'); }, 3000); };
+$('bDrive').onclick = driveTest;
+$('bCopy').onclick = copyResult;
+$('bClear').onclick = () => { if (confirm('이 폰의 시험 기록과 열쇠를 지울까요? (드라이브는 안 건드립니다)')) { lsSet('log', null); lsSet('tok', null); lsSet('rd', null); showKey(); renderLog(); } };
+$('bExt').onclick = () => { location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(HERE); };
+
+catchRedirect();
+(function reopenCheck() {
+  const old = lsGet('tok', null);
+  if (!old || location.hash) return;
+  const last = lsGet('lastOpenLog', 0);
+  if (Date.now() - last < 60000) return;  // 새로 고침마다 쌓이지 않게
+  lsSet('lastOpenLog', Date.now());
+  if (old.exp > Date.now() + 5000) addLog('다시 열었을 때 열쇠', true, `살아 있음 · ${ago(old.exp - Date.now())} 남음 · ${ago(Date.now() - old.at)} 전에 받은 것`);
+  else addLog('다시 열었을 때 열쇠', false, `끝남 · ${ago(Date.now() - old.at)} 전에 받은 것 → 조용히 다시 받기를 눌러 보세요`);
+})();
+showKey();
+renderLog();
+</script>
+</body>
+</html>
