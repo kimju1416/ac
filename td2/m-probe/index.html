@@ -36,13 +36,24 @@
   #log li:first-child { border-top:0; }
   #log .ok { color:var(--ok); font-weight:700; } #log .no { color:var(--no); font-weight:700; }
   #log .meta { color:var(--sub); font-size:12px; }
+  .gSteps { list-style:none; margin:12px 0 0; padding:0; }
+  .step { border:1px solid var(--line); border-radius:10px; padding:12px; margin:0 0 8px; }
+  .step h3 { font-size:15px; margin:0 0 4px; }
+  .step p { margin:0 0 8px; }
+  .step button { width:100%; }
+  .step.cur { border-color:var(--key); box-shadow:inset 0 0 0 1px var(--key); }
+  .step.done { background:#f0fdf4; border-color:#bbf7d0; }
+  .stat { font-size:13px; color:var(--sub); }
+  .step.done .stat { color:var(--ok); font-weight:600; }
+  .step.fail .stat { color:var(--no); font-weight:600; }
+  a { color:var(--key); }
   textarea { width:100%; min-height:160px; font:12px/1.5 ui-monospace, Menlo, monospace; margin-top:8px; }
 </style>
 </head>
 <body>
 <main>
   <h1>TD2 폰 연결 시험</h1>
-  <p class="lead">PC 간 동기화 자료를 폰에서 읽을 수 있는지 재는 시험 페이지입니다. 학생 자료 내용은 화면에 띄우지도, 어디로 보내지도 않습니다.</p>
+  <p class="lead" id="lead">PC 간 동기화 자료를 폰에서 읽을 수 있는지 재는 시험 페이지입니다. 학생 자료 내용은 화면에 띄우지도, 어디로 보내지도 않습니다.</p>
 
   <section id="inapp" class="warn" hidden>
     <h2 id="inappTitle">앱 안 브라우저에서 열렸습니다</h2>
@@ -50,7 +61,16 @@
     <div class="btns one"><button id="bExt">기본 브라우저로 열기</button></div>
   </section>
 
-  <section>
+  <section id="guide" hidden>
+    <h2 id="gTitle">폰 연결 시험을 도와주세요</h2>
+    <p style="margin:0 0 6px">TeacherDesk2를 폰에서도 쓸 수 있게 하려고, 구글 로그인이 잘 되는지 재는 중입니다. 5분이면 끝나요. 위에서부터 파란 테두리 칸의 버튼만 차례로 눌러 주세요.</p>
+    <p class="note" style="margin:0" id="gBrowserNote" hidden></p>
+    <p class="note" style="margin:6px 0 0">구글 계정으로 로그인하지만, 이 시험이 쓸 수 있는 곳은 구글 드라이브의 «이 앱 전용 숨김 칸»뿐입니다. 메일·사진·문서는 볼 수 없고, 작은 시험 파일을 만들었다가 바로 지웁니다.</p>
+    <ol class="gSteps" id="gSteps"></ol>
+    <p class="note" style="margin:4px 0 0"><a href="?full">전체 시험 화면 보기</a></p>
+  </section>
+
+  <section id="secEnv">
     <h2>지금 이 폰</h2>
     <dl>
       <dt>기기</dt><dd id="eDev"></dd>
@@ -59,7 +79,7 @@
     </dl>
   </section>
 
-  <section>
+  <section id="secOrder">
     <h2>순서</h2>
     <ol>
       <li><span class="bName">크롬</span>에서 <b>팝업으로 로그인</b> → <b>드라이브 시험</b></li>
@@ -70,7 +90,7 @@
     </ol>
   </section>
 
-  <section>
+  <section id="secLogin">
     <h2>1. 로그인</h2>
     <p class="keyline" id="keyState"></p>
     <div class="btns">
@@ -80,13 +100,13 @@
     <p class="note">PC 동기화에 쓰는 구글 계정으로 로그인하세요. 권한은 «앱 전용 숨김 칸»만 요청합니다.</p>
   </section>
 
-  <section>
+  <section id="secDrive">
     <h2>2. 드라이브 시험</h2>
     <div class="btns one"><button class="main" id="bDrive">계정 확인 → 목록 → 읽기 → 쓰기</button></div>
     <p class="note">쓰기 시험은 <code>m-probe.json</code> 작은 파일을 만들었다가 바로 지웁니다. PC 동기화 파일은 읽기만 합니다.</p>
   </section>
 
-  <section>
+  <section id="secSilent">
     <h2>3. 조용히 다시 받기</h2>
     <p class="keyline" id="hintLine"></p>
     <div class="btns one"><button class="main" id="bHintRedir">이동해서 계정 지정 (아무것도 누르지 말기)</button></div>
@@ -167,6 +187,21 @@ if (ios) {
   $('stepHome').innerHTML = '공유 단추 → <b>홈 화면에 추가</b> → 생긴 아이콘으로 열어 1·2를 다시';
 }
 
+/* 아이폰(또는 ?guide)이면 부탁받은 분이 따라 하기 쉬운 안내 화면으로 — ?full이면 전체 시험 화면 */
+const qs0 = new URLSearchParams(location.search);
+if (qs0.has('full')) lsSet('guide', null);
+if (qs0.has('guide')) lsSet('guide', 1);
+const GUIDE = !qs0.has('full') && (ios || !!lsGet('guide', 0));
+if (GUIDE) {
+  ['lead', 'secEnv', 'secOrder', 'secLogin', 'secDrive', 'secSilent'].forEach(id => { $(id).hidden = true; });
+  $('guide').hidden = false;
+  if (standalone) $('gTitle').textContent = '아이콘으로 열었어요 — 한 번만 더 부탁드려요';
+  if (ios && browser !== '사파리' && !inapp) {
+    $('gBrowserNote').hidden = false;
+    $('gBrowserNote').textContent = '지금 ' + browser + '입니다. 가능하면 사파리로 열어 주세요(홈 화면 추가는 사파리에서 합니다).';
+  }
+}
+
 /* ─── 기록 ─── */
 function addLog(test, ok, detail) {
   const log = lsGet('log', []);
@@ -178,7 +213,7 @@ function renderLog() {
   const log = lsGet('log', []);
   const ul = $('log');
   ul.textContent = '';
-  if (!log.length) { const li = document.createElement('li'); li.className = 'meta'; li.textContent = '아직 기록이 없습니다.'; ul.appendChild(li); return; }
+  if (!log.length) { const li = document.createElement('li'); li.className = 'meta'; li.textContent = '아직 기록이 없습니다.'; ul.appendChild(li); if (GUIDE) renderGuide(); return; }
   for (const r of log.slice().reverse()) {
     const li = document.createElement('li');
     const head = document.createElement('div');
@@ -193,6 +228,7 @@ function renderLog() {
     li.appendChild(head); li.appendChild(meta);
     ul.appendChild(li);
   }
+  if (GUIDE) renderGuide();
 }
 
 /* ─── 열쇠 ─── */
@@ -262,13 +298,14 @@ function catchRedirect() {
   history.replaceState(null, '', location.pathname + location.search);
   const rd = lsGet('rd', null);
   lsSet('rd', null);
-  if (!rd) { addLog('이동 방식 돌아옴', false, `떠날 때 적어 둔 표시가 없음 — 다른 저장 공간(${MODE})으로 돌아옴`); if (h.get('access_token')) saveTok(h.get('access_token'), h.get('expires_in'), '이동(표시 없음)'); return; }
+  if (!rd) { addLog('이동 방식 돌아옴', false, `떠날 때 적어 둔 표시가 없음 — 다른 저장 공간(${MODE})으로 돌아옴`); if (h.get('access_token')) { saveTok(h.get('access_token'), h.get('expires_in'), '이동(표시 없음)'); if (GUIDE) { fetchEmail(); driveTest(); } } return; }
   const note = rd.hintNote || '';
   if (rd.state !== h.get('state')) { addLog(rd.label, false, 'state가 맞지 않음' + note); return; }
   if (h.get('error')) { addLog(rd.label, false, '거절: ' + h.get('error') + note); return; }
   saveTok(h.get('access_token'), h.get('expires_in'), rd.label.replace(/로그인|다시 받기/, '').trim());
   addLog(rd.label, true, `${((Date.now() - rd.t0) / 1000).toFixed(1)}초 · 떠난 곳 ${rd.mode} → 돌아온 곳 ${MODE}${note}`);
   fetchEmail();
+  if (GUIDE && rd.label === '안내 로그인') driveTest();   // 부탁받은 분은 로그인 뒤 확인까지 저절로
 }
 
 /* ─── 드라이브 ─── */
@@ -310,6 +347,7 @@ async function driveTest() {
       const doc = files.filter(f => f.name === DOC_NAME).sort((a, b) => Date.parse(b.modifiedTime) - Date.parse(a.modifiedTime))[0];
       const photos = files.filter(f => f.name.startsWith('f-')).length;
       if (doc) addLog('숨김 칸 목록', true, `${DOC_NAME} 보임 · ${kb(+doc.size || 0)} · PC가 ${ago(Date.now() - Date.parse(doc.modifiedTime))} 전에 올림 · 사진 등 ${photos}개 · ${((Date.now() - t0) / 1000).toFixed(1)}초`);
+      else if (GUIDE) addLog('숨김 칸 목록', true, `목록 읽기 됨 · ${DOC_NAME} 없음(TD2 PC 동기화를 안 쓰는 계정이면 정상) · 파일 ${files.length}개 · ${((Date.now() - t0) / 1000).toFixed(1)}초`);
       else addLog('숨김 칸 목록', false, `${DOC_NAME} 안 보임(파일 ${files.length}개) — PC 동기화를 켠 계정인지, 같은 프로젝트 공유가 안 되는지`);
       files._doc = doc;
     } catch (e) { addLog('숨김 칸 목록', false, e.message); }
@@ -336,7 +374,7 @@ async function driveTest() {
       await api(`https://www.googleapis.com/drive/v3/files/${encodeURIComponent(made.id)}`, { method: 'DELETE' });
       addLog('쓰기·지우기', back === payload, `${back === payload ? '쓴 그대로 읽힘' : '읽은 값이 다름'} · 지움 · ${((Date.now() - t0) / 1000).toFixed(1)}초`);
     } catch (e) { addLog('쓰기·지우기', false, e.message); }
-  } finally { running = false; }
+  } finally { running = false; if (GUIDE) renderGuide(); }
 }
 
 /* ─── 결과 복사 ─── */
@@ -349,7 +387,68 @@ async function copyResult() {
   const text = resultText();
   const box = $('copyBox');
   try { await navigator.clipboard.writeText(text); box.hidden = true; $('bCopy').textContent = '복사했습니다'; setTimeout(() => { $('bCopy').textContent = '결과 복사'; }, 2000); }
-  catch (e) { box.hidden = false; box.value = text; box.focus(); box.select(); $('bCopy').textContent = '아래 글을 길게 눌러 복사'; }
+  catch (e) { box.hidden = false; box.value = text; box.scrollIntoView({ block: 'center' }); box.focus(); box.select(); $('bCopy').textContent = '아래 글을 길게 눌러 복사'; }
+}
+
+/* ─── 아이폰 도움 요청용 안내 화면 ─── 기록(log)에서 단계별 결과를 읽어 칸을 채운다 */
+function lastOf(test) {
+  const log = lsGet('log', []);
+  for (let i = log.length - 1; i >= 0; i--) if (log[i].test === test) return log[i];
+  return null;
+}
+function guideSteps() {
+  const s = [
+    { key: 'login', title: '구글로 로그인', desc: '버튼을 누르고 구글 계정을 고른 뒤 «허용»(또는 «계속»)을 누르세요. 돌아오면 확인이 저절로 진행됩니다.', test: '안내 로그인', btn: '구글로 로그인', run: () => redirectLogin('select_account', '안내 로그인', false) },
+    { key: 'silent', title: '화면 없이 한 번 더', desc: '버튼을 누른 뒤에는 아무것도 누르지 말고 기다려 주세요. 화면이 잠깐 넘어갔다 돌아오면 됩니다.', test: '안내 화면 없이 받기', btn: '화면 없이 한 번 더', run: () => redirectLogin('none', '안내 화면 없이 받기', true) },
+    { key: 'send', title: '결과 보내기', desc: '버튼을 누르고 카카오톡을 골라, 부탁한 분께 보내 주세요.', test: '안내 결과 보냄', btn: '결과 보내기', run: sendResult }
+  ];
+  if (!standalone) s.push({ key: 'home', title: '홈 화면에 추가하고 아이콘으로 열기', desc: '사파리의 공유 버튼(네모에 위쪽 화살표)을 누르고 «홈 화면에 추가» → «추가». 공유 버튼이 안 보이면 주소창 옆 ••• 을 먼저 누르세요. 그다음 홈 화면에 생긴 «TD2 시험» 아이콘으로 열어 1~3을 한 번 더 해 주세요.' });
+  else s.push({ key: 'tomorrow', title: '(내일) 아이콘으로 다시 열기', desc: '내일 아무 때나 이 아이콘으로 열어 «화면 없이 한 번 더» → «결과 보내기»만 다시 눌러 주세요. 오래 두었다 열어도 로그인이 유지되는지 봅니다.' });
+  return s;
+}
+function renderGuide() {
+  const ol = $('gSteps');
+  if (!ol) return;
+  ol.textContent = '';
+  let curSet = false;
+  guideSteps().forEach((s, i) => {
+    const li = document.createElement('li');
+    li.className = 'step';
+    const last = s.test ? lastOf(s.test) : null;
+    let ok = !!(last && last.ok), bad = !!(last && !last.ok), statText = '';
+    if (s.key === 'login' && last && last.ok) {
+      let drive = lastOf('쓰기·지우기');
+      if (drive && drive.t < last.t) drive = null;
+      ok = !!(drive && drive.ok);
+      bad = !!(drive && !drive.ok);
+      statText = drive ? (drive.ok ? `✓ 됨 · ${stamp(last.t)}` : `✗ 드라이브 확인 안 됨 · ${drive.detail}`)
+        : (running ? '로그인됨 — 확인하는 중…' : '로그인됨 — 확인이 멈췄으면 버튼을 한 번 더 눌러 주세요');
+    } else if (last) statText = last.ok ? `✓ 됨 · ${stamp(last.t)}` : `✗ 안 됨 · ${last.detail}`;
+    if (ok) li.classList.add('done'); else if (bad) li.classList.add('fail');
+    if (!ok && !curSet) { li.classList.add('cur'); curSet = true; }
+    const h = document.createElement('h3'); h.textContent = `${i + 1}. ${s.title}`;
+    const p = document.createElement('p'); p.textContent = s.desc;
+    li.appendChild(h); li.appendChild(p);
+    if (statText) { const st = document.createElement('p'); st.className = 'stat'; st.textContent = statText; li.appendChild(st); }
+    if (s.btn) {
+      const b = document.createElement('button');
+      b.textContent = s.btn;
+      if (li.classList.contains('cur')) b.className = 'main';
+      b.disabled = running;
+      b.onclick = s.run;
+      li.appendChild(b);
+    }
+    ol.appendChild(li);
+  });
+}
+async function sendResult() {
+  const text = resultText();
+  if (navigator.share) {
+    try { await navigator.share({ text }); addLog('안내 결과 보냄', true, '공유 창으로 보냄'); return; }
+    catch (e) { if (e && e.name === 'AbortError') return; }
+  }
+  await copyResult();
+  addLog('안내 결과 보냄', true, '복사함 — 카톡에 붙여 넣기');
 }
 
 /* ─── 단추 ─── */
