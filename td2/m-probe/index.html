@@ -88,12 +88,14 @@
 
   <section>
     <h2>3. 조용히 다시 받기</h2>
-    <div class="btns">
+    <p class="keyline" id="hintLine"></p>
+    <div class="btns one"><button class="main" id="bHintRedir">이동해서 계정 지정 (아무것도 누르지 말기)</button></div>
+    <div class="btns" style="margin-top:8px">
       <button id="bSilentPopup">팝업으로 조용히</button>
       <button id="bSilentRedir">이동해서 조용히</button>
     </div>
     <div class="btns one" style="margin-top:8px"><button id="bNoGesture">누르지 않고 3초 뒤 자동으로</button></div>
-    <p class="note">로그인 화면 없이 새 열쇠를 받는지 봅니다. 열쇠는 한 시간이면 끝납니다.</p>
+    <p class="note">로그인 화면 없이 새 열쇠를 받는지 봅니다. 열쇠가 살아 있어도 바로 눌러 시험할 수 있습니다. 로그인을 한 번 하면 계정이 저장돼 지정해서 보냅니다.</p>
   </section>
 
   <section>
@@ -126,16 +128,18 @@ function lsSet(k, v) { try { if (v == null) localStorage.removeItem(K(k)); else 
 const ua = navigator.userAgent;
 const ios = /iPhone|iPad|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 const iosVer = (ua.match(/OS (\d+)_(\d+)(?:_(\d+))?/) || []).slice(1).filter(Boolean).join('.');
-const android = /Android/.test(ua);
+// 크롬 «PC 버전 사이트»는 UA에서 Android를 지운다 — 플랫폼 글자로 알아본다
+const deskMode = !/Android/.test(ua) && /Linux (arm|aarch)/i.test(navigator.platform || '');
+const android = /Android/.test(ua) || deskMode;
 const kakao = /KAKAOTALK/i.test(ua);
 const naverApp = /NAVER\(inapp/i.test(ua);
 const inapp = kakao || naverApp || /Instagram|FBAN|FBAV|Line\//i.test(ua);
 const standalone = navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
 const browser = kakao ? '카카오톡 안' : naverApp ? '네이버 앱 안' : inapp ? '앱 안 브라우저'
   : /CriOS/.test(ua) ? '크롬(iOS)' : /EdgiOS/.test(ua) ? '엣지(iOS)' : /SamsungBrowser/.test(ua) ? '삼성 인터넷'
-  : android && /Chrome/.test(ua) ? '크롬' : ios && /Safari/.test(ua) ? '사파리' : '기타';
+  : android && /Chrome/.test(ua) ? (deskMode ? '크롬(PC 버전 사이트)' : '크롬') : ios && /Safari/.test(ua) ? '사파리' : '기타';
 const MODE = standalone ? '홈 화면 아이콘' : browser;
-const DEV = ios ? '아이폰 iOS ' + (iosVer || '?') : android ? '안드로이드 ' + ((ua.match(/Android ([\d.]+)/) || [])[1] || '') : '기타(' + navigator.platform + ')';
+const DEV = ios ? '아이폰 iOS ' + (iosVer || '?') : deskMode ? '안드로이드(PC 버전 사이트 모드)' : android ? '안드로이드 ' + ((ua.match(/Android ([\d.]+)/) || [])[1] || '') : '기타(' + navigator.platform + ')';
 
 const pad = n => String(n).padStart(2, '0');
 const stamp = t => { const d = new Date(t); return `${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`; };
@@ -205,18 +209,36 @@ setInterval(() => showKey(), 30000);
 const rand = () => Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(16).padStart(2, '0')).join('');
 
 /* 팝업 방식 — 구글 로그인 스크립트(GIS) */
-function popupLogin(prompt, label) {
+/* 로그인한 계정을 기억해 두었다가 조용히 받을 때 login_hint로 지정한다 */
+async function fetchEmail() {
+  try {
+    const j = await (await api('https://openidconnect.googleapis.com/v1/userinfo')).json();
+    if (j.email) { lsSet('email', j.email); showHint(); }
+    return j.email || '';
+  } catch (e) { return ''; }
+}
+function showHint() {
+  const e = lsGet('email', '');
+  $('hintLine').textContent = e ? '지정할 계정: ' + mask(e) : '지정할 계정 없음 — 위에서 로그인을 한 번 하면 저장됩니다';
+}
+
+function popupLogin(prompt, label, useHint) {
   if (!(window.google && google.accounts && google.accounts.oauth2)) { addLog(label, false, '구글 로그인 스크립트를 아직 못 불러옴(몇 초 뒤 다시)'); return; }
+  const hint = useHint ? lsGet('email', '') : '';
+  const hintNote = useHint ? ` · 계정 지정 ${hint ? '함' : '없음'}` : '';
   const t0 = Date.now();
   let done = false;
-  const finish = (ok, detail) => { if (done) return; done = true; clearTimeout(guard); addLog(label, ok, detail); };
+  const finish = (ok, detail) => { if (done) return; done = true; clearTimeout(guard); addLog(label, ok, detail + hintNote); };
   const guard = setTimeout(() => finish(false, '90초 동안 돌아오지 않음'), 90000);
+  const cfg = { client_id: CLIENT_ID, scope: SCOPE, prompt };
+  if (hint) cfg.login_hint = hint;
   const client = google.accounts.oauth2.initTokenClient({
-    client_id: CLIENT_ID, scope: SCOPE, prompt,
+    ...cfg,
     callback: r => {
       if (r.error) return finish(false, '거절: ' + r.error + (r.error_description ? ' ' + r.error_description : ''));
       saveTok(r.access_token, r.expires_in, label.replace(/로그인|다시 받기/, '').trim() || label);
       finish(true, `${((Date.now() - t0) / 1000).toFixed(1)}초 · 열쇠 받음(${Math.round((+r.expires_in || 3600) / 60)}분짜리)`);
+      fetchEmail();
     },
     error_callback: e => finish(false, '창 오류: ' + ((e && (e.type || e.message)) || '알 수 없음'))
   });
@@ -224,11 +246,13 @@ function popupLogin(prompt, label) {
 }
 
 /* 이동 방식 — 페이지를 떠났다 돌아온다 */
-function redirectLogin(prompt, label) {
+function redirectLogin(prompt, label, useHint) {
   const state = rand();
-  lsSet('rd', { state, t0: Date.now(), label, mode: MODE });
+  const hint = useHint ? lsGet('email', '') : '';
+  lsSet('rd', { state, t0: Date.now(), label, mode: MODE, hintNote: useHint ? ` · 계정 지정 ${hint ? '함' : '없음'}` : '' });
   const q = new URLSearchParams({ client_id: CLIENT_ID, redirect_uri: HERE, response_type: 'token', scope: SCOPE, state, include_granted_scopes: 'true' });
   if (prompt) q.set('prompt', prompt);
+  if (hint) q.set('login_hint', hint);
   location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + q.toString();
 }
 function catchRedirect() {
@@ -239,10 +263,12 @@ function catchRedirect() {
   const rd = lsGet('rd', null);
   lsSet('rd', null);
   if (!rd) { addLog('이동 방식 돌아옴', false, `떠날 때 적어 둔 표시가 없음 — 다른 저장 공간(${MODE})으로 돌아옴`); if (h.get('access_token')) saveTok(h.get('access_token'), h.get('expires_in'), '이동(표시 없음)'); return; }
-  if (rd.state !== h.get('state')) { addLog(rd.label, false, 'state가 맞지 않음'); return; }
-  if (h.get('error')) { addLog(rd.label, false, '거절: ' + h.get('error')); return; }
+  const note = rd.hintNote || '';
+  if (rd.state !== h.get('state')) { addLog(rd.label, false, 'state가 맞지 않음' + note); return; }
+  if (h.get('error')) { addLog(rd.label, false, '거절: ' + h.get('error') + note); return; }
   saveTok(h.get('access_token'), h.get('expires_in'), rd.label.replace(/로그인|다시 받기/, '').trim());
-  addLog(rd.label, true, `${((Date.now() - rd.t0) / 1000).toFixed(1)}초 · 떠난 곳 ${rd.mode} → 돌아온 곳 ${MODE}`);
+  addLog(rd.label, true, `${((Date.now() - rd.t0) / 1000).toFixed(1)}초 · 떠난 곳 ${rd.mode} → 돌아온 곳 ${MODE}${note}`);
+  fetchEmail();
 }
 
 /* ─── 드라이브 ─── */
@@ -271,6 +297,7 @@ async function driveTest() {
     // ① 계정
     try {
       const j = await (await api('https://openidconnect.googleapis.com/v1/userinfo')).json();
+      if (j.email) { lsSet('email', j.email); showHint(); }
       addLog('계정 확인', true, mask(j.email));
     } catch (e) { addLog('계정 확인', false, e.message); }
     // ② 목록
@@ -328,12 +355,13 @@ async function copyResult() {
 /* ─── 단추 ─── */
 $('bPopup').onclick = () => popupLogin('select_account', '팝업 로그인');
 $('bRedir').onclick = () => redirectLogin('select_account', '이동 로그인');
-$('bSilentPopup').onclick = () => popupLogin('none', '팝업 조용히 다시 받기');
-$('bSilentRedir').onclick = () => redirectLogin('none', '이동 조용히 다시 받기');
-$('bNoGesture').onclick = () => { $('bNoGesture').textContent = '3초 기다리는 중…'; setTimeout(() => { $('bNoGesture').textContent = '누르지 않고 3초 뒤 자동으로'; popupLogin('none', '누르지 않고 자동 받기'); }, 3000); };
+$('bSilentPopup').onclick = () => popupLogin('none', '팝업 조용히 다시 받기', true);
+$('bSilentRedir').onclick = () => redirectLogin('none', '이동 조용히 다시 받기', true);
+$('bHintRedir').onclick = () => redirectLogin('', '이동 계정 지정 받기', true);
+$('bNoGesture').onclick = () => { $('bNoGesture').textContent = '3초 기다리는 중…'; setTimeout(() => { $('bNoGesture').textContent = '누르지 않고 3초 뒤 자동으로'; popupLogin('none', '누르지 않고 자동 받기', true); }, 3000); };
 $('bDrive').onclick = driveTest;
 $('bCopy').onclick = copyResult;
-$('bClear').onclick = () => { if (confirm('이 폰의 시험 기록과 열쇠를 지울까요? (드라이브는 안 건드립니다)')) { lsSet('log', null); lsSet('tok', null); lsSet('rd', null); showKey(); renderLog(); } };
+$('bClear').onclick = () => { if (confirm('이 폰의 시험 기록과 열쇠를 지울까요? (드라이브는 안 건드립니다)')) { lsSet('log', null); lsSet('tok', null); lsSet('rd', null); lsSet('email', null); showKey(); showHint(); renderLog(); } };
 $('bExt').onclick = () => {
   if (kakao) location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(HERE);
   else if (android) location.href = 'intent://' + HERE.replace(/^https:\/\//, '') + '#Intent;scheme=https;package=com.android.chrome;end';
@@ -342,7 +370,7 @@ $('bExt').onclick = () => {
 
 // 콘솔에서 웹 클라이언트를 만들기 전 — 로그인 단추를 막고 알린다
 if (CLIENT_ID.startsWith('__')) {
-  ['bPopup', 'bRedir', 'bSilentPopup', 'bSilentRedir', 'bNoGesture', 'bDrive'].forEach(id => { $(id).disabled = true; $(id).style.opacity = '.45'; });
+  ['bPopup', 'bRedir', 'bSilentPopup', 'bSilentRedir', 'bHintRedir', 'bNoGesture', 'bDrive'].forEach(id => { $(id).disabled = true; $(id).style.opacity = '.45'; });
   $('keyState').textContent = '아직 구글 로그인 설정 전입니다 — 준비되면 이 문구가 사라집니다';
   showKey = () => {};
 }
@@ -357,6 +385,7 @@ catchRedirect();
   else addLog('다시 열었을 때 열쇠', false, `끝남 · ${ago(Date.now() - old.at)} 전에 받은 것 → 조용히 다시 받기를 눌러 보세요`);
 })();
 showKey();
+showHint();
 renderLog();
 </script>
 </body>
