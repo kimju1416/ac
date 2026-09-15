@@ -3748,7 +3748,7 @@
   });
 
   document.querySelectorAll('.addr-cp').forEach(btn=>{
-    btn.addEventListener('click',()=>{navigator.clipboard.writeText(btn.dataset.cp).then(()=>{
+    btn.addEventListener('click',()=>{navigator.clipboard.writeText(btn.dataset.cp).catch(()=>{/* 클립보드 권한이 막힌 브라우저는 옛 방식으로 한 번 더 */const t=document.createElement('textarea');t.value=btn.dataset.cp;t.setAttribute('readonly','');t.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(t);t.select();const ok=document.execCommand('copy');t.remove();if(!ok)throw new Error('copy');}).then(()=>{
       btn.textContent='복사됨';btn.classList.add('done');toast('주소를 복사했어요');
       setTimeout(()=>{btn.textContent='복사';btn.classList.remove('done');},1500);
     }).catch(()=>toast('복사 실패 — 주소를 직접 적어 주세요'));});
