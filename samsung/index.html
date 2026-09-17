@@ -36,7 +36,8 @@ a{color:var(--blue)}
 img{max-width:100%}
 
 /* 왼쪽 사이드 메뉴 */
-.side{position:fixed;inset:0 auto 0 0;width:var(--side);background:#fff;border-right:1px solid var(--line);display:flex;flex-direction:column;z-index:30;overflow-y:auto}
+.shell{max-width:1180px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:var(--side) minmax(0,1fr);gap:40px;align-items:start}
+.side{position:sticky;top:24px;margin-top:24px;max-height:calc(100vh - 48px);background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);display:flex;flex-direction:column;z-index:30;overflow-y:auto}
 .brand{display:flex;gap:12px;align-items:center;padding:22px 20px 18px}
 .brand .ball{flex:none;width:44px;height:44px;border-radius:50%;background:var(--blue);display:grid;place-items:center}
 .brand small{display:block;font-size:11px;font-weight:800;letter-spacing:.12em;color:var(--blue)}
@@ -58,12 +59,13 @@ img{max-width:100%}
 .scrim{display:none}
 
 /* 본문 (가운데) */
-.main{margin-left:var(--side);min-height:100vh;display:flex;flex-direction:column}
-.page{max-width:820px;width:100%;margin:0 auto;padding:36px 32px 24px;flex:1}
+.main{min-width:0;min-height:100vh;display:flex;flex-direction:column}
+.page{max-width:840px;width:100%;padding:24px 0 24px;flex:1}
 .label{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;color:var(--blue);background:var(--tint);border-radius:999px;padding:4px 12px;letter-spacing:.03em}
 .label::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--blue)}
 h1{font-size:28px;margin:12px 0 6px;line-height:1.35;letter-spacing:-.01em}
 h2{font-size:18px;margin:30px 0 10px}
+h2.first{font-size:22px;margin:0 0 4px}
 .lead{color:var(--sub);margin:0 0 20px;font-size:16px}
 p{margin:0 0 10px}
 .muted{color:var(--sub);font-size:14px}
@@ -79,25 +81,6 @@ p{margin:0 0 10px}
 
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:20px;box-shadow:var(--shadow)}
 .card+.card{margin-top:12px}
-
-/* 숫자 칩 */
-.score{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.score div{background:#fff;border:1px solid var(--line);border-radius:18px;padding:14px 16px;box-shadow:var(--shadow)}
-.score b{display:block;font-size:26px;font-weight:800;color:var(--blue);font-variant-numeric:tabular-nums;line-height:1.2}
-.score b small{font-size:13px;font-weight:700;color:var(--sub);margin-left:2px}
-.score span{font-size:13px;color:var(--sub)}
-.score div.hl{background:#FFF3D6;border-color:#F2CF7E}
-.score div.hl b{color:#9A5B00}
-.score div.hl span{color:#7A4B06;font-weight:700}
-
-/* 수수료 강조 */
-.fee{display:flex;gap:16px;align-items:center;background:#FFF3D6;border:2px solid #F2C35C;border-radius:var(--r2);padding:16px 20px;margin:14px 0 18px}
-.fee .won{flex:none;text-align:center;background:#fff;border-radius:16px;padding:8px 14px;border:1px solid #F2CF7E}
-.fee .won small{display:block;font-size:11px;font-weight:800;color:#9A5B00;letter-spacing:.04em}
-.fee .won b{display:block;font-size:26px;font-weight:900;color:#8A4F00;line-height:1.15;font-variant-numeric:tabular-nums}
-.fee .won b em{font-style:normal;font-size:14px}
-.fee p{margin:0;color:#5E3A05;font-size:14.5px}
-.fee p strong{display:block;font-size:17px;color:#3F2600;margin-bottom:2px}
 
 /* 요금제 비교 */
 .compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -149,6 +132,8 @@ p{margin:0 0 10px}
 .box.warn{background:var(--warn-bg);color:#6B420A}
 .box.err{background:var(--err-bg);color:#7A2219}
 .box.info{background:var(--tint);color:#16345F}
+.box ul{margin:4px 0 0;padding-left:18px}
+.box li+li{margin-top:2px}
 
 /* 체크리스트 */
 .check{list-style:none;margin:0;padding:0}
@@ -210,7 +195,7 @@ table.price tbody tr:first-child td{border-top:0}
 .pager a.next small{color:#CFE0FA}
 
 footer{margin-top:28px;border-top:1px solid var(--line)}
-footer .in{max-width:820px;margin:0 auto;padding:22px 32px 32px;font-size:13px;color:var(--sub);text-align:center}
+footer .in{max-width:840px;padding:22px 0 32px;font-size:13px;color:var(--sub);text-align:center}
 footer b{color:var(--text)}
 
 .zoom{position:fixed;inset:0;background:rgba(8,16,32,.92);z-index:60;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:16px}
@@ -218,7 +203,8 @@ footer b{color:var(--text)}
 .zoom button{position:fixed;top:12px;right:12px;height:44px;padding:0 16px;border-radius:var(--r1);border:0;background:#fff;font:inherit;font-weight:700}
 
 @media (max-width:899px){
-  .side{transform:translateX(-100%);transition:transform .22s ease;width:min(300px,86vw);border-right:0;box-shadow:8px 0 30px rgba(10,30,70,.18)}
+  .shell{display:block;padding:0}
+  .side{position:fixed;top:0;left:0;bottom:0;margin:0;max-height:none;border:0;border-radius:0 24px 24px 0;transform:translateX(-105%);transition:transform .22s ease;width:min(300px,86vw);box-shadow:8px 0 30px rgba(10,30,70,.18)}
   body.menu-open .side{transform:none}
   .scrim{display:block;position:fixed;inset:0;background:rgba(8,20,45,.45);z-index:25;opacity:0;pointer-events:none;transition:opacity .22s}
   body.menu-open .scrim{opacity:1;pointer-events:auto}
@@ -226,9 +212,8 @@ footer b{color:var(--text)}
   .topbar button{flex:none;display:flex;align-items:center;gap:6px;height:42px;padding:0 14px 0 10px;border:0;background:var(--tint);color:var(--blue);font:inherit;font-weight:800;font-size:14px;border-radius:999px}
   .topbar .cur{font-size:15px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .topbar .cnt{margin-left:auto;flex:none;font-size:12px;font-weight:700;color:var(--blue);background:var(--tint);border-radius:999px;padding:3px 10px;font-variant-numeric:tabular-nums}
-  .main{margin-left:0}
   .page{padding:20px 16px 16px}
-  footer .in{padding:20px 16px 28px}
+  footer .in{padding:20px 16px 28px;max-width:none}
   h1{font-size:24px}
 }
 @media (max-width:600px){
@@ -241,14 +226,6 @@ footer b{color:var(--text)}
   .hero-t b{font-size:27px}
   .hero-t span{font-size:14px}
   .compare{grid-template-columns:1fr}
-  .score{gap:6px}
-  .score div{padding:10px;border-radius:14px}
-  .score b{font-size:20px}
-  .score span{font-size:12px}
-  .fee{padding:14px;gap:12px}
-  .fee .won{padding:6px 10px}
-  .fee .won b{font-size:21px}
-  .fee p strong{font-size:15.5px}
   .card{padding:16px}
   .zones{grid-template-columns:1fr 1fr;gap:8px}
   .zone{padding:10px 12px}
@@ -274,9 +251,7 @@ table.glance thead th.g{background:#6B7788;width:42%}
 table.glance thead th.b{background:var(--blue)}
 table.glance tbody th{width:92px;color:var(--sub);font-weight:700;background:var(--tint-2)}
 table.glance td span{font-size:13px;color:var(--sub)}
-table.glance tr.hl th,table.glance tr.hl td{background:#FFF3D6;color:#5E3A05}
-table.glance tr.hl td b{font-size:17px;color:#8A4F00}
-.gobtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:4px 0 0}
+.gobtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 0}
 .gobtns .go{display:flex;flex-direction:column;justify-content:center;min-height:64px;padding:10px 18px;border-radius:18px;background:#fff;border:1px solid var(--line);text-decoration:none;color:var(--text);box-shadow:var(--shadow)}
 .gobtns .go small{font-size:12px;font-weight:800;color:var(--sub)}
 .gobtns .go b{font-size:15.5px}
@@ -288,14 +263,13 @@ table.glance tr.hl td b{font-size:17px;color:#8A4F00}
   table.glance th,table.glance td{padding:10px 8px}
   table.glance thead th{font-size:14px}
   table.glance thead th:first-child,table.glance tbody th{width:74px;white-space:nowrap;padding-left:10px;padding-right:6px}
-  table.glance tr.hl td b{font-size:15.5px}
   .gobtns{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){.side,.scrim,.nav a{transition:none}}
 </style>
 </head>
 <body>
-
+<div class="shell">
 <aside class="side" id="side" aria-label="가이드 메뉴">
   <div class="brand">
     <span class="ball" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M6.2 5.2c2.4 2 3.6 4.3 3.6 6.8s-1.2 4.8-3.6 6.8M17.8 5.2c-2.4 2-3.6 4.3-3.6 6.8s1.2 4.8 3.6 6.8"/></svg></span>
@@ -309,7 +283,6 @@ table.glance tr.hl td b{font-size:17px;color:#8A4F00}
     </a>
   </div>
 </aside>
-<div class="scrim" id="scrim"></div>
 
 <div class="main">
   <div class="topbar">
@@ -324,7 +297,7 @@ table.glance tr.hl td b{font-size:17px;color:#8A4F00}
   <main class="page">
 
 <!-- 01 -->
-<section data-page="plan" data-no="1" data-title="한눈에 보기" data-sub="요금제 · 방법 · 수수료">
+<section data-page="plan" data-no="1" data-title="한눈에 보기" data-sub="요금제 · 방법 · 티켓값">
   <div class="hero">
     <img src="hero.jpg" alt="파란 모자를 쓴 학생들이 야구장 관중석에서 응원하는 모습">
     <div class="hero-t">
@@ -333,9 +306,8 @@ table.glance tr.hl td b{font-size:17px;color:#8A4F00}
       <span>신청 절차 · 서류 · 좌석 · 요금을 한 번에</span>
     </div>
   </div>
-  <div class="label">1 · 한눈에 보기</div>
-  <h1>학교 단체관람 한눈에</h1>
-  <p class="lead">경기 요일에 따라 요금제가 다르고, 요금제에 따라 신청 방법이 완전히 다릅니다.</p>
+  <h2 class="first">한눈에 보기</h2>
+  <p class="lead">평일 경기와 주말 경기는 요금제도, 신청 방법도 다릅니다.</p>
 
   <div class="tbl glance-wrap">
     <table class="glance">
@@ -346,7 +318,8 @@ table.glance tr.hl td b{font-size:17px;color:#8A4F00}
         <tr><th>서류 마감</th><td>전화 신청일 하루 전</td><td>신청 당일 정오(12시)</td></tr>
         <tr><th>확정</th><td>전화 접수 때</td><td>당일 오후 02 번호 전화</td></tr>
         <tr><th>인원</th><td>50석 이상<br><span>경기당 3,000석</span></td><td>팀당 50~200석<br><span>경기당 5개 팀</span></td></tr>
-        <tr class="hl"><th>수수료</th><td colspan="2"><b>장당 1,000원</b> · 티켓값과 별도, 할인 없음</td></tr>
+        <tr><th>티켓값</th><td><b>8,000~10,000원</b><br><span>일반 1장 기준</span></td><td><b>9,000~14,000원</b><br><span>화이트 9,000~13,000 · 블루 11,000~14,000</span></td></tr>
+        <tr><th>수수료</th><td colspan="2">장당 1,000원 별도</td></tr>
         <tr><th>서류</th><td colspan="2">고유번호증 + 학교장 직인 공문</td></tr>
         <tr><th>좌석</th><td colspan="2">1루 내야지정석 · 외야지정석 · 1루 SKY 상단 · 3루 SKY 상단(U25~U31) · 중앙 SKY 상단(U10)</td></tr>
         <tr><th>표 받기</th><td colspan="2">경기 당일 중앙매표소 왼쪽 고객센터 · 취소는 1일 전까지</td></tr>
@@ -354,18 +327,14 @@ table.glance tr.hl td b{font-size:17px;color:#8A4F00}
     </table>
   </div>
 
-  <div class="fee">
-    <div class="won"><small>수수료</small><b>1,000<em>원</em></b></div>
-    <p><strong>표 한 장마다 수수료 1,000원이 따로 붙습니다</strong>티켓값에 더해 계산하세요. 예: 100석이면 수수료만 10만 원. 단체관람은 할인도 없습니다.</p>
-  </div>
 
   <div class="gobtns">
     <a class="go" href="#grey"><small>3-1</small><b>평일 · 그레이 신청</b></a>
     <a class="go blue" href="#weekend"><small>3-2</small><b>주말 · 화이트·블루 신청</b></a>
   </div>
   <div class="box info">
-    <b>요금제는 티켓링크에서 한 번 더 확인</b>
-    공휴일이나 매진이 예상되는 경기는 평일이어도 요금제가 달라질 수 있습니다. 티켓링크 예매 화면에서 그 경기의 요금제를 확인하세요.
+    <b>요금제는 티켓링크에서 확인</b>
+    공휴일이나 매진이 예상되는 경기는 평일이어도 요금제가 다를 수 있습니다.
   </div>
 </section>
 
@@ -404,13 +373,12 @@ table.glance tr.hl td b{font-size:17px;color:#8A4F00}
     <p class="muted" style="margin:10px 0 0">구단이 정한 양식은 없습니다. 위 항목은 심사에서 목적을 확인하기 쉽도록 정리한 참고용입니다.</p>
   </div>
 
-  <div class="box info">
-    <b>단체명은 학교명으로 자동 등록</b>
-    제출한 서류의 학교명으로 등록되고, 100석 이상이면 전광판에 그대로 나옵니다. 문구는 바꿀 수 없습니다.
-  </div>
-  <div class="box err">
-    <b>서류를 안 내거나 허위로 내면 자동 취소</b>
-    그레이는 전화 신청일 하루 전, 화이트·블루는 신청 당일 정오까지입니다.
+  <div class="box warn">
+    <b>알아 둘 것</b>
+    <ul>
+      <li>서류를 마감까지 안 내거나 허위로 내면 자동 취소됩니다.</li>
+      <li>단체명은 서류의 학교명으로 등록되고, 100석 이상이면 전광판에 그대로 나옵니다(수정 불가).</li>
+    </ul>
   </div>
 </section>
 
@@ -435,19 +403,15 @@ table.glance tr.hl td b{font-size:17px;color:#8A4F00}
         <ul>
           <li>운영: 화~금 10:00~17:00</li>
           <li>점심시간 12:00~13:00 제외</li>
-          <li>경기당 3,000석 한도, 학교당 50석 이상</li>
+          <li>50석 이상 · 경기당 3,000석 한도(일반예매 오픈 뒤에는 한도 없음)</li>
         </ul>
       </li>
       <li class="home">
         <span class="base"><i>H</i></span>
         <h3>예매 완료</h3>
-        <p>전화 접수로 확정됩니다. 결제 금액은 <b>티켓값 + 장당 수수료 1,000원</b>입니다. 표는 경기 당일 현장에서 받습니다.</p>
+        <p>전화 접수로 확정됩니다. 표는 경기 당일 현장에서 받습니다.</p>
       </li>
     </ol>
-  </div>
-  <div class="box info">
-    <b>3,000석 한도는 일반예매 오픈 전까지</b>
-    일반예매가 열린 뒤에는 한도 없이 받습니다. 인기 경기는 10시 접수 시작에 맞춰 전화하세요.
   </div>
 
   <div class="calc">
@@ -495,22 +459,18 @@ table.glance tr.hl td b{font-size:17px;color:#8A4F00}
       <li class="home">
         <span class="base"><i>H</i></span>
         <h3>예매 완료</h3>
-        <p>전화로 예매가 끝납니다. 결제 금액은 <b>티켓값 + 장당 수수료 1,000원</b>입니다. 표는 경기 당일 현장에서 받습니다.</p>
+        <p>전화로 예매가 끝납니다. 표는 경기 당일 현장에서 받습니다.</p>
       </li>
     </ol>
   </div>
   <div class="box warn">
-    <b>한 학교는 한 번만</b>
-    여러 선생님이 따로 내거나 같은 아이디로 여러 번 내면 접수가 취소됩니다. 제출한 내용은 고칠 수 없습니다.
+    <b>이러면 취소됩니다</b>
+    <ul>
+      <li>같은 학교가 여러 명·여러 번 접수 (제출 뒤 수정도 불가)</li>
+      <li>당일 확정 전화를 못 받음 — 추가 접수도 안 됩니다</li>
+    </ul>
   </div>
-  <div class="box err">
-    <b>전화를 못 받으면 취소</b>
-    당일 확정 전화가 연결되지 않으면 접수가 취소되고 추가 접수도 안 됩니다.
-  </div>
-  <div class="box info">
-    <b>5개 팀 안에 들어도 불가 안내가 올 수 있음</b>
-    접수 당일 상황에 따라 신청 불가로 안내될 수 있습니다. 신청 오픈일이 공휴일이면 다음 날 받습니다.
-  </div>
+  <p class="muted" style="margin-top:10px">5개 팀 안에 들어도 당일 상황에 따라 불가 안내가 올 수 있습니다. 신청 오픈일이 공휴일이면 다음 날 받습니다.</p>
 
   <div class="calc">
     <h2>신청 날짜 계산</h2>
@@ -543,11 +503,7 @@ table.glance tr.hl td b{font-size:17px;color:#8A4F00}
   <a class="btn" href="https://myseatcheck.com/%eb%8c%80%ea%b5%ac-%ec%82%bc%ec%84%b1-%eb%9d%bc%ec%9d%b4%ec%98%a8%ec%a6%88%ed%8c%8c%ed%81%ac/" target="_blank" rel="noopener">구역별 시야 사진 보기</a>
 
   <h2>요금 (2026, 1장 기준)</h2>
-  <div class="fee">
-    <div class="won"><small>수수료</small><b>1,000<em>원</em></b></div>
-    <p><strong>표 한 장마다 수수료 1,000원이 따로 붙습니다</strong>티켓값에 더해 계산하세요. 예: 100석이면 수수료만 10만 원. 단체관람은 할인도 없습니다.</p>
-  </div>
-  <p class="muted">단체 신청 가능한 좌석만 먼저 모았습니다.</p>
+  <p class="muted">단체 신청 가능한 좌석만 모았습니다. 금액은 1장 기준이며, 예매수수료 장당 1,000원이 따로 붙습니다.</p>
   <div class="tbl"><table class="price"><thead><tr><th>좌석</th><th class="g">그레이<small>평일</small></th><th class="w">화이트<small>주말</small></th><th class="b">블루<small>주말</small></th></tr></thead><tbody><tr><td class="nm"><b>1루 내야지정석</b></td><td>10,000</td><td>13,000</td><td>14,000</td></tr><tr><td class="nm"><b>1,3루 SKY 상단지정석</b><small>일반</small></td><td>8,000</td><td>9,000</td><td>11,000</td></tr><tr><td class="nm"><small>어린이·청소년·경로·장애인 등</small></td><td>5,000</td><td>6,000</td><td>8,000</td></tr><tr><td class="nm"><b>중앙 SKY 상단지정석</b><small>일반</small></td><td>9,000</td><td>10,000</td><td>12,000</td></tr><tr><td class="nm"><small>어린이·청소년·경로·장애인 등</small></td><td>6,000</td><td>7,000</td><td>9,000</td></tr><tr><td class="nm"><b>외야지정석</b><small>일반</small></td><td>9,000</td><td>10,000</td><td>11,000</td></tr><tr><td class="nm"><small>어린이·청소년·경로·장애인 등</small></td><td>6,000</td><td>7,000</td><td>8,000</td></tr></tbody></table></div>
   <details class="more">
     <summary>나머지 좌석 요금 보기 (단체 불가)</summary>
@@ -555,7 +511,7 @@ table.glance tr.hl td b{font-size:17px;color:#8A4F00}
   </details>
   <div class="box info">
     <b>어린이·청소년 요금 적용은 접수 때 확인</b>
-    SKY 상단·외야지정석은 어린이·청소년 요금이 따로 있습니다. 단체관람에 권종을 나눠 적용하는지는 확정 전화(또는 1688-0747)에서 확인하세요. 단체관람은 티켓 할인이 없습니다.
+    SKY 상단·외야지정석은 어린이·청소년 요금이 따로 있습니다. 단체관람에 권종을 나눠 적용하는지는 확정 전화(또는 1688-0747)에서 확인하세요.
   </div>
 </section>
 
@@ -574,8 +530,8 @@ table.glance tr.hl td b{font-size:17px;color:#8A4F00}
     </table>
   </div>
   <div class="box warn">
-    <b>인원이 줄어도 수량은 못 줄임</b>
-    예매 뒤에는 수량을 바꿀 수 없습니다. 결석자가 생길 수 있으면 신청 좌석 수를 넉넉하게 잡지 말고, 줄여야 하면 경기 1일 전까지 취소 여부를 문의하세요.
+    <b>인원을 확정한 뒤 신청하세요</b>
+    예매 뒤에는 수량을 바꿀 수 없습니다.
   </div>
 </section>
 
@@ -607,7 +563,7 @@ table.glance tr.hl td b{font-size:17px;color:#8A4F00}
   <p class="lead">학교가 단체에 해당하는지 헷갈리면 채널톡, 예매·취소는 티켓링크로 문의합니다.</p>
   <div class="card">
     <table>
-      <tr><th>예매·취소</th><td>티켓링크 <a href="tel:1688-0747">1688-0747</a><br><span class="muted">화~금 10:00~17:00 (점심 12~13시)</span></td></tr>
+      <tr><th>예매·취소</th><td>티켓링크 <a href="tel:1688-0747">1688-0747</a><br><span class="muted">그레이 전화 접수: 화~금 10:00~17:00 (점심 12~13시)</span></td></tr>
       <tr><th>단체 해당 여부</th><td>삼성라이온즈 구단 홈페이지 채널톡</td></tr>
       <tr><th>증빙서류</th><td><a href="https://naver.me/5mvI0inx" target="_blank" rel="noopener">naver.me/5mvI0inx</a></td></tr>
       <tr><th>공지 원문</th><td>티켓링크 › 스포츠 › 삼성라이온즈 › 공지사항</td></tr>
@@ -625,6 +581,8 @@ table.glance tr.hl td b{font-size:17px;color:#8A4F00}
     </div>
   </footer>
 </div>
+</div>
+<div class="scrim" id="scrim"></div>
 
 <script>
 (function(){
