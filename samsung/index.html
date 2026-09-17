@@ -9,99 +9,123 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kimju.kr/samsung/">
 <meta property="og:title" content="라이온즈파크 학교 단체관람 가이드">
-<meta property="og:description" content="화이트·블루 네이버폼 선착순, 그레이 서류 먼저 → 전화 선착순. 학교 기준 신청 절차 정리">
+<meta property="og:description" content="평일 그레이는 서류 먼저 → 전화 선착순, 주말 화이트·블루는 네이버폼 선착순. 학교 기준 신청 절차 정리">
+<meta property="og:image" content="https://kimju.kr/samsung/og.png?v=1">
+<meta property="og:image:secure_url" content="https://kimju.kr/samsung/og.png?v=1">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="삼성라이온즈 라이온즈파크 학교 단체관람 가이드">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://kimju.kr/samsung/og.png?v=1">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
 :root{
-  --blue:#0A4DA2; --blue-d:#083C80; --navy:#0B1F3F; --navy-2:#132D57;
+  --blue:#0A4DA2; --blue-d:#083C80; --navy:#0B1F3F; --navy-2:#132D57; --navy-line:#2C4A7C;
   --bg:#F2F5FA; --card:#fff; --line:#DCE3EE; --line-2:#E8EDF5;
   --text:#14233B; --sub:#5B6A82; --tint:#E8F0FB;
-  --warn:#B26B0F; --warn-bg:#FBF0DE; --err:#C0392B; --err-bg:#F9E8E6; --ok:#1D7A4D; --ok-bg:#E7F3EC;
-  --r1:10px; --r2:14px;
+  --warn:#B26B0F; --warn-bg:#FBF0DE; --err:#C0392B; --err-bg:#F9E8E6;
+  --r1:10px; --r2:14px; --side:264px;
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--text);font:15px/1.65 Pretendard,"Pretendard Variable",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;word-break:keep-all;overflow-wrap:break-word}
 a{color:var(--blue)}
-.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+[hidden]{display:none!important}
 
-/* 헤더: 전광판 느낌 */
-.board{background:var(--navy);color:#fff;position:relative;overflow:hidden}
-.board::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1.2px);background-size:9px 9px;pointer-events:none}
-.board .wrap{position:relative;padding-block:28px 24px}
-.tag{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.04em;color:#AFC6EA;border:1px solid #2C4A7C;border-radius:999px;padding:2px 10px}
-.board h1{margin:12px 0 6px;font-size:26px;line-height:1.3;font-weight:800;letter-spacing:-.01em}
-.board p{margin:0;color:#C3D2EA;font-size:14px}
-.score{display:grid;grid-template-columns:repeat(3,1fr);margin-top:20px;border:1px solid #2C4A7C;border-radius:var(--r1);overflow:hidden}
-.score div{padding:10px 12px;border-right:1px solid #2C4A7C;background:var(--navy-2)}
-.score div:last-child{border-right:0}
-.score b{display:block;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;color:#fff;line-height:1.2}
-.score b small{font-size:12px;font-weight:600;color:#9FB4D6;margin-left:2px}
-.score span{font-size:12px;color:#9FB4D6}
+/* ── 왼쪽 사이드 메뉴 ── */
+.side{position:fixed;inset:0 auto 0 0;width:var(--side);background:var(--navy);color:#fff;display:flex;flex-direction:column;z-index:30;overflow-y:auto}
+.side::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.06) 1px,transparent 1.2px);background-size:9px 9px;pointer-events:none}
+.brand{position:relative;padding:24px 20px 18px;border-bottom:1px solid var(--navy-line)}
+.brand small{display:block;font-size:11px;font-weight:700;letter-spacing:.12em;color:#8FAAD6}
+.brand b{display:block;font-size:19px;line-height:1.35;margin-top:6px;font-weight:800}
+.brand span{display:block;font-size:12px;color:#9FB4D6;margin-top:6px}
+.nav{position:relative;list-style:none;margin:0;padding:12px 10px;flex:1}
+.nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;min-height:46px;border-radius:var(--r1);color:#C3D2EA;text-decoration:none;font-size:15px;font-weight:600}
+.nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav a .no{flex:none;width:24px;height:24px;display:grid;place-items:center}
+.nav a .no i{width:18px;height:18px;border:1.5px solid #5D7BB0;transform:rotate(45deg);border-radius:3px;display:grid;place-items:center}
+.nav a .no em{transform:rotate(-45deg);font-style:normal;font-size:10px;font-weight:800;color:#9FB4D6}
+.nav a .t small{display:block;font-size:12px;font-weight:500;color:#8FAAD6;margin-top:1px}
+.nav a[aria-current="page"]{background:#fff;color:var(--navy)}
+.nav a[aria-current="page"] .no i{background:var(--blue);border-color:var(--blue)}
+.nav a[aria-current="page"] .no em{color:#fff}
+.nav a[aria-current="page"] .t small{color:var(--sub)}
+.side-foot{position:relative;padding:14px 20px 20px;border-top:1px solid var(--navy-line);font-size:12px;color:#8FAAD6}
+.insta{display:inline-flex;align-items:center;gap:8px;color:#fff;text-decoration:none;font-weight:700;font-size:14px;min-height:40px}
+.insta svg{flex:none}
+.insta:hover{text-decoration:underline}
 
-/* 목차 */
-.toc{position:sticky;top:0;z-index:10;background:rgba(242,245,250,.96);border-bottom:1px solid var(--line)}
-.toc .wrap{display:flex;gap:6px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
-.toc .wrap::-webkit-scrollbar{display:none}
-.toc a{flex:none;text-decoration:none;color:var(--sub);font-size:14px;font-weight:600;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;min-height:36px}
-.toc a.on{background:var(--blue);border-color:var(--blue);color:#fff}
+/* 모바일 상단 바 */
+.topbar{display:none}
+.scrim{display:none}
 
-section{padding-block:34px 6px;scroll-margin-top:56px}
+/* ── 본문 ── */
+.main{margin-left:var(--side);min-height:100vh;display:flex;flex-direction:column}
+.page{max-width:760px;width:100%;padding:40px 32px 24px;flex:1}
 .label{font-size:13px;font-weight:700;color:var(--blue);letter-spacing:.04em;display:flex;align-items:center;gap:8px}
 .label::before{content:"";width:10px;height:10px;background:var(--blue);transform:rotate(45deg);border-radius:1px}
-h2{font-size:22px;margin:6px 0 14px;line-height:1.35}
-h3{font-size:17px;margin:0 0 8px}
+h1{font-size:26px;margin:6px 0 8px;line-height:1.35}
+h2{font-size:18px;margin:26px 0 10px}
+.lead{color:var(--sub);margin:0 0 18px}
 p{margin:0 0 10px}
 .muted{color:var(--sub);font-size:14px}
 
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:18px}
 .card+.card{margin-top:12px}
 
+/* 전광판 */
+.score{display:grid;grid-template-columns:repeat(3,1fr);border-radius:var(--r2);overflow:hidden;background:var(--navy);color:#fff;margin-bottom:18px}
+.score div{padding:14px 14px;border-right:1px solid var(--navy-line)}
+.score div:last-child{border-right:0}
+.score b{display:block;font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.2}
+.score b small{font-size:12px;font-weight:600;color:#9FB4D6;margin-left:2px}
+.score span{font-size:12px;color:#9FB4D6}
+
 /* 요금제 비교 */
 .compare{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.plan{background:#fff;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden}
-.plan header{padding:12px 16px;background:var(--tint);border-bottom:1px solid var(--line)}
-.plan.grey header{background:#ECEFF3}
-.plan header b{font-size:16px}
+.plan{background:#fff;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden;display:flex;flex-direction:column}
+.plan header{padding:14px 16px;background:var(--tint);border-bottom:1px solid var(--line)}
+.plan.grey header{background:#E9ECF1}
+.day{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.02em;padding:2px 9px;border-radius:999px;background:var(--blue);color:#fff;margin-bottom:6px}
+.plan.grey .day{background:#5B6A82}
+.plan header b{display:block;font-size:17px}
 .plan header span{display:block;font-size:13px;color:var(--sub)}
-.plan dl{margin:0;padding:6px 16px 12px}
+.plan header .day{display:inline-block;color:#fff;font-size:12px}
+.plan dl{margin:0;padding:4px 16px 12px;flex:1}
 .plan dt{font-size:12px;font-weight:700;color:var(--sub);margin-top:10px}
 .plan dd{margin:2px 0 0;font-size:15px;font-weight:600}
 .plan dd small{display:block;font-weight:400;color:var(--sub);font-size:13px}
+.plan .go{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid var(--line-2);text-decoration:none;font-weight:700;font-size:14px;min-height:46px}
+.plan .go:hover{background:var(--tint)}
 
-/* 탭 */
-.tabs{display:flex;background:#E3E9F2;border-radius:var(--r1);padding:4px;gap:4px;margin-bottom:16px}
-.tabs button{flex:1;border:0;background:transparent;font:inherit;font-weight:700;font-size:15px;color:var(--sub);padding:10px 8px;border-radius:8px;min-height:44px;cursor:pointer}
-.tabs button[aria-selected="true"]{background:#fff;color:var(--blue);box-shadow:0 1px 3px rgba(0,0,0,.08)}
-
-/* 단계: 루상 진루 */
-.steps{list-style:none;margin:0;padding:0;position:relative}
-.steps li{position:relative;padding:0 0 22px 52px}
-.steps li::after{content:"";position:absolute;left:17px;top:38px;bottom:0;border-left:2px dashed #B7C6DD}
-.steps li:last-child{padding-bottom:0}
-.steps li:last-child::after{display:none}
+/* 단계 */
+.steps{list-style:none;margin:0;padding:0}
+.steps>li{position:relative;padding:0 0 22px 52px}
+.steps>li::after{content:"";position:absolute;left:17px;top:38px;bottom:0;border-left:2px dashed #B7C6DD}
+.steps>li:last-child{padding-bottom:0}
+.steps>li:last-child::after{display:none}
 .base{position:absolute;left:4px;top:4px;width:28px;height:28px;background:var(--blue);transform:rotate(45deg);border-radius:4px;display:grid;place-items:center}
 .base i{transform:rotate(-45deg);font-style:normal;color:#fff;font-weight:800;font-size:14px}
-.steps li.home .base{background:var(--navy)}
-.steps h4{margin:2px 0 4px;font-size:16px}
+.steps>li.home .base{background:var(--navy)}
+.steps h3{margin:2px 0 4px;font-size:16px}
 .when{display:inline-block;font-size:13px;font-weight:700;color:var(--blue);background:var(--tint);border-radius:6px;padding:1px 8px;margin-bottom:6px}
-.steps ul{margin:6px 0 0;padding-left:18px;color:var(--text)}
-.steps ul li{padding:0;margin:2px 0}
-.steps ul li::after{display:none}
+.steps ul{margin:6px 0 0;padding-left:18px}
+.steps ul li{margin:2px 0}
 
 /* 날짜 계산 */
 .calc{margin-top:18px;background:var(--navy);color:#fff;border-radius:var(--r2);padding:18px}
-.calc h3{color:#fff;font-size:16px;margin-bottom:4px}
+.calc h2{color:#fff;font-size:16px;margin:0 0 4px}
 .calc .muted{color:#A9BCDB}
 .calc label{display:block;font-size:13px;font-weight:600;color:#C3D2EA;margin:12px 0 6px}
-.calc input{width:100%;height:48px;border-radius:var(--r1);border:1px solid #2C4A7C;background:#fff;color:var(--text);font:inherit;font-size:16px;padding:0 12px}
+.calc input{width:100%;height:48px;border-radius:var(--r1);border:1px solid var(--navy-line);background:#fff;color:var(--text);font:inherit;font-size:16px;padding:0 12px}
 .calc input:focus{outline:0;border-color:#7FA7E0;box-shadow:0 0 0 3px rgba(127,167,224,.35)}
 .out{margin-top:14px;display:grid;gap:8px}
-.out .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;background:var(--navy-2);border:1px solid #2C4A7C;border-radius:var(--r1);padding:10px 12px}
+.out:empty{display:none}
+.out .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;background:var(--navy-2);border:1px solid var(--navy-line);border-radius:var(--r1);padding:10px 12px}
 .out .row span{font-size:13px;color:#A9BCDB}
 .out .row b{font-size:17px;font-variant-numeric:tabular-nums;text-align:right}
 .out .note{font-size:13px;color:#FFD9A0;margin:2px 0 0}
-.out:empty{display:none}
 
 /* 콜아웃 */
 .box{border-radius:var(--r1);padding:12px 14px;font-size:14px;margin-top:12px;border:1px solid}
@@ -120,246 +144,313 @@ p{margin:0 0 10px}
 .check span{color:var(--sub);font-size:14px}
 
 /* 좌석 */
-.zones{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.zones{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px}
 .zone{border:1px solid var(--line);border-radius:var(--r1);padding:10px 12px;background:#fff}
 .zone b{display:block;font-size:15px}
 .zone span{font-size:13px;color:var(--sub)}
 .zone.limit{border-color:#EED3A6;background:#FFFCF6}
 .zone.limit span{color:var(--warn);font-weight:600}
-.shot{margin-top:12px;border:1px solid var(--line);border-radius:var(--r2);background:#fff;padding:10px;text-align:center}
+.shot{margin:12px 0 0;border:1px solid var(--line);border-radius:var(--r2);background:#fff;padding:10px;text-align:center}
 .shot img{max-width:100%;height:auto;display:block;margin:0 auto;border-radius:8px;cursor:zoom-in}
 .shot figcaption{font-size:13px;color:var(--sub);margin-top:6px}
 
 .btn{display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:var(--r1);background:var(--blue);color:#fff;text-decoration:none;font-weight:700;font-size:15px;margin-top:12px}
 .btn:hover{background:var(--blue-d)}
-.btn.line{background:#fff;color:var(--text);border:1px solid var(--line)}
-.btn.line:hover{background:var(--tint)}
-.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{text-align:left;padding:10px 8px;border-top:1px solid var(--line-2);vertical-align:top}
 th{width:34%;color:var(--sub);font-weight:600}
 tr:first-child th,tr:first-child td{border-top:0}
 
-.no{list-style:none;margin:0;padding:0}
-.no li{position:relative;padding:10px 0 10px 28px;border-top:1px solid var(--line-2)}
-.no li:first-child{border-top:0}
-.no li::before{content:"";position:absolute;left:4px;top:18px;width:12px;height:2px;background:var(--err);transform:rotate(45deg)}
-.no li::after{content:"";position:absolute;left:4px;top:18px;width:12px;height:2px;background:var(--err);transform:rotate(-45deg)}
+.nolist{list-style:none;margin:0;padding:0}
+.nolist li{position:relative;padding:10px 0 10px 28px;border-top:1px solid var(--line-2)}
+.nolist li:first-child{border-top:0}
+.nolist li::before,.nolist li::after{content:"";position:absolute;left:4px;top:21px;width:12px;height:2px;background:var(--err);transform:rotate(45deg)}
+.nolist li::after{transform:rotate(-45deg)}
 
-footer{margin-top:40px;background:var(--navy);color:#A9BCDB;font-size:13px}
-footer .wrap{padding-block:22px 34px}
+
+/* 배치도·요금표 */
+.map{margin:14px 0 0;background:#fff;border:1px solid var(--line);border-radius:var(--r2);padding:12px}
+.map svg{display:block;width:100%;height:auto}
+.map figcaption{font-size:13px;color:var(--sub);margin-top:6px}
+.tbl{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:var(--r2)}
+table.price{min-width:440px;font-variant-numeric:tabular-nums}
+table.price th,table.price td{padding:9px 10px;text-align:right;white-space:nowrap;width:auto}
+table.price th{font-size:13px;color:#fff;font-weight:700;border-top:0}
+table.price th small{display:block;font-size:11px;font-weight:500;opacity:.8}
+table.price th:first-child{text-align:left;background:var(--navy)}
+table.price th.g{background:#7B8594} table.price th.w{background:#fff;color:var(--text);border-bottom:1px solid var(--line)} table.price th.b{background:var(--blue)}
+table.price td.nm{text-align:left;white-space:normal;color:var(--text)}
+table.price td.nm small{display:block;font-size:12px;color:var(--sub)}
+table.price tbody tr:first-child td{border-top:0}
+.more{margin-top:12px}
+.more summary{cursor:pointer;font-weight:700;color:var(--blue);min-height:44px;display:flex;align-items:center}
+
+/* 이전·다음 */
+.pager{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:32px}
+.pager a{display:flex;flex-direction:column;justify-content:center;min-height:64px;padding:10px 14px;border:1px solid var(--line);border-radius:var(--r2);background:#fff;text-decoration:none;color:var(--text)}
+.pager a:hover{border-color:var(--blue)}
+.pager a small{font-size:12px;color:var(--sub)}
+.pager a b{font-size:15px}
+.pager a.next{text-align:right;grid-column:2}
+
+footer{background:var(--navy);color:#A9BCDB;font-size:13px;margin-top:24px}
+footer .in{max-width:760px;padding:22px 32px 30px}
 footer b{color:#fff}
+footer .insta{margin-top:10px}
 
-/* 이미지 확대 */
-.zoom{position:fixed;inset:0;background:rgba(8,16,32,.92);z-index:50;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:16px}
+/* 확대 */
+.zoom{position:fixed;inset:0;background:rgba(8,16,32,.92);z-index:60;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:16px}
 .zoom img{max-width:none;width:min(1200px,200%)}
 .zoom button{position:fixed;top:12px;right:12px;height:44px;padding:0 16px;border-radius:var(--r1);border:0;background:#fff;font:inherit;font-weight:700}
 
+@media (max-width:899px){
+  .side{transform:translateX(-100%);transition:transform .22s ease;width:min(300px,86vw)}
+  body.menu-open .side{transform:none}
+  .scrim{display:block;position:fixed;inset:0;background:rgba(8,16,32,.5);z-index:25;opacity:0;pointer-events:none;transition:opacity .22s}
+  body.menu-open .scrim{opacity:1;pointer-events:auto}
+  .topbar{display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:20;height:56px;padding:0 12px 0 8px;background:var(--navy);color:#fff}
+  .topbar button{display:flex;align-items:center;gap:6px;height:44px;padding:0 10px;border:0;background:transparent;color:#fff;font:inherit;font-weight:700;font-size:14px;border-radius:8px}
+  .topbar .cur{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .topbar .cnt{margin-left:auto;font-size:13px;color:#9FB4D6;font-variant-numeric:tabular-nums}
+  .main{margin-left:0}
+  .page{padding:24px 20px 16px}
+  footer .in{padding:20px}
+  h1{font-size:23px}
+}
 @media (max-width:560px){
-  .board h1{font-size:23px}
   .compare{grid-template-columns:1fr}
-  .btns{grid-template-columns:1fr}
   .score b{font-size:19px}
   th{width:38%}
 }
+@media (prefers-reduced-motion:reduce){.side,.scrim{transition:none}}
 </style>
 </head>
 <body>
 
-<div class="board">
-  <div class="wrap">
-    <span class="tag">2026 시즌 기준 · 학교 전용 정리</span>
-    <h1>삼성라이온즈파크<br>학교 단체관람 신청 가이드</h1>
-    <p>요금제에 따라 신청 방법이 다릅니다. 경기 요금제부터 확인하세요.</p>
-    <div class="score">
-      <div><b>50<small>석~</small></b><span>최소 인원</span></div>
-      <div><b>1,000<small>원</small></b><span>장당 수수료</span></div>
-      <div><b>100<small>석~</small></b><span>전광판 노출</span></div>
-    </div>
+<aside class="side" id="side" aria-label="가이드 메뉴">
+  <div class="brand">
+    <small>SAMSUNG LIONS</small>
+    <b>라이온즈파크<br>학교 단체관람 가이드</b>
+    <span>2026 시즌 기준 · 비공식 정리</span>
   </div>
-</div>
-
-<nav class="toc" aria-label="목차">
-  <div class="wrap">
-    <a href="#s-plan">요금제 구분</a>
-    <a href="#s-docs">준비 서류</a>
-    <a href="#s-how">신청 절차</a>
-    <a href="#s-seat">좌석</a>
-    <a href="#s-day">경기 당일</a>
-    <a href="#s-no">안 되는 것</a>
-    <a href="#s-contact">문의</a>
+  <ul class="nav" id="nav"></ul>
+  <div class="side-foot">
+    <a class="insta" href="https://www.instagram.com/kimju.zip/" target="_blank" rel="noopener">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg>
+      @kimju.zip
+    </a>
   </div>
-</nav>
+</aside>
+<div class="scrim" id="scrim"></div>
 
-<main class="wrap">
+<div class="main">
+  <div class="topbar">
+    <button type="button" id="menuBtn" aria-controls="side" aria-expanded="false">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      메뉴
+    </button>
+    <span class="cur" id="curTitle"></span>
+    <span class="cnt" id="curCnt"></span>
+  </div>
 
-<section id="s-plan">
+  <main class="page">
+
+<!-- 01 -->
+<section data-page="plan" data-title="요금제 구분" data-sub="평일 그레이 · 주말 화이트·블루">
   <div class="label">01</div>
-  <h2>요금제부터 확인</h2>
-  <p class="muted">티켓링크 예매 화면에서 보고 싶은 경기의 요금제(화이트·블루 / 그레이)를 먼저 확인합니다.</p>
+  <h1>평일이냐 주말이냐부터</h1>
+  <p class="lead">경기 요일에 따라 요금제가 다르고, 요금제에 따라 신청 방법이 완전히 다릅니다.</p>
+
+  <div class="score">
+    <div><b>50<small>석~</small></b><span>최소 인원</span></div>
+    <div><b>1,000<small>원</small></b><span>장당 수수료</span></div>
+    <div><b>100<small>석~</small></b><span>전광판 노출</span></div>
+  </div>
+
   <div class="compare">
-    <div class="plan">
-      <header><b>화이트 · 블루 요금</b><span>네이버폼 선착순</span></header>
-      <dl>
-        <dt>경기당 한도</dt><dd>선착순 5개 팀<small>팀당 50~200석</small></dd>
-        <dt>신청 방법</dt><dd>일반예매 오픈 7일 전 10시<small>네이버폼 선착순 · 3연전 동시 오픈</small></dd>
-        <dt>서류 마감</dt><dd>신청한 날 정오(12시)</dd>
-        <dt>확정</dt><dd>신청 당일 전화(02 번호)</dd>
-      </dl>
-    </div>
     <div class="plan grey">
-      <header><b>그레이 요금</b><span>서류 먼저 → 전화 선착순</span></header>
+      <header><span class="day">평일 경기</span><b>그레이 요금</b><span>서류 먼저 → 전화 선착순</span></header>
       <dl>
         <dt>경기당 한도</dt><dd>3,000석<small>일반예매 오픈 뒤에는 한도 없음</small></dd>
-        <dt>신청 방법</dt><dd>경기 2주 전 같은 요일<small>1688-0747 전화 · 1경기씩 접수</small></dd>
+        <dt>신청</dt><dd>경기 2주 전 같은 요일<small>1688-0747 전화 · 1경기씩</small></dd>
         <dt>서류 마감</dt><dd>전화 신청일 하루 전</dd>
-        <dt>확정</dt><dd>전화 접수 시</dd>
       </dl>
+      <a class="go" href="#grey">그레이 신청 방법 <span aria-hidden="true">→</span></a>
     </div>
+    <div class="plan">
+      <header><span class="day">주말 경기</span><b>화이트 · 블루 요금</b><span>네이버폼 선착순</span></header>
+      <dl>
+        <dt>경기당 한도</dt><dd>선착순 5개 팀<small>팀당 50~200석</small></dd>
+        <dt>신청</dt><dd>일반예매 오픈 7일 전 10시<small>네이버폼 · 3연전 동시 오픈</small></dd>
+        <dt>서류 마감</dt><dd>신청한 날 정오(12시)</dd>
+      </dl>
+      <a class="go" href="#weekend">화이트·블루 신청 방법 <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+  <div class="box info">
+    <b>요금제는 티켓링크에서 한 번 더 확인</b>
+    공휴일이나 매진이 예상되는 경기는 평일이어도 요금제가 달라질 수 있습니다. 티켓링크 예매 화면에서 그 경기의 요금제를 확인하세요.
   </div>
 </section>
 
-<section id="s-docs">
+<!-- 02 -->
+<section data-page="docs" data-title="준비 서류" data-sub="고유번호증 · 공문">
   <div class="label">02</div>
-  <h2>학교가 준비할 서류</h2>
+  <h1>학교가 준비할 서류</h1>
+  <p class="lead">두 요금제 모두 같은 서류를 같은 폼으로 냅니다. 마감 시각만 다릅니다.</p>
   <div class="card">
     <ul class="check">
       <li>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A4DA2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A4DA2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
         <div><b>고유번호증</b><span>학교 고유번호증 사본 (이미지 또는 PDF)</span></div>
       </li>
       <li>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A4DA2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A4DA2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
         <div><b>학교장 직인 공문</b><span>또는 학교장 결재가 끝난 내부 결재문서</span></div>
       </li>
       <li>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A4DA2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-        <div><b>담당 교사 휴대폰</b><span>확정 전화를 받을 번호. 02 번호로 걸려 옵니다.</span></div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A4DA2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+        <div><b>담당 교사 휴대폰</b><span>화이트·블루는 02 번호로 확정 전화가 옵니다</span></div>
       </li>
     </ul>
     <a class="btn" href="https://naver.me/5mvI0inx" target="_blank" rel="noopener">증빙서류 제출 폼 열기</a>
     <p class="muted" style="margin:8px 0 0">티켓링크 › 스포츠 › 삼성라이온즈 › 공지사항 › 2026 삼성라이온즈 단체관람 신청 페이지에서도 들어갈 수 있습니다.</p>
   </div>
+
+  <h2>공문에 넣어 두면 좋은 것</h2>
+  <div class="card">
+    <table>
+      <tr><th>관람 목적</th><td>학생 체험활동 등 학교 교육활동임을 드러내기</td></tr>
+      <tr><th>경기 일시</th><td>경기 날짜와 상대 팀</td></tr>
+      <tr><th>인원</th><td>학생 수 + 인솔 교사 수 (신청 좌석 수와 맞추기)</td></tr>
+      <tr><th>담당자</th><td>담당 교사 이름·연락처</td></tr>
+    </table>
+    <p class="muted" style="margin:10px 0 0">구단이 정한 양식은 없습니다. 위 항목은 심사에서 목적을 확인하기 쉽도록 정리한 참고용입니다.</p>
+  </div>
+
   <div class="box info">
     <b>단체명은 학교명으로 자동 등록</b>
     제출한 서류의 학교명으로 등록되고, 100석 이상이면 전광판에 그대로 나옵니다. 문구는 바꿀 수 없습니다.
   </div>
   <div class="box err">
     <b>서류를 안 내거나 허위로 내면 자동 취소</b>
-    마감 시각(화이트·블루는 신청 당일 정오, 그레이는 신청일 하루 전)을 넘기지 마세요.
+    그레이는 전화 신청일 하루 전, 화이트·블루는 신청 당일 정오까지입니다.
   </div>
 </section>
 
-<section id="s-how">
-  <div class="label">03</div>
-  <h2>신청 절차</h2>
-
-  <div class="tabs" role="tablist">
-    <button role="tab" aria-selected="true" data-tab="wb">화이트 · 블루</button>
-    <button role="tab" aria-selected="false" data-tab="gr">그레이</button>
+<!-- 03 -->
+<section data-page="grey" data-title="그레이 신청" data-sub="평일 · 서류 먼저 → 전화">
+  <div class="label">03 · 평일 경기</div>
+  <h1>그레이 요금 신청</h1>
+  <p class="lead">신청서와 서류를 먼저 보내 두고, 접수일에 전화로 선착순 접수합니다.</p>
+  <div class="card">
+    <ol class="steps">
+      <li>
+        <span class="base"><i>1</i></span>
+        <h3>신청서·서류 먼저 보내기</h3>
+        <span class="when">전화 신청일 하루 전까지</span>
+        <p>증빙서류 폼에 <b>공문과 고유번호증</b>을 올립니다. 서류가 먼저 들어가 있어야 전화 접수가 됩니다.</p>
+      </li>
+      <li>
+        <span class="base"><i>2</i></span>
+        <h3>전화로 선착순 접수</h3>
+        <span class="when">경기 2주 전 같은 요일 · 10시부터</span>
+        <p><a href="tel:1688-0747"><b>1688-0747</b></a> (티켓링크). 한 통화에 한 경기씩 접수합니다.</p>
+        <ul>
+          <li>운영: 화~금 10:00~17:00</li>
+          <li>점심시간 12:00~13:00 제외</li>
+          <li>경기당 3,000석 한도, 학교당 50석 이상</li>
+        </ul>
+      </li>
+      <li class="home">
+        <span class="base"><i>H</i></span>
+        <h3>예매 완료</h3>
+        <p>전화 접수로 확정됩니다. 표는 경기 당일 현장에서 받습니다.</p>
+      </li>
+    </ol>
+  </div>
+  <div class="box info">
+    <b>3,000석 한도는 일반예매 오픈 전까지</b>
+    일반예매가 열린 뒤에는 한도 없이 받습니다. 인기 경기는 10시 접수 시작에 맞춰 전화하세요.
   </div>
 
-  <div id="tab-wb" role="tabpanel">
-    <div class="card">
-      <ol class="steps">
-        <li>
-          <span class="base"><i>1</i></span>
-          <h4>네이버폼 신청</h4>
-          <span class="when">일반예매 오픈 7일 전 · 오전 10시</span>
-          <p>제출 순서대로 5개 팀까지만 받습니다. 10시 정각에 바로 낼 수 있게 내용을 미리 적어 두세요.</p>
-          <ul>
-            <li>개인정보 수집·이용 동의</li>
-            <li>단체명: 학교명</li>
-            <li>담당자 연락처</li>
-            <li>통화 가능 시간: <b>오후 시간대만 선택 가능</b></li>
-            <li>희망 좌석 수: 숫자로 (50~200)</li>
-          </ul>
-        </li>
-        <li>
-          <span class="base"><i>2</i></span>
-          <h4>증빙서류 제출</h4>
-          <span class="when">신청한 날 정오(12시)까지</span>
-          <p>고유번호증과 학교장 직인 공문을 증빙서류 폼에 올립니다.</p>
-        </li>
-        <li>
-          <span class="base"><i>3</i></span>
-          <h4>확정 전화 받기</h4>
-          <span class="when">신청 당일 · 선택한 시간대</span>
-          <p>티켓링크(02 지역번호)가 순서대로 전화합니다. 여유가 있으면 오전에 올 수도 있습니다.</p>
-        </li>
-        <li class="home">
-          <span class="base"><i>H</i></span>
-          <h4>예매 완료</h4>
-          <p>전화로 예매가 끝납니다. 표는 경기 당일 현장에서 받습니다.</p>
-        </li>
-      </ol>
-    </div>
-    <div class="box warn">
-      <b>한 학교는 한 번만</b>
-      여러 선생님이 따로 내거나 같은 아이디로 여러 번 내면 접수가 취소됩니다. 제출한 내용은 고칠 수 없습니다.
-    </div>
-    <div class="box err">
-      <b>전화를 못 받으면 취소</b>
-      당일 확정 전화가 연결되지 않으면 접수가 취소되고 추가 접수도 안 됩니다.
-    </div>
-
-    <div class="calc">
-      <h3>신청 날짜 계산</h3>
-      <p class="muted">티켓링크에 안내된 해당 경기의 일반예매 오픈일을 넣으세요.</p>
-      <label for="wbOpen">일반예매 오픈일</label>
-      <input type="date" id="wbOpen">
-      <div class="out" id="wbOut"></div>
-    </div>
+  <div class="calc">
+    <h2>신청 날짜 계산</h2>
+    <p class="muted">보려는 경기 날짜를 넣으세요.</p>
+    <label for="grGame">경기일</label>
+    <input type="date" id="grGame">
+    <div class="out" id="grOut"></div>
   </div>
-
-  <div id="tab-gr" role="tabpanel" hidden>
-    <div class="card">
-      <ol class="steps">
-        <li>
-          <span class="base"><i>1</i></span>
-          <h4>신청서·서류 먼저 보내기</h4>
-          <span class="when">전화 신청일 하루 전까지</span>
-          <p>증빙서류 폼에 <b>공문과 고유번호증</b>을 올립니다. 서류가 먼저 들어가 있어야 전화 접수가 됩니다.</p>
-        </li>
-        <li>
-          <span class="base"><i>2</i></span>
-          <h4>전화로 선착순 접수</h4>
-          <span class="when">경기 2주 전 같은 요일 · 10시부터</span>
-          <p><a href="tel:1688-0747"><b>1688-0747</b></a> (티켓링크). 한 통화에 한 경기씩 접수합니다.</p>
-          <ul>
-            <li>운영: 화~금 10:00~17:00</li>
-            <li>점심시간 12:00~13:00 제외</li>
-            <li>경기당 3,000석 한도, 학교당 50석 이상</li>
-          </ul>
-        </li>
-        <li class="home">
-          <span class="base"><i>H</i></span>
-          <h4>예매 완료</h4>
-          <p>전화로 접수가 끝나면 확정입니다. 표는 경기 당일 현장에서 받습니다.</p>
-        </li>
-      </ol>
-    </div>
-    <div class="box info">
-      <b>그레이 요금 한도</b>
-      3,000석 한도는 일반예매가 열리기 전까지입니다. 일반예매가 열린 뒤에는 한도 없이 받습니다.
-    </div>
-
-    <div class="calc">
-      <h3>신청 날짜 계산</h3>
-      <p class="muted">보려는 경기 날짜를 넣으세요.</p>
-      <label for="grGame">경기일</label>
-      <input type="date" id="grGame">
-      <div class="out" id="grOut"></div>
-    </div>
-  </div>
-
-  <p class="muted" style="margin-top:10px">신청 오픈일이 공휴일이면 다음 날 받습니다. 계산기는 공휴일을 반영하지 않으니 달력으로 한 번 더 확인하세요.</p>
+  <p class="muted" style="margin-top:10px">계산기는 공휴일을 반영하지 않습니다. 접수일이 공휴일이면 1688-0747로 확인하세요.</p>
 </section>
 
-<section id="s-seat">
-  <div class="label">04</div>
-  <h2>신청 가능한 좌석</h2>
+<!-- 04 -->
+<section data-page="weekend" data-title="화이트·블루 신청" data-sub="주말 · 네이버폼 선착순">
+  <div class="label">04 · 주말 경기</div>
+  <h1>화이트 · 블루 요금 신청</h1>
+  <p class="lead">경기마다 5개 팀만 받는 선착순입니다. 10시 정각에 내는 게 관건입니다.</p>
+  <div class="card">
+    <ol class="steps">
+      <li>
+        <span class="base"><i>1</i></span>
+        <h3>네이버폼 신청</h3>
+        <span class="when">일반예매 오픈 7일 전 · 오전 10시</span>
+        <p>폼 링크는 티켓링크 삼성라이온즈 공지사항에 올라옵니다. 제출 순서대로 5개 팀까지 받으니 내용을 미리 적어 두세요.</p>
+        <ul>
+          <li>개인정보 수집·이용 동의</li>
+          <li>단체명: 학교명</li>
+          <li>담당자 연락처</li>
+          <li>통화 가능 시간: <b>오후 시간대만 선택 가능</b></li>
+          <li>희망 좌석 수: 숫자로 (50~200)</li>
+        </ul>
+      </li>
+      <li>
+        <span class="base"><i>2</i></span>
+        <h3>증빙서류 제출</h3>
+        <span class="when">신청한 날 정오(12시)까지</span>
+        <p>고유번호증과 학교장 직인 공문을 증빙서류 폼에 올립니다.</p>
+      </li>
+      <li>
+        <span class="base"><i>3</i></span>
+        <h3>확정 전화 받기</h3>
+        <span class="when">신청 당일 · 선택한 시간대</span>
+        <p>티켓링크(02 지역번호)가 순서대로 전화합니다. 여유가 있으면 오전에 올 수도 있습니다.</p>
+      </li>
+      <li class="home">
+        <span class="base"><i>H</i></span>
+        <h3>예매 완료</h3>
+        <p>전화로 예매가 끝납니다. 표는 경기 당일 현장에서 받습니다.</p>
+      </li>
+    </ol>
+  </div>
+  <div class="box warn">
+    <b>한 학교는 한 번만</b>
+    여러 선생님이 따로 내거나 같은 아이디로 여러 번 내면 접수가 취소됩니다. 제출한 내용은 고칠 수 없습니다.
+  </div>
+  <div class="box err">
+    <b>전화를 못 받으면 취소</b>
+    당일 확정 전화가 연결되지 않으면 접수가 취소되고 추가 접수도 안 됩니다.
+  </div>
+  <div class="box info">
+    <b>5개 팀 안에 들어도 불가 안내가 올 수 있음</b>
+    접수 당일 상황에 따라 신청 불가로 안내될 수 있습니다. 신청 오픈일이 공휴일이면 다음 날 받습니다.
+  </div>
+
+  <div class="calc">
+    <h2>신청 날짜 계산</h2>
+    <p class="muted">티켓링크에 안내된 그 경기의 일반예매 오픈일을 넣으세요.</p>
+    <label for="wbOpen">일반예매 오픈일</label>
+    <input type="date" id="wbOpen">
+    <div class="out" id="wbOut"></div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section data-page="seat" data-title="좌석·요금" data-sub="신청 가능 구역 · 시야">
+  <div class="label">05</div>
+  <h1>신청 가능한 좌석</h1>
+  <p class="lead">단체관람은 아래 구역만 됩니다. 두 요금제 모두 같습니다.</p>
   <div class="zones">
     <div class="zone"><b>1루 내야지정석</b><span>구역 전체</span></div>
     <div class="zone"><b>외야지정석</b><span>구역 전체</span></div>
@@ -367,48 +458,55 @@ footer b{color:#fff}
     <div class="zone limit"><b>3루 SKY 상단지정석</b><span>U25~U31 구역만</span></div>
     <div class="zone limit"><b>중앙 SKY 상단지정석</b><span>U10 구역만</span></div>
   </div>
-  <p class="muted" style="margin-top:10px">1루는 원정(AWAY), 3루는 홈(HOME) 쪽입니다. 3루 내야지정석·테이블석 등은 단체 대상이 아닙니다.</p>
+  <p class="muted" style="margin-top:10px">3루가 홈(삼성) 응원석, 1루가 원정 쪽입니다. 3루 내야지정석·테이블석·블루존 등은 단체 대상이 아닙니다.</p>
 
-  <figure class="shot" id="seatShot">
-    <img src="seatmap.png" alt="삼성라이온즈파크 좌석 배치도" data-zoom>
-    <figcaption>눌러서 크게 보기</figcaption>
+  <figure class="map">
+    <svg viewBox="0 0 800 820" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="삼성라이온즈파크 단체관람 가능 구역 배치 개략도" font-family="Pretendard, sans-serif"><path d="M400 600 L150 350 Q400 -40 650 350 Z" fill="#E6ECE4"/><path d="M400 585 L330 515 L400 445 L470 515 Z" fill="#fff" stroke="#C9D3C6"/><polygon points="151.1,299.0 170.9,280.0 188.9,298.8 169.0,317.8" fill="#0A4DA2"/><text x="170.0" y="298.9" dy="4" transform="rotate(0.0 170.0 298.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">LF1</text><polygon points="173.1,278.0 192.9,259.0 210.9,277.8 191.0,296.8" fill="#0A4DA2"/><text x="192.0" y="277.9" dy="4" transform="rotate(0.0 192.0 277.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">LF2</text><polygon points="195.1,257.0 214.9,238.0 232.9,256.8 213.0,275.8" fill="#0A4DA2"/><text x="214.0" y="256.9" dy="4" transform="rotate(0.0 214.0 256.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">LF3</text><polygon points="217.1,236.0 236.9,217.0 254.9,235.8 235.0,254.8" fill="#0A4DA2"/><text x="236.0" y="235.9" dy="4" transform="rotate(0.0 236.0 235.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">LF4</text><polygon points="239.1,215.0 258.9,196.0 276.9,214.8 257.0,233.8" fill="#0A4DA2"/><text x="258.0" y="214.9" dy="4" transform="rotate(0.0 258.0 214.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">LF5</text><polygon points="261.1,194.0 280.9,175.0 298.9,193.8 279.0,212.8" fill="#0A4DA2"/><text x="280.0" y="193.9" dy="4" transform="rotate(0.0 280.0 193.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">LF6</text><polygon points="283.1,173.0 302.9,154.0 320.9,172.8 301.0,191.8" fill="#0A4DA2"/><text x="302.0" y="172.9" dy="4" transform="rotate(0.0 302.0 172.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">LF7</text><polygon points="305.1,152.0 324.9,133.0 342.9,151.8 323.0,170.8" fill="#0A4DA2"/><text x="324.0" y="151.9" dy="4" transform="rotate(0.0 324.0 151.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">LF8</text><polygon points="327.1,131.0 346.9,112.0 364.9,130.8 345.0,149.8" fill="#0A4DA2"/><text x="346.0" y="130.9" dy="4" transform="rotate(0.0 346.0 130.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">LF9</text><polygon points="349.1,110.0 368.9,91.0 386.9,109.8 367.0,128.8" fill="#0A4DA2"/><text x="368.0" y="109.9" dy="4" transform="rotate(0.0 368.0 109.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">LF10</text><polygon points="431.1,91.0 450.9,110.0 433.0,128.8 413.1,109.8" fill="#0A4DA2"/><text x="432.0" y="109.9" dy="4" transform="rotate(0.0 432.0 109.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">RF10</text><polygon points="453.1,112.0 472.9,131.0 455.0,149.8 435.1,130.8" fill="#0A4DA2"/><text x="454.0" y="130.9" dy="4" transform="rotate(0.0 454.0 130.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">RF9</text><polygon points="475.1,133.0 494.9,152.0 477.0,170.8 457.1,151.8" fill="#0A4DA2"/><text x="476.0" y="151.9" dy="4" transform="rotate(0.0 476.0 151.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">RF8</text><polygon points="497.1,154.0 516.9,173.0 499.0,191.8 479.1,172.8" fill="#0A4DA2"/><text x="498.0" y="172.9" dy="4" transform="rotate(0.0 498.0 172.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">RF7</text><polygon points="519.1,175.0 538.9,194.0 521.0,212.8 501.1,193.8" fill="#0A4DA2"/><text x="520.0" y="193.9" dy="4" transform="rotate(0.0 520.0 193.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">RF6</text><polygon points="541.1,196.0 560.9,215.0 543.0,233.8 523.1,214.8" fill="#0A4DA2"/><text x="542.0" y="214.9" dy="4" transform="rotate(0.0 542.0 214.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">RF5</text><polygon points="563.1,217.0 582.9,236.0 565.0,254.8 545.1,235.8" fill="#0A4DA2"/><text x="564.0" y="235.9" dy="4" transform="rotate(0.0 564.0 235.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">RF4</text><polygon points="585.1,238.0 604.9,257.0 587.0,275.8 567.1,256.8" fill="#0A4DA2"/><text x="586.0" y="256.9" dy="4" transform="rotate(0.0 586.0 256.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">RF3</text><polygon points="607.1,259.0 626.9,278.0 609.0,296.8 589.1,277.8" fill="#0A4DA2"/><text x="608.0" y="277.9" dy="4" transform="rotate(0.0 608.0 277.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">RF2</text><polygon points="629.1,280.0 648.9,299.0 631.0,317.8 611.1,298.8" fill="#0A4DA2"/><text x="630.0" y="298.9" dy="4" transform="rotate(0.0 630.0 298.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">RF1</text><text x="215" y="150" font-size="13" font-weight="700" fill="#0A4DA2" text-anchor="middle">외야지정석</text><text x="585" y="150" font-size="13" font-weight="700" fill="#0A4DA2" text-anchor="middle">외야지정석</text><polygon points="141.1,361.1 220.6,440.6 199.4,461.8 119.8,382.3" fill="#D5DCE6"/><text x="170.2" y="411.4" dy="4" transform="rotate(45.0 170.2 411.4)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">3루 내야지정석</text><polygon points="222.7,442.7 302.3,522.3 281.1,543.5 201.5,463.9" fill="#D5DCE6"/><text x="251.9" y="493.1" dy="4" transform="rotate(45.0 251.9 493.1)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">블루존</text><polygon points="304.4,524.4 383.9,603.9 362.7,625.2 283.2,545.6" fill="#D5DCE6"/><text x="333.6" y="574.8" dy="4" transform="rotate(45.0 333.6 574.8)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">익사이팅석</text><polygon points="658.9,361.1 579.4,440.6 600.6,461.8 680.2,382.3" fill="#0A4DA2"/><text x="629.8" y="411.4" dy="4" transform="rotate(-45.0 629.8 411.4)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">1루 내야지정석</text><polygon points="577.3,442.7 497.7,522.3 518.9,543.5 598.5,463.9" fill="#D5DCE6"/><text x="548.1" y="493.1" dy="4" transform="rotate(-45.0 548.1 493.1)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">원정응원석</text><polygon points="495.6,524.4 416.1,603.9 437.3,625.2 516.8,545.6" fill="#D5DCE6"/><text x="466.4" y="574.8" dy="4" transform="rotate(-45.0 466.4 574.8)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">내야테이블석</text><rect x="355" y="622" width="90" height="36" rx="3" fill="#D5DCE6"/><text x="400" y="645" font-size="10" font-weight="700" fill="#6B7A90" text-anchor="middle">중앙테이블·VIP</text><polygon points="40.0,301.5 40.0,329.9 76.0,329.9 76.0,301.5" fill="#0A4DA2"/><text x="58.0" y="315.7" dy="4" transform="rotate(0.0 58.0 315.7)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U31</text><polygon points="40.0,332.9 40.0,361.4 76.0,361.4 76.0,332.9" fill="#0A4DA2"/><text x="58.0" y="347.1" dy="4" transform="rotate(0.0 58.0 347.1)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U30</text><polygon points="40.0,364.4 40.0,392.8 76.0,392.8 76.0,364.4" fill="#0A4DA2"/><text x="58.0" y="378.6" dy="4" transform="rotate(0.0 58.0 378.6)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U29</text><polygon points="40.0,395.8 40.0,424.2 76.0,424.2 76.0,395.8" fill="#0A4DA2"/><text x="58.0" y="410.0" dy="4" transform="rotate(0.0 58.0 410.0)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U28</text><polygon points="40.0,427.2 40.0,455.6 76.0,455.6 76.0,427.2" fill="#0A4DA2"/><text x="58.0" y="441.4" dy="4" transform="rotate(0.0 58.0 441.4)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U27</text><polygon points="40.0,458.6 40.0,487.1 76.0,487.1 76.0,458.6" fill="#0A4DA2"/><text x="58.0" y="472.9" dy="4" transform="rotate(0.0 58.0 472.9)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U26</text><polygon points="40.0,490.1 40.0,518.5 76.0,518.5 76.0,490.1" fill="#0A4DA2"/><text x="58.0" y="504.3" dy="4" transform="rotate(0.0 58.0 504.3)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U25</text><polygon points="63.1,541.0 86.7,561.0 106.1,538.2 82.6,518.1" fill="#D5DCE6"/><text x="84.6" y="539.6" dy="4" transform="rotate(0.0 84.6 539.6)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">U24</text><polygon points="88.9,563.0 112.5,583.0 131.9,560.2 108.4,540.1" fill="#D5DCE6"/><text x="110.4" y="561.6" dy="4" transform="rotate(0.0 110.4 561.6)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">U23</text><polygon points="114.7,585.0 138.3,605.0 157.7,582.2 134.2,562.1" fill="#D5DCE6"/><text x="136.2" y="583.6" dy="4" transform="rotate(0.0 136.2 583.6)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">U22</text><polygon points="140.5,607.0 164.1,627.0 183.5,604.2 160.0,584.1" fill="#D5DCE6"/><text x="162.0" y="605.6" dy="4" transform="rotate(0.0 162.0 605.6)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">U21</text><polygon points="166.3,629.0 189.9,649.0 209.3,626.2 185.8,606.1" fill="#D5DCE6"/><text x="187.8" y="627.6" dy="4" transform="rotate(0.0 187.8 627.6)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">U20</text><polygon points="192.1,651.0 215.7,671.0 235.1,648.2 211.6,628.1" fill="#D5DCE6"/><text x="213.6" y="649.6" dy="4" transform="rotate(0.0 213.6 649.6)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">U19</text><polygon points="217.9,673.0 241.5,693.0 260.9,670.2 237.4,650.1" fill="#D5DCE6"/><text x="239.4" y="671.6" dy="4" transform="rotate(0.0 239.4 671.6)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">U18</text><polygon points="243.7,695.0 267.3,715.0 286.7,692.2 263.2,672.1" fill="#D5DCE6"/><text x="265.2" y="693.6" dy="4" transform="rotate(0.0 265.2 693.6)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">U17</text><polygon points="269.5,717.0 293.1,737.0 312.5,714.2 289.0,694.1" fill="#D5DCE6"/><text x="291.0" y="715.6" dy="4" transform="rotate(0.0 291.0 715.6)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">U16</text><polygon points="295.3,739.0 318.9,759.0 338.3,736.2 314.8,716.1" fill="#D5DCE6"/><text x="316.8" y="737.6" dy="4" transform="rotate(0.0 316.8 737.6)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">U15</text><polygon points="331.5,772.0 360.5,772.0 360.5,742.0 331.5,742.0" fill="#D5DCE6"/><text x="346.0" y="757.0" dy="4" transform="rotate(0.0 346.0 757.0)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">U14</text><polygon points="363.5,772.0 392.5,772.0 392.5,742.0 363.5,742.0" fill="#D5DCE6"/><text x="378.0" y="757.0" dy="4" transform="rotate(0.0 378.0 757.0)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">U13</text><polygon points="395.5,772.0 424.5,772.0 424.5,742.0 395.5,742.0" fill="#D5DCE6"/><text x="410.0" y="757.0" dy="4" transform="rotate(0.0 410.0 757.0)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">U12</text><polygon points="427.5,772.0 456.5,772.0 456.5,742.0 427.5,742.0" fill="#D5DCE6"/><text x="442.0" y="757.0" dy="4" transform="rotate(0.0 442.0 757.0)" fill="#6B7A90" font-size="11" font-weight="700" text-anchor="middle">U11</text><polygon points="459.5,772.0 488.5,772.0 488.5,742.0 459.5,742.0" fill="#0A4DA2"/><text x="474.0" y="757.0" dy="4" transform="rotate(0.0 474.0 757.0)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U10</text><polygon points="501.1,759.0 527.8,734.4 507.4,712.3 480.8,736.9" fill="#0A4DA2"/><text x="504.3" y="735.6" dy="4" transform="rotate(0.0 504.3 735.6)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U9</text><polygon points="530.0,732.3 556.7,707.7 536.3,685.6 509.6,710.3" fill="#0A4DA2"/><text x="533.2" y="709.0" dy="4" transform="rotate(0.0 533.2 709.0)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U8</text><polygon points="558.9,705.6 585.6,681.0 565.2,659.0 538.5,683.6" fill="#0A4DA2"/><text x="562.0" y="682.3" dy="4" transform="rotate(0.0 562.0 682.3)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U7</text><polygon points="587.8,679.0 614.5,654.4 594.1,632.3 567.4,656.9" fill="#0A4DA2"/><text x="590.9" y="655.6" dy="4" transform="rotate(0.0 590.9 655.6)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U6</text><polygon points="616.7,652.3 643.3,627.7 623.0,605.6 596.3,630.3" fill="#0A4DA2"/><text x="619.8" y="629.0" dy="4" transform="rotate(0.0 619.8 629.0)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U5</text><polygon points="645.5,625.6 672.2,601.0 651.9,579.0 625.2,603.6" fill="#0A4DA2"/><text x="648.7" y="602.3" dy="4" transform="rotate(0.0 648.7 602.3)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U4</text><polygon points="674.4,599.0 701.1,574.4 680.8,552.3 654.1,576.9" fill="#0A4DA2"/><text x="677.6" y="575.6" dy="4" transform="rotate(0.0 677.6 575.6)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U3</text><polygon points="703.3,572.3 730.0,547.7 709.7,525.6 683.0,550.3" fill="#0A4DA2"/><text x="706.5" y="549.0" dy="4" transform="rotate(0.0 706.5 549.0)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U2</text><polygon points="732.2,545.6 758.9,521.0 738.5,499.0 711.9,523.6" fill="#0A4DA2"/><text x="735.4" y="522.3" dy="4" transform="rotate(0.0 735.4 522.3)" fill="#fff" font-size="11" font-weight="700" text-anchor="middle">U1</text><text x="56" y="288" font-size="12" font-weight="700" fill="#0A4DA2" text-anchor="start">3루 SKY 상단</text><text x="400" y="705" font-size="12" font-weight="700" fill="#6B7A90" text-anchor="middle">중앙 SKY 상단</text><text x="700" y="760" font-size="12" font-weight="700" fill="#0A4DA2" text-anchor="middle">1루 SKY 상단</text><text x="300" y="330" font-size="15" font-weight="800" fill="#14233B" text-anchor="middle">3루 (HOME)</text><text x="500" y="330" font-size="15" font-weight="800" fill="#14233B" text-anchor="middle">1루 (AWAY)</text><rect x="560" y="24" width="16" height="16" rx="3" fill="#0A4DA2"/><text x="584" y="37" font-size="13" font-weight="700" fill="#14233B" text-anchor="start">단체 신청 가능</text><rect x="560" y="48" width="16" height="16" rx="3" fill="#D5DCE6"/><text x="584" y="61" font-size="13" font-weight="700" fill="#6B7A90" text-anchor="start">단체 불가</text></svg>
+    <figcaption>단체 가능 구역을 표시한 개략도입니다. 실제 구역 모양·위치는 티켓링크 좌석도와 다를 수 있습니다.</figcaption>
   </figure>
 
-  <div class="btns">
-    <a class="btn" href="https://myseatcheck.com/%eb%8c%80%ea%b5%ac-%ec%82%bc%ec%84%b1-%eb%9d%bc%ec%9d%b4%ec%98%a8%ec%a6%88%ed%8c%8c%ed%81%ac/" target="_blank" rel="noopener">구역별 시야 사진 보기</a>
-    <a class="btn line" href="#s-price">좌석 요금 보기</a>
-  </div>
+  <a class="btn" href="https://myseatcheck.com/%eb%8c%80%ea%b5%ac-%ec%82%bc%ec%84%b1-%eb%9d%bc%ec%9d%b4%ec%98%a8%ec%a6%88%ed%8c%8c%ed%81%ac/" target="_blank" rel="noopener">구역별 시야 사진 보기</a>
 
-  <div id="s-price" style="scroll-margin-top:56px">
-    <figure class="shot" id="priceShot">
-      <img src="ticket-price.png" alt="2026 티켓 종류 및 요금표" data-zoom>
-      <figcaption>2026 티켓 요금표 · 눌러서 크게 보기</figcaption>
-    </figure>
-    <div class="box info">
-      <b>수수료</b>
-      표 한 장에 예매수수료 1,000원이 붙습니다. 단체관람은 티켓 할인이 적용되지 않습니다.
-    </div>
+  <h2>요금 (2026, 1장 기준)</h2>
+  <p class="muted">단체 신청 가능한 좌석만 먼저 모았습니다. 여기에 장당 수수료 1,000원이 더해집니다.</p>
+  <div class="tbl"><table class="price"><thead><tr><th>좌석</th><th class="g">그레이<small>평일</small></th><th class="w">화이트<small>주말</small></th><th class="b">블루<small>주말</small></th></tr></thead><tbody><tr><td class="nm"><b>1루 내야지정석</b></td><td>10,000</td><td>13,000</td><td>14,000</td></tr><tr><td class="nm"><b>1,3루 SKY 상단지정석</b><small>일반</small></td><td>8,000</td><td>9,000</td><td>11,000</td></tr><tr><td class="nm"><small>어린이·청소년·경로·장애인 등</small></td><td>5,000</td><td>6,000</td><td>8,000</td></tr><tr><td class="nm"><b>중앙 SKY 상단지정석</b><small>일반</small></td><td>9,000</td><td>10,000</td><td>12,000</td></tr><tr><td class="nm"><small>어린이·청소년·경로·장애인 등</small></td><td>6,000</td><td>7,000</td><td>9,000</td></tr><tr><td class="nm"><b>외야지정석</b><small>일반</small></td><td>9,000</td><td>10,000</td><td>11,000</td></tr><tr><td class="nm"><small>어린이·청소년·경로·장애인 등</small></td><td>6,000</td><td>7,000</td><td>8,000</td></tr></tbody></table></div>
+  <details class="more">
+    <summary>나머지 좌석 요금 보기 (단체 불가)</summary>
+    <div class="tbl"><table class="price"><thead><tr><th>좌석</th><th class="g">그레이<small>평일</small></th><th class="w">화이트<small>주말</small></th><th class="b">블루<small>주말</small></th></tr></thead><tbody><tr><td class="nm"><b>VIP석</b></td><td>50,000</td><td>60,000</td><td>65,000</td></tr><tr><td class="nm"><b>으뜸병원 중앙테이블석</b></td><td>45,000</td><td>55,000</td><td>60,000</td></tr><tr><td class="nm"><b>1,3루 테이블석</b></td><td>40,000</td><td>50,000</td><td>55,000</td></tr><tr><td class="nm"><b>1,3루 익사이팅</b></td><td>22,000</td><td>27,000</td><td>30,000</td></tr><tr><td class="nm"><b>블루존</b></td><td>19,000</td><td>22,000</td><td>25,000</td></tr><tr><td class="nm"><b>3루 내야지정석</b></td><td>15,000</td><td>17,000</td><td>19,000</td></tr><tr><td class="nm"><b>원정응원석</b></td><td>19,000</td><td>22,000</td><td>25,000</td></tr><tr><td class="nm"><b>SKY 요기보 패밀리존</b><small>4인</small></td><td>140,000</td><td>180,000</td><td>200,000</td></tr><tr><td class="nm"><b>SKY 블루존</b><small>일반</small></td><td>10,000</td><td>12,000</td><td>15,000</td></tr><tr><td class="nm"><small>어린이·청소년·경로·장애인 등</small></td><td>7,000</td><td>9,000</td><td>12,000</td></tr><tr><td class="nm"><b>SKY 하단 지정석</b><small>일반</small></td><td>10,000</td><td>11,000</td><td>13,000</td></tr><tr><td class="nm"><small>어린이·청소년·경로·장애인 등</small></td><td>7,000</td><td>8,000</td><td>10,000</td></tr><tr><td class="nm"><b>한국해비타트 외야패밀리석</b></td><td>18,000</td><td>20,000</td><td>23,000</td></tr><tr><td class="nm"><b>외야테이블석</b><small>4인</small></td><td>72,000</td><td>80,000</td><td>92,000</td></tr><tr><td class="nm"><b>외야테이블석</b><small>8인</small></td><td>144,000</td><td>160,000</td><td>184,000</td></tr><tr><td class="nm"><b>외야커플테이블석</b><small>2인</small></td><td>30,000</td><td>36,000</td><td>40,000</td></tr><tr><td class="nm"><b>루프탑테이블석</b></td><td>20,000</td><td>23,000</td><td>25,000</td></tr><tr><td class="nm"><b>파티플로어 라이브석</b></td><td>65,000</td><td>70,000</td><td>75,000</td></tr><tr><td class="nm"><b>잔디그린존</b></td><td>10,000</td><td>11,000</td><td>13,000</td></tr><tr><td class="nm"><b>캠핑존</b><small>6인</small></td><td>180,000</td><td>240,000</td><td>270,000</td></tr><tr><td class="nm"><b>장애인(휠체어)석</b></td><td>5,000</td><td>5,000</td><td>5,000</td></tr></tbody></table></div>
+  </details>
+  <div class="box info">
+    <b>어린이·청소년 요금 적용은 접수 때 확인</b>
+    SKY 상단·외야지정석은 어린이·청소년 요금이 따로 있습니다. 단체관람에 권종을 나눠 적용하는지는 확정 전화(또는 1688-0747)에서 확인하세요. 단체관람은 티켓 할인이 없습니다.
   </div>
 </section>
 
-<section id="s-day">
-  <div class="label">05</div>
-  <h2>경기 당일 · 취소</h2>
+<!-- 06 -->
+<section data-page="day" data-title="경기 당일·취소" data-sub="현장 수령 · 취소 기한">
+  <div class="label">06</div>
+  <h1>경기 당일 · 취소</h1>
+  <p class="lead">표는 미리 받지 않습니다. 당일 현장에서 한꺼번에 받습니다.</p>
   <div class="card">
     <table>
       <tr><th>표 받는 곳</th><td>경기 당일 <b>중앙매표소 왼쪽 고객센터</b>에서 현장 수령</td></tr>
       <tr><th>취소</th><td>경기 <b>1일 전까지</b>만 가능. 당일 취소 불가<br><a href="tel:1688-0747">1688-0747</a></td></tr>
       <tr><th>변경</th><td>예매 완료 뒤 권종·수량 변경 불가</td></tr>
       <tr><th>전광판</th><td>100석 이상일 때 학교명 노출 (문구 수정 불가)</td></tr>
+      <tr><th>우천 취소</th><td>경기가 취소됐을 때 처리는 1688-0747로 확인</td></tr>
     </table>
+  </div>
+  <div class="box warn">
+    <b>인원이 줄어도 수량은 못 줄임</b>
+    예매 뒤에는 수량을 바꿀 수 없습니다. 결석자가 생길 수 있으면 신청 좌석 수를 넉넉하게 잡지 말고, 줄여야 하면 경기 1일 전까지 취소 여부를 문의하세요.
   </div>
 </section>
 
-<section id="s-no">
-  <div class="label">06</div>
-  <h2>안 되는 것</h2>
+<!-- 07 -->
+<section data-page="no" data-title="안 되는 것" data-sub="취소·제한 사유">
+  <div class="label">07</div>
+  <h1>안 되는 것</h1>
+  <p class="lead">아래에 해당하면 접수가 취소되거나 이후 단체관람이 제한될 수 있습니다.</p>
   <div class="card">
-    <ul class="no">
+    <ul class="nolist">
       <li>학교 구성원(학생·교직원)이 아닌 사람에게 표 넘기기, 되팔기</li>
       <li>단체관람을 위해 일시적으로 사람을 모은 모임 (학부모 사모임 등)</li>
       <li>같은 학교가 여러 명·여러 번 중복 접수</li>
@@ -423,73 +521,101 @@ footer b{color:#fff}
   </div>
 </section>
 
-<section id="s-contact">
-  <div class="label">07</div>
-  <h2>문의</h2>
+<!-- 08 -->
+<section data-page="contact" data-title="문의" data-sub="전화 · 채널톡">
+  <div class="label">08</div>
+  <h1>문의</h1>
+  <p class="lead">학교가 단체에 해당하는지 헷갈리면 채널톡, 예매·취소는 티켓링크로 문의합니다.</p>
   <div class="card">
     <table>
-      <tr><th>예매·취소</th><td>티켓링크 <a href="tel:1688-0747">1688-0747</a></td></tr>
+      <tr><th>예매·취소</th><td>티켓링크 <a href="tel:1688-0747">1688-0747</a><br><span class="muted">화~금 10:00~17:00 (점심 12~13시)</span></td></tr>
       <tr><th>단체 해당 여부</th><td>삼성라이온즈 구단 홈페이지 채널톡</td></tr>
       <tr><th>증빙서류</th><td><a href="https://naver.me/5mvI0inx" target="_blank" rel="noopener">naver.me/5mvI0inx</a></td></tr>
+      <tr><th>공지 원문</th><td>티켓링크 › 스포츠 › 삼성라이온즈 › 공지사항</td></tr>
     </table>
   </div>
 </section>
 
-</main>
+    <nav class="pager" id="pager" aria-label="이전 다음"></nav>
+  </main>
 
-<footer>
-  <div class="wrap">
-    <b>비공식 정리 자료입니다.</b><br>
-    2026 삼성라이온즈 단체관람 정책 변경 공지(6/2 시행)와 티켓링크 안내를 바탕으로 정리했습니다. 규정은 바뀔 수 있으니 신청 전에 티켓링크 공지사항을 확인하세요. 다음 시즌에는 날짜·구역·수수료를 새 공지와 대조해 쓰세요.
-  </div>
-</footer>
+  <footer>
+    <div class="in">
+      <b>비공식 정리 자료입니다.</b><br>
+      2026 삼성라이온즈 단체관람 정책 변경 공지(6/2 시행)와 티켓링크 안내를 바탕으로 정리했습니다. 규정은 바뀔 수 있으니 신청 전에 티켓링크 공지사항을 확인하세요.<br>
+      <a class="insta" href="https://www.instagram.com/kimju.zip/" target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6" fill="currentColor"/></svg>
+        김주집 @kimju.zip
+      </a>
+    </div>
+  </footer>
+</div>
 
 <script>
 (function(){
-  var DAY = ['일','월','화','수','목','금','토'];
-  function parse(v){ if(!v) return null; var p=v.split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
+  var pages=[].slice.call(document.querySelectorAll('section[data-page]'));
+  var nav=document.getElementById('nav'), pager=document.getElementById('pager');
+  var body=document.body, menuBtn=document.getElementById('menuBtn');
+
+  pages.forEach(function(s,i){
+    var li=document.createElement('li');
+    li.innerHTML='<a href="#'+s.dataset.page+'"><span class="no"><i><em>'+(i+1)+'</em></i></span><span class="t">'+s.dataset.title+'<small>'+s.dataset.sub+'</small></span></a>';
+    nav.appendChild(li);
+  });
+  var links=[].slice.call(nav.querySelectorAll('a'));
+
+  function show(){
+    var id=(location.hash||'').slice(1);
+    var idx=pages.findIndex(function(s){return s.dataset.page===id;});
+    if(idx<0) idx=0;
+    pages.forEach(function(s,i){ s.hidden=i!==idx; });
+    links.forEach(function(a,i){ if(i===idx) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
+    var prev=pages[idx-1], next=pages[idx+1], h='';
+    if(prev) h+='<a class="prev" href="#'+prev.dataset.page+'"><small>이전</small><b>'+prev.dataset.title+'</b></a>';
+    if(next) h+='<a class="next" href="#'+next.dataset.page+'"><small>다음</small><b>'+next.dataset.title+'</b></a>';
+    pager.innerHTML=h;
+    document.getElementById('curTitle').textContent=pages[idx].dataset.title;
+    document.getElementById('curCnt').textContent=(idx+1)+' / '+pages.length;
+    closeMenu();
+    window.scrollTo(0,0);
+  }
+  function closeMenu(){ body.classList.remove('menu-open'); menuBtn.setAttribute('aria-expanded','false'); }
+  menuBtn.addEventListener('click', function(){
+    var open=!body.classList.contains('menu-open');
+    body.classList.toggle('menu-open',open); menuBtn.setAttribute('aria-expanded',String(open));
+  });
+  document.getElementById('scrim').addEventListener('click', closeMenu);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeMenu(); });
+  window.addEventListener('hashchange', show);
+  show();
+
+  // 날짜 계산
+  var DAY=['일','월','화','수','목','금','토'];
+  function parse(v){ if(!v) return null; var p=v.split('-'); return new Date(+p[0],+p[1]-1,+p[2]); }
   function add(d,n){ var x=new Date(d); x.setDate(x.getDate()+n); return x; }
   function fmt(d){ return (d.getMonth()+1)+'월 '+d.getDate()+'일 ('+DAY[d.getDay()]+')'; }
-  function row(label,val){ return '<div class="row"><span>'+label+'</span><b>'+val+'</b></div>'; }
+  function row(l,v){ return '<div class="row"><span>'+l+'</span><b>'+v+'</b></div>'; }
 
   var wbOpen=document.getElementById('wbOpen'), wbOut=document.getElementById('wbOut');
   wbOpen.addEventListener('input', function(){
     var d=parse(wbOpen.value); if(!d){ wbOut.innerHTML=''; return; }
-    var apply=add(d,-7);
-    wbOut.innerHTML =
-      row('네이버폼 신청', fmt(apply)+' 10:00') +
-      row('증빙서류 마감', fmt(apply)+' 12:00') +
-      row('확정 전화', fmt(apply)+' 오후');
+    var a=add(d,-7);
+    wbOut.innerHTML=row('네이버폼 신청',fmt(a)+' 10:00')+row('증빙서류 마감',fmt(a)+' 12:00')+row('확정 전화',fmt(a)+' 오후');
   });
-
   var grGame=document.getElementById('grGame'), grOut=document.getElementById('grOut');
   grGame.addEventListener('input', function(){
     var d=parse(grGame.value); if(!d){ grOut.innerHTML=''; return; }
-    var call=add(d,-14), docs=add(call,-1);
-    var html =
-      row('서류 제출 마감', fmt(docs)+'까지') +
-      row('전화 접수', fmt(call)+' 10:00~') +
-      row('경기일', fmt(d));
-    var wd=call.getDay();
-    if(wd<2 || wd>5) html += '<p class="note">전화 접수 날짜가 화~금이 아닙니다. 접수일을 1688-0747로 확인하세요.</p>';
-    grOut.innerHTML = html;
+    var call=add(d,-14), docs=add(call,-1), wd=d.getDay();
+    var h=row('서류 제출 마감',fmt(docs)+'까지')+row('전화 접수',fmt(call)+' 10:00~')+row('경기일',fmt(d));
+    if(wd===0||wd===5||wd===6) h+='<p class="note">금~일 경기는 보통 화이트·블루 요금입니다. 04번 화이트·블루 신청을 확인하세요.</p>';
+    else if(call.getDay()<2||call.getDay()>5) h+='<p class="note">전화 접수 날짜가 화~금이 아닙니다. 접수일을 1688-0747로 확인하세요.</p>';
+    grOut.innerHTML=h;
   });
 
-  // 탭
-  var tabs=document.querySelectorAll('.tabs button');
-  tabs.forEach(function(b){
-    b.addEventListener('click', function(){
-      tabs.forEach(function(t){
-        var on=t===b; t.setAttribute('aria-selected', on);
-        document.getElementById('tab-'+t.dataset.tab).hidden=!on;
-      });
-    });
-  });
-
-  // 이미지: 파일이 없으면 칸 숨김, 있으면 눌러서 확대
+  // 이미지: 없으면 숨김, 있으면 확대
   document.querySelectorAll('img[data-zoom]').forEach(function(img){
     function hide(){ img.closest('figure').hidden=true; }
-    img.addEventListener('error', hide);
+    img.addEventListener('error',hide);
     if(img.complete && !img.naturalWidth) hide();
     img.addEventListener('click', function(){
       var z=document.createElement('div'); z.className='zoom';
@@ -499,17 +625,6 @@ footer b{color:#fff}
       document.body.appendChild(z);
     });
   });
-
-  // 목차 현재 위치
-  var links=[].slice.call(document.querySelectorAll('.toc a'));
-  var io=new IntersectionObserver(function(es){
-    es.forEach(function(e){
-      if(e.isIntersecting){
-        links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+e.target.id); });
-      }
-    });
-  },{rootMargin:'-40% 0px -55% 0px'});
-  document.querySelectorAll('main section').forEach(function(s){ io.observe(s); });
 })();
 </script>
 </body>
