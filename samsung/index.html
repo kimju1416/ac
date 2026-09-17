@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>라이온즈파크 학교 단체관람 가이드</title>
+<meta name="description" content="삼성라이온즈파크 학교 단체관람 신청 절차 정리 (2026 시즌 기준, 비공식)">
+<link rel="canonical" href="https://kimju.kr/samsung/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kimju.kr/samsung/">
+<meta property="og:title" content="라이온즈파크 학교 단체관람 가이드">
+<meta property="og:description" content="화이트·블루 네이버폼 선착순, 그레이 서류 먼저 → 전화 선착순. 학교 기준 신청 절차 정리">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --blue:#0A4DA2; --blue-d:#083C80; --navy:#0B1F3F; --navy-2:#132D57;
+  --bg:#F2F5FA; --card:#fff; --line:#DCE3EE; --line-2:#E8EDF5;
+  --text:#14233B; --sub:#5B6A82; --tint:#E8F0FB;
+  --warn:#B26B0F; --warn-bg:#FBF0DE; --err:#C0392B; --err-bg:#F9E8E6; --ok:#1D7A4D; --ok-bg:#E7F3EC;
+  --r1:10px; --r2:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:15px/1.65 Pretendard,"Pretendard Variable",-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;word-break:keep-all;overflow-wrap:break-word}
+a{color:var(--blue)}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+
+/* 헤더: 전광판 느낌 */
+.board{background:var(--navy);color:#fff;position:relative;overflow:hidden}
+.board::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1.2px);background-size:9px 9px;pointer-events:none}
+.board .wrap{position:relative;padding-block:28px 24px}
+.tag{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.04em;color:#AFC6EA;border:1px solid #2C4A7C;border-radius:999px;padding:2px 10px}
+.board h1{margin:12px 0 6px;font-size:26px;line-height:1.3;font-weight:800;letter-spacing:-.01em}
+.board p{margin:0;color:#C3D2EA;font-size:14px}
+.score{display:grid;grid-template-columns:repeat(3,1fr);margin-top:20px;border:1px solid #2C4A7C;border-radius:var(--r1);overflow:hidden}
+.score div{padding:10px 12px;border-right:1px solid #2C4A7C;background:var(--navy-2)}
+.score div:last-child{border-right:0}
+.score b{display:block;font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;color:#fff;line-height:1.2}
+.score b small{font-size:12px;font-weight:600;color:#9FB4D6;margin-left:2px}
+.score span{font-size:12px;color:#9FB4D6}
+
+/* 목차 */
+.toc{position:sticky;top:0;z-index:10;background:rgba(242,245,250,.96);border-bottom:1px solid var(--line)}
+.toc .wrap{display:flex;gap:6px;overflow-x:auto;padding-block:10px;scrollbar-width:none}
+.toc .wrap::-webkit-scrollbar{display:none}
+.toc a{flex:none;text-decoration:none;color:var(--sub);font-size:14px;font-weight:600;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff;min-height:36px}
+.toc a.on{background:var(--blue);border-color:var(--blue);color:#fff}
+
+section{padding-block:34px 6px;scroll-margin-top:56px}
+.label{font-size:13px;font-weight:700;color:var(--blue);letter-spacing:.04em;display:flex;align-items:center;gap:8px}
+.label::before{content:"";width:10px;height:10px;background:var(--blue);transform:rotate(45deg);border-radius:1px}
+h2{font-size:22px;margin:6px 0 14px;line-height:1.35}
+h3{font-size:17px;margin:0 0 8px}
+p{margin:0 0 10px}
+.muted{color:var(--sub);font-size:14px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r2);padding:18px}
+.card+.card{margin-top:12px}
+
+/* 요금제 비교 */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.plan{background:#fff;border:1px solid var(--line);border-radius:var(--r2);overflow:hidden}
+.plan header{padding:12px 16px;background:var(--tint);border-bottom:1px solid var(--line)}
+.plan.grey header{background:#ECEFF3}
+.plan header b{font-size:16px}
+.plan header span{display:block;font-size:13px;color:var(--sub)}
+.plan dl{margin:0;padding:6px 16px 12px}
+.plan dt{font-size:12px;font-weight:700;color:var(--sub);margin-top:10px}
+.plan dd{margin:2px 0 0;font-size:15px;font-weight:600}
+.plan dd small{display:block;font-weight:400;color:var(--sub);font-size:13px}
+
+/* 탭 */
+.tabs{display:flex;background:#E3E9F2;border-radius:var(--r1);padding:4px;gap:4px;margin-bottom:16px}
+.tabs button{flex:1;border:0;background:transparent;font:inherit;font-weight:700;font-size:15px;color:var(--sub);padding:10px 8px;border-radius:8px;min-height:44px;cursor:pointer}
+.tabs button[aria-selected="true"]{background:#fff;color:var(--blue);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* 단계: 루상 진루 */
+.steps{list-style:none;margin:0;padding:0;position:relative}
+.steps li{position:relative;padding:0 0 22px 52px}
+.steps li::after{content:"";position:absolute;left:17px;top:38px;bottom:0;border-left:2px dashed #B7C6DD}
+.steps li:last-child{padding-bottom:0}
+.steps li:last-child::after{display:none}
+.base{position:absolute;left:4px;top:4px;width:28px;height:28px;background:var(--blue);transform:rotate(45deg);border-radius:4px;display:grid;place-items:center}
+.base i{transform:rotate(-45deg);font-style:normal;color:#fff;font-weight:800;font-size:14px}
+.steps li.home .base{background:var(--navy)}
+.steps h4{margin:2px 0 4px;font-size:16px}
+.when{display:inline-block;font-size:13px;font-weight:700;color:var(--blue);background:var(--tint);border-radius:6px;padding:1px 8px;margin-bottom:6px}
+.steps ul{margin:6px 0 0;padding-left:18px;color:var(--text)}
+.steps ul li{padding:0;margin:2px 0}
+.steps ul li::after{display:none}
+
+/* 날짜 계산 */
+.calc{margin-top:18px;background:var(--navy);color:#fff;border-radius:var(--r2);padding:18px}
+.calc h3{color:#fff;font-size:16px;margin-bottom:4px}
+.calc .muted{color:#A9BCDB}
+.calc label{display:block;font-size:13px;font-weight:600;color:#C3D2EA;margin:12px 0 6px}
+.calc input{width:100%;height:48px;border-radius:var(--r1);border:1px solid #2C4A7C;background:#fff;color:var(--text);font:inherit;font-size:16px;padding:0 12px}
+.calc input:focus{outline:0;border-color:#7FA7E0;box-shadow:0 0 0 3px rgba(127,167,224,.35)}
+.out{margin-top:14px;display:grid;gap:8px}
+.out .row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;background:var(--navy-2);border:1px solid #2C4A7C;border-radius:var(--r1);padding:10px 12px}
+.out .row span{font-size:13px;color:#A9BCDB}
+.out .row b{font-size:17px;font-variant-numeric:tabular-nums;text-align:right}
+.out .note{font-size:13px;color:#FFD9A0;margin:2px 0 0}
+.out:empty{display:none}
+
+/* 콜아웃 */
+.box{border-radius:var(--r1);padding:12px 14px;font-size:14px;margin-top:12px;border:1px solid}
+.box b{display:block;margin-bottom:2px}
+.box.warn{background:var(--warn-bg);border-color:#EED3A6;color:#6B420A}
+.box.err{background:var(--err-bg);border-color:#EDC5C0;color:#7A2219}
+.box.info{background:var(--tint);border-color:#C9DAF2;color:#16345F}
+.box ul{margin:4px 0 0;padding-left:18px}
+
+/* 체크리스트 */
+.check{list-style:none;margin:0;padding:0}
+.check li{display:flex;gap:10px;padding:12px 0;border-top:1px solid var(--line-2)}
+.check li:first-child{border-top:0;padding-top:0}
+.check svg{flex:none;margin-top:3px}
+.check b{display:block}
+.check span{color:var(--sub);font-size:14px}
+
+/* 좌석 */
+.zones{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.zone{border:1px solid var(--line);border-radius:var(--r1);padding:10px 12px;background:#fff}
+.zone b{display:block;font-size:15px}
+.zone span{font-size:13px;color:var(--sub)}
+.zone.limit{border-color:#EED3A6;background:#FFFCF6}
+.zone.limit span{color:var(--warn);font-weight:600}
+.shot{margin-top:12px;border:1px solid var(--line);border-radius:var(--r2);background:#fff;padding:10px;text-align:center}
+.shot img{max-width:100%;height:auto;display:block;margin:0 auto;border-radius:8px;cursor:zoom-in}
+.shot figcaption{font-size:13px;color:var(--sub);margin-top:6px}
+
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;height:48px;border-radius:var(--r1);background:var(--blue);color:#fff;text-decoration:none;font-weight:700;font-size:15px;margin-top:12px}
+.btn:hover{background:var(--blue-d)}
+.btn.line{background:#fff;color:var(--text);border:1px solid var(--line)}
+.btn.line:hover{background:var(--tint)}
+.btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:10px 8px;border-top:1px solid var(--line-2);vertical-align:top}
+th{width:34%;color:var(--sub);font-weight:600}
+tr:first-child th,tr:first-child td{border-top:0}
+
+.no{list-style:none;margin:0;padding:0}
+.no li{position:relative;padding:10px 0 10px 28px;border-top:1px solid var(--line-2)}
+.no li:first-child{border-top:0}
+.no li::before{content:"";position:absolute;left:4px;top:18px;width:12px;height:2px;background:var(--err);transform:rotate(45deg)}
+.no li::after{content:"";position:absolute;left:4px;top:18px;width:12px;height:2px;background:var(--err);transform:rotate(-45deg)}
+
+footer{margin-top:40px;background:var(--navy);color:#A9BCDB;font-size:13px}
+footer .wrap{padding-block:22px 34px}
+footer b{color:#fff}
+
+/* 이미지 확대 */
+.zoom{position:fixed;inset:0;background:rgba(8,16,32,.92);z-index:50;overflow:auto;display:flex;align-items:flex-start;justify-content:center;padding:16px}
+.zoom img{max-width:none;width:min(1200px,200%)}
+.zoom button{position:fixed;top:12px;right:12px;height:44px;padding:0 16px;border-radius:var(--r1);border:0;background:#fff;font:inherit;font-weight:700}
+
+@media (max-width:560px){
+  .board h1{font-size:23px}
+  .compare{grid-template-columns:1fr}
+  .btns{grid-template-columns:1fr}
+  .score b{font-size:19px}
+  th{width:38%}
+}
+</style>
+</head>
+<body>
+
+<div class="board">
+  <div class="wrap">
+    <span class="tag">2026 시즌 기준 · 학교 전용 정리</span>
+    <h1>삼성라이온즈파크<br>학교 단체관람 신청 가이드</h1>
+    <p>요금제에 따라 신청 방법이 다릅니다. 경기 요금제부터 확인하세요.</p>
+    <div class="score">
+      <div><b>50<small>석~</small></b><span>최소 인원</span></div>
+      <div><b>1,000<small>원</small></b><span>장당 수수료</span></div>
+      <div><b>100<small>석~</small></b><span>전광판 노출</span></div>
+    </div>
+  </div>
+</div>
+
+<nav class="toc" aria-label="목차">
+  <div class="wrap">
+    <a href="#s-plan">요금제 구분</a>
+    <a href="#s-docs">준비 서류</a>
+    <a href="#s-how">신청 절차</a>
+    <a href="#s-seat">좌석</a>
+    <a href="#s-day">경기 당일</a>
+    <a href="#s-no">안 되는 것</a>
+    <a href="#s-contact">문의</a>
+  </div>
+</nav>
+
+<main class="wrap">
+
+<section id="s-plan">
+  <div class="label">01</div>
+  <h2>요금제부터 확인</h2>
+  <p class="muted">티켓링크 예매 화면에서 보고 싶은 경기의 요금제(화이트·블루 / 그레이)를 먼저 확인합니다.</p>
+  <div class="compare">
+    <div class="plan">
+      <header><b>화이트 · 블루 요금</b><span>네이버폼 선착순</span></header>
+      <dl>
+        <dt>경기당 한도</dt><dd>선착순 5개 팀<small>팀당 50~200석</small></dd>
+        <dt>신청 방법</dt><dd>일반예매 오픈 7일 전 10시<small>네이버폼 선착순 · 3연전 동시 오픈</small></dd>
+        <dt>서류 마감</dt><dd>신청한 날 정오(12시)</dd>
+        <dt>확정</dt><dd>신청 당일 전화(02 번호)</dd>
+      </dl>
+    </div>
+    <div class="plan grey">
+      <header><b>그레이 요금</b><span>서류 먼저 → 전화 선착순</span></header>
+      <dl>
+        <dt>경기당 한도</dt><dd>3,000석<small>일반예매 오픈 뒤에는 한도 없음</small></dd>
+        <dt>신청 방법</dt><dd>경기 2주 전 같은 요일<small>1688-0747 전화 · 1경기씩 접수</small></dd>
+        <dt>서류 마감</dt><dd>전화 신청일 하루 전</dd>
+        <dt>확정</dt><dd>전화 접수 시</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<section id="s-docs">
+  <div class="label">02</div>
+  <h2>학교가 준비할 서류</h2>
+  <div class="card">
+    <ul class="check">
+      <li>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A4DA2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <div><b>고유번호증</b><span>학교 고유번호증 사본 (이미지 또는 PDF)</span></div>
+      </li>
+      <li>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A4DA2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <div><b>학교장 직인 공문</b><span>또는 학교장 결재가 끝난 내부 결재문서</span></div>
+      </li>
+      <li>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0A4DA2" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+        <div><b>담당 교사 휴대폰</b><span>확정 전화를 받을 번호. 02 번호로 걸려 옵니다.</span></div>
+      </li>
+    </ul>
+    <a class="btn" href="https://naver.me/5mvI0inx" target="_blank" rel="noopener">증빙서류 제출 폼 열기</a>
+    <p class="muted" style="margin:8px 0 0">티켓링크 › 스포츠 › 삼성라이온즈 › 공지사항 › 2026 삼성라이온즈 단체관람 신청 페이지에서도 들어갈 수 있습니다.</p>
+  </div>
+  <div class="box info">
+    <b>단체명은 학교명으로 자동 등록</b>
+    제출한 서류의 학교명으로 등록되고, 100석 이상이면 전광판에 그대로 나옵니다. 문구는 바꿀 수 없습니다.
+  </div>
+  <div class="box err">
+    <b>서류를 안 내거나 허위로 내면 자동 취소</b>
+    마감 시각(화이트·블루는 신청 당일 정오, 그레이는 신청일 하루 전)을 넘기지 마세요.
+  </div>
+</section>
+
+<section id="s-how">
+  <div class="label">03</div>
+  <h2>신청 절차</h2>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" aria-selected="true" data-tab="wb">화이트 · 블루</button>
+    <button role="tab" aria-selected="false" data-tab="gr">그레이</button>
+  </div>
+
+  <div id="tab-wb" role="tabpanel">
+    <div class="card">
+      <ol class="steps">
+        <li>
+          <span class="base"><i>1</i></span>
+          <h4>네이버폼 신청</h4>
+          <span class="when">일반예매 오픈 7일 전 · 오전 10시</span>
+          <p>제출 순서대로 5개 팀까지만 받습니다. 10시 정각에 바로 낼 수 있게 내용을 미리 적어 두세요.</p>
+          <ul>
+            <li>개인정보 수집·이용 동의</li>
+            <li>단체명: 학교명</li>
+            <li>담당자 연락처</li>
+            <li>통화 가능 시간: <b>오후 시간대만 선택 가능</b></li>
+            <li>희망 좌석 수: 숫자로 (50~200)</li>
+          </ul>
+        </li>
+        <li>
+          <span class="base"><i>2</i></span>
+          <h4>증빙서류 제출</h4>
+          <span class="when">신청한 날 정오(12시)까지</span>
+          <p>고유번호증과 학교장 직인 공문을 증빙서류 폼에 올립니다.</p>
+        </li>
+        <li>
+          <span class="base"><i>3</i></span>
+          <h4>확정 전화 받기</h4>
+          <span class="when">신청 당일 · 선택한 시간대</span>
+          <p>티켓링크(02 지역번호)가 순서대로 전화합니다. 여유가 있으면 오전에 올 수도 있습니다.</p>
+        </li>
+        <li class="home">
+          <span class="base"><i>H</i></span>
+          <h4>예매 완료</h4>
+          <p>전화로 예매가 끝납니다. 표는 경기 당일 현장에서 받습니다.</p>
+        </li>
+      </ol>
+    </div>
+    <div class="box warn">
+      <b>한 학교는 한 번만</b>
+      여러 선생님이 따로 내거나 같은 아이디로 여러 번 내면 접수가 취소됩니다. 제출한 내용은 고칠 수 없습니다.
+    </div>
+    <div class="box err">
+      <b>전화를 못 받으면 취소</b>
+      당일 확정 전화가 연결되지 않으면 접수가 취소되고 추가 접수도 안 됩니다.
+    </div>
+
+    <div class="calc">
+      <h3>신청 날짜 계산</h3>
+      <p class="muted">티켓링크에 안내된 해당 경기의 일반예매 오픈일을 넣으세요.</p>
+      <label for="wbOpen">일반예매 오픈일</label>
+      <input type="date" id="wbOpen">
+      <div class="out" id="wbOut"></div>
+    </div>
+  </div>
+
+  <div id="tab-gr" role="tabpanel" hidden>
+    <div class="card">
+      <ol class="steps">
+        <li>
+          <span class="base"><i>1</i></span>
+          <h4>신청서·서류 먼저 보내기</h4>
+          <span class="when">전화 신청일 하루 전까지</span>
+          <p>증빙서류 폼에 <b>공문과 고유번호증</b>을 올립니다. 서류가 먼저 들어가 있어야 전화 접수가 됩니다.</p>
+        </li>
+        <li>
+          <span class="base"><i>2</i></span>
+          <h4>전화로 선착순 접수</h4>
+          <span class="when">경기 2주 전 같은 요일 · 10시부터</span>
+          <p><a href="tel:1688-0747"><b>1688-0747</b></a> (티켓링크). 한 통화에 한 경기씩 접수합니다.</p>
+          <ul>
+            <li>운영: 화~금 10:00~17:00</li>
+            <li>점심시간 12:00~13:00 제외</li>
+            <li>경기당 3,000석 한도, 학교당 50석 이상</li>
+          </ul>
+        </li>
+        <li class="home">
+          <span class="base"><i>H</i></span>
+          <h4>예매 완료</h4>
+          <p>전화로 접수가 끝나면 확정입니다. 표는 경기 당일 현장에서 받습니다.</p>
+        </li>
+      </ol>
+    </div>
+    <div class="box info">
+      <b>그레이 요금 한도</b>
+      3,000석 한도는 일반예매가 열리기 전까지입니다. 일반예매가 열린 뒤에는 한도 없이 받습니다.
+    </div>
+
+    <div class="calc">
+      <h3>신청 날짜 계산</h3>
+      <p class="muted">보려는 경기 날짜를 넣으세요.</p>
+      <label for="grGame">경기일</label>
+      <input type="date" id="grGame">
+      <div class="out" id="grOut"></div>
+    </div>
+  </div>
+
+  <p class="muted" style="margin-top:10px">신청 오픈일이 공휴일이면 다음 날 받습니다. 계산기는 공휴일을 반영하지 않으니 달력으로 한 번 더 확인하세요.</p>
+</section>
+
+<section id="s-seat">
+  <div class="label">04</div>
+  <h2>신청 가능한 좌석</h2>
+  <div class="zones">
+    <div class="zone"><b>1루 내야지정석</b><span>구역 전체</span></div>
+    <div class="zone"><b>외야지정석</b><span>구역 전체</span></div>
+    <div class="zone"><b>1루 SKY 상단지정석</b><span>구역 전체</span></div>
+    <div class="zone limit"><b>3루 SKY 상단지정석</b><span>U25~U31 구역만</span></div>
+    <div class="zone limit"><b>중앙 SKY 상단지정석</b><span>U10 구역만</span></div>
+  </div>
+  <p class="muted" style="margin-top:10px">1루는 원정(AWAY), 3루는 홈(HOME) 쪽입니다. 3루 내야지정석·테이블석 등은 단체 대상이 아닙니다.</p>
+
+  <figure class="shot" id="seatShot">
+    <img src="seatmap.png" alt="삼성라이온즈파크 좌석 배치도" data-zoom>
+    <figcaption>눌러서 크게 보기</figcaption>
+  </figure>
+
+  <div class="btns">
+    <a class="btn" href="https://myseatcheck.com/%eb%8c%80%ea%b5%ac-%ec%82%bc%ec%84%b1-%eb%9d%bc%ec%9d%b4%ec%98%a8%ec%a6%88%ed%8c%8c%ed%81%ac/" target="_blank" rel="noopener">구역별 시야 사진 보기</a>
+    <a class="btn line" href="#s-price">좌석 요금 보기</a>
+  </div>
+
+  <div id="s-price" style="scroll-margin-top:56px">
+    <figure class="shot" id="priceShot">
+      <img src="ticket-price.png" alt="2026 티켓 종류 및 요금표" data-zoom>
+      <figcaption>2026 티켓 요금표 · 눌러서 크게 보기</figcaption>
+    </figure>
+    <div class="box info">
+      <b>수수료</b>
+      표 한 장에 예매수수료 1,000원이 붙습니다. 단체관람은 티켓 할인이 적용되지 않습니다.
+    </div>
+  </div>
+</section>
+
+<section id="s-day">
+  <div class="label">05</div>
+  <h2>경기 당일 · 취소</h2>
+  <div class="card">
+    <table>
+      <tr><th>표 받는 곳</th><td>경기 당일 <b>중앙매표소 왼쪽 고객센터</b>에서 현장 수령</td></tr>
+      <tr><th>취소</th><td>경기 <b>1일 전까지</b>만 가능. 당일 취소 불가<br><a href="tel:1688-0747">1688-0747</a></td></tr>
+      <tr><th>변경</th><td>예매 완료 뒤 권종·수량 변경 불가</td></tr>
+      <tr><th>전광판</th><td>100석 이상일 때 학교명 노출 (문구 수정 불가)</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="s-no">
+  <div class="label">06</div>
+  <h2>안 되는 것</h2>
+  <div class="card">
+    <ul class="no">
+      <li>학교 구성원(학생·교직원)이 아닌 사람에게 표 넘기기, 되팔기</li>
+      <li>단체관람을 위해 일시적으로 사람을 모은 모임 (학부모 사모임 등)</li>
+      <li>같은 학교가 여러 명·여러 번 중복 접수</li>
+      <li>제출한 신청 내용 수정</li>
+      <li>경기장 안 배포부스 설치</li>
+      <li>개막시리즈 단체관람 (미운영)</li>
+    </ul>
+  </div>
+  <div class="box warn">
+    <b>단체관람이 제한될 수 있는 경기</b>
+    이벤트·상품 제공 경기, 포스트시즌 등 일부 경기는 단체관람을 받지 않을 수 있습니다. 스폰서데이·사회공헌행사처럼 구단이 주최하는 행사는 기준이 따로 있습니다.
+  </div>
+</section>
+
+<section id="s-contact">
+  <div class="label">07</div>
+  <h2>문의</h2>
+  <div class="card">
+    <table>
+      <tr><th>예매·취소</th><td>티켓링크 <a href="tel:1688-0747">1688-0747</a></td></tr>
+      <tr><th>단체 해당 여부</th><td>삼성라이온즈 구단 홈페이지 채널톡</td></tr>
+      <tr><th>증빙서류</th><td><a href="https://naver.me/5mvI0inx" target="_blank" rel="noopener">naver.me/5mvI0inx</a></td></tr>
+    </table>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <b>비공식 정리 자료입니다.</b><br>
+    2026 삼성라이온즈 단체관람 정책 변경 공지(6/2 시행)와 티켓링크 안내를 바탕으로 정리했습니다. 규정은 바뀔 수 있으니 신청 전에 티켓링크 공지사항을 확인하세요. 다음 시즌에는 날짜·구역·수수료를 새 공지와 대조해 쓰세요.
+  </div>
+</footer>
+
+<script>
+(function(){
+  var DAY = ['일','월','화','수','목','금','토'];
+  function parse(v){ if(!v) return null; var p=v.split('-'); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function add(d,n){ var x=new Date(d); x.setDate(x.getDate()+n); return x; }
+  function fmt(d){ return (d.getMonth()+1)+'월 '+d.getDate()+'일 ('+DAY[d.getDay()]+')'; }
+  function row(label,val){ return '<div class="row"><span>'+label+'</span><b>'+val+'</b></div>'; }
+
+  var wbOpen=document.getElementById('wbOpen'), wbOut=document.getElementById('wbOut');
+  wbOpen.addEventListener('input', function(){
+    var d=parse(wbOpen.value); if(!d){ wbOut.innerHTML=''; return; }
+    var apply=add(d,-7);
+    wbOut.innerHTML =
+      row('네이버폼 신청', fmt(apply)+' 10:00') +
+      row('증빙서류 마감', fmt(apply)+' 12:00') +
+      row('확정 전화', fmt(apply)+' 오후');
+  });
+
+  var grGame=document.getElementById('grGame'), grOut=document.getElementById('grOut');
+  grGame.addEventListener('input', function(){
+    var d=parse(grGame.value); if(!d){ grOut.innerHTML=''; return; }
+    var call=add(d,-14), docs=add(call,-1);
+    var html =
+      row('서류 제출 마감', fmt(docs)+'까지') +
+      row('전화 접수', fmt(call)+' 10:00~') +
+      row('경기일', fmt(d));
+    var wd=call.getDay();
+    if(wd<2 || wd>5) html += '<p class="note">전화 접수 날짜가 화~금이 아닙니다. 접수일을 1688-0747로 확인하세요.</p>';
+    grOut.innerHTML = html;
+  });
+
+  // 탭
+  var tabs=document.querySelectorAll('.tabs button');
+  tabs.forEach(function(b){
+    b.addEventListener('click', function(){
+      tabs.forEach(function(t){
+        var on=t===b; t.setAttribute('aria-selected', on);
+        document.getElementById('tab-'+t.dataset.tab).hidden=!on;
+      });
+    });
+  });
+
+  // 이미지: 파일이 없으면 칸 숨김, 있으면 눌러서 확대
+  document.querySelectorAll('img[data-zoom]').forEach(function(img){
+    function hide(){ img.closest('figure').hidden=true; }
+    img.addEventListener('error', hide);
+    if(img.complete && !img.naturalWidth) hide();
+    img.addEventListener('click', function(){
+      var z=document.createElement('div'); z.className='zoom';
+      z.innerHTML='<button type="button">닫기</button><img alt="">';
+      z.querySelector('img').src=img.src;
+      z.addEventListener('click', function(e){ if(e.target===z||e.target.tagName==='BUTTON') z.remove(); });
+      document.body.appendChild(z);
+    });
+  });
+
+  // 목차 현재 위치
+  var links=[].slice.call(document.querySelectorAll('.toc a'));
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(a){ a.classList.toggle('on', a.getAttribute('href')==='#'+e.target.id); });
+      }
+    });
+  },{rootMargin:'-40% 0px -55% 0px'});
+  document.querySelectorAll('main section').forEach(function(s){ io.observe(s); });
+})();
+</script>
+</body>
+</html>
