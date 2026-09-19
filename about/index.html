@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>김주현 · kimju.zip</title>
+<meta name="description" content="불편함을 코딩으로 해결하는 15년차 체육교사 김주현(@kimju.zip)의 소개 페이지입니다.">
+<link rel="canonical" href="https://kimju.kr/about/">
+<meta name="theme-color" content="#F6F6F3">
+<meta property="og:type" content="profile">
+<meta property="og:site_name" content="kimju.zip">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://kimju.kr/about/">
+<meta property="og:title" content="김주현 · kimju.zip">
+<meta property="og:description" content="불편함을 코딩으로 해결하는 15년차 체육교사 김주현(@kimju.zip)">
+<meta property="og:image" content="https://kimju.kr/og.jpg">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{--bg:#F6F6F3;--card:#fff;--ink:#15171B;--sub:#5B616B;--mute:#8B9099;--line:#E6E6E1;--soft:#EDEDE8;--lime:#D4F25A;--limeInk:#2F3A00}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:'Pretendard Variable',Pretendard,system-ui,sans-serif;word-break:keep-all;-webkit-font-smoothing:antialiased;line-height:1.6}
+a{color:inherit;text-decoration:none}
+header{position:sticky;top:0;z-index:30;background:rgba(246,246,243,.88);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--line)}
+.nav{max-width:1000px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:800;font-size:19px;letter-spacing:-.03em}.logo b{background:var(--lime);padding:0 5px;border-radius:5px;margin-left:1px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;font-size:14px;font-weight:600;border:1px solid var(--line);background:#fff;white-space:nowrap}
+.btn:hover{border-color:#cfcfc8}
+.btn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
+main{max-width:1000px;margin:0 auto;padding:56px 24px 72px}
+.hero{display:grid;grid-template-columns:260px 1fr;gap:44px;align-items:center;margin-bottom:56px}
+.pic{background:#fff;border:1px solid var(--line);border-radius:24px;padding:10px;transform:rotate(-1.5deg)}
+.pic img{width:100%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:16px;display:block}
+.tag{display:inline-block;font-size:13px;font-weight:600;color:var(--sub);background:#fff;border:1px solid var(--line);padding:6px 12px;border-radius:999px}
+h1{font-size:clamp(34px,5vw,52px);letter-spacing:-.045em;line-height:1.15;font-weight:800;margin:16px 0 10px}
+h1 mark{background:linear-gradient(transparent 58%,var(--lime) 58%);color:inherit;padding:0 2px}
+.role{font-size:18px;color:var(--sub)}
+.hero .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
+.sec{background:#fff;border:1px solid var(--line);border-radius:24px;padding:32px 34px;margin-bottom:18px}
+.sec h2{font-size:21px;letter-spacing:-.03em;margin-bottom:16px}
+.bio{font-size:16px;color:var(--sub);line-height:1.9}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:0 40px}
+.cols h3{font-size:13px;color:var(--mute);font-weight:600;margin-bottom:6px}
+.tl{list-style:none}
+.tl li{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--soft)}
+.tl li:first-child{border-top:0}
+.yr{font-size:13.5px;color:var(--mute);font-variant-numeric:tabular-nums;padding-top:1px}
+.tl b{font-size:15.5px;font-weight:700}.tl small{display:block;font-size:13.5px;color:var(--sub)}
+.lec{display:grid;grid-template-columns:repeat(2,1fr);gap:0 40px}
+.lec div{display:grid;grid-template-columns:92px 1fr;gap:12px;padding:11px 0;border-top:1px solid var(--soft);font-size:15px}
+.lec div:nth-child(-n+2){border-top:0}
+.lec span{font-size:13.5px;color:var(--mute);font-variant-numeric:tabular-nums}
+.contact{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.c{border:1px solid var(--line);border-radius:18px;padding:18px 20px;display:flex;flex-direction:column;gap:4px;transition:border-color .15s,transform .15s}
+.c:hover{border-color:var(--ink);transform:translateY(-2px)}
+.c svg{width:22px;height:22px;margin-bottom:8px}
+.c small{font-size:12.5px;color:var(--mute);font-weight:600}
+.c b{font-size:16px}.c span{font-size:13.5px;color:var(--sub)}
+.back{display:flex;justify-content:space-between;align-items:center;gap:16px;background:var(--ink);color:#fff;border-radius:24px;padding:28px 32px;margin-top:28px}
+.back b{font-size:20px;letter-spacing:-.03em}.back p{color:#A9AEB7;font-size:14px;margin-top:2px}
+.back .btn{background:var(--lime);border-color:var(--lime);color:var(--limeInk);height:46px;padding:0 20px}
+footer{max-width:1000px;margin:0 auto;padding:28px 24px 44px;border-top:1px solid var(--line);font-size:13px;color:var(--mute)}
+:focus-visible{outline:2px solid #3E7BC7;outline-offset:2px}
+@media(max-width:760px){
+  main{padding:32px 16px 56px}.nav{padding:0 16px}
+  .hero{grid-template-columns:1fr;gap:26px;margin-bottom:36px}.pic{max-width:240px}
+  .sec{padding:24px 20px;border-radius:20px}
+  .cols,.lec{grid-template-columns:1fr}.cols>div+div{margin-top:18px}
+  .lec div:nth-child(2){border-top:1px solid var(--soft)}
+  .contact{grid-template-columns:1fr}
+  .back{flex-direction:column;align-items:flex-start;padding:24px 20px}
+}
+</style>
+</head>
+<body>
+<header><div class="nav">
+  <a class="logo" href="../">kimju<b>.zip</b></a>
+  <a class="btn" href="../">← 앱 목록</a>
+</div></header>
+
+<main>
+  <section class="hero">
+    <div class="pic"><img src="../30020.webp" alt="kimju.zip 캐릭터 — 호루라기를 목에 건 체육교사가 노트북으로 코딩하는 그림" width="400" height="400"></div>
+    <div>
+      <span class="tag">교사 소개</span>
+      <h1>김주현<br><mark>@kimju.zip</mark></h1>
+      <p class="role">불편함을 코딩으로 해결하는 15년차 체육교사</p>
+      <div class="acts">
+        <a class="btn dark" href="mailto:dakkang27da@gmail.com">강의 · 협업 문의</a>
+        <a class="btn" href="https://instagram.com/kimju.zip" target="_blank" rel="noopener">Instagram</a>
+        <a class="btn" href="https://www.threads.net/@kimju.zip" target="_blank" rel="noopener">Threads</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>소개</h2>
+    <p class="bio">
+      체육 교사로 근무하면서 반복되는 업무, 불편한 행정, 아날로그 방식에 답답함을 느끼고
+      직접 코딩으로 해결하기 시작했습니다. 개발자가 아니어도 학교 현장에 꼭 맞는 앱을
+      만들 수 있다는 걸 직접 증명하고, 그 결과물을 선생님들께 무료로 공유하고 있습니다.<br><br>
+      수업·생활지도·행정 업무 자동화부터 AI 프롬프트, 교육 자료까지 무료로 공개 중이며,
+      학교 현장의 선생님들께 바이브코딩의 가능성을 소개하고 있습니다.
+    </p>
+  </section>
+
+  <section class="sec">
+    <h2>경력</h2>
+    <div class="cols">
+      <div>
+        <h3>근무 경력</h3>
+        <ul class="tl">
+          <li><span class="yr">2012–2015</span><b>구미고등학교</b></li>
+          <li><span class="yr">2016–2019</span><b>구미중학교</b></li>
+          <li><span class="yr">2020–2024</span><b>율곡중학교</b></li>
+          <li><span class="yr">2025–</span><b>광평중학교</b></li>
+        </ul>
+      </div>
+      <div>
+        <h3>활동 경력</h3>
+        <ul class="tl">
+          <li><span class="yr">2023</span><div><b>교육부 장관상</b><small>학교체육 활성화</small></div></li>
+          <li><span class="yr">2024</span><b>교육혁신 선도교사</b></li>
+          <li><span class="yr">2025</span><b>터치교사단</b></li>
+          <li><span class="yr">2026</span><b>AI 디지털 기반 교육혁신 멘토</b></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>강의 이력</h2>
+    <div class="lec">
+      <div><span>26. 1. 16</span>대구체육교과연구회</div>
+      <div><span>26. 2. 24</span>경북교육청</div>
+      <div><span>26. 4. 20</span>교사성장학교</div>
+      <div><span>26. 4. 23</span>비안초등학교</div>
+      <div><span>26. 4. 27</span>구미문성중학교</div>
+      <div><span>26. 4. 28</span>모계고등학교</div>
+      <div><span>26. 4. 29</span>청송고등학교</div>
+      <div><span>26. 5. 14</span>영동미래고등학교</div>
+      <div><span>26. 5. 21</span>경산자인학교</div>
+      <div><span>26. 6. 25</span>대전 경덕중학교</div>
+      <div><span>26. 6. 29</span>봉곡중학교</div>
+      <div><span>26. 6. 30</span>경북외국어고등학교</div>
+      <div><span>26. 7. 1</span>금성중고등학교</div>
+      <div><span>26. 7. 2</span>한국교원대학교</div>
+      <div><span>26. 7. 5</span>대한민국학교체육축전</div>
+      <div><span>26. 7. 27–28</span>부산교육청 교육연구정보원</div>
+      <div><span>26. 8. 3</span>경남특수교육원</div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <h2>연락하기</h2>
+    <div class="contact">
+      <a class="c" href="https://www.threads.net/@kimju.zip" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="9.5"/><path d="M8 12a4 4 0 0 1 8 0"/></svg>
+        <small>Threads</small><b>@kimju.zip</b><span>일상 · 앱 업데이트</span>
+      </a>
+      <a class="c" href="https://instagram.com/kimju.zip" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg>
+        <small>Instagram</small><b>@kimju.zip</b><span>바이브코딩 콘텐츠</span>
+      </a>
+      <a class="c" href="mailto:dakkang27da@gmail.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 5.5 9 7.5 9-7.5"/></svg>
+        <small>이메일</small><b>강의 · 협업 문의</b><span>dakkang27da@gmail.com</span>
+      </a>
+    </div>
+  </section>
+
+  <a class="back" href="../">
+    <div><b>kimju.zip 앱 목록 바로가기</b><p>교육용 웹앱 무료 공개 중</p></div>
+    <span class="btn">앱 보러 가기 →</span>
+  </a>
+</main>
+<footer>© 2026 kimju.zip — 불편함을 코딩으로 해결하는 체육교사</footer>
+</body>
+</html>
