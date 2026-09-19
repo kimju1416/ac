@@ -203,7 +203,7 @@ details.steps li b{color:var(--ink)}
 :focus-visible{outline:2px solid #3E7BC7;outline-offset:2px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 @media(max-width:900px){
-  .nav nav{display:none}.nav .right .hide-m{display:none}
+  .nav{gap:18px}.nav nav{gap:16px}.nav nav a,.nav nav button{font-size:14.5px}.nav .right .hide-m{display:none}
   .hero{grid-template-columns:1fr;gap:34px;padding:34px 0 40px}
   .me,.visits{justify-self:center;max-width:340px}.visits{justify-content:center}
   .feat{grid-template-columns:1fr;padding:22px;gap:20px}.feat .shot{order:-1}.feat h2{font-size:26px}
@@ -216,6 +216,7 @@ details.steps li b{color:var(--ink)}
   .sheet .pv{padding:14px 14px 0;background:#fff}.sheet .bd{padding:14px 18px 22px}
   .sheet h3{font-size:22px}
 }
+@media(max-width:560px){.hide-s{display:none!important}}
 @media(max-width:600px){.row{grid-template-columns:1fr 1fr}.row .rk:first-child{grid-column:1/-1}}
 @media(max-width:430px){.me,.visits{max-width:270px}.grid{grid-template-columns:1fr}h1{font-size:33px}.lead{font-size:16.5px}}
 </style>
@@ -242,7 +243,7 @@ details.steps li b{color:var(--ink)}
   <div class="right">
     <a class="btn hide-m" href="https://www.threads.net/@kimju.zip" target="_blank" rel="noopener">Threads</a>
     <a class="btn iconbtn hide-m" href="https://instagram.com/kimju.zip" target="_blank" rel="noopener" aria-label="Instagram @kimju.zip"><svg class="ic"><use href="#i-insta"/></svg></a>
-    <button class="btn dark" type="button" onclick="openBoard('건의')">앱 요청하기</button>
+    <button class="btn dark hide-s" type="button" onclick="openBoard('건의')">앱 요청하기</button>
   </div>
 </div></header>
 
@@ -310,7 +311,7 @@ details.steps li b{color:var(--ink)}
     </div>
     <div class="form">
       <div class="ftags" id="ftags"></div>
-      <input id="fbName" maxlength="20" placeholder="이름 (선택 · 비우면 '익명의 선생님'으로 올라갑니다)">
+      <input id="fbName" maxlength="20" placeholder="이름 (선택 · 비우면 익명)">
       <textarea id="fbContent" maxlength="500" placeholder="한 줄이어도 좋습니다. 어떤 앱이 필요하신가요?"></textarea>
       <div class="send"><button class="btn dark" id="fbSubmit" type="button" onclick="submitPost()">등록하기</button></div>
     </div>
