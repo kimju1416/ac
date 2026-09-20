@@ -515,7 +515,7 @@ function kindOf(a){
   if(a.badge === 'doc') return 'doc';
   return 'web';
 }
-const KIND_LABEL = {td2:'Windows 앱', exe:'Windows 앱', sheet:'구글 시트 앱', guide:'설치형 앱', game:'게임', prompt:'AI 프롬프트', as:'챗봇', doc:'자료', web:'웹앱'};
+const KIND_LABEL = {td2:'Windows 앱', exe:'Windows 앱', sheet:'GAS 앱', guide:'설치형 앱', game:'게임', prompt:'AI 프롬프트', as:'챗봇', doc:'자료', web:'웹앱'};
 
 /* ─── 인기 순위 (Supabase app_clicks, 실패하면 아래 순서) ─── */
 let RANK = {};
@@ -639,8 +639,8 @@ function openApp(name){
 function openInstall(){
   scrim.classList.add('install');
   sheet.innerHTML = `<button class="x" type="button" onclick="closeSheet()" aria-label="닫기"><svg class="ic"><use href="#i-x"/></svg></button>
-    <div class="bd"><div class="chips"><span class="kd">구글 시트 앱</span></div><h3 id="sheetTitle">시트 앱 설치 방법</h3>
-    <p class="ds">목록에서 «구글 시트 앱»이라고 적힌 앱은 이 순서대로 설치합니다. 누르자마자 열리는 웹앱·게임은 설치 없이 바로 쓰시면 돼요.</p>
+    <div class="bd"><div class="chips"><span class="kd">GAS 앱</span></div><h3 id="sheetTitle">GAS 앱 설치 방법</h3>
+    <p class="ds">목록에서 «GAS 앱»이라고 적힌 앱은 이 순서대로 설치합니다. 누르자마자 열리는 웹앱·게임은 설치 없이 바로 쓰시면 돼요.</p>
     ${STEPS.replace('<details class="steps">','<details class="steps" open>')}</div>`;
   showSheet();
 }
