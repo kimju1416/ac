@@ -586,9 +586,39 @@ const wantOf = a => { const m = (DATA.meta || []).find(x => x.app === a); return
 const LIFE_KEY = 'ops.life.v1';
 function lifeCacheRead() { try { const j = JSON.parse(localStorage.getItem(LIFE_KEY) || 'null'); return (j && j.full && j.upto && j.life) ? j : null; } catch (e) { return null; } }
 function lifeCacheWrite(upto, life) { try { localStorage.setItem(LIFE_KEY, JSON.stringify({ full: true, upto, life })); } catch (e) { } }
+/* 🔴 «첫날·마지막날»은 서버가 세어 주는 편이 압도적으로 싸다.
+   컴퓨터 한 대가 하루 한 줄이라 2년치면 수십만 줄인데, 정작 필요한 것은 대당 두 날짜뿐이다.
+   PostgREST 집계(day.min()·day.max())를 쓰면 **대수만큼(수천 줄)** 만 받으면 된다.
+   ⚠️ 집계를 막아 둔 설정도 있어, 실패하거나 설치 수가 집계표와 크게 어긋나면 옛 방식(전수 훑기)으로 되돌아간다. */
+async function lifeByAggregate() {
+  const got = await pageAll((a, b) => sb.from('app_ping').select('app,install_id,first:day.min(),last:day.max()')
+    .order('install_id', { ascending: true }).range(a, b), { cap: 60000, par: 4, onPage: n => { DATA.lifeReading = n; drawSlowNote(); } });
+  if (got.bad || !got.rows.length) return null;
+  const r0 = got.rows[0];
+  if (!r0 || r0.first == null || r0.last == null) return null;      // 집계가 안 먹은 응답
+  const life = {};
+  got.rows.forEach(r => { life[r.app + '|' + r.install_id] = { app: r.app, first: r.first, last: r.last }; });
+  // 설치 수가 집계 뷰와 크게 어긋나면 믿지 않는다(줄이 잘렸거나 묶음이 어긋난 것)
+  for (const row of (DATA.sum || [])) {
+    const mine = Object.keys(life).filter(k => life[k].app === row.app).length;
+    if (row.installs && Math.abs(mine - row.installs) > Math.max(20, row.installs * 0.05)) return null;
+  }
+  return life;
+}
+
 async function computeLife() {
   const cached = lifeCacheRead(), life = {};
   let readRows = 0, partial = false;
+  if (!cached) {
+    const agg = await lifeByAggregate();
+    DATA.lifeReading = null;
+    if (agg) {
+      DATA.life = agg; DATA.slowRead = Object.keys(agg).length; DATA.slowCached = false; DATA.lifeAgg = true;
+      lifeCacheWrite(kstToday(), agg);
+      if (DATA.nw === null || DATA.idle === null) { DATA.slow = true; fillFromLife(agg); }
+      return;
+    }
+  }
   if (cached) for (const k of Object.keys(cached.life)) life[k] = { ...cached.life[k] };
   /* 🔴 정렬을 못 박는다 — 없으면 쪽 경계에서 줄이 겹치거나 빠질 수 있다(순서 미보장).
      기억해 둔 날 **이후만** 읽되 그날 하루는 다시 읽는다(그날 중간에 멈췄을 수 있다). */
@@ -611,6 +641,11 @@ async function computeLife() {
   // 뷰가 있으면 그대로 쓴다 — 없을 때만 이 값으로 메운다(그 사실은 화면에 적는다)
   if (DATA.nw !== null && DATA.idle !== null) return;
   DATA.slow = true;
+  fillFromLife(life);
+}
+
+/* 뷰(v_app_new·v_app_idle)가 없을 때 그 자리를 메운다 — 이미 센 첫날·마지막날이면 충분하다 */
+function fillFromLife(life) {
   const today = kstToday(), from30 = dayShift(today, -29);
   const c7 = dayShift(today, -7), c14 = dayShift(today, -14), c30 = dayShift(today, -30);
   const newBy = {}, idleBy = {};
@@ -666,10 +701,40 @@ function errMix(r) {
 async function loadPings(app) {
   if (PINGS[app]) { if (app === cur) drawPingParts(); return; }
   PINGS[app] = { loading: true };
-  const since = dayShift(kstToday(), -13);
-  const got = await pageAll((a, b) => sb.from('app_ping').select('day,version,os,install_id')
-    .eq('app', app).gte('day', since).order('id', { ascending: true }).range(a, b), { cap: 60000 });
-  PINGS[app] = got.bad ? { fail: true } : { rows: got.rows, cut: got.partial };
+  const since = dayShift(kstToday(), -13), week = dayShift(kstToday(), -6);
+  /* 🔴 예전엔 14일치 핑을 통째로(만 줄 단위) 끌어왔다. 정작 쓰는 것은 «날짜×판 개수»와
+     «컴퓨터마다 마지막 OS»뿐이라, 서버에서 세어 오면 줄이 백 단위로 줄어든다.
+     ⚠️ 집계를 못 쓰는 서버 설정도 있어 실패하면 예전 방식으로 조용히 되돌아간다. */
+  const agg = await pageAll((a, b) => sb.from('app_ping').select('day,version,n:install_id.count()')
+    .eq('app', app).gte('day', since).order('day', { ascending: true }).range(a, b), { cap: 20000, par: 2 });
+  if (!agg.bad && agg.rows.length && agg.rows[0] && agg.rows[0].n != null) {
+    const byDay = {};
+    agg.rows.forEach(r => { const b = byDay[r.day] || (byDay[r.day] = { all: 0, v: {} }); b.all += r.n; if (isVer(r.version)) b.v[r.version] = (b.v[r.version] || 0) + r.n; });
+    const osAgg = await pageAll((a, b) => sb.from('app_ping').select('install_id,os,last:day.max()')
+      .eq('app', app).gte('day', week).order('install_id', { ascending: true }).range(a, b), { cap: 40000, par: 4 });
+    const osBy = {};
+    if (!osAgg.bad) {
+      const pick = {};
+      osAgg.rows.forEach(r => { const k = r.install_id; if (!pick[k] || r.last > pick[k].last) pick[k] = r; });
+      Object.keys(pick).forEach(k => { const n = osName(pick[k].os); osBy[n] = (osBy[n] || 0) + 1; });
+    }
+    PINGS[app] = { byDay, osBy, cut: agg.partial };
+  } else {
+    const got = await pageAll((a, b) => sb.from('app_ping').select('day,version,os,install_id')
+      .eq('app', app).gte('day', since).order('id', { ascending: true }).range(a, b), { cap: 60000 });
+    if (got.bad) PINGS[app] = { fail: true };
+    else {
+      const byDay = {}, last = {};
+      got.rows.forEach(r => {
+        const b = byDay[r.day] || (byDay[r.day] = { all: 0, v: {} }); b.all++;
+        if (isVer(r.version)) b.v[r.version] = (b.v[r.version] || 0) + 1;
+        if (r.day >= week && (!last[r.install_id] || r.day > last[r.install_id].day)) last[r.install_id] = r;
+      });
+      const osBy = {};
+      Object.keys(last).forEach(k => { const n = osName(last[k].os); osBy[n] = (osBy[n] || 0) + 1; });
+      PINGS[app] = { byDay, osBy, cut: got.partial, raw: true };
+    }
+  }
   if (app === cur) drawPingParts();
 }
 
@@ -711,14 +776,25 @@ function series() {
   only(DATA.nw).forEach(r => { nb[r.day] = (nb[r.day] || 0) + (r.news || 0); });
   const today = kstToday(), out = [];
   for (let i = 29; i >= 0; i--) { const d = dayShift(today, -i); out.push({ day: d, users: by[d] || 0, news: nb[d] || 0, today: d === today, wd: wdOf(d) }); }
-  // 7일 이동평균 — 오늘은 아직 하루가 안 끝나 넣지 않는다
+  /* 이동평균은 **평일 5일**로 센다. 🔴 토·일을 섞으면 평균이 통째로 눌려(주말은 평일의 10%대)
+     «줄었다»가 늘 뜬다 — 형님 «특성상 토일은 무조건 빼야 돼». 오늘은 아직 안 끝나 넣지 않는다. */
   out.forEach((p, i) => {
-    if (p.today || i < 6) return;
-    let s = 0; for (let j = i - 6; j <= i; j++) s += out[j].users; p.ma = s / 7;
+    if (p.today || p.wd === 0 || p.wd === 6) return;
+    const back = [];
+    for (let j = i; j >= 0 && back.length < 5; j--) if (out[j].wd > 0 && out[j].wd < 6 && !out[j].today) back.push(out[j].users);
+    if (back.length === 5) p.ma = back.reduce((x, y) => x + y, 0) / 5;
   });
   return out;
 }
-const avgRange = (s, a, b) => { const xs = s.slice(a, b).map(p => p.users); return xs.length ? xs.reduce((x, y) => x + y, 0) / xs.length : 0; };
+/* 평일만 골라 최근 n 영업일 평균 — skip 만큼 건너뛰면 «그 앞 n 영업일»이 된다.
+   오늘은 진행 중이라 언제나 뺀다. 공휴일은 가릴 길이 없어 평일로 세어진다(그 주는 낮게 나온다). */
+function weekdays(s) { return s.filter(p => !p.today && p.wd > 0 && p.wd < 6).map(p => p.users); }
+function avgWd(s, n, skip = 0) {
+  const w = weekdays(s), cut = w.slice(Math.max(0, w.length - n - skip), w.length - skip);
+  return cut.length ? cut.reduce((x, y) => x + y, 0) / cut.length : 0;
+}
+const lastWd = s => { const w = s.filter(p => !p.today && p.wd > 0 && p.wd < 6); return w[w.length - 1] || {}; };
+function sameWdPrevWeek(s, day) { const i = s.findIndex(p => p.day === day); return i >= 7 ? s[i - 7] : {}; }
 
 function delta(nowV, prevV, goodUp = true, unit = '%') {
   if (!prevV) return '<span class="eq">비교할 자료 없음</span>';
@@ -769,9 +845,9 @@ function drawSync() {
 
 function drawKpis() {
   const sm = only(DATA.sum)[0] || {};
-  const s = series(), n = s.length;             // s[n-1] = 오늘, s[n-2] = 어제
-  const y = s[n - 2] || {}, y8 = s[n - 9] || {};
-  const a7 = avgRange(s, n - 8, n - 1), p7 = avgRange(s, n - 15, n - 8);
+  const s = series(), n = s.length;
+  const y = lastWd(s), y8 = sameWdPrevWeek(s, y.day);          // 마지막 평일 · 지난주 같은 요일
+  const a7 = avgWd(s, 5), p7 = avgWd(s, 5, 5);                  // 최근 5영업일 · 그 앞 5영업일
   const nw7 = s.slice(n - 7).reduce((x, p) => x + p.news, 0), nwP = s.slice(n - 14, n - 7).reduce((x, p) => x + p.news, 0);
   const R = reachOf(cur);
   const ret = only(DATA.ret)[0];
@@ -781,9 +857,9 @@ function drawKpis() {
   const e7 = (eRaw || []).filter(r => r.app === cur && kstDay(r.created_at) >= dayShift(kstToday(), -6)).length;
   const u7 = s.slice(n - 7).reduce((x, p) => x + p.users, 0);
   const K = [
-    { l: '어제 쓰신 분', v: fmt(y.users), d: `${delta(y.users, y8.users)} 지난주 ${y.day ? WD[y.wd] + '요일' : ''} 대비`, t: 'use' },
-    { l: '하루 평균 · 최근 7일', v: fmt(Math.round(a7)), d: `${delta(a7, p7)} 앞 7일 대비`, t: 'use' },
-    { l: '최근 7일 쓰신 컴퓨터', v: fmt(sm.week), d: `꾸준함(하루/주) ${pct(a7, sm.week)} · 오늘 지금까지 ${fmt(sm.today)}`, t: 'use' },
+    { l: `마지막 평일 (${y.day ? md(y.day) + ' ' + WD[y.wd] : '—'})`, v: fmt(y.users), d: `${delta(y.users, y8.users)} 지난주 같은 요일(${fmt(y8.users)}) 대비`, t: 'use' },
+    { l: '평일 하루 평균 · 5영업일', v: fmt(Math.round(a7)), d: `${delta(a7, p7)} 앞 5영업일(${fmt(Math.round(p7))}) 대비`, t: 'use' },
+    { l: '최근 7일 쓰신 컴퓨터', v: fmt(sm.week), d: `꾸준함(평일 평균/주) ${pct(a7, sm.week)} · 오늘 지금까지 ${fmt(sm.today)}`, t: 'use' },
     { l: '누적 설치', v: fmt(sm.installs), d: id && id.total ? `최근 7일 안에 켜진 곳 ${pct(id.total - id.idle7, id.total)}` : '', t: 'use' },
     { l: '새로 오신 분 · 최근 7일', v: fmt(nw7), d: `${delta(nw7, nwP)} 앞 7일(${fmt(nwP)}) 대비`, t: 'use' },
     { l: '낸 판 도달', v: R.want ? pct(R.onWant, R.tot) : '—', d: R.want ? `v${esc(R.want)} · ${fmt(R.onWant)} / ${fmt(R.tot)}대` : '판 번호 없음', t: 'dep' },
@@ -797,8 +873,8 @@ function drawKpis() {
 /* 살펴볼 것 — 숫자를 보고 사람이 하던 판단을 문장으로. 규칙은 단순하게, 단정은 피한다 */
 function drawInsights() {
   const L = [];
-  const s = series(), n = s.length;
-  const a7 = avgRange(s, n - 8, n - 1), p7 = avgRange(s, n - 15, n - 8);
+  const s = series();
+  const a7 = avgWd(s, 5), p7 = avgWd(s, 5, 5);
   const R = reachOf(cur), rel = (DATA.rel[cur] || {});
   if (R.want && R.tot) {
     const days = rel.ok && rel.at ? Math.max(0, Math.floor((Date.now() - new Date(rel.at)) / 864e5)) : null;
@@ -810,7 +886,7 @@ function drawInsights() {
   if (p7 >= 20) {
     const ch = (a7 - p7) / p7;
     if (Math.abs(ch) >= .1) L.push({ lv: ch < 0 ? 'warn' : 'ok', t: 'use',
-      tx: `하루 평균 사용자가 앞 7일보다 <b>${Math.abs(Math.round(ch * 100))}% ${ch < 0 ? '줄었습니다' : '늘었습니다'}</b>(${fmt(Math.round(p7))} → ${fmt(Math.round(a7))}).` + (ch < 0 ? ' 연휴·방학·주말이 끼었는지 먼저 보십시오.' : '') });
+      tx: `평일 하루 평균이 앞 5영업일보다 <b>${Math.abs(Math.round(ch * 100))}% ${ch < 0 ? '줄었습니다' : '늘었습니다'}</b>(${fmt(Math.round(p7))} → ${fmt(Math.round(a7))}). 주말은 빼고 셉니다.` + (ch < 0 ? ' 연휴·방학이 끼었는지 먼저 보십시오.' : '') });
   }
   const errs = only(DATA.err);
   const fresh = errs.filter(freshErr);
@@ -911,14 +987,14 @@ function drawDau(el, compact) {
   });
   const pts = s.map((p, i) => p.ma == null ? null : [f.L + pw * i + pw / 2, Y(p.ma)]).filter(Boolean);
   const line = pts.length > 1 ? `<path d="M${pts.map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join('L')}" fill="none" stroke="var(--tx)" stroke-width="2" stroke-linejoin="round" opacity=".7"/>` : '';
-  const n = s.length, a7 = avgRange(s, n - 8, n - 1);
+  const a7 = avgWd(s, 5);
   const nw30 = s.reduce((x, p) => x + p.news, 0);
-  $(el).innerHTML = `<div class="lg"><span><i style="background:var(--s1)"></i>쓰던 분</span><span><i style="background:var(--s2)"></i>새로 오신 분</span><span><i class="ln" style="background:var(--tx);opacity:.7"></i>7일 평균</span><span class="sp"></span><span>주말은 옅게 · 오늘은 점선(진행 중)</span></div>
+  $(el).innerHTML = `<div class="lg"><span><i style="background:var(--s1)"></i>쓰던 분</span><span><i style="background:var(--s2)"></i>새로 오신 분</span><span><i class="ln" style="background:var(--tx);opacity:.7"></i>평일 5일 평균</span><span class="sp"></span><span>주말은 옅게 · 오늘은 점선(진행 중)</span></div>
     <svg height="${f.H}" viewBox="0 0 ${f.W} ${f.H}">${yGrid(f, max)}<line class="base" x1="${f.L}" x2="${f.W - f.R}" y1="${base}" y2="${base}"/>${bars}${line}<g class="axis">${lbl}</g>${hits}</svg>
-    ${compact ? '' : `<div class="cap">어제까지 7일 하루 평균 <b>${fmt(Math.round(a7))}명</b> · 30일 동안 새로 오신 분 <b>${fmt(nw30)}대</b>. 주황이 줄어드는데 파랑이 그대로면 새 분은 안 오고 쓰던 분들이 버티는 중입니다.</div>`}`;
+    ${compact ? '' : `<div class="cap">최근 5영업일 평균 <b>${fmt(Math.round(a7))}명</b> <span class="mut">(토·일 뺀 값)</span> · 30일 동안 새로 오신 분 <b>${fmt(nw30)}대</b>. 주황이 줄어드는데 파랑이 그대로면 새 분은 안 오고 쓰던 분들이 버티는 중입니다.</div>`}`;
   attachTip($(el), s.length, i => {
     const p = s[i];
-    return `<b>${md(p.day)} (${WD[p.wd]})${p.today ? ' · 진행 중' : ''}</b><br><i style="background:var(--s1)"></i>쓰신 분 ${fmt(p.users)}명<br><i style="background:var(--s2)"></i>그중 새로 ${fmt(p.news)}` + (p.ma != null ? `<br>7일 평균 ${fmt(Math.round(p.ma))}` : '');
+    return `<b>${md(p.day)} (${WD[p.wd]})${p.today ? ' · 진행 중' : ''}</b><br><i style="background:var(--s1)"></i>쓰신 분 ${fmt(p.users)}명<br><i style="background:var(--s2)"></i>그중 새로 ${fmt(p.news)}` + (p.ma != null ? `<br>평일 5일 평균 ${fmt(Math.round(p.ma))}` : '');
   });
 }
 
@@ -957,11 +1033,9 @@ function osName(o) {
 }
 function drawOs() {
   const P = PINGS[cur];
-  if (!P || P.loading) { $('#os').innerHTML = '<div class="mut">불러오는 중…</div>'; return; }
+  if (!P || P.loading) { $('#os').innerHTML = '<div class="mut">세는 중…</div>'; return; }
   if (P.fail) { $('#os').innerHTML = '<div class="mut">핑 원본을 읽지 못했습니다.</div>'; return; }
-  const since = dayShift(kstToday(), -6), last = {};
-  P.rows.forEach(r => { if (r.day >= since && (!last[r.install_id] || r.day > last[r.install_id].day)) last[r.install_id] = r; });
-  const by = {}; Object.values(last).forEach(r => { const k = osName(r.os); by[k] = (by[k] || 0) + 1; });
+  const by = P.osBy || {};
   const tot = Object.values(by).reduce((a, b) => a + b, 0);
   const rows = Object.entries(by).sort((a, b) => b[1] - a[1]).slice(0, 6);
   if (!tot) { $('#os').innerHTML = '<div class="mut">최근 7일 자료가 없습니다.</div>'; return; }
@@ -976,8 +1050,15 @@ function drawAdopt() {
   if (!want) { $(el).innerHTML = '<div class="empty">최신 판 번호가 없어 견줄 수 없습니다.</div>'; return; }
   if (!P || P.loading) { $(el).innerHTML = '<div class="mut">핑 원본을 읽는 중…</div>'; return; }
   if (P.fail) { $(el).innerHTML = '<div class="empty">핑 원본을 읽지 못했습니다.</div>'; return; }
+  // 날짜마다 «몇 대가 켰고, 그중 낸 판·자동 설치 가능 판이 몇 대인가»
   const by = {};
-  P.rows.forEach(r => { const b = by[r.day] || (by[r.day] = { all: 0, on: 0, auto: 0 }); b.all++; if (isVer(r.version) && cmpVer(r.version, want) >= 0) b.on++; if (isVer(r.version) && cmpVer(r.version, AUTO_FROM[cur] || '0') >= 0) b.auto++; });
+  Object.keys(P.byDay || {}).forEach(d => {
+    const src = P.byDay[d], b = by[d] = { all: src.all, on: 0, auto: 0 };
+    Object.keys(src.v).forEach(v => {
+      if (cmpVer(v, want) >= 0) b.on += src.v[v];
+      if (cmpVer(v, AUTO_FROM[cur] || '0') >= 0) b.auto += src.v[v];
+    });
+  });
   const days = Object.keys(by).sort();
   const firstOn = days.find(d => by[d].on > 0);
   const from = firstOn ? days.indexOf(firstOn) : days.length;
@@ -1414,18 +1495,18 @@ function lineChart(el, series, opt) {
 /* ─── 사용 탭 · 참여 지표 ─── */
 const CALC = '<div class="empty">원본을 읽어 세는 중입니다… 잠시 뒤 채워집니다.</div>';
 function drawUseKpis() {
-  const g = growth(cur), sm = only(DATA.sum)[0] || {}, s = series(), n = s.length;
+  const g = growth(cur), sm = only(DATA.sum)[0] || {}, s = series();
   if (!g) { $('#useKpis').innerHTML = `<div class="kpi" style="grid-column:1/-1">${CALC}</div>`; return; }
-  const a7 = avgRange(s, n - 8, n - 1);
+  const a7 = avgWd(s, 5), p7 = avgWd(s, 5, 5);
   const K = [
     { l: '오늘 (지금까지)', v: fmt(sm.today), d: '자정에 초기화됩니다' },
     { l: '최근 7일에 켠 곳', v: fmt(g.wau), d: `누적 설치의 ${pct(g.wau, g.total)}` },
     { l: '최근 30일에 켠 곳', v: fmt(g.mau), d: `누적 설치의 ${pct(g.mau, g.total)}` },
-    { l: '하루 평균 ÷ 7일', v: pct(a7, g.wau), d: '한 주에 며칠 켜시는가(꾸준함)' },
+    { l: '평일 평균 ÷ 7일 사용', v: pct(a7, g.wau), d: '한 주에 며칠 켜시는가(꾸준함)' },
     { l: '7일 ÷ 30일', v: pct(g.wau, g.mau), d: '달 안에 다시 오시는 비율' },
     { l: '설치 대비 7일 사용률', v: pct(g.wau, g.total), d: `${fmt(g.wau)} / ${fmt(g.total)}대` },
     { l: '30일 넘게 조용', v: pct(g.idle30, g.total), d: `${fmt(g.idle30)}대 — 지웠는지는 알 수 없습니다` },
-    { l: '하루 평균 · 최근 7일', v: fmt(Math.round(a7)), d: '어제까지 온전한 7일' }
+    { l: '평일 하루 평균', v: fmt(Math.round(a7)), d: `최근 5영업일 · 앞 5영업일 ${fmt(Math.round(p7))} ${delta(a7, p7)}` }
   ];
   $('#useKpis').innerHTML = K.map(k => `<div class="kpi"><div class="l">${k.l}</div><div class="v">${k.v}</div><div class="d">${k.d}</div></div>`).join('');
 }
@@ -1549,8 +1630,7 @@ function drawSpeed() {
   if (P.fail) { $(el).innerHTML = '<div class="empty">핑 원본을 읽지 못했습니다.</div>'; return; }
   if (!rs || rs.loading) { $(el).innerHTML = '<div class="mut">릴리스 목록을 읽는 중…</div>'; return; }
   if (rs.fail || !rs.length) { $(el).innerHTML = `<div class="empty">릴리스 목록을 읽지 못해 견줄 수 없습니다${rs.fail ? ' — ' + esc(rs.fail) : ''}.</div>`; return; }
-  const byDay = {};
-  P.rows.forEach(r => { const b = byDay[r.day] || (byDay[r.day] = { all: 0, v: {} }); b.all++; if (isVer(r.version)) b.v[r.version] = (b.v[r.version] || 0) + 1; });
+  const byDay = P.byDay || {};
   const days = Object.keys(byDay).sort();
   // 핑이 있는 기간 안에 나온 판만 — 최대 3판(색각 검사를 통과한 계열 수)
   const pick = rs.filter(r => r.at && kstDay(r.at) >= days[0]).slice(0, 3).reverse();
@@ -1605,7 +1685,7 @@ function csv(name, head, rows) {
 document.querySelectorAll('[data-csv]').forEach(b => b.addEventListener('click', () => {
   if (!DATA) return;
   const k = b.dataset.csv;
-  if (k === 'daily') csv('daily', ['날짜', '요일', '쓰신 분', '새로 오신 분', '7일 평균'], series().map(p => [p.day, WD[p.wd], p.users, p.news, p.ma == null ? '' : Math.round(p.ma)]));
+  if (k === 'daily') csv('daily', ['날짜', '요일', '쓰신 분', '새로 오신 분', '평일 5일 평균'], series().map(p => [p.day, WD[p.wd], p.users, p.news, p.ma == null ? '' : Math.round(p.ma)]));
   if (k === 'ver') csv('versions', ['버전', '대수'], only(DATA.ver).map(r => [r.version, r.machines]));
   if (k === 'weekly') csv('weekly', ['주 시작', '새로 온 곳', '조용해진 곳(추정)', '순증'], weekSeries(26).map(w => [w.w, w.nw, w.part ? '' : w.ch, w.part ? '' : w.nw - w.ch]));
   if (k === 'err') csv('errors', ['처음', '마지막', '내용', '횟수', '대수', '제일 많은 판'], only(DATA.err).map(r => { const m = errMix(r); return [r.first_at, r.last_at, r.sample, r.hits, r.machines, m ? m.top : r.version]; }));
