@@ -516,16 +516,36 @@ async function load() {
     ...Object.keys(APPS).map(a => ghLatest(REL[a]))
   ]);
   const relBy = {}; Object.keys(APPS).forEach((a, i) => { relBy[a] = rel[i]; });
-  DATA = { sum, daily, fb, ver, ret, err, nt, nw, idle, meta: meta || [], rel: relBy, sync: {}, errRaw: [], slow: false, life: null };
-  /* 전 기간 성장·이탈은 뷰에 없다 — 핑 원본에서 컴퓨터마다 첫날·마지막날을 세어 만든다.
-     한 번 센 것은 기억해 두고 다음부터는 그날 이후만 읽는다(실측 12,185줄 → 65줄). */
-  await computeLife();
-  await errRaw();   // 판 섞임·날짜별 그래프 — 늘 센다(조건부로 부르면 조용히 멎는다, 09-09)
+  DATA = { sum, daily, fb, ver, ret, err, nt, nw, idle, meta: meta || [], rel: relBy, sync: {}, errRaw: null, slow: false, life: null };
+  /* 🔴 여기서 멈추지 않는다 — 뷰 열 개는 한 번씩이라 금방 오지만, **원본을 훑는 것(핑 전 기간·오류 30일)은
+     오래 걸린다.** 예전에는 그것까지 기다렸다가 그리는 바람에 화면이 한참 하얬다(형님 «너무너무 느린데»).
+     먼저 그리고, 무거운 셈은 뒤에서 돌리며 끝나는 대로 그 칸만 다시 그린다. */
   await syncLatest();
   drawPick(); drawAll();
   DIAG.done = false; if (TAB === 'sys') drawDiag();
   $('#asof').textContent = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) + ' 기준';
   delete PINGS[cur]; loadPings(cur);
+  errRaw().then(() => { drawErrors(); drawErrRate(); drawInsights(); drawKpis(); if (TAB === 'err') drawErrChart(); });
+  computeLife().then(() => { drawUseKpis(); drawGrowKpis(); drawSpan(); drawCohort(); drawInsights(); drawSlowNote(); if (TAB === 'grow') { drawWeekly(); drawCum(); } });
+}
+
+/* 원본을 여러 쪽으로 끊어 읽되 **여섯 쪽씩 한꺼번에** 묻는다.
+   한 쪽씩 차례로 기다리면 쪽수만큼 왕복이 쌓여 첫 화면이 그만큼 늦어진다.
+   개수를 미리 세지 않는 까닭: count 질의 자체가 큰 표에서 느리다 — 짧은 쪽이 나오면 거기서 끝낸다. */
+async function pageAll(make, { step = 1000, par = 6, cap = 200000, onPage } = {}) {
+  const rows = []; let from = 0, done = false, bad = false;
+  while (!done && !bad && from < cap) {
+    const got = await Promise.all(Array.from({ length: par }, (_, i) => make(from + i * step, from + (i + 1) * step - 1)));
+    for (const g of got) {
+      if (g.error) { bad = true; break; }
+      const d = g.data || [];
+      rows.push(...d);
+      if (d.length < step) { done = true; break; }
+    }
+    from += step * par;
+    if (onPage) onPage(rows.length);
+  }
+  return { rows, bad, partial: !done && !bad };
 }
 
 /* ─── 판 번호 맞추기 ───
@@ -570,22 +590,20 @@ async function computeLife() {
   const cached = lifeCacheRead(), life = {};
   let readRows = 0, partial = false;
   if (cached) for (const k of Object.keys(cached.life)) life[k] = { ...cached.life[k] };
-  const STEP = 1000, CAP = 120000;
-  for (let from = 0; from < CAP; from += STEP) {
+  /* 🔴 정렬을 못 박는다 — 없으면 쪽 경계에서 줄이 겹치거나 빠질 수 있다(순서 미보장).
+     기억해 둔 날 **이후만** 읽되 그날 하루는 다시 읽는다(그날 중간에 멈췄을 수 있다). */
+  const got = await pageAll((a, b) => {
     let q = sb.from('app_ping').select('app,install_id,day').order('day', { ascending: true }).order('id', { ascending: true });
     if (cached) q = q.gte('day', cached.upto);
-    const { data, error } = await q.range(from, from + STEP - 1);
-    if (error) { partial = true; break; }
-    if (!data || !data.length) break;
-    readRows += data.length;
-    for (const r of data) {
-      const k = r.app + '|' + r.install_id, v = life[k];
-      if (!v) life[k] = { app: r.app, first: r.day, last: r.day };
-      else { if (r.day < v.first) v.first = r.day; if (r.day > v.last) v.last = r.day; }
-    }
-    if (data.length < STEP) break;
-    if (from + STEP >= CAP) partial = true;
+    return q.range(a, b);
+  }, { cap: 300000, onPage: n => { DATA.lifeReading = n; drawSlowNote(); } });
+  readRows = got.rows.length; partial = got.bad || got.partial;
+  for (const r of got.rows) {
+    const k = r.app + '|' + r.install_id, v = life[k];
+    if (!v) life[k] = { app: r.app, first: r.day, last: r.day };
+    else { if (r.day < v.first) v.first = r.day; if (r.day > v.last) v.last = r.day; }
   }
+  DATA.lifeReading = null;
   DATA.slowRead = readRows; DATA.slowCached = !!cached;
   DATA.life = life;
   if (!Object.keys(life).length) { DATA.nw = DATA.nw || []; DATA.idle = DATA.idle || []; return; }
@@ -611,14 +629,9 @@ async function computeLife() {
       «낸 판에서도 남»으로 읽혔다(2026-09-09). 판별 건수를 늘 센다. 날짜별 그래프도 여기서 나온다. */
 async function errRaw() {
   const since = new Date(Date.now() - 31 * 864e5).toISOString();
-  const rows = [];
-  for (let from = 0; from < 16000; from += 1000) {
-    const { data, error } = await sb.from('app_error').select('app,sig,created_at,version,install_id')
-      .gte('created_at', since).order('id', { ascending: true }).range(from, from + 999);
-    if (error || !data || !data.length) break;
-    rows.push(...data);
-    if (data.length < 1000) break;
-  }
+  const got = await pageAll((a, b) => sb.from('app_error').select('app,sig,created_at,version,install_id')
+    .gte('created_at', since).order('id', { ascending: true }).range(a, b), { cap: 40000 });
+  const rows = got.rows;
   DATA.errRaw = rows;
   const min = {}, mix = {}, days = {};
   rows.forEach(r => {
@@ -654,17 +667,9 @@ async function loadPings(app) {
   if (PINGS[app]) { if (app === cur) drawPingParts(); return; }
   PINGS[app] = { loading: true };
   const since = dayShift(kstToday(), -13);
-  const head = await sb.from('app_ping').select('id', { count: 'exact', head: true }).eq('app', app).gte('day', since);
-  const total = Math.min(head.count || 0, 40000);
-  const pages = []; for (let f = 0; f < total; f += 1000) pages.push(f);
-  const rows = []; let bad = !!head.error;
-  for (let i = 0; i < pages.length && !bad; i += 6) {
-    const got = await Promise.all(pages.slice(i, i + 6).map(f =>
-      sb.from('app_ping').select('day,version,os,install_id').eq('app', app).gte('day', since)
-        .order('id', { ascending: true }).range(f, f + 999)));
-    got.forEach(g => { if (g.error) bad = true; else rows.push(...(g.data || [])); });
-  }
-  PINGS[app] = bad ? { fail: true } : { rows, cut: (head.count || 0) > 40000 };
+  const got = await pageAll((a, b) => sb.from('app_ping').select('day,version,os,install_id')
+    .eq('app', app).gte('day', since).order('id', { ascending: true }).range(a, b), { cap: 60000 });
+  PINGS[app] = got.bad ? { fail: true } : { rows: got.rows, cut: got.partial };
   if (app === cur) drawPingParts();
 }
 
@@ -772,7 +777,8 @@ function drawKpis() {
   const ret = only(DATA.ret)[0];
   const id = (DATA.idle || []).find(r => r.app === cur);
   const errs = only(DATA.err), fresh = errs.filter(freshErr).length;
-  const e7 = (DATA.errRaw || []).filter(r => r.app === cur && kstDay(r.created_at) >= dayShift(kstToday(), -6)).length;
+  const eRaw = DATA.errRaw;
+  const e7 = (eRaw || []).filter(r => r.app === cur && kstDay(r.created_at) >= dayShift(kstToday(), -6)).length;
   const u7 = s.slice(n - 7).reduce((x, p) => x + p.users, 0);
   const K = [
     { l: '어제 쓰신 분', v: fmt(y.users), d: `${delta(y.users, y8.users)} 지난주 ${y.day ? WD[y.wd] + '요일' : ''} 대비`, t: 'use' },
@@ -782,7 +788,7 @@ function drawKpis() {
     { l: '새로 오신 분 · 최근 7일', v: fmt(nw7), d: `${delta(nw7, nwP)} 앞 7일(${fmt(nwP)}) 대비`, t: 'use' },
     { l: '낸 판 도달', v: R.want ? pct(R.onWant, R.tot) : '—', d: R.want ? `v${esc(R.want)} · ${fmt(R.onWant)} / ${fmt(R.tot)}대` : '판 번호 없음', t: 'dep' },
     { l: '7일 뒤에도 쓰심', v: ret && ret.cohort7 ? pct(ret.kept7, ret.cohort7) : '—', d: ret && ret.cohort30 ? `30일 뒤 ${pct(ret.kept30, ret.cohort30)}` : '아직 자료 부족', t: 'use' },
-    { l: '오류 · 최근 7일', v: fmt(e7), d: `${fresh ? '<span class="dn">새 묶음 ' + fresh + '가지</span>' : '새 묶음 없음'} · 100명당 ${u7 ? (Math.round(e7 / u7 * 1000) / 10) : '—'}건`, t: 'err' }
+    { l: '오류 · 최근 7일', v: eRaw ? fmt(e7) : '…', d: `${fresh ? '<span class="dn">새 묶음 ' + fresh + '가지</span>' : '새 묶음 없음'} · 100명당 ${u7 ? (Math.round(e7 / u7 * 1000) / 10) : '—'}건`, t: 'err' }
   ];
   $('#kpis').innerHTML = K.map(k => `<div class="kpi link" data-t="${k.t}"><div class="l">${k.l}</div><div class="v">${k.v}</div><div class="d">${k.d}</div></div>`).join('');
   $('#kpis').querySelectorAll('.kpi').forEach(el => el.addEventListener('click', () => setTab(el.dataset.t)));
@@ -812,7 +818,7 @@ function drawInsights() {
   const hot = errs.filter(r => { const m = errMix(r); return m && m.onNew >= 5 && m.onNew / m.total >= .2; });
   if (hot.length) L.push({ lv: 'bad', t: 'err', tx: `<b>낸 판에서도 여러 번 나는 오류 ${hot.length}가지</b> — ${esc(String(hot[0].sample || '').slice(0, 60))}` });
   /* 성장은 «지금 늘고 있나»가 한 줄로 보여야 한다 — 이탈을 판정할 수 있는 마지막 주로 센다 */
-  const gg = growth(cur), wks = Object.keys(gg.weeks).sort().filter(w => dayShift(w, 6) < dayShift(kstToday(), -13));
+  const gg = growth(cur), wks = !gg ? [] : Object.keys(gg.weeks).sort().filter(w => dayShift(w, 6) < dayShift(kstToday(), -13));
   const lw = wks[wks.length - 1];
   if (lw) {
     const net = gg.weeks[lw].nw - gg.weeks[lw].ch;
@@ -833,6 +839,13 @@ function drawInsights() {
 
 function drawSlowNote() {
   const el = $('#slowNote');
+  if (!el) return;
+  /* 뒤에서 도는 중이라는 것을 적어 둔다 — 안 적으면 «성장 탭이 비었다»로 읽힌다 */
+  if (!DATA.life) {
+    el.innerHTML = `<p class="mut" style="margin:12px 0 0;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card)">
+      성장·참여 지표를 위해 핑 원본을 읽는 중입니다${DATA.lifeReading ? ` — ${fmt(DATA.lifeReading)}줄` : ''}. 화면은 그대로 쓰셔도 되고, <b>한 번 센 것은 기억해 두어 다음부터는 그날치만</b> 읽습니다.</p>`;
+    return;
+  }
   if (!DATA.slow) { el.innerHTML = ''; return; }
   el.innerHTML = `<p class="mut" style="margin:12px 0 0;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--card)">
     <b>새로 오신 분·조용한 컴퓨터</b>는 집계 뷰(<code>v_app_new</code>·<code>v_app_idle</code>)가 없어 <b>브라우저가 직접 센 값</b>입니다 — 이번에 ${fmt(DATA.slowRead)}줄 읽음.
@@ -992,6 +1005,7 @@ function drawAdopt() {
 /* 오류 날짜별 — 낸 판 / 옛 판 쌓기. 퇴근 시각 잡음 같은 «옛 판 소리»를 한눈에 가른다 */
 function drawErrChart() {
   const el = '#chErr', want = wantOf(cur);
+  if (!DATA.errRaw) { $(el).innerHTML = CALC; return; }
   const rows = (DATA.errRaw || []).filter(r => r.app === cur);
   const today = kstToday(), s = [];
   for (let i = 29; i >= 0; i--) s.push({ day: dayShift(today, -i), on: 0, old: 0, m: new Set() });
@@ -1343,7 +1357,8 @@ async function drawDiag() {
 const dnum = (a, b) => Math.round((Date.parse(b + 'T00:00:00Z') - Date.parse(a + 'T00:00:00Z')) / 864e5);
 const weekStart = s => dayShift(s, -((wdOf(s) + 6) % 7));
 function growth(app) {
-  const life = DATA.life || {}, today = kstToday();
+  if (!DATA || !DATA.life) return null;      // 아직 세는 중 — 부르는 쪽이 «계산 중»을 그린다
+  const life = DATA.life, today = kstToday();
   const rows = Object.keys(life).map(k => life[k]).filter(r => r.app === app);
   const g = { rows, total: rows.length, wau: 0, mau: 0, idle30: 0, spans: [0, 0, 0, 0], weeks: {}, months: {}, cohort: {} };
   const d7 = dayShift(today, -6), d30 = dayShift(today, -29), c30 = dayShift(today, -30);
@@ -1397,8 +1412,10 @@ function lineChart(el, series, opt) {
 }
 
 /* ─── 사용 탭 · 참여 지표 ─── */
+const CALC = '<div class="empty">원본을 읽어 세는 중입니다… 잠시 뒤 채워집니다.</div>';
 function drawUseKpis() {
   const g = growth(cur), sm = only(DATA.sum)[0] || {}, s = series(), n = s.length;
+  if (!g) { $('#useKpis').innerHTML = `<div class="kpi" style="grid-column:1/-1">${CALC}</div>`; return; }
   const a7 = avgRange(s, n - 8, n - 1);
   const K = [
     { l: '오늘 (지금까지)', v: fmt(sm.today), d: '자정에 초기화됩니다' },
@@ -1416,6 +1433,7 @@ function drawUseKpis() {
 /* ─── 성장 탭 ─── */
 function drawGrowKpis() {
   const g = growth(cur);
+  if (!g) { $('#growKpis').innerHTML = `<div class="kpi" style="grid-column:1/-1">${CALC}</div>`; return; }
   const wk = Object.keys(g.weeks).sort(), today = kstToday();
   const thisW = weekStart(today), lastW = dayShift(thisW, -7);
   const mNow = today.slice(0, 7), mPrev = dayShift(today.slice(0, 8) + '01', -1).slice(0, 7);
@@ -1439,11 +1457,13 @@ function drawGrowKpis() {
 
 function weekSeries(n) {
   const g = growth(cur), out = [], w0 = weekStart(kstToday());
+  if (!g) return out;
   for (let i = n - 1; i >= 0; i--) { const w = dayShift(w0, -7 * i), v = g.weeks[w] || { nw: 0, ch: 0 }; out.push({ w, nw: v.nw, ch: v.ch, part: i === 0 }); }
   return out;
 }
 function drawWeekly() {
   const ws = weekSeries(12);
+  if (!ws.length) { $('#chWeekly').innerHTML = CALC; return; }
   if (!ws.some(w => w.nw || w.ch)) { $('#chWeekly').innerHTML = '<div class="empty">아직 자료가 없습니다.</div>'; return; }
   const f = svgFrame('#chWeekly', 220), base = f.H - f.B;
   const max = niceMax(Math.max(...ws.map(w => Math.max(w.nw, w.ch))));
@@ -1466,7 +1486,9 @@ function drawWeekly() {
 }
 
 function drawCum() {
-  const g = growth(cur), ms = Object.keys(g.months).sort();
+  const g = growth(cur);
+  if (!g) { $('#chCum').innerHTML = CALC; return; }
+  const ms = Object.keys(g.months).sort();
   if (!ms.length) { $('#chCum').innerHTML = '<div class="empty">아직 자료가 없습니다.</div>'; return; }
   const from = ms[0], to = kstToday().slice(0, 7), xs = [], cum = [], nw = [];
   let cur2 = from, acc = 0;
@@ -1483,7 +1505,9 @@ function drawCum() {
 }
 
 function drawSpan() {
-  const g = growth(cur), L = ['하루만 켜고 안 옴', '2~6일', '7~29일', '30일 이상'];
+  const g = growth(cur);
+  if (!g) { $('#span').innerHTML = CALC; return; }
+  const L = ['하루만 켜고 안 옴', '2~6일', '7~29일', '30일 이상'];
   const tot = g.spans.reduce((a, b) => a + b, 0);
   if (!tot) { $('#span').innerHTML = '<div class="mut">아직 자료가 없습니다.</div>'; return; }
   const mx = Math.max(...g.spans);
@@ -1493,6 +1517,7 @@ function drawSpan() {
 
 function drawCohort() {
   const g = growth(cur);
+  if (!g) { $('#cohort').innerHTML = CALC; return; }
   const ms = Object.keys(g.cohort).sort().reverse().slice(0, 8);
   if (!ms.length) { $('#cohort').innerHTML = '<div class="empty">아직 자료가 없습니다.</div>'; return; }
   $('#cohort').innerHTML = `<div class="tw"><table><thead><tr><th>설치한 달</th><th class="num">새로 온 곳</th><th class="num">7일 뒤에도</th><th class="num">30일 뒤에도</th></tr></thead><tbody>${
@@ -1550,6 +1575,7 @@ function drawSpeed() {
 /* ─── 오류 탭 · 판마다 얼마나 나는가 ───
    건수만 보면 사용자가 많은 판이 늘 나쁘게 보인다. **그 판을 쓰는 대수로 나눠야** 견줄 수 있다. */
 function drawErrRate() {
+  if (!DATA.errRaw) { $('#errRate').innerHTML = CALC; return; }
   const since = dayShift(kstToday(), -6);
   const raw = (DATA.errRaw || []).filter(r => r.app === cur && kstDay(r.created_at) >= since);
   const mach = {}; only(DATA.ver).forEach(r => { if (isVer(r.version)) mach[r.version] = r.machines; });
