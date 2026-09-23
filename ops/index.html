@@ -442,7 +442,10 @@ sb.auth.onAuthStateChange((ev, s) => {
 });
 $('#out').addEventListener('click', async () => { await sb.auth.signOut(); location.reload(); });
 $('#reload').addEventListener('click', () => load());
-async function show() { $('#login').hidden = true; $('#main').hidden = false; await load(); }
+/* 🔴 로그인 확인이 두 길(onAuthStateChange·getSession)로 거의 동시에 들어와 load()가 두 번 돌았다 —
+   무거운 뷰 열 개를 두 번씩 불러 서로 밀려 첫 화면이 6초 → 14초가 됐다(2026-09-23 실측). 한 번만. */
+let shown = false;
+async function show() { if (shown) return; shown = true; $('#login').hidden = true; $('#main').hidden = false; await load(); }
 sb.auth.getSession().then(({ data }) => { if (data.session) show(); });
 
 /* 🔴 RLS는 지우기 정책이 없으면 오류 없이 0줄 지우고 «성공»한다 — 지운 줄을 돌려받아 0이면 권한 없음 */
@@ -465,6 +468,7 @@ const PINGS = {};          // 앱별 최근 14일 핑 원본 — 도달 곡선·
 /* 🔴 이 두 줄은 반드시 setTab()보다 **위**에 있어야 한다. 아래쪽에 두었더니 첫 탭이 «배포»인 채로
    열릴 때 setTab → loadReleases 가 선언 전 const 를 건드려(TDZ) 뒤쪽 스크립트가 통째로 멎었다. */
 const RELS = {};           // 앱별 릴리스 목록(GitHub) — 판별 확산 속도 견주기에 쓴다
+const pingTab = t => t === 'use' || t === 'dep';   // 14일 핑 원본(PINGS)을 쓰는 탭
 
 function drawPick() {
   const by = Object.fromEntries(((DATA && DATA.sum) || []).map(r => [r.app, r]));
@@ -474,7 +478,7 @@ function drawPick() {
     if (cur === b.dataset.a) return;
     cur = b.dataset.a; localStorage.setItem('ops.app', cur);
     FB.show = FB.step; VER.open = false; ERR.show = ERR.step; NT.show = NT.step;
-    drawPick(); drawAll(); loadPings(cur); if (TAB === 'dep') loadReleases(cur);
+    drawPick(); drawAll(); if (pingTab(TAB)) loadPings(cur); if (TAB === 'dep') loadReleases(cur);
   }));
 }
 function setTab(t) {
@@ -482,6 +486,7 @@ function setTab(t) {
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.t === t));
   document.querySelectorAll('section[data-tab]').forEach(s => s.classList.toggle('on', s.dataset.tab === t));
   if (t === 'sys' && DATA && !DIAG.done) drawDiag();
+  if (DATA && pingTab(t)) loadPings(cur);   // 한 번 읽으면 PINGS에 남아 다시 안 읽는다
   if (t === 'dep') loadReleases(cur);   // 릴리스 목록은 배포 탭을 열 때만 — 안 볼 때 남의 API를 두드리지 않는다
   if (DATA) redrawCharts();   // 숨어 있던 칸은 폭이 0이라, 보일 때 다시 그린다
 }
@@ -502,16 +507,19 @@ function ghLatest(repo) {
 async function load() {
   $('#asof').textContent = '불러오는 중…';
   const soft = r => (r.error ? null : (r.data || []));
+  /* 🔴 뷰는 서버가 붐비면 시간 초과로 오류를 낸다 — 예전엔 그걸 빈 배열로 삼켜 «누적 설치 —»처럼
+     칸이 조용히 비었다(2026-09-23 실측). 오류면 한 번 더 묻는다. */
+  const again = (mk, pick) => mk().then(r => r.error ? mk() : r).then(pick || (r => r.data || []));
   const [sum, daily, fb, ver, ret, err, nt, nw, idle, meta, ...rel] = await Promise.all([
-    sb.from('v_app_summary').select('*').then(r => r.data || []),
-    sb.from('v_app_daily').select('*').then(r => r.data || []),
+    again(() => sb.from('v_app_summary').select('*')),
+    again(() => sb.from('v_app_daily').select('*')),
     sb.from('app_feedback').select('*').order('created_at', { ascending: false }).limit(500).then(r => r.data || []),
-    sb.from('v_app_versions').select('*').then(r => r.data || []),
-    sb.from('v_app_retention').select('*').then(r => r.data || []),
-    sb.from('v_app_errors').select('*').limit(80).then(r => r.data || []),
+    again(() => sb.from('v_app_versions').select('*')),
+    again(() => sb.from('v_app_retention').select('*')),
+    again(() => sb.from('v_app_errors').select('*').limit(80)),
     sb.from('app_notice').select('*').order('created_at', { ascending: false }).limit(40).then(r => r.data || []),
-    sb.from('v_app_new').select('*').then(soft),
-    sb.from('v_app_idle').select('*').then(soft),
+    again(() => sb.from('v_app_new').select('*'), soft),
+    again(() => sb.from('v_app_idle').select('*'), soft),
     sb.from('app_meta').select('*').then(soft),
     ...Object.keys(APPS).map(a => ghLatest(REL[a]))
   ]);
@@ -524,7 +532,8 @@ async function load() {
   drawPick(); drawAll();
   DIAG.done = false; if (TAB === 'sys') drawDiag();
   $('#asof').textContent = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) + ' 기준';
-  delete PINGS[cur]; loadPings(cur);
+  for (const k of Object.keys(PINGS)) delete PINGS[k];
+  if (pingTab(TAB)) loadPings(cur);   // 14일 핑은 사용·배포 탭에서만 쓴다 — 개요만 볼 땐 안 읽는다
   errRaw().then(() => { drawErrors(); drawErrRate(); drawInsights(); drawKpis(); if (TAB === 'err') drawErrChart(); });
   computeLife().then(() => { drawUseKpis(); drawGrowKpis(); drawSpan(); drawCohort(); drawInsights(); drawSlowNote(); if (TAB === 'grow') { drawWeekly(); drawCum(); } });
 }
@@ -546,6 +555,31 @@ async function pageAll(make, { step = 1000, par = 6, cap = 200000, onPage } = {}
     if (onPage) onPage(rows.length);
   }
   return { rows, bad, partial: !done && !bad };
+}
+
+/* 🔴 핑 원본은 **하루씩 잘라** 읽는다.
+   이 Supabase는 집계(day.min()·count())를 막아 두어(실측 «Use of aggregate functions is not allowed»)
+   서버에서 세는 길은 늘 실패하고 원본으로 떨어진다. 그 원본을 «기간 통째 + 건너뛰기(offset)»로 읽으면
+   뒤쪽 쪽일수록 앞줄을 다 세고 버려 느려진다 — 14일치에 26초(2026-09-23 실측). 하루씩 자르면
+   (app, day) 인덱스를 타고 건너뛰는 양이 하루치 안에서 끝난다. 날짜 여섯 개를 동시에 읽는다. */
+function dayList(from, to) { const out = []; for (let d = from; d <= to; d = dayShift(d, 1)) out.push(d); return out; }
+async function pingsByDay(app, days, cols, onRows, par = 6) {
+  const rows = []; let bad = false, i = 0;
+  async function worker() {
+    while (!bad && i < days.length) {
+      const d = days[i++];
+      for (let from = 0; ; from += 1000) {
+        const { data, error } = await sb.from('app_ping').select(cols).eq('app', app).eq('day', d)
+          .order('id', { ascending: true }).range(from, from + 999);
+        if (error) { bad = true; return; }
+        rows.push(...(data || []));
+        if (onRows) onRows(rows.length);
+        if (!data || data.length < 1000) break;
+      }
+    }
+  }
+  await Promise.all(Array.from({ length: par }, worker));
+  return { rows, bad };
 }
 
 /* ─── 판 번호 맞추기 ───
@@ -620,14 +654,23 @@ async function computeLife() {
     }
   }
   if (cached) for (const k of Object.keys(cached.life)) life[k] = { ...cached.life[k] };
-  /* 🔴 정렬을 못 박는다 — 없으면 쪽 경계에서 줄이 겹치거나 빠질 수 있다(순서 미보장).
-     기억해 둔 날 **이후만** 읽되 그날 하루는 다시 읽는다(그날 중간에 멈췄을 수 있다). */
-  const got = await pageAll((a, b) => {
-    let q = sb.from('app_ping').select('app,install_id,day').order('day', { ascending: true }).order('id', { ascending: true });
-    if (cached) q = q.gte('day', cached.upto);
-    return q.range(a, b);
-  }, { cap: 300000, onPage: n => { DATA.lifeReading = n; drawSlowNote(); } });
-  readRows = got.rows.length; partial = got.bad || got.partial;
+  /* 기억해 둔 날 **이후만** 읽되 그날 하루는 다시 읽는다(그날 중간에 멈췄을 수 있다).
+     처음이면 앱마다 가장 이른 날부터 — 하루씩 잘라 읽는다(pingsByDay 설명 참고). */
+  const today = kstToday(), apps = [...new Set([...Object.keys(APPS), ...(DATA.sum || []).map(r => r.app)])];
+  const got = { rows: [], bad: false };
+  for (const app of apps) {
+    let from = cached && cached.upto;
+    if (!from) {
+      const { data, error } = await sb.from('app_ping').select('day').eq('app', app).order('day', { ascending: true }).limit(1);
+      if (error) { got.bad = true; break; }
+      if (!data || !data.length) continue;
+      from = data[0].day;
+    }
+    const g = await pingsByDay(app, dayList(from, today), 'app,install_id,day', n => { DATA.lifeReading = got.rows.length + n; drawSlowNote(); });
+    got.rows.push(...g.rows);
+    if (g.bad) { got.bad = true; break; }
+  }
+  readRows = got.rows.length; partial = got.bad;
   for (const r of got.rows) {
     const k = r.app + '|' + r.install_id, v = life[k];
     if (!v) life[k] = { app: r.app, first: r.day, last: r.day };
@@ -720,8 +763,7 @@ async function loadPings(app) {
     }
     PINGS[app] = { byDay, osBy, cut: agg.partial };
   } else {
-    const got = await pageAll((a, b) => sb.from('app_ping').select('day,version,os,install_id')
-      .eq('app', app).gte('day', since).order('id', { ascending: true }).range(a, b), { cap: 60000 });
+    const got = await pingsByDay(app, dayList(since, kstToday()), 'day,version,os,install_id');
     if (got.bad) PINGS[app] = { fail: true };
     else {
       const byDay = {}, last = {};
@@ -732,7 +774,7 @@ async function loadPings(app) {
       });
       const osBy = {};
       Object.keys(last).forEach(k => { const n = osName(last[k].os); osBy[n] = (osBy[n] || 0) + 1; });
-      PINGS[app] = { byDay, osBy, cut: got.partial, raw: true };
+      PINGS[app] = { byDay, osBy, cut: false, raw: true };
     }
   }
   if (app === cur) drawPingParts();
