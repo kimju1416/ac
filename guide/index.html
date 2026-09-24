@@ -291,10 +291,18 @@ button,select,input{font:inherit;color:inherit}
 .step{display:grid;grid-template-columns:34px 1fr;gap:2px 8px;padding:12px 16px 12px 12px;border-top:1px solid var(--line2)}
 .step input{width:22px;height:22px;margin:1px auto 0;accent-color:var(--pt);cursor:pointer}
 .step .sn{font-size:11.5px;font-weight:800;color:var(--sub);letter-spacing:.03em}
+.step .stepmeta{display:flex;align-items:center;flex-wrap:wrap;gap:4px 7px}
+.step .when{font-size:12px;font-weight:700;color:var(--sub)}
 .step .who{font-size:12.5px;font-weight:700;color:var(--tx2);background:var(--line2);border-radius:5px;padding:1px 7px;margin-left:6px}
 .step .what{font-size:15px;font-weight:600;margin-top:3px}
 .step .det{font-size:14px;color:var(--tx2);margin-top:3px}
 .step .bs{font-size:12.5px;color:var(--sub);margin-top:3px}
+.step-more{margin-top:7px}
+.step-more summary{width:max-content;cursor:pointer;list-style:none;color:var(--pt);font-size:12.5px;font-weight:700}
+.step-more summary::-webkit-details-marker{display:none}
+.step-more summary::after{content:'＋';margin-left:5px}
+.step-more[open] summary::after{content:'－'}
+.step-more .morebody{padding-top:4px}
 .step.done .what,.step.done .det{color:var(--sub);text-decoration:line-through;text-decoration-color:#AAB6C8}
 .step.now{background:#F7FAFE}
 .step.now .sn{color:var(--pt)}
@@ -443,7 +451,17 @@ details.faq .a{padding:0 18px 14px 44px;font-size:14.5px;color:var(--tx2)}
   .deep .db{padding:0 16px 14px 16px}
   .nowbox li{font-size:15px}
   .sec h2{font-size:18px}
-  .step{padding:12px 14px 12px 8px}
+  .steps{overflow:hidden}
+  .step{position:relative;grid-template-columns:28px minmax(0,1fr);gap:2px 8px;padding:12px 12px 12px 8px}
+  .step::before{content:"";position:absolute;left:26px;top:34px;bottom:-1px;border-left:2px solid var(--line);pointer-events:none}
+  .step:last-child::before{display:none}
+  .step input{position:relative;z-index:1;background:#fff}
+  .step.now::before{border-color:var(--pt-line)}
+  .step .stepmeta{gap:4px 6px}
+  .step .who{margin-left:0}
+  .step .what{font-size:15.5px;line-height:1.4}
+  .step-more{margin-top:6px}
+  .step-more summary{min-height:32px;display:flex;align-items:center}
   .how li{font-size:14px}
   .xrow{flex-direction:column;gap:2px}
 }
@@ -742,9 +760,9 @@ function renderCase(id){
       <div class="ndetail" id="ndetail"></div>
     </div>
     <ol class="steps" id="steplist" style="display:none"></ol>` : '';
-  const flowRight = L.length ? `<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><div class="legend"><span><i class="lg-done"></i>한 일</span><span><i class="lg-now"></i>지금 할 일</span><span><i class="lg-wait"></i>남은 일</span></div><div class="seg" id="viewseg"><button data-view="flow">흐름도</button><button data-view="list">목록</button></div></div>` : '';
+  const flowRight = L.length ? `<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><div class="legend"><span><i class="lg-done"></i>한 일</span><span><i class="lg-now"></i>지금 할 일</span><span><i class="lg-wait"></i>남은 일</span></div><div class="seg" id="viewseg"><button data-view="flow">가로 흐름도</button><button data-view="list">한눈에 보기</button></div></div>` : '';
 
-  const flowSec = (sec('flow', '업무 흐름도', flowHtml, `${c.steps.length}단계 · 칸에 마우스를 올리면 요약, 누르면 하는 법까지 나옵니다. 끝낸 일은 체크하세요. 체크는 이 기기에만 남습니다.`, flowRight));
+  const flowSec = (sec('flow', '업무 흐름도', flowHtml, `${c.steps.length}단계 · 휴대전화에서는 세로 목록으로 한눈에 보고, 각 단계를 눌러 자세한 절차와 근거를 펼칠 수 있습니다.`, flowRight));
 
   if (c.deep && c.deep.length) main.push(sec('deep', '과정별 깊이 보기', `<div class="card deep">${c.deep.map((d, i) => `<details ${i === 0 ? 'open' : ''}><summary><span class="dn">${String(i + 1).padStart(2, '0')}</span>${esc(d.title)}</summary><div class="db">${(Array.isArray(d.body) ? d.body : [d.body]).map(p => `<p>${esc(p)}</p>`).join('')}${d.basis ? `<p class="bs">근거 ${esc(d.basis)}</p>` : ''}</div></details>`).join('')}</div>`, '조사·심의·결정·불복까지 과정마다 실제로 어떻게 진행되는지'));
   if (c.tables && c.tables.length) main.push(sec('tables', '한눈에 보는 표', c.tables.map(t => `<div class="card xt"><div class="xth">${esc(t.title)}</div><div class="xtw"><table class="t"><thead><tr>${(t.head || []).map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${(t.rows || []).map(r => `<tr>${r.map((v, j) => `<td data-h="${esc((t.head || [])[j] || '')}"${j === 0 ? ' class="k0"' : ''}>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>${t.note ? `<div class="xtn">${esc(t.note)}</div>` : ''}</div>`).join('')));
@@ -835,7 +853,7 @@ function renderCase(id){
     L.forEach(x => {
       if (x.phase !== lastP){ html += `<li class="pgrp">${PHASES[x.phase].name} · ${PHASES[x.phase].sub}</li>`; lastP = x.phase; }
       const s = x.s;
-      html += `<li class="step ${done[x.i] ? 'done' : ''} ${firstOpen === x.i ? 'now' : ''}"><input type="checkbox" data-i="${x.i}" ${done[x.i] ? 'checked' : ''} aria-label="${x.i + 1}단계 완료"><div><span class="sn">S${String(x.i + 1).padStart(2, '0')}${firstOpen === x.i ? ' · 지금' : ''}</span>${s.who ? `<span class="who">${esc(s.who)}</span>` : ''}<div class="what">${esc(s.what)}</div>${s.detail ? `<div class="det">${esc(s.detail)}</div>` : ''}${stepExtra(s)}<div class="bs">${esc(s.when || '')}${s.basis ? ' · 근거 ' + esc(s.basis) : ''}</div></div></li>`;
+      html += `<li class="step ${done[x.i] ? 'done' : ''} ${firstOpen === x.i ? 'now' : ''}"><input type="checkbox" data-i="${x.i}" ${done[x.i] ? 'checked' : ''} aria-label="${x.i + 1}단계 완료"><div><div class="stepmeta"><span class="sn">S${String(x.i + 1).padStart(2, '0')}${firstOpen === x.i ? ' · 지금' : ''}</span>${s.who ? `<span class="who">${esc(s.who)}</span>` : ''}<span class="when">${esc(s.when || '')}</span></div><div class="what">${esc(s.what)}</div><details class="step-more"><summary>자세히·근거 보기</summary><div class="morebody">${s.detail ? `<div class="det">${esc(s.detail)}</div>` : ''}${stepExtra(s)}${s.basis ? `<div class="bs">근거 ${esc(s.basis)}</div>` : ''}</div></details></div></li>`;
     });
     ol.innerHTML = html;
     ol.querySelectorAll('input').forEach(el => el.addEventListener('change', () => setDone(+el.dataset.i, el.checked)));
@@ -878,7 +896,7 @@ function renderCase(id){
   };
   $app.querySelectorAll('[data-view]').forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
   paint();
-  setView(store.get('view', null) || (isMobile() ? 'list' : 'flow'));
+  setView(isMobile() ? 'list' : (store.get('view', null) || 'flow'));
 
   // 기한 계산
   const base = document.getElementById('base');
