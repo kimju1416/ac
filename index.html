@@ -394,9 +394,9 @@ const apps = [
   { name:'체육대회 모바일 안내문',      desc:'체육대회 일정·종목·주의사항을 담은 모바일 최적화 안내문을 쉽고 빠르게 만드는 도구',        cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://guide11.netlify.app/' },
   { name:'현장체험학습 모바일 안내문',  desc:'현장체험학습 안내 내용을 모바일 친화적 안내문으로 빠르게 제작하는 도구',                   cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://su333.netlify.app/' },
   { name:'ClassTube (교실TV)',          sub:'↳ 초·중등 교육 영상 3,287편 아카이브', desc:'공강·자율활동·의무교육 수업에 바로 쓸 수 있는 교육 유튜브 영상 3,287편을 재생시간·학년별로 필터링해 빠르게 찾는 영상 아카이브', cat:'기타 자료', badge:'doc', date:'26.07.04', url:'https://kimju1416.github.io/classtube/' },
-  { name:'경북교육청 서식 꾸러미',        desc:'경북교육청 행정 서식 1,175종을 검색·미리보기·다운로드할 수 있는 서식 아카이브',            cat:'기타 자료',  badge:'doc',    date:'26.07.26', url:'https://kimju1416.github.io/gbe-seosik' },
-  { name:'경북에듀잡',                  shot:'gb-edujob', desc:'경북 지역 학교 채용공고를 직종·지역별로 모아 마감임박순으로 보여주는 구인 정보 사이트. 기간제교원·교육공무직·방과후강사 등 매일 자동 수집', cat:'기타 자료', badge:'doc', date:'26.08.10', url:'https://kimju1416.github.io/gb-edujob/' },
-  { name:'경북교육지도',                shot:'gb-edu-map', desc:'경북 학교 위치·통학구역·학생 수 흐름을 3D 지도로 보는 교사용 교육 통계 지도. 시군별 둘러보기, 2032년까지 입학생 추정, 학교알리미 공시까지 한 화면에', cat:'기타 자료', badge:'doc', date:'26.09.23', url:'https://kimju1416.github.io/gb-edu-map/' },
+  { name:'경북교육청 서식 꾸러미',        desc:'경북교육청 행정 서식 1,175종을 검색·미리보기·다운로드할 수 있는 서식 아카이브',            cat:'경북',  badge:'doc',    date:'26.07.26', url:'https://kimju1416.github.io/gbe-seosik' },
+  { name:'경북에듀잡',                  shot:'gb-edujob', desc:'경북 지역 학교 채용공고를 직종·지역별로 모아 마감임박순으로 보여주는 구인 정보 사이트. 기간제교원·교육공무직·방과후강사 등 매일 자동 수집', cat:'경북', badge:'doc', date:'26.08.10', url:'https://kimju1416.github.io/gb-edujob/' },
+  { name:'경북교육지도',                shot:'gb-edu-map', desc:'경북 학교 위치·통학구역·학생 수 흐름을 3D 지도로 보는 교사용 교육 통계 지도. 시군별 둘러보기, 2032년까지 입학생 추정, 학교알리미 공시까지 한 화면에', cat:'경북', badge:'doc', date:'26.09.23', url:'https://kimju1416.github.io/gb-edu-map/' },
   { name:'AI 사용량 위젯', shot:'aiwidget',              desc:'Claude·Codex·Gemini 세 가지 AI 서비스의 사용량을 바탕화면에서 한눈에 확인하는 윈도우 전용 데스크톱 위젯. exe 설치 후 바로 사용 가능', cat:'기타 자료', badge:'exe',    date:'26.07.26', url:'https://github.com/kimju1416/ai-usage-widget/releases/latest/download/AIUsageWidget-Setup.exe' },
   { name:'공무원·교사 연금 비교 시뮬레이터', desc:'공무원연금과 국민연금을 조건별로 비교해 예상 수령액·납입액을 시뮬레이션하는 교사 전용 계산기', cat:'기타 자료', badge:'doc',    date:'26.07.26', url:'https://kimju1416.github.io/pension/' },
   // 8. 오락실 — 수업·쉬는시간에 바로 켜는 게임
@@ -480,8 +480,8 @@ const ONE = {
   'kimju.zip A/S 챗봇':'앱 쓰다 막히면 바로 물어보기',
 };
 
-const CATS = ['오락실','학생부 업무','담임 업무','체육과 업무','마음지도','공통 업무','프롬프트','기타 자료','A/S'];
-const CAT_LABEL = {'오락실':'수업 게임','학생부 업무':'학생부','담임 업무':'담임','체육과 업무':'체육','마음지도':'마음지도','공통 업무':'교무 공통','프롬프트':'AI 프롬프트','기타 자료':'자료실','A/S':'도움'};
+const CATS = ['A/S','학생부 업무','담임 업무','체육과 업무','마음지도','공통 업무','경북','프롬프트','기타 자료','오락실'];
+const CAT_LABEL = {'오락실':'수업 게임','학생부 업무':'학생부','담임 업무':'담임','체육과 업무':'체육','마음지도':'마음지도','공통 업무':'교무 공통','프롬프트':'AI 프롬프트','기타 자료':'자료실','경북':'경북','A/S':'도움'};
 const TD2_EXE = 'https://github.com/kimju1416/teacherdesk2/releases/latest/download/TeacherDesk-Setup.exe';
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -559,7 +559,7 @@ function matches(a, q){
 function renderGrid(){
   let list = cur==='전체' ? apps : apps.filter(a=>a.cat===cur);
   if(query) list = list.filter(a=>matches(a, query));
-  list = list.slice().sort((x,y)=>rankOf(x)-rankOf(y));
+  list = list.slice().sort((x,y)=>rankOf(x)-rankOf(y) || CATS.indexOf(x.cat)-CATS.indexOf(y.cat));
   const qi = document.getElementById('qinfo');
   qi.style.display = query ? 'block' : 'none';
   qi.innerHTML = query ? `「${esc(query)}」 검색 결과 ${list.length}개<button type="button" onclick="clearSearch()">검색 지우기</button>` : '';
