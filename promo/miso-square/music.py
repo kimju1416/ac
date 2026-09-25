@@ -1,5 +1,6 @@
 import numpy as np, wave
-SR=44100; BPM=96; beat=60/BPM; DUR=27.0
+import sys
+SR=44100; BPM=float(sys.argv[1]); beat=60/BPM; DUR=float(sys.argv[2]); OUT=sys.argv[3]; HITS=[float(v) for v in sys.argv[4].split(',')] if len(sys.argv)>4 else []; PUNCH=BPM>110
 N=int(SR*DUR); out=np.zeros((N,2))
 t_all=np.arange(N)/SR
 def note(f): return 440*2**((f-69)/12)
@@ -33,7 +34,7 @@ for b in range(nbars):
 for i in range(int(DUR/ (beat/2))):
     st=i*beat/2
     if st<bar: continue
-    if i%2==0 and (i//2)%2==0:
+    if i%2==0 and ((i//2)%2==0 or PUNCH):
         kt=np.arange(int(0.35*SR))/SR
         f=50+90*np.exp(-kt*30)
         k=np.sin(2*np.pi*np.cumsum(f)/SR)*np.exp(-kt*9)*0.45; add(k,st)
@@ -44,13 +45,14 @@ for i in range(int(DUR/ (beat/2))):
     h=np.diff(np.random.randn(len(ht)+1))*np.exp(-ht*70)*0.03; add(h,st,pan=0.2)
 # riser + impact at 21s (price reveal)
 rt=np.arange(int(1.5*SR))/SR
-add(np.random.randn(len(rt))*(rt/1.5)**2*0.05,19.5)
 it=np.arange(int(2.5*SR))/SR
-add(np.sin(2*np.pi*45*it)*np.exp(-it*2)*0.4,21.0)
+for h in HITS:
+    add(np.random.randn(len(rt))*(rt/1.5)**2*0.05,h-1.5)
+    add(np.sin(2*np.pi*45*it)*np.exp(-it*2)*0.4,h)
 # fade in/out
 fade=np.ones(N); fi=int(0.3*SR); fo=int(2.5*SR)
 fade[:fi]=np.linspace(0,1,fi); fade[-fo:]=np.linspace(1,0,fo)
 out*=fade[:,None]
 out/=np.abs(out).max()/0.85
-w=wave.open('bgm.wav','wb'); w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
+w=wave.open(OUT,'wb'); w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR)
 w.writeframes((out*32767).astype('<i2').tobytes()); w.close(); print('ok')

@@ -1,0 +1,146 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:K;font-weight:500;src:url(NotoKR-500.ttf)}
+@font-face{font-family:K;font-weight:700;src:url(NotoKR-700.ttf)}
+@font-face{font-family:K;font-weight:900;src:url(NotoKR-900.ttf)}
+html,body{margin:0;background:#000}
+canvas{display:block}
+</style></head><body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script src="common.js"></script>
+<script>
+function card(X,Y,w,h,a,hl){A(a);rr(X,Y,w,h,26);x.fillStyle=hl?'rgba(216,179,106,.16)':'rgba(255,255,255,.07)';x.fill();
+  x.strokeStyle='rgba(216,179,106,.5)';x.lineWidth=2;x.stroke();}
+
+/* S1 0~4.4 훅 */
+function s1(t){
+  photo(1.18-0.12*eo(t/4.4),0.45,0.12);
+  A(1);x.fillStyle=vgrad([[0,'rgba(8,16,40,.85)'],[.32,'rgba(8,16,40,.15)'],[.55,'rgba(8,16,40,.2)'],[.76,'rgba(8,16,40,.92)'],[1,'rgba(6,12,30,1)']]);x.fillRect(0,0,W,H);
+  brand(eo(seg(t,.1,.5)));
+  const a1=eo(seg(t,.3,.6));
+  txt('구미 송정 · 2018년 준공 준신축',90,275+30*(1-a1),{w:700,size:44,a:a1,color:'#e8eefc',shadow:12});
+  const a2=eo(seg(t,.6,.7));
+  txt('미소스퀘어',84,1340+60*(1-a2),{w:900,size:150,a:a2,shadow:20});
+  const a3=eb(seg(t,1.0,.6));
+  x.save();x.translate(90,1400);x.scale(a3,a3);
+  A(clamp(a3));rr(0,0,250,120,18);x.fillStyle=goldGrad(0,120);x.fill();
+  txt('매각',125,88,{w:900,size:78,color:NAVY,align:'center',a:clamp(a3)});x.restore();
+  const a4=eo(seg(t,1.6,.6));
+  txt('100% 만실 · 연 6.23%',90,1620+30*(1-a4),{w:900,size:74,a:a4,color:GOLD2,shadow:10});
+  txt('대출 승계 시 수익률 8%까지',90,1712+30*(1-a4),{w:700,size:50,a:a4*.95});
+}
+/* S2 4.4~10.2 수익률 */
+function s2(t){
+  navyBG();x.save();A(.35);photo(1.3,0.5,0.1,0,0,W,760);x.restore();
+  A(1);x.fillStyle=vgrad([[0,'rgba(12,26,58,.3)'],[.4,NAVY],[1,'#060e22']]);x.fillRect(0,0,W,H);diag(t);
+  const a0=eo(seg(t,.1,.5));
+  txt('투자 포인트 ①',90,300,{w:700,size:40,color:GOLD,a:a0,ls:4});
+  txt('인수금 대비 수익률',90,400,{w:900,size:80,a:a0});
+  const p=eo(seg(t,.4,1.8)),v=(6.23*p).toFixed(2),a1=eo(seg(t,.4,.4));
+  txt('연',90,720,{w:900,size:110,a:a1});
+  A(a1);font(900,300);x.textAlign='left';x.fillStyle=goldGrad(480,740);x.letterSpacing='-8px';x.fillText(v,230,740);
+  const nw=x.measureText(v).width;x.letterSpacing='0px';
+  txt('%',240+nw,740,{w:900,size:160,color:GOLD2,a:a1});
+  const rows=[['매매가','7억원'],['인수금','6억 4,500만원'],['연 임대료','4,020만원']];
+  rows.forEach(([k,val],i)=>{const a=eo(seg(t,2.2+i*.35,.55)),Y=860+i*200+50*(1-a);
+    card(90,Y,900,170,a,i===1);A(a);x.fillStyle=GOLD;x.fillRect(90,Y+30,8,110);
+    txt(k,140,Y+100,{w:500,size:42,color:'#b9c6e4',a});
+    txt(val,950,Y+105,{w:900,size:64,a,align:'right'});});
+  const a3=eo(seg(t,3.4,.6));
+  txt('※ 관리비 별도',90,1520,{w:700,size:38,color:'#8b9bc2',a:a3});
+}
+/* S3 10.2~15.8 대출 승계 */
+function s3(t){
+  navyBG();diag(t+2);
+  const a0=eo(seg(t,.1,.5));
+  txt('투자 포인트 ②',90,300,{w:700,size:40,color:GOLD,a:a0,ls:4});
+  txt('대출 승계 시',90,400,{w:900,size:88,a:a0});
+  txt('적은 금액으로 더 높은 수익률',90,480,{w:700,size:46,a:a0,color:'#b9c6e4'});
+  const cols=[['일반 매수','6억 4,500만','6.23%',false],['대출 승계','3억 3,000만','8%',true]];
+  cols.forEach(([h,m,r,hl],i)=>{const a=eo(seg(t,.6+i*.5,.6)),X=90+i*465,Y=600+40*(1-a);
+    card(X,Y,435,640,a,hl);
+    if(hl){A(a);rr(X,Y,435,90,{upperLeft:26,upperRight:26});x.fillStyle=goldGrad(Y,Y+90);x.fill();}
+    txt(h,X+217,Y+62,{w:900,size:44,align:'center',color:hl?NAVY:'#e8eefc',a});
+    txt('인수금',X+217,Y+170,{w:500,size:36,align:'center',color:'#b9c6e4',a});
+    txt(m,X+217,Y+245,{w:900,size:56,align:'center',a});
+    A(a*.5);x.fillStyle=GOLD;x.fillRect(X+60,Y+300,315,2);
+    txt('수익률',X+217,Y+380,{w:500,size:36,align:'center',color:'#b9c6e4',a});
+    const s=hl?eb(seg(t,1.8,.6)):1;x.save();x.translate(X+217,Y+530);x.scale(s,s);
+    A(a);font(900,hl?150:120);x.textAlign='center';x.fillStyle=hl?goldGrad(-120,0):'#ffffff';x.fillText(r,0,0);x.restore();});
+  // arrow between
+  const aa=eo(seg(t,1.4,.4));A(aa);x.fillStyle=GOLD;x.beginPath();x.arc(540,920,40,0,7);x.fill();
+  A(aa);x.strokeStyle=NAVY;x.lineWidth=8;x.lineCap='round';x.beginPath();x.moveTo(522,920);x.lineTo(556,920);x.moveTo(542,904);x.lineTo(558,920);x.lineTo(542,936);x.stroke();
+  const a3=eo(seg(t,2.6,.6));
+  txt('※ 8%는 대출이자 차감 후 기준',90,1340,{w:700,size:38,color:'#8b9bc2',a:a3});
+}
+/* S4 15.8~21.2 입점 현황 */
+function s4(t){
+  navyBG();diag(t+3);
+  const a0=eo(seg(t,.1,.5));
+  txt('투자 포인트 ③',90,300,{w:700,size:40,color:GOLD,a:a0,ls:4});
+  txt('전 층 임대 완료',90,400,{w:900,size:88,a:a0});
+  const ab=eb(seg(t,.5,.6));
+  x.save();x.translate(820,340);x.rotate(-.12);x.scale(ab,ab);
+  A(clamp(ab));x.beginPath();x.arc(0,0,115,0,Math.PI*2);x.fillStyle=goldGrad(-115,115);x.fill();
+  x.strokeStyle=NAVY;x.lineWidth=4;x.beginPath();x.arc(0,0,98,0,Math.PI*2);x.stroke();
+  txt('100%',0,8,{w:900,size:62,color:NAVY,align:'center',a:clamp(ab)});
+  txt('만실',0,62,{w:900,size:40,color:NAVY,align:'center',a:clamp(ab)});x.restore();
+  const fl=[['3F','교육기관 · 사무실'],['2F','사무실'],['1F','공인중개사 · 네일샵 · 미용실']];
+  const top=560,h=250,gap=26;A(a0);x.fillStyle=GOLD;x.fillRect(90,top-40,900,8);
+  for(let i=2;i>=0;i--){const order=2-i,a=eo(seg(t,.9+order*.5,.55)),Y=top+i*(h+gap),sl=(1-a)*120;
+    card(90+sl,Y,900,h,a,i===2);
+    txt(fl[i][0],150+sl,Y+150,{w:900,size:110,color:GOLD2,a});
+    txt(fl[i][1],360+sl,Y+118,{w:700,size:i===2?46:54,a});
+    const as=eb(seg(t,1.2+order*.5,.4));
+    if(as>0){x.save();x.translate(860+sl,Y+185);x.scale(as,as);A(clamp(as));rr(-100,-40,200,70,35);x.fillStyle='#2fbf71';x.fill();
+      txt('임대중',0,12,{w:900,size:36,color:WHITE,align:'center',a:clamp(as)});x.restore();}}
+  A(a0);x.fillStyle='rgba(216,179,106,.6)';x.fillRect(60,top+3*(h+gap)-6,960,6);
+  const a3=eo(seg(t,2.8,.6));
+  txt('공실 걱정 없는 안정적 현금흐름',540,1560,{w:900,size:56,color:GOLD2,align:'center',a:a3});
+}
+/* S5 21.2~25.5 입지 · 건물 */
+function s5(t){
+  A(1);x.fillStyle=NAVY;x.fillRect(0,0,W,H);
+  photo(1.05+.1*eo(t/4.3),0.5,0.18,0,0,W,960);
+  A(1);x.fillStyle=vgrad([[0,'rgba(12,26,58,.55)'],[.15,'rgba(12,26,58,0)'],[.38,'rgba(12,26,58,.2)'],[.5,NAVY],[1,'#060e22']]);x.fillRect(0,0,W,H);
+  const a0=eo(seg(t,.1,.5));
+  txt('투자 포인트 ④',90,250,{w:700,size:40,color:GOLD,a:a0,ls:4,shadow:10});
+  txt('입지 & 건물',90,345,{w:900,size:84,a:a0,shadow:16});
+  const items=[['약 1,000세대 항아리 상권','아파트 주출입로에 위치한 알짜 상가'],['2018년 준공 준신축','현대적인 외관 · 전유 322.62㎡'],['관리비로 운영비 해결','건물 청소 · 공용부 전기료 · 수도료']];
+  items.forEach(([h1,h2],i)=>{const a=eo(seg(t,.5+i*.4,.55)),Y=930+i*200,sl=(1-a)*-80;
+    card(90+sl,Y,900,170,a);
+    A(a);x.beginPath();x.arc(170+sl,Y+85,50,0,Math.PI*2);x.fillStyle=goldGrad(Y+35,Y+135);x.fill();
+    txt('0'+(i+1),170+sl,Y+100,{w:900,size:42,color:NAVY,align:'center',a});
+    txt(h1,250+sl,Y+78,{w:900,size:50,a});
+    txt(h2,250+sl,Y+135,{w:500,size:36,color:'#b9c6e4',a});});
+}
+/* S6 25.5~31 가격 + 연락처 */
+function s6(t){
+  photo(1.25-.1*eo(t/6),0.4,0.1);
+  A(1);x.fillStyle='rgba(6,12,30,.78)';x.fillRect(0,0,W,H);diag(t);
+  brand(eo(seg(t,.1,.5)));
+  const a0=eo(seg(t,.2,.5));
+  txt('구미 송정 미소스퀘어 매각',540,400,{w:700,size:50,align:'center',a:a0,color:'#e8eefc'});
+  txt('매매가',540,490,{w:700,size:56,align:'center',color:GOLD,a:a0,ls:10});
+  const ap=eb(seg(t,.35,.7));
+  x.save();x.translate(540,770);x.scale(ap,ap);
+  A(clamp(ap));font(900,280);x.textAlign='center';x.fillStyle=goldGrad(-230,20);x.shadowColor='rgba(216,179,106,.45)';x.shadowBlur=50;
+  x.fillText('7억',-40,0);x.shadowBlur=0;
+  txt('원',200,0,{w:900,size:120,color:GOLD2,align:'center',a:clamp(ap)});x.restore();
+  const a1=eo(seg(t,1.0,.5));
+  txt('인수금 6.45억 · 대출 승계 시 3.3억',540,860,{w:700,size:46,align:'center',a:a1,color:'#cfd8ee'});
+  A(a1);x.fillStyle=GOLD;x.fillRect(540-300*a1,930,600*a1,3);
+  const a2=eo(seg(t,1.6,.6)),Y=1040+60*(1-a2);
+  A(a2);rr(90,Y,900,430,32);x.fillStyle=goldGrad(Y,Y+430);x.fill();
+  txt('문의 및 현장 안내',540,Y+95,{w:900,size:50,color:NAVY,align:'center',a:a2});
+  const pulse=1+.03*Math.sin(t*6)*seg(t,2.4,.1);
+  x.save();x.translate(540,Y+255);x.scale(pulse,pulse);
+  txt('010-5165-7120',0,0,{w:900,size:108,color:NAVY,align:'center',a:a2,ls:-1});x.restore();
+  txt('yimagu@hanmail.net',540,Y+355,{w:700,size:44,color:'#26345c',align:'center',a:a2});
+  const a3=eo(seg(t,2.6,.6));
+  txt('연 6.23% · 100% 만실 · 2018년 준공',540,1600,{w:700,size:40,align:'center',color:'#b9c6e4',a:a3});
+}
+run([[0,4.4,s1],[4.4,10.2,s2],[10.2,15.8,s3],[15.8,21.2,s4],[21.2,25.5,s5],[25.5,31,s6]],.45,0);
+</script></body></html>

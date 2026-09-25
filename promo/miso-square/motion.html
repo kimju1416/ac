@@ -1,0 +1,164 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:K;font-weight:500;src:url(NotoKR-500.ttf)}
+@font-face{font-family:K;font-weight:700;src:url(NotoKR-700.ttf)}
+@font-face{font-family:K;font-weight:900;src:url(NotoKR-900.ttf)}
+html,body{margin:0;background:#000}
+canvas{display:block}
+</style></head><body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script src="common.js"></script>
+<script>
+const CREAM='#f6efe2',MINT='#2fbf71',BEAT=.5;
+const pop=(t,a,d=.35)=>eb(seg(t,a,d));
+function fill(c){A(1);x.fillStyle=c;x.fillRect(0,0,W,H)}
+// circular wipe reveal: previous color underneath, new scene clipped in a growing circle
+function wipe(prev,t,cx,cy,fn){
+  const r=eo(t/.5)*2300; fill(prev);
+  x.save();x.beginPath();x.arc(cx,cy,Math.max(1,r),0,7);x.clip();fn();x.restore();
+  if(t<.5){A(1-t/.5);x.strokeStyle=GOLD;x.lineWidth=14;x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();A(1)}
+}
+function dots(t,col,al){ // drifting dot grid
+  A(al);x.fillStyle=col;const o=(t*30)%90;
+  for(let yy=-90;yy<H+90;yy+=90)for(let xx=0;xx<W+90;xx+=90){x.beginPath();x.arc(xx-o*.5,yy+o,4,0,7);x.fill()}
+}
+function ring(cx,cy,r,t,col,al,dash=[30,24]){A(al);x.strokeStyle=col;x.lineWidth=6;x.setLineDash(dash);x.lineDashOffset=-t*80;
+  x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();x.setLineDash([]);}
+function circPhoto(cx,cy,r,z,a){A(a);x.save();x.beginPath();x.arc(cx,cy,r,0,7);x.clip();photo(z,.45,.15,cx-r,cy-r,2*r,2*r);x.restore();
+  A(a);x.strokeStyle=GOLD;x.lineWidth=10;x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();}
+function slam(s,X,Y,t,at,o){const k=seg(t,at,.3);if(k<=0)return;const sc=1+.8*(1-eo(k));
+  x.save();x.translate(X,Y);x.scale(sc,sc);txt(s,0,0,{...o,a:clamp(k*3)});x.restore();}
+function title(tag,s,t,col,tagCol){const a=eo(seg(t,.3,.4));
+  txt(tag,90,250,{w:900,size:40,color:tagCol,a,ls:6});slam(s,90,350,t,.35,{w:900,size:86,color:col});}
+
+/* M1 0~3.5 훅: 단어 슬램 */
+function m1(t){
+  fill(NAVY);dots(t,GOLD,.12);
+  slam('구미 송정',90,420,t,0,{w:900,size:110,color:WHITE});
+  slam('100% 만실',90,580,t,BEAT,{w:900,size:130,color:GOLD2});
+  slam('프리미엄 상가',90,730,t,BEAT*2,{w:900,size:110,color:WHITE});
+  const k=pop(t,BEAT*3,.4);
+  if(k>0){x.save();x.translate(90,800);x.scale(k,k);A(clamp(k));rr(0,0,330,140,20);x.fillStyle=goldGrad(0,140);x.fill();
+    txt('매각',165,108,{w:900,size:100,color:NAVY,align:'center',a:clamp(k)});x.restore();}
+  const r=330*eb(seg(t,2,.6));
+  if(r>1){ring(540,1400,r+45,t,GOLD,.6);circPhoto(540,1400,r,1.3-.1*seg(t,2,1.5),1);}
+}
+/* M2 3.5~8 수익률 링 */
+function m2(t){wipe(NAVY,t,540,1400,()=>{
+  fill(GOLD2);dots(t,NAVY,.07);
+  title('INVESTMENT','인수금 대비 수익률',t,NAVY,'#8a6a2a');
+  const cx=540,cy=880,R=300,p=eo(seg(t,.6,1.8));
+  A(1);x.lineWidth=46;x.strokeStyle='rgba(12,26,58,.12)';x.beginPath();x.arc(cx,cy,R,0,7);x.stroke();
+  x.strokeStyle=NAVY;x.lineCap='round';x.beginPath();x.arc(cx,cy,R,-Math.PI/2,-Math.PI/2+Math.PI*2*p*.8);x.stroke();x.lineCap='butt';
+  txt('연',cx,cy-110,{w:900,size:60,color:NAVY,align:'center'});
+  txt((6.23*p).toFixed(2)+'%',cx,cy+70,{w:900,size:170,color:NAVY,align:'center',ls:-6});
+  const chips=[['매매가','7억원'],['인수금','6억 4,500만원'],['연 임대료','4,020만원']];
+  chips.forEach(([k,v],i)=>{const s=pop(t,2+i*BEAT,.4);if(s<=0)return;const Y=1300+i*150;
+    x.save();x.translate(540,Y);x.scale(s,s);A(clamp(s));rr(-450,-60,900,120,60);x.fillStyle=NAVY;x.fill();
+    txt(k,-390,18,{w:700,size:44,color:GOLD2,a:clamp(s)});txt(v,390,20,{w:900,size:56,color:WHITE,align:'right',a:clamp(s)});x.restore();});
+  txt('※ 관리비 별도',540,1780,{w:700,size:36,color:'#6b5220',align:'center',a:eo(seg(t,3.4,.4))});
+});}
+/* M3 8~12.5 대출 승계 막대 비교 */
+function m3(t){wipe(GOLD2,t,540,900,()=>{
+  fill(NAVY);dots(t,GOLD,.1);
+  title('LOAN TAKEOVER','대출 승계하면?',t,WHITE,GOLD);
+  const L=140,MAX=800;
+  function bar(Y,label,val,w,col,a,txtCol){A(a);rr(L,Y,Math.max(1,w),110,20);x.fillStyle=col;x.fill();
+    txt(label,L,Y-24,{w:700,size:38,color:'#b9c6e4',a});
+    txt(val,L+Math.max(w,0)-28,Y+75,{w:900,size:52,color:txtCol,align:'right',a:a*clamp((w-250)/100)});}
+  txt('인수금',90,560,{w:900,size:56,color:GOLD2,a:eo(seg(t,.6,.3))});
+  bar(660,'일반 매수','6억 4,500만',MAX*eo(seg(t,.8,.6)),'rgba(255,255,255,.22)',1,WHITE);
+  bar(860,'대출 승계','3억 3,000만',MAX*(330/645)*eo(seg(t,1.3,.6)),goldGrad(860,970),1,NAVY);
+  txt('수익률',90,1140,{w:900,size:56,color:GOLD2,a:eo(seg(t,1.8,.3))});
+  bar(1240,'일반 매수','6.23%',MAX*(6.23/8)*eo(seg(t,2,.6)),'rgba(255,255,255,.22)',1,WHITE);
+  bar(1440,'대출 승계','8%',MAX*eo(seg(t,2.5,.6)),goldGrad(1440,1550),1,NAVY);
+  const s=pop(t,3.1,.4);if(s>0){x.save();x.translate(880,1320);x.rotate(.18);x.scale(.8,.8);x.scale(s,s);A(clamp(s));
+    x.beginPath();x.arc(0,0,95,0,7);x.fillStyle=MINT;x.fill();txt('UP!',0,18,{w:900,size:56,color:WHITE,align:'center',a:clamp(s)});x.restore();}
+  txt('※ 8%는 대출이자 차감 후 기준',90,1700,{w:700,size:36,color:'#8b9bc2',a:eo(seg(t,3.2,.4))});
+});}
+/* M4 12.5~16.5 층 블록 드롭 */
+function m4(t){wipe(NAVY,t,540,1500,()=>{
+  fill(CREAM);dots(t,NAVY,.06);
+  title('100% OCCUPIED','전 층 임대 완료',t,NAVY,'#8a6a2a');
+  const fl=[['1F','공인중개사 · 네일샵 · 미용실','#0c1a3a'],['2F','사무실','#1d3470'],['3F','교육기관 · 사무실','#2b4a94']];
+  const base=1560,h=260,w=860;
+  A(1);x.fillStyle=NAVY;x.fillRect(60,base,960,14);
+  fl.forEach(([f,d,c],i)=>{const at=.6+i*BEAT*1.2,k=seg(t,at,.45);if(k<=0)return;
+    const tgt=base-(i+1)*h,drop=(1-eb(k))*-900,Y=tgt+drop;
+    A(1);rr(110,Y+6,w,h-12,18);x.fillStyle=c;x.fill();
+    for(let j=0;j<4;j++){A(.25);x.fillStyle=GOLD2;x.fillRect(400+j*95,Y+40,60,40)}
+    txt(f,160,Y+160,{w:900,size:110,color:GOLD2});
+    txt(d,400,Y+180,{w:700,size:i===0?40:50,color:WHITE});
+    const s=pop(t,at+.4,.3);if(s>0){x.save();x.translate(860,Y+70);x.scale(s,s);A(clamp(s));rr(-90,-34,180,62,31);x.fillStyle=MINT;x.fill();
+      txt('임대중',0,12,{w:900,size:32,color:WHITE,align:'center',a:clamp(s)});x.restore();}
+  });
+  const s=pop(t,2.7,.45);if(s>0){x.save();x.translate(810,560);x.rotate(-.2);x.scale(s,s);A(clamp(s));
+    x.beginPath();x.arc(0,0,120,0,7);x.fillStyle=goldGrad(-120,120);x.fill();x.strokeStyle=NAVY;x.lineWidth=5;x.beginPath();x.arc(0,0,100,0,7);x.stroke();
+    txt('100%',0,10,{w:900,size:64,color:NAVY,align:'center',a:clamp(s)});txt('만실',0,62,{w:900,size:38,color:NAVY,align:'center',a:clamp(s)});x.restore();}
+});}
+/* M5 16.5~20.5 항아리 상권 */
+function m5(t){wipe(CREAM,t,540,1000,()=>{
+  fill(NAVY);dots(t,GOLD,.08);
+  title('LOCATION','약 1,000세대 항아리 상권',t,WHITE,GOLD);
+  const cx=540,cy=1020;
+  // ripples
+  for(let i=0;i<3;i++){const ph=((t*.8+i/3)%1);A((1-ph)*.5*eo(seg(t,.4,.3)));x.strokeStyle=GOLD;x.lineWidth=4;x.beginPath();x.arc(cx,cy,80+ph*300,0,7);x.stroke();}
+  // road (주출입로) from bottom
+  const rk=eo(seg(t,.9,.6));A(1);x.fillStyle='#3a4a74';x.fillRect(cx-55,cy+60,110,(1480-cy-60)*rk);
+  A(1);x.strokeStyle=GOLD2;x.lineWidth=6;x.setLineDash([30,26]);x.lineDashOffset=t*60;x.beginPath();x.moveTo(cx,cy+80);x.lineTo(cx,cy+60+(1480-cy-60)*rk);x.stroke();x.setLineDash([]);
+  // apartments ring
+  const N=12;for(let i=0;i<N;i++){const ang=-Math.PI/2+i/N*Math.PI*2;if(Math.abs(ang-Math.PI/2)<.6)continue;
+    const s=pop(t,.6+i*.08,.3);if(s<=0)continue;const ax=cx+Math.cos(ang)*380,ay=cy+Math.sin(ang)*380;
+    x.save();x.translate(ax,ay);x.scale(s,s);A(clamp(s));x.fillStyle='#e8eefc';rr(-34,-70,68,140,8);x.fill();
+    x.fillStyle=NAVY;for(let r=0;r<5;r++)for(let c2=0;c2<2;c2++)x.fillRect(-22+c2*26,-56+r*26,18,14);x.restore();}
+  // store pin
+  const ps=pop(t,.3,.4);x.save();x.translate(cx,cy);x.scale(ps,ps);A(clamp(ps));
+  x.beginPath();x.arc(0,0,90,0,7);x.fillStyle=goldGrad(-90,90);x.fill();txt('MISO',0,-4,{w:900,size:34,color:NAVY,align:'center',a:clamp(ps)});
+  txt('SQUARE',0,34,{w:900,size:24,color:NAVY,align:'center',a:clamp(ps)});x.restore();
+  txt('아파트 주출입로',cx+80,1440,{w:900,size:46,color:GOLD2,a:rk});
+  const c=Math.round(1000*eo(seg(t,1,1.6)));
+  txt('약 '+c.toLocaleString()+'세대',540,1660,{w:900,size:96,color:WHITE,align:'center',a:eo(seg(t,1,.3))});
+  txt('아파트 주출입로에 위치한 알짜 상가',540,1760,{w:700,size:44,color:'#b9c6e4',align:'center',a:eo(seg(t,2.2,.4))});
+});}
+/* M6 20.5~24 준신축 + 관리비 */
+function m6(t){wipe(NAVY,t,540,500,()=>{
+  fill(GOLD2);dots(t,NAVY,.07);
+  const y=Math.round(2000+18*eo(seg(t,.3,1)));
+  txt('BUILT IN',90,300,{w:900,size:44,color:'#8a6a2a',ls:8,a:eo(seg(t,.2,.3))});
+  txt(String(y),70,560,{w:900,size:280,color:NAVY,ls:-10,a:eo(seg(t,.2,.3))});
+  const s=pop(t,1.2,.4);if(s>0){x.save();x.translate(90,620);x.scale(s,s);A(clamp(s));rr(0,0,420,110,55);x.fillStyle=NAVY;x.fill();
+    txt('준공 준신축',210,76,{w:900,size:56,color:GOLD2,align:'center',a:clamp(s)});x.restore();}
+  A(1);x.fillStyle=NAVY;x.fillRect(90,850,900*eo(seg(t,1.4,.4)),6);
+  txt('관리비로 해결되는 운영비',90,970,{w:900,size:64,color:NAVY,a:eo(seg(t,1.5,.3))});
+  ['건물 청소','공용부 전기료','건물 수도료'].forEach((s2,i)=>{const at=1.8+i*.3,k=eo(seg(t,at,.3)),Y=1100+i*170;
+    A(k);rr(90+(1-k)*-60,Y,900,140,24);x.fillStyle=NAVY;x.fill();
+    const cs=pop(t,at+.15,.3);A(clamp(cs));x.beginPath();x.arc(170,Y+70,44,0,7);x.fillStyle=MINT;x.fill();check(170,Y+72,70,clamp(cs),WHITE);
+    txt(s2,250,Y+90,{w:900,size:56,color:WHITE,a:k});});
+  txt('※ 관리비 별도',90,1640,{w:700,size:36,color:'#6b5220',a:eo(seg(t,2.8,.3))});
+});}
+/* M7 24~30 가격 슬램 + 연락처 */
+function m7(t){wipe(GOLD2,t,540,640,()=>{
+  fill(NAVY);dots(t,GOLD,.08);
+  // shockwave
+  for(let i=0;i<3;i++){const k=seg(t,.1+i*.12,1);if(k>0&&k<1){A((1-k)*.7);x.strokeStyle=GOLD;x.lineWidth=10*(1-k)+2;x.beginPath();x.arc(540,560,120+k*800,0,7);x.stroke();}}
+  txt('구미 송정 미소스퀘어',540,250,{w:900,size:52,color:'#e8eefc',align:'center',a:eo(seg(t,.2,.3))});
+  txt('매매가',540,360,{w:900,size:52,color:GOLD,align:'center',ls:10,a:eo(seg(t,.2,.3))});
+  const k=seg(t,0,.35),sc=1+1.5*(1-eo(k));
+  x.save();x.translate(540,640);x.scale(sc,sc);A(clamp(k*2));font(900,300);x.textAlign='center';x.fillStyle=goldGrad(-250,20);
+  x.shadowColor='rgba(216,179,106,.5)';x.shadowBlur=60;x.fillText('7억',-40,0);x.shadowBlur=0;txt('원',215,0,{w:900,size:120,color:GOLD2,align:'center',a:clamp(k*2)});x.restore();
+  const tags=[['연 6.23%',MINT],['100% 만실',GOLD],['2018 준공','#5b7fd6']];
+  tags.forEach(([s2,c],i)=>{const s=pop(t,.8+i*.25,.35);if(s<=0)return;const X=210+i*330;
+    x.save();x.translate(X,790);x.scale(s,s);A(clamp(s));rr(-150,-50,300,100,50);x.fillStyle=c;x.fill();
+    txt(s2,0,16,{w:900,size:44,color:i===1?NAVY:WHITE,align:'center',a:clamp(s)});x.restore();});
+  const r=160*eb(seg(t,1.5,.5));if(r>1)circPhoto(540,1060,r,1.2,1);
+  const a2=eo(seg(t,1.9,.5)),Y=1270+60*(1-a2);
+  A(a2);rr(90,Y,900,380,32);x.fillStyle=goldGrad(Y,Y+380);x.fill();
+  txt('문의 및 현장 안내',540,Y+85,{w:900,size:48,color:NAVY,align:'center',a:a2});
+  const pl=1+.035*Math.sin(t*2*Math.PI*2)*seg(t,2.6,.1);
+  x.save();x.translate(540,Y+225);x.scale(pl,pl);txt('010-5165-7120',0,0,{w:900,size:104,color:NAVY,align:'center',a:a2,ls:-1});x.restore();
+  txt('yimagu@hanmail.net',540,Y+315,{w:700,size:42,color:'#26345c',align:'center',a:a2});
+});}
+run([[0,3.5,m1],[3.5,8,m2],[8,12.5,m3],[12.5,16.5,m4],[16.5,20.5,m5],[20.5,24,m6],[24,30,m7]],0,0);
+</script></body></html>
