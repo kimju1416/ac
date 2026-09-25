@@ -1,0 +1,213 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face{font-family:K;font-weight:500;src:url(NotoKR-500.ttf)}
+@font-face{font-family:K;font-weight:700;src:url(NotoKR-700.ttf)}
+@font-face{font-family:K;font-weight:900;src:url(NotoKR-900.ttf)}
+html,body{margin:0;background:#000}
+canvas{display:block}
+</style></head><body>
+<canvas id="c" width="1080" height="1920"></canvas>
+<script>
+const W=1080,H=1920,c=document.getElementById('c'),x=c.getContext('2d');
+const NAVY='#0c1a3a',NAVY2='#162a57',GOLD='#d8b36a',GOLD2='#f3dca3',WHITE='#ffffff';
+const img=new Image();img.src='bldg_clean.jpg';
+let BA=1;
+const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v));
+const eo=t=>1-Math.pow(1-clamp(t),3);             // easeOutCubic
+const eb=t=>{t=clamp(t);const s=1.7;return 1+(s+1)*Math.pow(t-1,3)+s*Math.pow(t-1,2)}; // easeOutBack
+const seg=(t,a,d)=>clamp((t-a)/d);
+function A(a){x.globalAlpha=clamp(BA*a)}
+function font(w,s){x.font=`${w} ${s}px K`}
+function txt(s,X,Y,{w=700,size=60,color=WHITE,align='left',a=1,ls=0,shadow=0}={}){
+  A(a);font(w,size);x.fillStyle=color;x.textAlign=align;x.textBaseline='alphabetic';
+  x.letterSpacing=ls+'px';
+  if(shadow){x.shadowColor='rgba(0,0,0,.55)';x.shadowBlur=shadow;x.shadowOffsetY=4}
+  x.fillText(s,X,Y);x.shadowBlur=0;x.shadowOffsetY=0;x.letterSpacing='0px';
+}
+function rr(X,Y,w,h,r){x.beginPath();x.roundRect(X,Y,w,h,r)}
+function goldGrad(y0,y1){const g=x.createLinearGradient(0,y0,0,y1);g.addColorStop(0,GOLD2);g.addColorStop(1,GOLD);return g}
+// draw photo covering a rect with zoom/pan (sx,sy = focus 0..1)
+function photo(zoom,fx,fy,X=0,Y=0,w=W,h=H){
+  const iw=img.width,ih=img.height,s=Math.max(w/iw,h/ih)*zoom;
+  const dw=iw*s,dh=ih*s;
+  const dx=X+(w-dw)*fx,dy=Y+(h-dh)*fy;
+  x.save();x.beginPath();x.rect(X,Y,w,h);x.clip();x.drawImage(img,dx,dy,dw,dh);x.restore();
+}
+function vgrad(stops){const g=x.createLinearGradient(0,0,0,H);stops.forEach(([p,c])=>g.addColorStop(p,c));return g}
+function navyBG(){A(1);x.fillStyle=vgrad([[0,NAVY],[1,'#060e22']]);x.fillRect(0,0,W,H)}
+function diag(t){ // decorative gold diagonal lines
+  A(.35);x.strokeStyle=GOLD;x.lineWidth=3;
+  const o=(t*40)%200;
+  x.beginPath();x.moveTo(W-420+o*0,H+10);x.lineTo(W+10,H-430);x.stroke();
+  x.beginPath();x.moveTo(W-300,H+10);x.lineTo(W+10,H-310);x.stroke();
+  x.beginPath();x.moveTo(-10,420);x.lineTo(300,-10);x.stroke();
+}
+function brand(a){ // MISO SQUARE logo row
+  A(a);x.strokeStyle=GOLD;x.lineWidth=5;
+  x.beginPath();x.moveTo(90,178);x.lineTo(90,140);x.lineTo(108,160);x.lineTo(126,140);x.lineTo(126,178);x.stroke();
+  txt('MISO SQUARE',146,176,{w:700,size:38,color:GOLD2,a,ls:6});
+}
+
+/* ---------- SCENE 1 : 0 ~ 4.2s  훅 ---------- */
+function s1(t){
+  photo(1.18-0.12*eo(t/4.2),0.45,0.12);
+  A(1);x.fillStyle=vgrad([[0,'rgba(8,16,40,.85)'],[.32,'rgba(8,16,40,.15)'],[.55,'rgba(8,16,40,.2)'],[.78,'rgba(8,16,40,.92)'],[1,'rgba(6,12,30,1)']]);x.fillRect(0,0,W,H);
+  brand(eo(seg(t,.1,.5)));
+  const a1=eo(seg(t,.3,.6));
+  txt('구미 송정 · 프리미엄 단지 내 상가',90,275+30*(1-a1),{w:700,size:44,a:a1,color:'#e8eefc',shadow:12});
+  // bottom block
+  const a2=eo(seg(t,.6,.7));
+  txt('미소스퀘어',84,1360+60*(1-a2),{w:900,size:150,a:a2,shadow:20});
+  const a3=eb(seg(t,1.0,.6));
+  x.save();x.translate(90,1420);x.scale(a3,a3);
+  A(clamp(a3));rr(0,0,250,120,18);x.fillStyle=goldGrad(0,120);x.fill();
+  txt('매각',125,88,{w:900,size:78,color:NAVY,align:'center',a:clamp(a3)});x.restore();
+  const a4=eo(seg(t,1.6,.6));
+  txt('100% 만실, 공실 제로!',90,1640+30*(1-a4),{w:900,size:74,a:a4,color:GOLD2,shadow:10});
+  txt('실투자 연 6.04% 수익 상가',90,1730+30*(1-a4),{w:700,size:50,a:a4*.95});
+}
+
+/* ---------- SCENE 2 : 4.2 ~ 9.6s  수익률 ---------- */
+function s2(t){
+  navyBG();
+  // faint photo strip on top
+  x.save();A(.35);photo(1.3,0.5,0.1,0,0,W,760);x.restore();
+  A(1);x.fillStyle=vgrad([[0,'rgba(12,26,58,.3)'],[.4,NAVY],[1,'#060e22']]);x.fillRect(0,0,W,H);
+  diag(t);
+  const a0=eo(seg(t,.1,.5));
+  txt('투자 포인트 ①',90,330,{w:700,size:40,color:GOLD,a:a0,ls:4});
+  txt('실투자금 대비',90,430,{w:900,size:80,a:a0});
+  // big number
+  const p=eo(seg(t,.4,1.8));
+  const v=(6.04*p).toFixed(2);
+  const a1=eo(seg(t,.4,.4));
+  txt('연',90,760,{w:900,size:110,color:WHITE,a:a1});
+  A(a1);font(900,300);x.textAlign='left';x.fillStyle=goldGrad(520,780);x.letterSpacing='-8px';x.fillText(v,230,780);
+  const nw=x.measureText(v).width;x.letterSpacing='0px';
+  txt('%',240+nw,780,{w:900,size:160,color:GOLD2,a:a1});
+  const a2=eo(seg(t,2.1,.5));
+  txt('수익률 달성',90,900,{w:900,size:80,a:a2});
+  // cards
+  const cards=[['실투자금','6억 4,500만원'],['연간 순임대료','3,900만원']];
+  cards.forEach(([k,val],i)=>{
+    const a=eo(seg(t,2.6+i*.35,.55)),Y=1040+i*230+50*(1-a);
+    A(a);rr(90,Y,900,190,26);x.fillStyle='rgba(255,255,255,.07)';x.fill();
+    x.strokeStyle='rgba(216,179,106,.55)';x.lineWidth=2;x.stroke();
+    A(a);x.fillStyle=GOLD;x.fillRect(90,Y+30,8,130);
+    txt(k,140,Y+80,{w:500,size:40,color:'#b9c6e4',a});
+    txt(val,140,Y+150,{w:900,size:66,a});
+  });
+  const a3=eo(seg(t,3.6,.6));
+  txt('※ 매매가 7억원 기준',90,1590,{w:500,size:34,color:'#8b9bc2',a:a3});
+}
+
+/* ---------- SCENE 3 : 9.6 ~ 15.6s  입점 현황 ---------- */
+function s3(t){
+  navyBG();diag(t+3);
+  const a0=eo(seg(t,.1,.5));
+  txt('투자 포인트 ②',90,300,{w:700,size:40,color:GOLD,a:a0,ls:4});
+  txt('전 층 임대 완료',90,400,{w:900,size:88,a:a0});
+  // badge
+  const ab=eb(seg(t,.5,.6));
+  x.save();x.translate(820,340);x.rotate(-.12);x.scale(ab,ab);
+  A(clamp(ab));x.beginPath();x.arc(0,0,115,0,Math.PI*2);x.fillStyle=goldGrad(-115,115);x.fill();
+  x.strokeStyle=NAVY;x.lineWidth=4;x.beginPath();x.arc(0,0,98,0,Math.PI*2);x.stroke();
+  txt('100%',0,8,{w:900,size:62,color:NAVY,align:'center',a:clamp(ab)});
+  txt('만실',0,62,{w:900,size:40,color:NAVY,align:'center',a:clamp(ab)});
+  x.restore();
+  // floors (3F top ... 1F bottom), appear bottom-up
+  const fl=[['3F','교육기관 · 사무실'],['2F','사무실'],['1F','공인중개사 · 네일샵 · 미용실']];
+  const top=560,h=250,gap=26;
+  // roof line
+  A(a0);x.fillStyle=GOLD;x.fillRect(90,top-40,900,8);
+  for(let i=2;i>=0;i--){
+    const order=2-i,a=eo(seg(t,.9+order*.55,.55)),Y=top+i*(h+gap);
+    const slide=(1-a)*120;
+    A(a);rr(90+slide,Y,900,h,24);x.fillStyle=i===2?'rgba(216,179,106,.16)':'rgba(255,255,255,.08)';x.fill();
+    x.strokeStyle='rgba(216,179,106,.5)';x.lineWidth=2;x.stroke();
+    txt(fl[i][0],150+slide,Y+150,{w:900,size:110,color:GOLD2,a});
+    txt(fl[i][1],360+slide,Y+118,{w:700,size:i===2?46:54,a});
+    // 임대중 stamp
+    const as=eb(seg(t,1.2+order*.55,.4));
+    if(as>0){x.save();x.translate(860+slide,Y+185);x.scale(as,as);
+      A(clamp(as));rr(-100,-40,200,70,35);x.fillStyle='#2fbf71';x.fill();
+      txt('임대중',0,12,{w:900,size:36,color:WHITE,align:'center',a:clamp(as)});x.restore();}
+  }
+  // ground
+  A(a0);x.fillStyle='rgba(216,179,106,.6)';x.fillRect(60,top+3*(h+gap)-6,960,6);
+  const a3=eo(seg(t,3.0,.6));
+  txt('공실 걱정 없는 안정적 현금흐름',540,1560,{w:900,size:56,color:GOLD2,align:'center',a:a3});
+}
+
+/* ---------- SCENE 4 : 15.6 ~ 21s  입지 · 건물 ---------- */
+function s4(t){
+  // photo top half with pan
+  A(1);x.fillStyle=NAVY;x.fillRect(0,0,W,H);
+  photo(1.05+.1*eo(t/5.4),0.5,0.18,0,0,W,1080);
+  A(1);x.fillStyle=vgrad([[0,'rgba(12,26,58,.55)'],[.15,'rgba(12,26,58,0)'],[.42,'rgba(12,26,58,.2)'],[.56,NAVY],[1,'#060e22']]);x.fillRect(0,0,W,H);
+  const a0=eo(seg(t,.1,.5));
+  txt('투자 포인트 ③',90,250,{w:700,size:40,color:GOLD,a:a0,ls:4,shadow:10});
+  txt('입지 & 건물',90,345,{w:900,size:84,a:a0,shadow:16});
+  const items=[['01','풍부한 배후수요','아파트 단지 정문 인근'],['02','우수한 건물 상태','현대적인 외관'],['03','전유면적 322.62㎡','경북 구미시 송정동 527']];
+  items.forEach(([n,h1,h2],i)=>{
+    const a=eo(seg(t,.7+i*.45,.55)),Y=1010+i*200,sl=(1-a)*-80;
+    A(a);rr(90+sl,Y,900,170,24);x.fillStyle='rgba(255,255,255,.07)';x.fill();
+    x.strokeStyle='rgba(216,179,106,.45)';x.lineWidth=2;x.stroke();
+    A(a);x.beginPath();x.arc(170+sl,Y+85,50,0,Math.PI*2);x.fillStyle=goldGrad(Y+35,Y+135);x.fill();
+    txt(n,170+sl,Y+100,{w:900,size:42,color:NAVY,align:'center',a});
+    txt(h1,250+sl,Y+78,{w:900,size:52,a});
+    txt(h2,250+sl,Y+135,{w:500,size:38,color:'#b9c6e4',a});
+  });
+}
+
+/* ---------- SCENE 5 : 21 ~ 27s  가격 + 연락처 ---------- */
+function s5(t){
+  photo(1.25-.1*eo(t/6),0.4,0.1);
+  A(1);x.fillStyle='rgba(6,12,30,.78)';x.fillRect(0,0,W,H);
+  diag(t);
+  brand(eo(seg(t,.1,.5)));
+  const a0=eo(seg(t,.2,.5));
+  txt('구미 송정 미소스퀘어 매각',540,420,{w:700,size:50,align:'center',a:a0,color:'#e8eefc'});
+  txt('매매가',540,500,{w:700,size:56,align:'center',color:GOLD,a:a0,ls:10});
+  const ap=eb(seg(t,.35,.7));
+  x.save();x.translate(540,800);x.scale(ap,ap);
+  A(clamp(ap));font(900,280);x.textAlign='center';x.fillStyle=goldGrad(-230,20);x.shadowColor='rgba(216,179,106,.45)';x.shadowBlur=50;
+  x.fillText('7억',-40,0);x.shadowBlur=0;
+  txt('원',200,0,{w:900,size:120,color:GOLD2,align:'center',a:clamp(ap)});
+  x.restore();
+  const a1=eo(seg(t,1.0,.5));
+  txt('700,000,000원',540,880,{w:700,size:52,align:'center',a:a1,color:'#cfd8ee',ls:3});
+  // line
+  A(a1);x.fillStyle=GOLD;x.fillRect(540-300*a1,950,600*a1,3);
+  // contact card
+  const a2=eo(seg(t,1.6,.6)),Y=1060+60*(1-a2);
+  A(a2);rr(90,Y,900,430,32);x.fillStyle=goldGrad(Y,Y+430);x.fill();
+  txt('문의 및 현장 안내',540,Y+95,{w:900,size:50,color:NAVY,align:'center',a:a2});
+  const pulse=1+.03*Math.sin(t*6)*seg(t,2.4,.1);
+  x.save();x.translate(540,Y+255);x.scale(pulse,pulse);
+  txt('010-5165-7120',0,0,{w:900,size:108,color:NAVY,align:'center',a:a2,ls:-1});x.restore();
+  txt('yimagu@hanmail.net',540,Y+355,{w:700,size:44,color:'#26345c',align:'center',a:a2});
+  const a3=eo(seg(t,2.6,.6));
+  txt('실투자 연 6.04% · 100% 만실 · 전유 322.62㎡',540,1610,{w:700,size:38,align:'center',color:'#b9c6e4',a:a3});
+}
+
+const SC=[[0,4.2,s1],[4.2,9.6,s2],[9.6,15.6,s3],[15.6,21,s4],[21,27,s5]];
+const XF=.45;
+function draw(T){
+  x.setTransform(1,0,0,1,0,0);BA=1;A(1);x.fillStyle='#000';x.fillRect(0,0,W,H);
+  for(let i=0;i<SC.length;i++){
+    const [a,b,f]=SC[i];
+    if(T<a-XF||T>b) continue;
+    const k=i===0?1:eo(clamp((T-(a-XF))/XF));
+    BA=k;x.save();
+    if(i>0&&k<1){x.translate(0,(1-k)*60)}
+    f(Math.max(0,T-a+(i>0?XF:0)-XF));x.restore();
+  }
+  BA=1;
+  // final fade out
+  if(T>26.2){A((T-26.2)/.8*.0);}
+}
+window.draw=draw;
+window.ready=Promise.all([document.fonts.load('900 50px K'),document.fonts.load('700 50px K'),document.fonts.load('500 50px K'),new Promise(r=>img.complete?r():img.onload=r)]);
+</script></body></html>
