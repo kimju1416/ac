@@ -345,7 +345,7 @@ const apps = [
   { name:'학교문화책임규약', shot:'chekim',          desc:'학생 생활 규약을 디지털로 안내하고 확인·서명까지 한 번에 처리하는 앱',            cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1x8RXHnQxjPmR8qpkGJvZfGhBGxT7vRpt0XpUaVu-QvQ/copy' },
   { name:'분실물 센터', shot:'lostfound',                desc:'학교 내 분실물을 사진과 함께 등록하고 학생이 직접 조회·신청할 수 있는 관리 앱',    cat:'학생부 업무', badge:'',       date:'26.05.15', url:'https://docs.google.com/spreadsheets/d/1XjSXO-MI-P3T_Q68FTwC5xjtkFDQf3J2ER70PdoILmg/copy' },
   { name:'학교폭력 사안처리 조회', shot:'hakpok-case',     desc:'학폭 사안의 접수부터 처리 완료까지 9단계 흐름을 한눈에 추적·관리하는 앱',         cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/177BdGTaJXkCHZsVMGcnUfSIOfVNR2i38BiFfX7YJ6g8/copy' },
-  { name:'학교폭력 24시간 신고센터', shot:'hakpok-report',   desc:'학생이 익명으로 학폭을 신고하고 담당자가 실시간으로 접수·처리할 수 있는 앱',       cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1Jnwp8xcOpamNZsL6EsoQy9ZxfwIrPCsNOXLRmtvQVTM/copy' },
+  { name:'학교폭력 24시간 신고센터', shot:'hakpok-report','kimju-guide',   desc:'학생이 익명으로 학폭을 신고하고 담당자가 실시간으로 접수·처리할 수 있는 앱',       cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1Jnwp8xcOpamNZsL6EsoQy9ZxfwIrPCsNOXLRmtvQVTM/copy' },
   { name:'학교 사안 처리 길잡이', desc:'학교폭력·위기·안전사고 등 21가지 사안의 초기 대응부터 절차·기한·불복까지 확인하는 전국 교사용 길잡이', cat:'학생부 업무', badge:'', date:'26.09.24', url:'https://kimju.kr/guide/' },
   { name:'학교규칙 제·개정 공동체 의견수렴', shot:'schoolrule', desc:'학교규칙 제·개정 시 학생·학부모·교사의 의견을 온라인으로 수렴하고 결과를 한눈에 정리하는 앱', cat:'학생부 업무', badge:'', date:'26.06.26', url:'https://docs.google.com/spreadsheets/d/1Apefsjt75E83Vjc-UnMZztLHgnFv2oUegiVPu4HtJns/copy' },
   // 2. 담임 업무
@@ -396,6 +396,7 @@ const apps = [
   { name:'ClassTube (교실TV)',          sub:'↳ 초·중등 교육 영상 3,287편 아카이브', desc:'공강·자율활동·의무교육 수업에 바로 쓸 수 있는 교육 유튜브 영상 3,287편을 재생시간·학년별로 필터링해 빠르게 찾는 영상 아카이브', cat:'기타 자료', badge:'doc', date:'26.07.04', url:'https://kimju1416.github.io/classtube/' },
   { name:'경북교육청 서식 꾸러미',        desc:'경북교육청 행정 서식 1,175종을 검색·미리보기·다운로드할 수 있는 서식 아카이브',            cat:'기타 자료',  badge:'doc',    date:'26.07.26', url:'https://kimju1416.github.io/gbe-seosik' },
   { name:'경북에듀잡',                  shot:'gb-edujob', desc:'경북 지역 학교 채용공고를 직종·지역별로 모아 마감임박순으로 보여주는 구인 정보 사이트. 기간제교원·교육공무직·방과후강사 등 매일 자동 수집', cat:'기타 자료', badge:'doc', date:'26.08.10', url:'https://kimju1416.github.io/gb-edujob/' },
+  { name:'경북교육지도',                shot:'gb-edu-map', desc:'경북 학교 위치·통학구역·학생 수 흐름을 3D 지도로 보는 교사용 교육 통계 지도. 시군별 둘러보기, 2032년까지 입학생 추정, 학교알리미 공시까지 한 화면에', cat:'기타 자료', badge:'doc', date:'26.09.23', url:'https://kimju1416.github.io/gb-edu-map/' },
   { name:'AI 사용량 위젯', shot:'aiwidget',              desc:'Claude·Codex·Gemini 세 가지 AI 서비스의 사용량을 바탕화면에서 한눈에 확인하는 윈도우 전용 데스크톱 위젯. exe 설치 후 바로 사용 가능', cat:'기타 자료', badge:'exe',    date:'26.07.26', url:'https://github.com/kimju1416/ai-usage-widget/releases/latest/download/AIUsageWidget-Setup.exe' },
   { name:'공무원·교사 연금 비교 시뮬레이터', desc:'공무원연금과 국민연금을 조건별로 비교해 예상 수령액·납입액을 시뮬레이션하는 교사 전용 계산기', cat:'기타 자료', badge:'doc',    date:'26.07.26', url:'https://kimju1416.github.io/pension/' },
   // 8. 오락실 — 수업·쉬는시간에 바로 켜는 게임
@@ -415,7 +416,7 @@ const apps = [
   { name:'kimju.zip A/S 챗봇',          desc:'kimju.zip 앱 사용 중 오류나 궁금한 점을 AI 챗봇에게 바로 물어볼 수 있는 지원 창구',   cat:'A/S',        badge:'as',     date:'26.04.12', url:'https://kimju.kr/help' },
 ];
 
-const SHOTS = new Set(['aiwidget','arcade','archive','baseball','card','chekim','cho','classassign','classmemo','classtube','cmass','codex','consult','cowork','design','edu1','gb-edujob','gbe-seosik','gpt2','guide11','hakpok-case','hakpok-report','kimjuzip','lostfound','maeumjido-cho','maeumjido-jung','motion-pulse-arcade','notice-cho','notice-jung','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','paps','pe-textbook','pension','saemcall','safe-school-game','safety','school-civildefense-drill','school-earthquake-drill','school-fire-drill','schoolrule','seat','sono','specialroom','sportsmap','squat-coach','ssamzip','td2','su333','teammix','timetable-swap','training','trip-escape','trip-escape-teen','uni1','vibev','youcall','youcall-board']);
+const SHOTS = new Set(['aiwidget','arcade','archive','baseball','card','chekim','cho','classassign','classmemo','classtube','cmass','codex','consult','cowork','design','edu1','gb-edu-map','gb-edujob','gbe-seosik','gpt2','guide11','hakpok-case','hakpok-report','kimju-guide','kimjuzip','lostfound','maeumjido-cho','maeumjido-jung','motion-pulse-arcade','notice-cho','notice-jung','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','paps','pe-textbook','pension','saemcall','safe-school-game','safety','school-civildefense-drill','school-earthquake-drill','school-fire-drill','schoolrule','seat','sono','specialroom','sportsmap','squat-coach','ssamzip','td2','su333','teammix','timetable-swap','training','trip-escape','trip-escape-teen','uni1','vibev','youcall','youcall-board']);
 
 /* 카드용 한 줄 소개 — 앱 이름이 바뀌면 여기 열쇠도 같이 바꾼다 */
 const ONE = {
@@ -463,6 +464,7 @@ const ONE = {
   'ClassTube (교실TV)':'수업에 바로 트는 교육 영상 3,287편',
   '경북교육청 서식 꾸러미':'경북교육청 서식 1,175종 검색',
   '경북에듀잡':'경북 학교 채용공고를 마감순으로',
+  '경북교육지도':'우리 지역 학교·통학구역·학생 수를 3D 지도로',
   'AI 사용량 위젯':'Claude·Codex·Gemini 사용량을 바탕화면에',
   '공무원·교사 연금 비교 시뮬레이터':'공무원연금과 국민연금 비교 계산',
   'AI 모션 트레이닝 센터':'카메라가 세어 주는 스쿼트와 미니게임',
