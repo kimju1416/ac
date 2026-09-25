@@ -106,7 +106,11 @@ h1 mark{background:linear-gradient(transparent 58%,var(--lime) 58%);color:inheri
 .rk .n.top{background:var(--lime);color:var(--limeInk)}
 .rk h4{font-size:15px;letter-spacing:-.02em;line-height:1.35;margin:12px 4px 0}.rk p{font-size:13px;color:var(--sub);margin:3px 4px 0;line-height:1.45}
 /* 분류 탭 */
-.tabs{position:sticky;top:64px;z-index:20;background:var(--bg);padding:12px 0;display:flex;gap:8px;overflow-x:auto;margin-bottom:18px;scrollbar-width:none}
+.tabsw{position:sticky;top:64px;z-index:20;background:var(--bg);margin-bottom:18px}
+.tabsw:before,.tabsw:after{content:'';position:absolute;top:0;bottom:0;width:48px;pointer-events:none;opacity:0;transition:opacity .2s ease;z-index:1}
+.tabsw:before{left:0;background:linear-gradient(to right,var(--bg) 20%,rgba(246,246,243,0))}.tabsw:after{right:0;background:linear-gradient(to left,var(--bg) 20%,rgba(246,246,243,0))}
+.tabsw.fl:before,.tabsw.fr:after{opacity:1}
+.tabs{padding:12px 0;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tabs button{flex-shrink:0;height:38px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:14px;font-weight:600;color:var(--sub)}
 .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -215,10 +219,23 @@ details.steps li b{color:var(--ink)}
   .sheet{grid-template-columns:1fr;border-radius:22px 22px 0 0;max-height:92vh;transform:translateY(40px)}
   .sheet .pv{padding:14px 14px 0;background:#fff}.sheet .bd{padding:14px 18px 22px}
   .sheet h3{font-size:22px}
+  .nav nav a,.nav nav button{display:inline-flex;align-items:center;min-height:44px}.dot{top:3px}
+  .tags button{padding:9px 14px;font-size:14px}
+  .strip a{display:inline-block;padding:10px 2px;margin:-10px 0}
+  .sh .more{padding:12px 0}
 }
-@media(max-width:560px){.hide-s{display:none!important}}
+@media(max-width:560px){.hide-s{display:none!important}
+  .grid{grid-template-columns:1fr!important;gap:0!important;margin-bottom:56px}
+  .card{display:grid;grid-template-columns:116px 1fr;grid-template-rows:auto auto auto;column-gap:14px;align-content:center;padding:12px 0;border-bottom:1px solid var(--line);border-radius:0}
+  .card:hover{transform:none}.card:first-child{padding-top:4px}
+  .card .t{grid-column:1;grid-row:1/4;align-self:center;border-radius:10px}
+  .card h4,.card p,.card .d{grid-column:2}
+  .card h4{margin-top:0;font-size:15.5px}.card p{font-size:13px;margin-top:2px}.card .d{font-size:12px;margin-top:3px}
+  .card .k{left:5px;top:5px;font-size:10px;padding:2px 5px;border-radius:5px}.card .nw{right:5px;top:5px;font-size:10px;padding:2px 5px;border-radius:5px}
+  .card .t .none{font-size:12px}
+}
 @media(max-width:600px){.row{grid-template-columns:1fr 1fr}.row .rk:first-child{grid-column:1/-1}}
-@media(max-width:430px){.me,.visits{max-width:270px}.grid{grid-template-columns:1fr}h1{font-size:33px}.lead{font-size:16.5px}}
+@media(max-width:430px){.me,.visits{max-width:270px}h1{font-size:33px}.lead{font-size:16.5px}}
 </style>
 </head>
 <body>
@@ -299,7 +316,7 @@ details.steps li b{color:var(--ink)}
 
   <section id="apps">
     <div class="sh"><div><h2>전체 앱</h2><p>업무별로 골라 보세요. 누르면 소개가 먼저 열립니다</p></div></div>
-    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="tabsw" id="tabsw"><div class="tabs" id="tabs" role="tablist"></div></div>
     <div class="qinfo" id="qinfo"></div>
     <div class="grid" id="grid"></div>
   </section>
@@ -551,6 +568,7 @@ function renderTabs(){
     const n = c==='전체' ? apps.length : apps.filter(a=>a.cat===c).length;
     return `<button type="button" role="tab" aria-selected="${c===cur}" class="${c===cur?'on':''}" data-c="${esc(c)}">${c==='전체'?'전체':esc(CAT_LABEL[c]||c)}<span>${n}</span></button>`;
   }).join('');
+  requestAnimationFrame(tabFade);
 }
 function matches(a, q){
   const hay = (a.name+' '+a.desc+' '+(a.sub||'')+' '+oneOf(a)+' '+a.cat+' '+(CAT_LABEL[a.cat]||'')).toLowerCase();
@@ -575,7 +593,21 @@ function renderGrid(){
       <div class="d">${esc(CAT_LABEL[a.cat]||a.cat)} · ${fullDate(a)}</div>
     </button>`).join('');
 }
-function setCat(c){ cur=c; renderTabs(); renderGrid(); }
+function setCat(c){
+  const t=document.getElementById('tabs'), x=t.scrollLeft;
+  cur=c; renderTabs(); renderGrid();
+  t.scrollLeft=x;   // 다시 그려도 제자리에서 출발
+  const on=t.querySelector('.on');
+  if(on) t.scrollTo({left:on.offsetLeft-(t.clientWidth-on.offsetWidth)/2, behavior:'smooth'});
+}
+/* 탭 줄이 옆으로 넘치면 가장자리를 흐리게 — 더 있다는 표시 */
+function tabFade(){
+  const t=document.getElementById('tabs'), w=document.getElementById('tabsw');
+  w.classList.toggle('fl', t.scrollLeft>4);
+  w.classList.toggle('fr', t.scrollLeft+t.clientWidth < t.scrollWidth-4);
+}
+document.getElementById('tabs').addEventListener('scroll', tabFade, {passive:true});
+addEventListener('resize', tabFade);
 function go(id){ document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'}); }
 function goSearch(){
   query = document.getElementById('q').value.trim();
