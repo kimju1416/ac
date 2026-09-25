@@ -68,7 +68,7 @@
     <h1>개인정보 처리방침</h1>
     <p>TeacherDesk 2가 무엇을 저장하고, 무엇을 밖으로 보내는지 밝힌 문서입니다.
       학교에 설명하셔야 할 때 이 주소를 그대로 보여 주시면 됩니다.</p>
-    <div class="stamp">TeacherDesk 2 · 시행일 2026년 9월 15일 · 만든 사람 김주현(광평중학교)</div>
+    <div class="stamp">TeacherDesk 2 · 시행일 2026년 9월 26일(구글 캘린더 연결 추가) · 만든 사람 김주현(광평중학교)</div>
   </header>
 
   <section>
@@ -110,7 +110,7 @@
       <li>만든 사람의 서버를 거치지 않습니다. 저장 공간은 선생님 구글 계정 용량을 씁니다.</li>
     </ul>
 
-    <h3>구글에 요청하는 권한 (이 셋이 전부입니다)</h3>
+    <h3>구글에 요청하는 권한 (PC 간 동기화는 이 셋이 전부입니다)</h3>
     <div class="tbl"><table>
       <tr><th>권한</th><th>쓰는 곳</th></tr>
       <tr><td><code>drive.appdata</code></td><td>앱 전용 칸에 동기화 자료를 저장하고 읽기</td></tr>
@@ -140,11 +140,30 @@
       <li>끄기 — PC 설정에서 폰 연동을 끄면 드라이브의 폰 몫을 지웁니다([학생 자료도]만 끄면 다음에 올릴 때 학생 자료가 빠집니다). 폰에서는 설정 → 로그아웃.</li>
     </ul>
 
+    <h3 id="gcal">구글 캘린더 연결 (v3.57~)</h3>
+    <p>선생님이 지금 쓰시는 구글 캘린더를 TeacherDesk 2 달력에서 <b>보고 · 넣고 · 고치고 · 지우는</b> 기능입니다.
+      <b>기본은 꺼져 있고</b>, PC 설정 → [학교] 탭의 <b>[구글 캘린더 연결]</b>, 폰 페이지 설정의 <b>[구글 캘린더 쓰기 켜기]</b>를 누르셨을 때만 켜집니다.
+      PC 간 동기화 로그인과는 <b>따로</b> 허락을 받습니다.</p>
+    <div class="tbl"><table>
+      <tr><th>권한</th><th>쓰는 곳</th></tr>
+      <tr><td><code>calendar.events.owned</code></td><td>선생님 <b>본인 소유 캘린더</b>의 일정을 읽고, 선생님이 TeacherDesk 2에서 넣고 · 고치고 · 지우라고 하신 일정만 바꾸기</td></tr>
+      <tr><td><code>calendar.calendarlist.readonly</code></td><td>어느 캘린더를 달력에 보일지 고르실 수 있게 캘린더 <b>이름 목록</b>만 읽기</td></tr>
+      <tr><td><code>email</code> · <code>openid</code></td><td>어느 계정에 연결했는지 설정 화면에 보여 드리기</td></tr>
+    </table></div>
+    <ul>
+      <li><b>무엇을 읽나요</b> — 켜신 캘린더의 일정 제목 · 날짜 · 시각 · 반복 규칙. 일정 설명 · 장소 · 참석자 명단은 저장하지 않고 쓰지도 않습니다(참석자가 있는 일정은 보기만 합니다).</li>
+      <li><b>무엇을 쓰나요</b> — 선생님이 누르신 넣기 · 고치기 · 지우기만 구글 캘린더에 반영합니다. TeacherDesk 2만 쓰는 표시(중요 · 끝냄 · 알림)는 그 일정 안의 숨김 칸(비공개 확장 속성)에 적어 두어 선생님의 다른 PC · 폰이 같이 봅니다.</li>
+      <li><b>어디에 두나요</b> — PC는 받은 일정의 사본을 그 컴퓨터에 <b>암호화해</b> 두고 달라진 것만 받아 옵니다. 폰은 받은 일정을 화면에만 쓰고 폰에 저장하지 않습니다.
+        <b>만든 사람의 서버를 거치지 않고</b>, 선생님 PC · 폰이 구글과 직접 주고받습니다.</li>
+      <li><b>끄는 방법</b> — PC 설정 [학교] → [연결 끊기], 폰 설정 → [구글 캘린더 쓰기 끄기]. 그 기기에서만 빠지고 구글 캘린더의 일정은 그대로 남습니다.
+        <a href="https://myaccount.google.com/connections" target="_blank" rel="noopener">구글 계정 → 연결된 앱</a>에서 끊으실 수도 있습니다.</li>
+    </ul>
+
     <h3>구글에서 받은 정보를 쓰는 원칙</h3>
     <p>TeacherDesk 2가 구글 API로 받은 정보를 쓰고 옮기는 방식은
       <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API 서비스 사용자 데이터 정책</a>의
-      제한적 사용(Limited Use) 요건을 따릅니다. 받은 정보는 선생님의 컴퓨터끼리 기록을 동기화하는 데에만 쓰고,
-      광고에 쓰거나 다른 사람에게 넘기거나 팔지 않으며, 만든 사람을 포함해 누구도 사람이 직접 읽지 않습니다.</p>
+      제한적 사용(Limited Use) 요건을 따릅니다. 받은 정보는 선생님의 컴퓨터끼리 기록을 동기화하고 선생님의 구글 캘린더를 TeacherDesk 2에서 보고 고치는 데에만 쓰고,
+      광고에 쓰거나 다른 사람에게 넘기거나 팔지 않으며, AI 모델 학습에 쓰지 않고, 만든 사람을 포함해 누구도 사람이 직접 읽지 않습니다.</p>
 
     <h3>끄고 지우는 방법</h3>
     <ul>
@@ -163,7 +182,7 @@
     <h3>나. 날씨</h3>
     <p>지역을 찾을 때 학교 주소 일부·학교 이름(또는 넣으신 지역명)이, 그 뒤로는 좌표만 나갑니다.</p>
     <h3>다. 구글 캘린더 · 전광판 시트 · 컴시간 · 새 버전 확인</h3>
-    <p>넣으신 주소·학교로 받아 오기만 합니다.</p>
+    <p>넣으신 주소·학교로 받아 오기만 합니다. [구글 캘린더 연결]을 켜신 경우에만 선생님이 넣고 · 고치고 · 지우신 일정이 선생님 구글 캘린더로 갑니다(3번 항목).</p>
     <h3>라. PC 간 동기화</h3>
     <p>로그인하신 경우에만, 3번 항목의 기록이 선생님 본인 구글 드라이브로 갑니다.</p>
     <h3>마. 익명 사용 집계</h3>
@@ -222,6 +241,23 @@
   <section>
     <h2><span class="n">9</span>만 14세 미만</h2>
     <p>이 프로그램은 교사가 쓰는 업무 도구입니다. 학생이 직접 설치해 쓰거나 학생에게서 정보를 직접 수집하지 않습니다.</p>
+  </section>
+
+  <section id="google-user-data" lang="en">
+    <h2>Google user data (English summary)</h2>
+    <p>TeacherDesk 2 is a desktop dashboard for school teachers, made by an individual teacher (contact: Instagram @kimju.zip or the in-app Feedback tab).
+      It has no developer server: all Google API calls go directly between the teacher's own PC or phone and Google.</p>
+    <ul>
+      <li><b>PC sync</b> (optional) — <code>drive.appdata</code>, <code>openid</code>, <code>email</code>: stores the teacher's own records in the app-only folder of their Google Drive so their PCs and phone stay in sync.</li>
+      <li><b>Google Calendar</b> (optional, off by default) — <code>calendar.events.owned</code>: reads the events of calendars the teacher owns so they appear in the TeacherDesk 2 calendar, and creates, updates or deletes an event only when the teacher does so in TeacherDesk 2.
+        <code>calendar.calendarlist.readonly</code>: reads the list of the teacher's calendars so they can choose which ones to show.
+        Event descriptions, locations and attendee lists are not stored or used. Events with attendees are read-only in the app.</li>
+      <li>Calendar data is cached only on the teacher's own PC (encrypted with the Windows user key) and is kept in memory only on the phone page. It is never sent to the developer or any third party.</li>
+      <li>TeacherDesk 2's use and transfer of information received from Google APIs adheres to the
+        <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, including the Limited Use requirements.
+        Google user data is not used for advertising, not sold, not transferred to others, not used to train AI models, and not read by humans.</li>
+      <li>To stop: press [Disconnect] in the app, or remove TeacherDesk2 at <a href="https://myaccount.google.com/connections" target="_blank" rel="noopener">Google Account → Third-party connections</a>. Events in Google Calendar are not deleted.</li>
+    </ul>
   </section>
 
   <section>
