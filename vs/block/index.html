@@ -16,11 +16,11 @@
 <style>
 /* 블록 대전 전용 — 이름은 모두 bk 접두어 */
 #bkCv{position:absolute;left:0;top:0}
-.bkPad{position:absolute;left:0;right:0;bottom:0;z-index:3;display:flex;justify-content:center;gap:6px;padding:6px 8px 8px}
-.bkPad button{width:var(--bkBs,52px);height:var(--bkBs,52px);flex:0 0 auto;border-radius:14px;background:rgba(255,255,255,.93);color:#1C2340;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 rgba(0,0,0,.28);touch-action:none;font-weight:900;font-size:15px}
-.bkPad button.bkRot{background:#1C2340;color:#fff}
-.bkPad button.bkHd{background:#E05A1E;color:#fff}
-.bkPad button.bkHold{background:#2361C4;color:#fff;font-size:14px}
+.bkPad{position:absolute;left:0;right:0;bottom:0;z-index:3;display:flex;justify-content:space-between;align-items:center;padding:6px 16px 10px}
+.bkDir{display:flex;gap:8px}
+.bkPad button{width:var(--bkBs,60px);height:var(--bkBs,60px);flex:0 0 auto;border-radius:16px;background:rgba(255,255,255,.93);color:#1C2340;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 rgba(0,0,0,.3);touch-action:none}
+/* 회전: 고전 휴대용 게임기처럼 오른쪽에 크고 둥글게 */
+.bkPad button.bkRot{width:var(--bkRs,80px);height:var(--bkRs,80px);border-radius:50%;background:#E05A1E;color:#fff}
 .bkPad button.bkOn{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.28)}
 .bkPad svg{width:50%;height:50%;fill:none;stroke:currentColor;stroke-width:2.7;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
 </style>
@@ -31,7 +31,7 @@
 <script>
 "use strict";
 // ================= 블록 대전 =================
-// 10×20 판(위에 숨은 2줄), 7개 묶음(7-bag), SRS 회전·벽차기, 홀드, 다음 5개, 고스트, 잠금 지연 0.5초(15회).
+// 10×20 판(위에 숨은 2줄), 7개 묶음(7-bag), SRS 회전·벽차기(시계 방향 회전 하나), 다음 5개, 고스트, 잠금 지연 0.5초(15회). 하드 드롭·홀드 없음(고전 조작).
 // 공격: 줄 1→0, 2→1, 3→2, 4→4 / T-스핀 싱글2·더블4·트리플6 / 백투백 +1 / 콤보 / 판 비우기 +10.
 // 판은 각자 자기 기기에서만 진행하고, 공격(atk)과 판 요약(bd)·조각 위치(pc)만 주고받는다.
 const W = 10, H = 22, HID = 2;                    // 가로 10, 세로 22(위 2줄은 숨은 줄)
@@ -82,7 +82,7 @@ class Plr {
     this.rng = VS.rng(seed);                        // 같은 seed → 두 사람이 같은 조각 순서
     this.hr = VS.rng((seed ^ (salt * 7919)) + 13);  // 방해 줄 빈칸 위치(내 기기 것)
     this.bag = []; this.q = []; this.fillQ();
-    this.hold = 0; this.canHold = true; this.cur = null;
+    this.cur = null;
     this.pend = []; this.b2b = false; this.combo = -1; this.dead = false;
     this.gT = 0; this.lockT = 0; this.resets = 0; this.low = 0; this.lastRot = false; this.lastKick = 0;
     this.soft = false; this.sent = 0; this.lines = 0; this.pieces = 0; this.fx = null; this.ver = 0;
@@ -103,7 +103,7 @@ class Plr {
     this.low = p.y;
     return true;
   }
-  next(){ const t = this.q.shift(); this.fillQ(); this.canHold = true; this.pieces++; return this.spawn(t); }
+  next(){ const t = this.q.shift(); this.fillQ(); this.pieces++; return this.spawn(t); }
   die(){ if (this.dead) return; this.dead = true; this.emit('dead'); }
   touched(){ if (this.resets < LOCK_RESETS){ this.lockT = 0; this.resets++; } this.ver++; }
   checkLow(){ const p = this.cur; if (p.y > this.low){ this.low = p.y; this.resets = 0; } }
@@ -121,21 +121,14 @@ class Plr {
     const p = this.cur; if (!p || this.dead || !fitsG(this.g, p.t, p.r, p.x, p.y + 1)) return false;
     p.y++; this.lastRot = false; this.checkLow(); this.ver++; return true;
   }
-  hard(){ const p = this.cur; if (!p || this.dead) return; let n = 0; while (this.down()) n++; this.emit('hard', { n, p }); this.lock(); }
-  doHold(){
-    if (!this.cur || this.dead || !this.canHold) return false;
-    const t = this.cur.t;
-    if (this.hold){ const h = this.hold; this.hold = t; this.spawn(h); }
-    else { this.hold = t; const n = this.q.shift(); this.fillQ(); this.spawn(n); }
-    this.canHold = false; this.emit('hold'); return true;
-  }
   tick(dt, grav){
     const p = this.cur; if (!p || this.dead) return;
     const iv = this.soft ? Math.min(grav, SOFT_MS) : grav;
     this.gT += dt; let n = 0;
     while (this.gT >= iv && n++ < H){ this.gT -= iv; if (!this.down()){ this.gT = 0; break; } }
     if (!this.cur) return;
-    if (!fitsG(this.g, p.t, p.r, p.x, p.y + 1)){ this.lockT += dt; if (this.lockT >= LOCK_MS) this.lock(); }
+    // 바닥에 닿은 채 아래를 누르고 있으면 더 빨리 굳는다(하드 드롭이 없는 대신)
+    if (!fitsG(this.g, p.t, p.r, p.x, p.y + 1)){ this.lockT += this.soft ? dt * 4 : dt; if (this.lockT >= LOCK_MS) this.lock(); }
     else this.lockT = 0;
   }
   lock(){
@@ -193,7 +186,7 @@ function placements(g, t){
   const s = spawnPos(t);
   if (!fitsG(g, t, 0, s.x, s.y)) return [];
   if (fitsG(g, t, 0, s.x, s.y + 1)) s.y++;
-  const out = [], rots = t === T_O ? [[]] : [[], [1], [1, 1], [-1]];
+  const out = [], rots = t === T_O ? [[]] : [[], [1], [1, 1], [1, 1, 1]];
   for (const seq of rots){
     let p = { r: 0, x: s.x, y: s.y }, ok = true;
     for (const d of seq){ const k = kickRot(g, t, p.r, p.x, p.y, d); if (!k){ ok = false; break; } p = { r: k.r, x: k.x, y: k.y }; }
@@ -226,11 +219,11 @@ function evalGrid(g, L){
   if (maxH > 12) v -= (maxH - 12) * 1.5;
   return v;
 }
-// 한 조각의 목표 자리 고르기. 어려움은 홀드와 다음 조각까지 본다.
+// 한 조각의 목표 자리 고르기. 어려움은 다음 조각까지 본다(홀드·하드 드롭 없이 사람과 같은 조건).
 function think(p, lv){
   const cur = p.cur; if (!cur) return null;
   const cands = [];
-  const tryPiece = (t, hold, nextT) => {
+  const tryPiece = (t, nextT) => {
     for (const pl of placements(p.g, t)){
       const s = simPlace(p.g, t, pl.r, pl.x, pl.y);
       let v = evalGrid(s.g, s.L);
@@ -239,14 +232,10 @@ function think(p, lv){
         for (const p2 of placements(s.g, nextT)){ const s2 = simPlace(s.g, nextT, p2.r, p2.x, p2.y); const v2 = evalGrid(s2.g, s2.L); if (v2 > best) best = v2; }
         v = best > -1e9 ? best + 0.76 * s.L + (s.L === 4 ? 4 : 0) : v - 50;
       }
-      cands.push(Object.assign(pl, { hold, v }));
+      cands.push(Object.assign(pl, { v }));
     }
   };
-  tryPiece(cur.t, false, p.q[0]);
-  if (lv === 'hard' && p.canHold){
-    if (p.hold) tryPiece(p.hold, true, p.q[0]);
-    else if (p.q[0] !== cur.t) tryPiece(p.q[0], true, p.q[1]);
-  }
+  tryPiece(cur.t, p.q[0]);
   if (!cands.length) return null;
   if (lv === 'easy'){
     for (const c of cands) c.v += Math.random() * 2.5;
@@ -257,30 +246,29 @@ function think(p, lv){
 }
 function planSteps(pl){
   const st = [];
-  if (pl.hold) st.push('H');
   for (const d of pl.seq) st.push(d > 0 ? 'CW' : 'CCW');
   const dx = pl.x - pl.sx; for (let i = 0; i < Math.abs(dx); i++) st.push(dx > 0 ? 'R' : 'L');
   st.push('D');
   return st;
 }
 function doStep(p, k){
-  if (k === 'H') p.doHold(); else if (k === 'CW') p.rot(1); else if (k === 'CCW') p.rot(-1);
-  else if (k === 'L') p.move(-1); else if (k === 'R') p.move(1); else if (k === 'D') p.hard();
+  if (k === 'CW') p.rot(1); else if (k === 'CCW') p.rot(-1);
+  else if (k === 'L') p.move(-1); else if (k === 'R') p.move(1); else if (k === 'D') p.soft = true;   // D = 아래로 내리기 시작
 }
-const PIECE_MS = { easy: 1200, normal: 600, hard: 300 };
+const PIECE_MS = { easy: 1200, normal: 600, hard: 300 };   // 돌리고 옮기는 데 쓰는 시간(그 뒤 아래로 내린다)
 class Bot {
   constructor(p, lv){ this.p = p; this.lv = lv; this.steps = null; this.pc = -1; this.t = 0; this.dt = 100; }
   update(dt){
     const p = this.p; if (!p.cur || p.dead) return;
     if (this.pc !== p.pieces || !this.steps){
-      this.pc = p.pieces; const pl = think(p, this.lv);
+      this.pc = p.pieces; p.soft = false; const pl = think(p, this.lv);
       this.steps = pl ? planSteps(pl) : ['D'];
       this.dt = PIECE_MS[this.lv] / (this.steps.length + 1); this.t = 0;   // 이동 과정을 여러 단계로 보여 준다
     }
     this.t += dt;
     while (this.steps && this.steps.length && this.t >= this.dt){
       this.t -= this.dt; const k = this.steps.shift(); doStep(p, k);
-      if (k === 'D' || !p.cur) { this.steps = null; break; }
+      if (k === 'D' || !p.cur) { this.steps = []; break; }
     }
   }
 }
@@ -379,28 +367,23 @@ const G = {
   bg: { wide: '/vs/common/bg-neon-wide.jpg', tall: '/vs/common/bg-neon-tall.jpg' },
   id: 'block', title: '블록 대전', sub: '줄을 지워 상대 판에 방해 줄을 올려라',
   turnBased: false, countdown: true, ft: 3, cpuFt: 2,
-  levels: [{ k: 'easy', name: '쉬움', desc: '천천히 둬요' }, { k: 'normal', name: '보통', desc: '제법 빨라요' }, { k: 'hard', name: '어려움', desc: '홀드까지 써요' }],
+  levels: [{ k: 'easy', name: '쉬움', desc: '천천히 둬요' }, { k: 'normal', name: '보통', desc: '제법 빨라요' }, { k: 'hard', name: '어려움', desc: '다음 블록까지 봐요' }],
   rules: `<ul><li>떨어지는 블록을 돌리고 옮겨 <b>가로 한 줄을 채우면</b> 그 줄이 사라집니다.</li>
 <li>한 번에 여러 줄을 지우면 상대 판 아래에 <b>방해 줄</b>을 보냅니다. 2줄→1, 3줄→2, 4줄→4줄.</li>
 <li>T 블록을 돌려 끼워 지우는 <b>T-스핀</b>(싱글 2·더블 4·트리플 6), 연속으로 지우는 <b>콤보</b>, 4줄·T-스핀을 잇는 <b>백투백</b>(+1), 판을 싹 비우는 <b>퍼펙트</b>(+10)는 더 많이 보냅니다.</li>
 <li>받은 방해는 판 왼쪽 막대에 쌓입니다. 줄을 지우면 먼저 막대가 줄고, 못 지우면 다음 블록을 놓을 때 한 번에 최대 8줄 올라옵니다.</li>
 <li>새 블록이 나올 자리가 막히면 집니다. 시간이 갈수록 빨라지고, 2분이 지나면 10초마다 방해 줄이 1줄씩 저절로 쌓입니다.</li></ul>`,
-  controls: `<p><b>PC</b> — <kbd>←</kbd><kbd>→</kbd> 이동, <kbd>↓</kbd> 천천히 내리기, <kbd>스페이스</kbd> 바로 떨어뜨리기, <kbd>↑</kbd>·<kbd>X</kbd> 시계 방향, <kbd>Z</kbd> 반시계, <kbd>C</kbd>·<kbd>Shift</kbd> 홀드(한 조각에 한 번).</p>
-<p><b>폰</b> — 아래 버튼(이동·내리기·떨어뜨리기·회전·홀드)을 쓰거나 판 위에서 <b>좌우로 끌어 이동</b>, <b>아래로 튕겨 떨어뜨리기</b>, <b>톡 눌러 회전</b>, 위로 튕겨 홀드. 이동 버튼은 누르고 있으면 계속 움직입니다.</p>`,
+  controls: `<p><b>PC</b> — <kbd>←</kbd><kbd>→</kbd> 이동, <kbd>↓</kbd> 빨리 내리기(누르고 있으면 계속), <kbd>↑</kbd>·<kbd>X</kbd>·<kbd>스페이스</kbd> 회전.</p>
+<p><b>폰</b> — 왼쪽 버튼 <b>◀ ▼ ▶</b>로 옮기고 내리며, 오른쪽 큰 버튼으로 <b>회전</b>합니다. 누르고 있으면 계속 움직입니다. 판 위에서 좌우로 끌어도 옮겨지고, 톡 누르면 회전합니다.</p>`,
   st: null,
   mount(stage){
     cv = document.createElement('canvas'); cv.id = 'bkCv'; stage.appendChild(cv); cx = cv.getContext('2d');
     pad = document.createElement('div'); pad.className = 'bkPad hide'; pad.id = 'bkPad';
     const sv = p => `<svg viewBox="0 0 24 24">${p}</svg>`;
-    pad.innerHTML = [
-      ['L', '', '왼쪽', sv('<path d="M15 5l-7 7 7 7"/>')],
-      ['R', '', '오른쪽', sv('<path d="M9 5l7 7-7 7"/>')],
-      ['SD', '', '천천히 내리기', sv('<path d="M5 9l7 7 7-7"/>')],
-      ['HD', 'bkHd', '바로 떨어뜨리기', sv('<path d="M6 4l6 6 6-6"/><path d="M6 11l6 6 6-6"/><path d="M5 21h14"/>')],
-      ['CCW', 'bkRot', '반시계 회전', sv('<path d="M4 12a8 8 0 1 0 2.5-5.8"/><path d="M4 4v5h5"/>')],
-      ['CW', 'bkRot', '시계 방향 회전', sv('<path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 4v5h-5"/>')],
-      ['HOLD', 'bkHold', '홀드', '홀드'],
-    ].map(([k, c, a, h]) => `<button data-k="${k}" class="${c}" aria-label="${a}">${h}</button>`).join('');
+    const bt = (k, c, a, h) => `<button data-k="${k}" class="${c}" aria-label="${a}">${h}</button>`;
+    // 왼쪽: 방향 셋(왼쪽·아래·오른쪽), 오른쪽: 큰 회전 하나
+    pad.innerHTML = '<div class="bkDir">' + bt('L', '', '왼쪽', sv('<path d="M15 5l-7 7 7 7"/>')) + bt('SD', '', '아래로 내리기', sv('<path d="M5 9l7 7 7-7"/>')) + bt('R', '', '오른쪽', sv('<path d="M9 5l7 7-7 7"/>')) + '</div>'
+      + bt('CW', 'bkRot', '회전', sv('<path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 4v5h-5"/>'));
     stage.appendChild(pad);
     wirePad(); wireKeys(); wireSwipe();
     requestAnimationFrame(loop);
@@ -469,8 +452,6 @@ function onFx(who, k, d){
   const mine = who === 'me';
   if (k === 'move'){ if (mine) VS.sfx('move'); }
   else if (k === 'rot'){ if (mine) VS.sfx('rot'); }
-  else if (k === 'hold'){ if (mine) VS.sfx('click'); }
-  else if (k === 'hard'){ if (mine){ VS.sfx('thud'); VS.buzz(8); } }
   else if (k === 'lock'){
     if (mine){ s.bdDirty = true; if (!d.L) VS.sfx('place'); }
     if (d.L){
@@ -543,14 +524,14 @@ function layout(){
   cv.width = Math.round(w * DPR); cv.height = Math.round(h * DPR); cv.style.width = w + 'px'; cv.style.height = h + 'px';
   let padH = 0;
   if (VS.isTouch){
-    const bs = Math.max(44, Math.min(66, Math.floor((w - 16 - 6 * 6) / 7)));
-    pad.style.setProperty('--bkBs', bs + 'px'); pad.classList.remove('hide'); padH = bs + 16;
+    const bs = Math.max(48, Math.min(64, Math.floor((w - 64) / 4.3))), rs = Math.round(bs * 1.28);
+    pad.style.setProperty('--bkBs', bs + 'px'); pad.style.setProperty('--bkRs', rs + 'px'); pad.classList.remove('hide'); padH = rs + 18;
   } else pad.classList.add('hide');
   const port = w < 760 && h > w;
   const avH = h - padH - 14;
   const L = { w, h, port };
   if (port){
-    // 세로 폰: [막대][내 판][오른쪽 칸: 상대 미니맵 · 홀드 · 다음]
+    // 세로 폰: [막대][내 판][오른쪽 칸: 상대 미니맵 · 다음]
     const c = Math.max(8, Math.floor(Math.min(avH / 20.3, (w - 14) / 14.2)));
     const tot = 14.2 * c, x0 = Math.round((w - tot) / 2);
     L.c = c; L.mw = Math.max(6, Math.round(c * .42)); L.mx = x0; L.bx = x0 + L.mw + Math.round(c * .18);
@@ -559,20 +540,17 @@ function layout(){
     L.oc = Math.max(4, Math.floor(Math.min(c * .33, (sw - c * .4) / W)));
     L.omw = Math.max(3, Math.round(L.oc * .7)); L.omx = sx; L.ox = sx + L.omw + 3; L.oy = L.by + Math.round(c * .6);
     L.olab = { x: L.ox, y: L.by - 2, sz: Math.max(10, Math.round(c * .45)) };
-    const hy = L.oy + 20 * L.oc + Math.round(c * .45);
-    L.hold = { x: sx, y: hy + Math.round(c * .55), w: sw, h: Math.round(c * 2.1), ly: hy, ps: Math.max(6, Math.floor(c * .5)) };
-    const ny = L.hold.y + L.hold.h + Math.round(c * .4);
-    L.next = { x: sx, y: ny + Math.round(c * .55), w: sw, ly: ny, step: c * 1.42, ps: Math.max(6, Math.floor(c * .46)), ps0: Math.max(6, Math.floor(c * .5)) };
+    const ny = L.oy + 20 * L.oc + Math.round(c * .5);
+    L.next = { x: sx, y: ny + Math.round(c * .55), w: sw, ly: ny, step: c * 1.5, ps: Math.max(6, Math.floor(c * .46)), ps0: Math.max(6, Math.floor(c * .5)) };
     L.next.h = Math.min(L.next.step * 5 + c * .2, L.by + 20 * c - L.next.y);
     L.stats = null;
   } else {
-    // 넓은 화면: [홀드·기록][막대][내 판][다음] [상대 막대][상대 판]
+    // 넓은 화면: [기록][막대][내 판][다음] [상대 막대][상대 판]
     const U = 27.8;
     const c = Math.max(8, Math.min(40, Math.floor(Math.min(avH / 20.6, (w - 24) / U))));
     const x0 = Math.round((w - U * c) / 2);
     L.c = c; L.by = Math.round(Math.max(8, (avH - 20 * c) / 2 + 6));
-    L.hold = { x: x0, y: L.by + Math.round(c * .75), w: Math.round(c * 4.2), h: Math.round(c * 3), ly: L.by, ps: Math.floor(c * .72) };
-    L.stats = { x: x0, y: L.hold.y + L.hold.h + c * .8, sz: Math.max(11, Math.round(c * .44)) };
+    L.stats = { x: x0, y: L.by + Math.round(c * .75) + c * .6, w: Math.round(c * 4.2), sz: Math.max(11, Math.round(c * .44)) };
     L.mw = Math.round(c * .45); L.mx = x0 + Math.round(c * 4.4); L.bx = L.mx + L.mw + Math.round(c * .15);
     const nx = L.bx + W * c + Math.round(c * .35);
     L.next = { x: nx, y: L.by + Math.round(c * .75), w: Math.round(c * 4.2), ly: L.by, step: c * 2.3, ps: Math.floor(c * .6), ps0: Math.floor(c * .72) };
@@ -602,11 +580,6 @@ function draw(s, dt){
   drawMeter(x, me.pend, L.mx, L.by, L.mw, c, FX.meterFlash.me);
   drawBoard(x, me, L.bx, L.by, c, { ghost: true });
   x.restore();
-  // 홀드
-  const hd = L.hold;
-  label(x, '홀드', hd.x + 2, hd.ly, Math.max(10, Math.round(c * (L.port ? .42 : .5))));
-  panel(x, hd.x, hd.y, hd.w, hd.h);
-  if (me.hold) drawPiece(x, me.hold, hd.x + hd.w / 2, hd.y + hd.h / 2, hd.ps, me.canHold ? 1 : .35);
   // 다음 5개
   const nx = L.next;
   label(x, '다음', nx.x + 2, nx.ly, Math.max(10, Math.round(c * (L.port ? .42 : .5))));
@@ -619,7 +592,7 @@ function draw(s, dt){
   if (L.stats){
     const st = L.stats, lh = st.sz * 1.7;
     const rows = [['보낸 줄', me.sent], ['지운 줄', me.lines], ['놓은 블록', me.pieces]];
-    panel(x, L.hold.x, st.y - st.sz * .6, L.hold.w, rows.length * lh * 1.6 + st.sz * .5);
+    panel(x, st.x, st.y - st.sz * .6, st.w, rows.length * lh * 1.6 + st.sz * .5);
     rows.forEach(([a, b], i) => { label(x, a, st.x + st.sz * .7, st.y + i * lh * 1.6, st.sz, 'left', '#AFC0E6'); label(x, String(b), st.x + st.sz * .7, st.y + i * lh * 1.6 + lh * .7, Math.round(st.sz * 1.35), 'left', '#fff'); });
   }
   // 줄 번쩍임
@@ -664,16 +637,14 @@ function press(k){
   const m = liveMe(); if (!m) return;
   if (k === 'L') m.move(-1); else if (k === 'R') m.move(1);
   else if (k === 'SD') m.down();
-  else if (k === 'HD') m.hard();
-  else if (k === 'CW') m.rot(1); else if (k === 'CCW') m.rot(-1);
-  else if (k === 'HOLD') m.doHold();
+  else if (k === 'CW') m.rot(1);
 }
 function release(k){
   if (k === 'L'){ inp.l = false; inp.dir = inp.r ? 1 : 0; inp.das = 0; inp.arr = 0; }
   if (k === 'R'){ inp.r = false; inp.dir = inp.l ? -1 : 0; inp.das = 0; inp.arr = 0; }
   if (k === 'SD') inp.soft = false;
 }
-const KEYMAP = { ArrowLeft: 'L', ArrowRight: 'R', ArrowDown: 'SD', ' ': 'HD', ArrowUp: 'CW', x: 'CW', X: 'CW', z: 'CCW', Z: 'CCW', c: 'HOLD', C: 'HOLD', Shift: 'HOLD', 'ㅌ': 'CW', 'ㅋ': 'CCW', 'ㅊ': 'HOLD' };
+const KEYMAP = { ArrowLeft: 'L', ArrowRight: 'R', ArrowDown: 'SD', ' ': 'CW', ArrowUp: 'CW', x: 'CW', X: 'CW', 'ㅌ': 'CW' };
 function inGame(){ return G.st && !VS.$('vsGame').classList.contains('hide'); }
 function wireKeys(){
   addEventListener('keydown', e => {
@@ -707,7 +678,7 @@ function wirePad(){
     b.addEventListener('contextmenu', e => e.preventDefault());
   }
 }
-// 판 위 손가락 조작: 좌우로 끌기 = 이동, 아래로 끌기 = 천천히, 아래로 튕기기 = 바로 떨어뜨리기, 위로 튕기기 = 홀드, 톡 = 회전
+// 판 위 손가락 조작: 좌우로 끌기 = 이동, 아래로 끌기 = 한 칸씩 내리기, 톡 = 회전
 function wireSwipe(){
   let sw = null;
   cv.addEventListener('pointerdown', e => {
@@ -732,21 +703,23 @@ function wireSwipe(){
     const m = liveMe(), fast = t - sw.lt < 90 ? sw.vy : 0;
     if (m){
       if (!sw.moved && Math.abs(dx) < 12 && Math.abs(dy) < 12 && dur < 320) m.rot(1);
-      else if (dy > c * 1.4 && fast > .7 && Math.abs(dy) > Math.abs(dx) * 1.4) m.hard();
-      else if (dy < -c * 1.4 && fast < -.7 && Math.abs(dy) > Math.abs(dx) * 1.4) m.doHold();
     }
     sw = null;
   };
   cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', e => { if (sw && e.pointerId === sw.id) sw = null; });
 }
 
-// 시험용: 한 번 부를 때마다 내 판에 한 조각을 둔다(rand = 아무 데나 둘 확률). 기본 동작에는 영향 없음.
+// 시험용: 새 조각이 나오면 회전·이동을 한 번에 하고 ↓를 누른 상태로 둔다(rand = 아무 데나 둘 확률).
+// 사람과 같은 조작(이동·회전·소프트 드롭)만 쓴다. 기본 동작에는 영향 없음.
+let bkBotPc = -1;
 window.__bkBot = function(rand){
   const m = liveMe(); if (!m) return false;
+  if (bkBotPc === m.pieces && inp.soft) return true;
+  bkBotPc = m.pieces; inp.soft = false;
   let pl = think(m, 'normal');
   if (Math.random() < (rand == null ? .25 : rand)){ const all = placements(m.g, m.cur.t); if (all.length) pl = all[Math.floor(Math.random() * all.length)]; }
-  if (!pl){ m.hard(); return true; }
-  for (const k of planSteps(pl)){ if (!m.cur) break; doStep(m, k); }
+  if (pl) for (const k of planSteps(pl)){ if (!m.cur || k === 'D') break; doStep(m, k); }
+  inp.soft = true;
   return true;
 };
 VS.init(G);
