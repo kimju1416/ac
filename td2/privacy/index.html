@@ -146,8 +146,9 @@
       PC 간 동기화 로그인과는 <b>따로</b> 허락을 받습니다.</p>
     <div class="tbl"><table>
       <tr><th>권한</th><th>쓰는 곳</th></tr>
-      <tr><td><code>calendar.events.owned</code></td><td>선생님 <b>본인 소유 캘린더</b>의 일정을 읽고, 선생님이 TeacherDesk 2에서 넣고 · 고치고 · 지우라고 하신 일정만 바꾸기</td></tr>
-      <tr><td><code>calendar.calendarlist.readonly</code></td><td>어느 캘린더를 달력에 보일지 고르실 수 있게 캘린더 <b>이름 목록</b>만 읽기</td></tr>
+      <tr><td><code>calendar.events</code></td><td>선생님이 <b>켜신 캘린더</b>(본인 캘린더와 학년 · 학교처럼 공유받은 캘린더)의 일정을 읽고, 선생님이 TeacherDesk 2에서 넣고 · 고치고 · 지우라고 하신 일정만 바꾸기.
+        공유받은 캘린더는 주인이 «일정 변경» 권한을 준 경우에만 쓰고, «보기»만 준 캘린더는 보기만 합니다.</td></tr>
+      <tr><td><code>calendar.calendarlist.readonly</code></td><td>어느 캘린더를 달력에 보일지 고르실 수 있게 캘린더 <b>이름 목록과 권한(쓰기 가능 · 보기만)</b>만 읽기</td></tr>
       <tr><td><code>email</code> · <code>openid</code></td><td>어느 계정에 연결했는지 설정 화면에 보여 드리기</td></tr>
     </table></div>
     <ul>
@@ -249,8 +250,8 @@
       It has no developer server: all Google API calls go directly between the teacher's own PC or phone and Google.</p>
     <ul>
       <li><b>PC sync</b> (optional) — <code>drive.appdata</code>, <code>openid</code>, <code>email</code>: stores the teacher's own records in the app-only folder of their Google Drive so their PCs and phone stay in sync.</li>
-      <li><b>Google Calendar</b> (optional, off by default) — <code>calendar.events.owned</code>: reads the events of calendars the teacher owns so they appear in the TeacherDesk 2 calendar, and creates, updates or deletes an event only when the teacher does so in TeacherDesk 2.
-        <code>calendar.calendarlist.readonly</code>: reads the list of the teacher's calendars so they can choose which ones to show.
+      <li><b>Google Calendar</b> (optional, off by default) — <code>calendar.events</code>: reads the events of the calendars the teacher turns on (their own calendars and calendars shared with them, such as a grade or school calendar) so they appear in the TeacherDesk 2 calendar, and creates, updates or deletes an event only when the teacher does so in TeacherDesk 2. Shared calendars are written to only when their owner granted the teacher "make changes to events"; view-only calendars stay read-only.
+        <code>calendar.calendarlist.readonly</code>: reads the list of the teacher's calendars and their access level so they can choose which ones to show.
         Event descriptions, locations and attendee lists are not stored or used. Events with attendees are read-only in the app.</li>
       <li>Calendar data is cached only on the teacher's own PC (encrypted with the Windows user key) and is kept in memory only on the phone page. It is never sent to the developer or any third party.</li>
       <li>TeacherDesk 2's use and transfer of information received from Google APIs adheres to the
