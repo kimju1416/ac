@@ -72,7 +72,7 @@ input,select{font:inherit;color:inherit}
 .btn.pri:hover{background:var(--pt-d)}
 .btn.sec{background:#fff;border:1px solid var(--line)}
 .btn:disabled{opacity:.45;cursor:default}
-.btn.full{width:100%}
+.btn.wide{width:100%}
 .seg{display:flex;border:1px solid var(--line);border-radius:var(--r1);overflow:hidden;background:#fff}
 .seg button{flex:1;height:44px;font-size:15px;font-weight:600;color:var(--sub);border-left:1px solid var(--line)}
 .seg button:first-child{border-left:0}
@@ -343,7 +343,7 @@ body.port .bar .sc b{font-size:12px}
       <input id="roomPw" class="inp" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="예: 1234" autocomplete="off">
       <label class="lbl">선승 (먼저 이기면 끝)</label>
       <div class="seg" id="ftSeg"></div>
-      <button id="btnMake" class="btn pri full" style="margin-top:16px">방 열기</button>
+      <button id="btnMake" class="btn pri wide" style="margin-top:16px">방 열기</button>
       <p class="help">방을 만든 사람의 기기가 경기를 진행합니다. 경기가 끝날 때까지 이 화면을 켜 두세요.</p>
     </div>
 
@@ -1060,7 +1060,7 @@ function seg(el, cur, onPick){
 seg($('ftSeg'), makeFt, function pick(v){ makeFt = v; seg($('ftSeg'), v, pick); });
 
 $('tabList').onclick = () => { $('tabList').classList.add('on'); $('tabMake').classList.remove('on'); $('paneList').classList.remove('hide'); $('paneMake').classList.add('hide'); };
-$('tabMake').onclick = () => { $('tabMake').classList.add('on'); $('tabList').classList.remove('on'); $('paneMake').classList.remove('hide'); $('paneList').classList.add('hide'); setTimeout(() => { try { $('btnMake').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch {} }, 60); };
+$('tabMake').onclick = () => { $('tabMake').classList.add('on'); $('tabList').classList.remove('on'); $('paneMake').classList.remove('hide'); $('paneList').classList.add('hide'); setTimeout(() => { try { $('btnMake').scrollIntoView({ behavior: "smooth", block: "nearest" }); } catch {} }, 60); };
 
 class FakeWSS { constructor(){ this.h = {}; this.clients = new Set(); } on(e, f){ (this.h[e] = this.h[e] || []).push(f); } emit(e, ...a){ (this.h[e] || []).forEach(f => f(...a)); } }
 class FakeSock {
@@ -1790,7 +1790,7 @@ if (/KAKAOTALK/i.test(navigator.userAgent)){
   $('btnExt').onclick = () => { location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href); };
 }
 // 새 버전 확인: 폰에 옛 화면이 남아 있지 않게, 화면으로 돌아올 때·2분마다 확인해서 경기 중이 아니면 새로 고친다
-const APP_VER = '2026-09-27b';
+const APP_VER = '2026-09-27c';
 function checkVer(){
   if (mode === 'game' || mode === 'waitRoom') return;
   fetch(location.pathname + '?v=' + Date.now(), { cache: 'no-store' }).then(r => r.text()).then(tx => {
