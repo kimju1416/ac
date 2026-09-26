@@ -102,17 +102,53 @@ input,select{font:inherit;color:inherit}
 .slot.me{border-color:var(--pt)}
 .slot.wait b{color:var(--sub);font-weight:500}
 
-/* ---------- 메인 화면 ---------- */
-.home{max-width:460px;text-align:center;padding:22px 20px 18px}
-.home canvas#homeArt{display:block;width:100%;height:92px;margin:-4px 0 4px}
-.home h1{font-size:40px;font-weight:900;letter-spacing:-.03em;line-height:1.1}
-.home .tag{font-size:14px;color:var(--sub);margin-top:6px}
-.mcard{margin-top:18px;border:1px solid var(--line);border-radius:var(--r2);background:#fff;padding:16px;text-align:left}
-.mcard h2{font-size:17px;font-weight:800;margin-bottom:4px}
-.mcard p{font-size:13px;color:var(--sub);margin-bottom:12px;line-height:1.5}
-.mrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.linkbtn{margin-top:14px;font-size:14px;font-weight:700;color:var(--pt);padding:8px 10px}
-.back{display:inline-flex;align-items:center;gap:4px;font-size:14px;font-weight:700;color:var(--sub);padding:6px 4px;margin:-6px 0 6px -4px}
+/* ---------- 시작·메인·혼자 하기 (전체 화면 메뉴) ---------- */
+.full{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(14px,3vh,28px);
+  padding:calc(16px + env(safe-area-inset-top)) 16px calc(16px + env(safe-area-inset-bottom));
+  background:linear-gradient(rgba(10,18,48,.10),rgba(10,18,48,.55));overflow-y:auto}
+.title{font-weight:900;color:#fff;letter-spacing:-.02em;line-height:1;font-size:clamp(52px,12vw,112px);text-align:center;
+  text-shadow:0 5px 0 #1C2340,4px 0 0 #1C2340,-4px 0 0 #1C2340,0 -4px 0 #1C2340,3px 3px 0 #1C2340,-3px 3px 0 #1C2340,3px -3px 0 #1C2340,-3px -3px 0 #1C2340,0 12px 24px rgba(0,0,0,.35)}
+.title.sm{font-size:clamp(40px,8vw,72px)}
+.subt{margin-top:10px;text-align:center;font-weight:800;font-size:clamp(15px,2.2vw,20px);color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.45)}
+#splashArt{display:block;width:min(560px,92vw);height:clamp(90px,16vh,150px)}
+.tapmsg{font-size:clamp(18px,3vw,26px);font-weight:900;color:#fff;background:rgba(20,28,64,.72);padding:14px 30px;border-radius:999px;animation:tapPulse 1.3s ease-in-out infinite}
+@keyframes tapPulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.06);opacity:.8}}
+.iosTip{font-size:13px;color:#fff;background:rgba(0,0,0,.45);padding:8px 14px;border-radius:10px;text-align:center;max-width:320px}
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,300px));gap:clamp(12px,2.5vw,24px);width:100%;justify-content:center}
+.tile{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 14px 18px;border-radius:24px;color:#fff;text-align:center;
+  box-shadow:0 6px 0 rgba(0,0,0,.28);transition:transform .08s}
+.tile:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.28)}
+.tile.solo{background:#2361C4}
+.tile.duo{background:#D9482C}
+.tile b{font-size:clamp(24px,4vw,34px);font-weight:900;letter-spacing:-.01em}
+.tile span{font-size:clamp(13px,1.8vw,16px);font-weight:600;opacity:.9}
+.tart{display:block;width:100%;height:clamp(96px,17vh,150px)}
+.menuLinks{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.pill{height:44px;padding:0 18px;border-radius:999px;background:rgba(20,28,64,.72);color:#fff;font-size:15px;font-weight:800}
+.topRight{position:fixed;top:calc(10px + env(safe-area-inset-top));right:12px;z-index:3;display:flex;gap:8px}
+.icbtn{width:44px;height:44px;border-radius:12px;background:rgba(20,28,64,.72);color:#fff;display:flex;align-items:center;justify-content:center}
+.icbtn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+.backL{position:fixed;top:calc(10px + env(safe-area-inset-top));left:12px;z-index:3;height:44px;padding:0 16px;border-radius:12px;background:rgba(20,28,64,.72);color:#fff;font-size:15px;font-weight:800}
+.lvtiles{display:grid;grid-template-columns:repeat(3,minmax(0,220px));gap:clamp(10px,2vw,18px);width:100%;justify-content:center}
+.lv{display:flex;flex-direction:column;align-items:center;gap:4px;padding:12px 10px 16px;border-radius:22px;background:#fff;color:var(--tx);box-shadow:0 6px 0 rgba(0,0,0,.25);border:4px solid transparent}
+.lv:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.lv canvas{display:block;width:100%;height:clamp(80px,14vh,120px)}
+.lv b{font-size:clamp(20px,3vw,26px);font-weight:900}
+.lv span{font-size:13px;color:var(--sub);font-weight:600}
+.lv.e{border-color:#35B84A}.lv.n{border-color:#F0BE2A}.lv.h{border-color:#E8413A}
+.practice{height:56px;padding:0 26px;border-radius:999px;background:#fff;color:var(--tx);font-size:17px;font-weight:800;box-shadow:0 5px 0 rgba(0,0,0,.25)}
+@media (max-width:620px) and (orientation:portrait){
+  .tiles{grid-template-columns:minmax(0,420px)}
+  .tile{flex-direction:row;text-align:left;padding:10px 16px 10px 10px;gap:12px}
+  .tile .tart{width:44%;height:112px;flex:none}
+  .tile .txt{display:flex;flex-direction:column;gap:4px}
+  .lvtiles{grid-template-columns:minmax(0,420px)}
+  .lv{flex-direction:row;gap:14px;padding:8px 16px 8px 8px;text-align:left}
+  .lv canvas{width:96px;height:80px;flex:none}
+  .lv .txt{display:flex;flex-direction:column}
+}
+.tile .txt,.lv .txt{display:flex;flex-direction:column;align-items:inherit;gap:4px}
+
 /* 사용법 */
 .guide h2{font-size:17px;font-weight:800;margin:20px 0 8px}
 .guide h2:first-of-type{margin-top:4px}
@@ -204,24 +240,36 @@ body.port .bar .sc b{font-size:12px}
 <body>
 <div id="bgArt"><div class="rays"></div><div class="crowd"></div><div class="rail"></div><div class="img" id="bgImg"></div></div>
 
-<!-- 메인 -->
-<section id="home" class="screen">
-  <div class="panel home">
-    <canvas id="homeArt"></canvas>
-    <h1>말랑 대전</h1>
-    <div class="tag">같은 색 넷을 이어 터뜨리고, 연쇄로 상대 판을 덮어라</div>
-    <div class="mcard">
-      <h2>혼자 하기 · 컴퓨터와 대전</h2>
-      <p>컴퓨터와 2선승 대결. 연쇄로 방해뿌요를 주고받습니다.</p>
-      <div class="seg" id="lvSeg"></div>
-      <button id="btnCpu" class="btn pri full" style="margin-top:10px">대전 시작</button>
-    </div>
-    <div class="mrow">
-      <button id="btnOnline" class="btn sec">친구와 대전</button>
-      <button id="btnSolo" class="btn sec">연습 모드</button>
-    </div>
-    <button id="btnGuide" class="linkbtn">사용법 보기</button>
+<!-- 시작 화면: 한 번 누르면 전체 화면으로 -->
+<section id="splash" class="full">
+  <canvas id="splashArt"></canvas>
+  <div><div class="title">말랑 대전</div><div class="subt">같은 색 넷을 이어 터뜨리고, 연쇄로 상대 판을 덮어라</div></div>
+  <div class="tapmsg">화면을 눌러 시작</div>
+  <div class="iosTip hide" id="iosTip">아이폰은 공유 버튼 → «홈 화면에 추가»로 열면 전체 화면으로 즐길 수 있어요</div>
+</section>
+
+<!-- 메인: 혼자 하기 / 함께 하기 -->
+<section id="home" class="full hide">
+  <div class="topRight"><button class="icbtn" id="btnFs" aria-label="전체 화면"><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button></div>
+  <div class="title sm">말랑 대전</div>
+  <div class="tiles">
+    <button class="tile solo" id="tileSolo"><canvas class="tart" id="artSolo"></canvas><div class="txt"><b>혼자 하기</b><span>컴퓨터와 대결 · 연습 모드</span></div></button>
+    <button class="tile duo" id="tileDuo"><canvas class="tart" id="artDuo"></canvas><div class="txt"><b>함께 하기</b><span>친구와 1:1 온라인 대전</span></div></button>
   </div>
+  <div class="menuLinks"><button class="pill" id="btnGuide">사용법</button></div>
+</section>
+
+<!-- 혼자 하기: 난이도 고르기 -->
+<section id="soloSel" class="full hide">
+  <button class="backL" id="soloBack">‹ 처음으로</button>
+  <div class="title sm">혼자 하기</div>
+  <div class="subt" style="margin-top:-6px">컴퓨터와 2선승 대결 — 누구와 붙을까요?</div>
+  <div class="lvtiles">
+    <button class="lv e" data-lv="easy"><canvas></canvas><div class="txt"><b>쉬움</b><span>느긋하게 둬요</span></div></button>
+    <button class="lv n" data-lv="normal"><canvas></canvas><div class="txt"><b>보통</b><span>연쇄를 노려요</span></div></button>
+    <button class="lv h" data-lv="hard"><canvas></canvas><div class="txt"><b>어려움</b><span>크게 모아 터뜨려요</span></div></button>
+  </div>
+  <button class="practice" id="btnSolo">연습 모드 · 혼자 끝없이 쌓기</button>
 </section>
 
 <!-- 사용법 -->
@@ -925,7 +973,7 @@ for (const id of ['codeIn', 'pwIn', 'roomPw']) $(id).addEventListener('input', e
 $('nick').addEventListener('input', () => store.set('ml_nick', $('nick').value.trim()));
 const nick = () => ($('nick').value.trim() || '플레이어').slice(0, 10);
 
-function show(id){ for (const s of ['home', 'guide', 'lobby', 'waitRoom', 'game']) $(s).classList.toggle('hide', s !== id); mode = id; if (id === 'game') layout(); keepAwake(id === 'game' || id === 'waitRoom'); if (id === 'guide') drawGuide(); }
+function show(id){ for (const s of ['splash', 'home', 'soloSel', 'guide', 'lobby', 'waitRoom', 'game']) $(s).classList.toggle('hide', s !== id); mode = id; if (id === 'game') layout(); keepAwake(id === 'game' || id === 'waitRoom'); if (id === 'guide') drawGuide(); }
 function status(el, t, err){ el.textContent = t || ''; el.classList.toggle('err', !!err); }
 function note(t, ms){ const n = $('note'); n.textContent = t; n.classList.remove('hide'); clearTimeout(note._t); if (ms) note._t = setTimeout(() => n.classList.add('hide'), ms); }
 function hideNote(){ $('note').classList.add('hide'); }
@@ -1044,7 +1092,6 @@ $('btnMake').onclick = () => {
 $('lobbyBack').onclick = () => show('home');
 $('guideBack').onclick = () => show('home');
 $('btnGuide').onclick = () => show('guide');
-$('btnOnline').onclick = () => { ac(); show('lobby'); };
 $('btnLeave').onclick = () => { send({ t:'leave' }); roomCode = null; token = null; room = null; sess.clear(); resultOpen = false; curRound = 0; stopGame(); $('ov').classList.add('hide'); hideNote(); show('lobby'); };
 $('btnReady').onclick = () => { ac(); const me = room && room.players.find(p => p.id === myId); send({ t:'ready', v: !(me && me.ready) }); };
 $('btnCopy').onclick = async () => {
@@ -1174,7 +1221,7 @@ $('btnQuit').onclick = () => {
 };
 
 // 혼자 연습
-$('btnSolo').onclick = () => { ac(); solo = true; vsCpu = false; cpu = null; startSolo(); };
+$('btnSolo').onclick = () => { ac(); goFs(); solo = true; vsCpu = false; cpu = null; startSolo(); };
 function startSolo(){
   show('game'); document.body.classList.add('solo');
   $('sideOp').classList.add('hide'); $('nxOpW').classList.add('hide'); $('scBox').classList.add('hide'); $('pnOp').classList.add('hide');
@@ -1202,12 +1249,29 @@ const CPU_LV = {
   hard:   { name: '어려움', think: 110, step: 45,  greedy: 1,   soft: true,  build: true },
 };
 let cpuLv = store.get('ml_cpu') || 'normal'; if (!CPU_LV[cpuLv]) cpuLv = 'normal';
-function drawLv(){
-  const el = $('lvSeg'); el.innerHTML = '';
-  for (const k of ['easy', 'normal', 'hard']){ const b = document.createElement('button'); b.textContent = CPU_LV[k].name; b.className = k === cpuLv ? 'on' : ''; b.onclick = () => { cpuLv = k; store.set('ml_cpu', k); drawLv(); }; el.appendChild(b); }
+// 전체 화면(누른 순간에만 허락된다 — 시작 화면 터치·메뉴 버튼에서 부른다)
+function isFs(){ return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+function goFs(){
+  if (isFs()) return;
+  const d = document.documentElement, f = d.requestFullscreen || d.webkitRequestFullscreen;
+  if (!f) return;
+  try { const r = f.call(d, { navigationUI: 'hide' }); if (r && r.catch) r.catch(() => {}); } catch {}
 }
-drawLv();
-$('btnCpu').onclick = () => { ac(); cpuMatch = { me: 0, cpu: 0, ft: 2, lv: cpuLv }; startCpuRound(); };
+function toggleFs(){ if (isFs()){ const e = document.exitFullscreen || document.webkitExitFullscreen; if (e) e.call(document); } else goFs(); }
+document.addEventListener('fullscreenchange', () => { if (mode === 'game') layout(); });
+document.addEventListener('webkitfullscreenchange', () => { if (mode === 'game') layout(); });
+const noFsApi = !(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen);
+const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+if (noFsApi && !standalone && /iPhone|iPod/.test(navigator.userAgent)) $('iosTip').classList.remove('hide');
+$('splash').addEventListener('click', () => { ac(); goFs(); show('home'); });
+$('btnFs').onclick = toggleFs;
+$('tileSolo').onclick = () => { ac(); goFs(); show('soloSel'); };
+$('tileDuo').onclick = () => { ac(); goFs(); show('lobby'); };
+$('soloBack').onclick = () => show('home');
+for (const b of document.querySelectorAll('#soloSel .lv')) b.onclick = () => {
+  ac(); goFs(); cpuLv = b.dataset.lv; store.set('ml_cpu', cpuLv);
+  cpuMatch = { me: 0, cpu: 0, ft: 2, lv: cpuLv }; startCpuRound();
+};
 function startCpuRound(){
   clearTimeout(cpuNextT);
   solo = false; vsCpu = true; roundEnded = false; resultOpen = false; hideNote();
@@ -1404,7 +1468,7 @@ let lastT = performance.now();
 function frame(t){
   const dt = Math.min(50, t - lastT); lastT = t;
   try {
-    if (mode === 'home') homeArt(t);
+    if (mode === 'splash' || mode === 'home' || mode === 'soloSel') menuArt(t);
     if (game && mode === 'game'){
       const online = !solo && !vsCpu;
       if ((roundLive && (!online || wsOk)) || game.state === 'dead') game.update(dt);
@@ -1458,17 +1522,44 @@ function redrawAll(){
     $('miLabel').textContent = g.chain ? '연쇄' : '최대 연쇄'; $('miVal').textContent = g.chain || g.maxChain;
   }
 }
-function homeArt(t){
-  const cv = $('homeArt'); if (!cv || mode !== 'home') return;
-  const w = cv.clientWidth || 400, h = 92, x = setupCanvas(cv, w, h); x.clearRect(0, 0, w, h);
-  const s = 46, n = 5, gap = Math.min(s * 1.25, (w - 20) / n), x0 = w / 2 - gap * (n - 1) / 2;
-  const cs = [0, 3, 1, 2, 4];
-  for (let i = 0; i < n; i++){
-    const ph = t / 380 + i * .9, jump = Math.max(0, Math.sin(ph)) * 20, squash = Math.sin(ph) < 0 ? 1 + Math.sin(ph) * -.14 : 1;
-    const cx = x0 + i * gap, by = h - 8;
-    x.save(); x.translate(cx, by); x.scale(1 / squash, squash); x.translate(-s / 2, -s - jump);
-    x.drawImage(puyoSprite(cs[i], s, false, ((t / 1000 + i * 1.3) % 4) < .12), 0, 0, s, s); x.restore();
-    x.fillStyle = 'rgba(0,0,0,.12)'; x.beginPath(); x.ellipse(cx, by - 2, s * .38 * (1 - jump / 80), 4, 0, 0, 7); x.fill();
+function bounce(x, cx, by, s, c, t, ph, o = {}){
+  const k = Math.sin(t / 360 + ph), jump = Math.max(0, k) * s * .38, sq = k < 0 ? 1 - k * .14 : 1;
+  x.fillStyle = 'rgba(0,0,0,.16)'; x.beginPath(); x.ellipse(cx, by - 2, s * .4 * (1 - jump / (s * 1.2)), s * .07, 0, 0, 7); x.fill();
+  x.save(); x.translate(cx, by); x.scale(1 / sq, sq); x.translate(-s / 2, -s - jump);
+  x.drawImage(puyoSprite(c, s, false, o.blink != null ? o.blink : ((t / 1000 + ph * 1.7) % 4) < .12), 0, 0, s, s);
+  if (o.brow){ x.strokeStyle = '#1F1A2E'; x.lineWidth = s * .07; x.lineCap = 'round'; x.beginPath(); x.moveTo(s * .2, s * .2); x.lineTo(s * .42, s * .3); x.moveTo(s * .8, s * .2); x.lineTo(s * .58, s * .3); x.stroke(); }
+  if (o.antenna){ x.strokeStyle = '#5B6478'; x.lineWidth = s * .05; x.beginPath(); x.moveTo(s * .5, s * .06); x.lineTo(s * .5, -s * .16); x.stroke(); x.fillStyle = '#FFE45C'; x.beginPath(); x.arc(s * .5, -s * .2, s * .08, 0, 7); x.fill(); }
+  if (o.zz){ x.fillStyle = '#fff'; x.font = '900 ' + (s * .28) + 'px Pretendard Variable, sans-serif'; x.fillText('z', s * .86, s * .1 - (t / 600 % 1) * s * .2); }
+  x.restore();
+}
+function menuArt(t){
+  if (mode === 'splash'){
+    const cv = $('splashArt'), w = cv.clientWidth || 500, h = cv.clientHeight || 120, x = setupCanvas(cv, w, h); x.clearRect(0, 0, w, h);
+    const s = Math.min(h * .62, w / 6.4), gap = s * 1.22, x0 = w / 2 - gap * 2;
+    [0, 3, 1, 2, 4].forEach((c, i) => bounce(x, x0 + i * gap, h - 4, s, c, t, i * .9));
+  } else if (mode === 'home'){
+    for (const [id, kind] of [['artSolo', 'solo'], ['artDuo', 'duo']]){
+      const cv = $(id), w = cv.clientWidth || 260, h = cv.clientHeight || 120, x = setupCanvas(cv, w, h); x.clearRect(0, 0, w, h);
+      const s = Math.min(h * .6, w / 3.2);
+      if (kind === 'solo'){
+        bounce(x, w * .27, h - 4, s, 2, t, 0);
+        x.fillStyle = '#FFE45C'; x.font = '900 ' + (s * .42) + 'px Pretendard Variable, sans-serif'; x.textAlign = 'center'; x.fillText('VS', w * .5, h * .62);
+        bounce(x, w * .73, h - 4, s, 0, t, 1.6, { antenna: true });
+      } else {
+        bounce(x, w * .3, h - 4, s, 2, t, 0); bounce(x, w * .7, h - 4, s, 0, t, Math.PI);
+        x.strokeStyle = 'rgba(255,255,255,.9)'; x.lineWidth = 3; x.lineCap = 'round';
+        for (let k = 0; k < 3; k++){ const a = (t / 500 + k / 3) % 1; x.globalAlpha = 1 - a; x.beginPath(); x.arc(w * .5, h * .55, 8 + a * 22, Math.PI * 1.2, Math.PI * 1.8); x.stroke(); }
+        x.globalAlpha = 1;
+      }
+    }
+  } else if (mode === 'soloSel'){
+    document.querySelectorAll('#soloSel .lv canvas').forEach((cv, i) => {
+      const w = cv.clientWidth || 180, h = cv.clientHeight || 100, x = setupCanvas(cv, w, h); x.clearRect(0, 0, w, h);
+      const s = Math.min(h * .72, w * .6);
+      if (i === 0) bounce(x, w / 2, h - 4, s, 1, t * .55, 0, { blink: true, zz: true });
+      else if (i === 1) bounce(x, w / 2, h - 4, s, 3, t, .7);
+      else bounce(x, w / 2, h - 4, s, 0, t * 1.6, 1.4, { brow: true });
+    });
   }
 }
 // 사용법 그림: 작은 판에 예시 배치를 그린다
@@ -1498,7 +1589,7 @@ function loadBg(){
   im.src = want;
 }
 loadBg(); addEventListener('resize', loadBg);
-if (new URLSearchParams(location.search).get('room') && !roomCode) show('lobby'); else show('home');
+if (new URLSearchParams(location.search).get('room') && !roomCode) show('lobby'); else show('splash');
 requestAnimationFrame(frame);
 connect();
 </script>
