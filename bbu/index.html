@@ -352,7 +352,7 @@ body.port .bar .sc b{font-size:12px}
     <div class="brand"><h1 id="wrName">방</h1></div>
     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
       <div><div style="font-size:13px;color:var(--sub);font-weight:600">방 번호<span id="wrPwL"></span></div><div class="code" id="wrCode">----</div></div>
-      <button id="btnCopy" class="btn sec">주소 복사</button>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button id="btnShare" class="btn pri hide">카톡 등으로 보내기</button><button id="btnCopy" class="btn sec">주소 복사</button></div>
     </div>
     <div class="slots" id="slots"></div>
     <label class="lbl">선승</label>
@@ -1084,6 +1084,8 @@ function hostStart(){
       let opened = false;
       const to = setTimeout(() => { if (!opened){ try { peer.destroy(); } catch {} reject(new Error('timeout')); } }, 12000);
       peer.on('open', () => {
+        // 중개에 다시 연결될 때도 open이 또 온다 — 방 서버는 처음 한 번만 만든다(두 번 만들면 방이 빈 서버로 바뀐다)
+        if (opened) return;
         opened = true; clearTimeout(to);
         window.__ML_CODE = code;
         const wss = createPuyoServer(FakeWSS);
@@ -1092,16 +1094,7 @@ function hostStart(){
         srvAttach(wss, mine, 'host');
         Object.assign(NET, { role: 'host', peer, wss, local: mine, code, send: d => queueMicrotask(() => mine.emit('message', d)) });
         wsOk = true;
-        peer.on('connection', conn => {
-          conn.on('open', () => {
-            const sock = new FakeSock(d => { try { conn.send(d); } catch {} }, () => { try { conn.close(); } catch {} }, () => (conn.dataChannel ? conn.dataChannel.bufferedAmount : 0));
-            srvAttach(wss, sock, 'p2p-' + conn.peer);
-            conn.on('data', d => sock.emit('message', typeof d === 'string' ? d : String(d)));
-            conn.on('close', () => { if (sock.readyState === 1){ sock.readyState = 3; sock.emit('close'); } });
-            conn.on('error', () => {});
-          });
-        });
-        peer.on('disconnected', () => { try { peer.reconnect(); } catch {} });   // 중개와만 끊긴 것 — 게임 연결은 그대로
+        hostPeerWire(peer);
         resolve(code);
       });
       peer.on('error', e => {
@@ -1113,6 +1106,36 @@ function hostStart(){
     attempt();
   });
 }
+// 방장 피어: 손님 연결을 방 서버에 붙이고, 중개와 끊기면 다시 잇는다
+function hostPeerWire(peer){
+  peer.on('connection', conn => {
+    conn.on('open', () => {
+      if (!NET.wss) { try { conn.close(); } catch {} return; }
+      const sock = new FakeSock(d => { try { conn.send(d); } catch {} }, () => { try { conn.close(); } catch {} }, () => (conn.dataChannel ? conn.dataChannel.bufferedAmount : 0));
+      srvAttach(NET.wss, sock, 'p2p-' + conn.peer);
+      conn.on('data', d => sock.emit('message', typeof d === 'string' ? d : String(d)));
+      conn.on('close', () => { if (sock.readyState === 1){ sock.readyState = 3; sock.emit('close'); } });
+      conn.on('error', () => {});
+    });
+  });
+  // 카톡 등으로 잠깐 나가 있으면 중개(방 번호 안내소)와의 연결만 끊긴다 — 방 내용과 게임 연결은 그대로 두고 다시 잇는다
+  peer.on('disconnected', () => { if (NET.peer === peer) setTimeout(hostRevive, 700); });
+  peer.on('close', () => { if (NET.peer === peer) setTimeout(hostRevive, 700); });
+  peer.on('error', e => { if (NET.peer === peer && /network|server-error|socket-error|socket-closed/.test(e.type || '')) setTimeout(hostRevive, 2000); });
+}
+function hostRevive(){
+  if (NET.role !== 'host' || !NET.code || !NET.wss) return;
+  const old = NET.peer;
+  if (old && !old.destroyed && old.open) return;
+  if (old && !old.destroyed && old.disconnected){ try { old.reconnect(); } catch {} return; }
+  // 완전히 없어졌으면 같은 번호로 새로 만든다(옛 이름이 아직 안 풀렸으면 3초 뒤 다시)
+  const peer = new Peer(PEER_PREFIX + NET.code, { config: ICE, debug: 0 });
+  NET.peer = peer; hostPeerWire(peer);
+  peer.on('error', e => { if (NET.peer === peer && e.type === 'unavailable-id'){ try { peer.destroy(); } catch {} NET.peer = null; setTimeout(hostRevive, 3000); } });
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && NET.role === 'host') hostRevive(); });
+setInterval(() => { if (NET.role === 'host') hostRevive(); }, 5000);
+
 // 손님: 방 번호로 방장 기기에 바로 붙는다
 function guestStart(code){
   return new Promise((resolve, reject) => {
@@ -1122,6 +1145,7 @@ function guestStart(code){
     const fail = (why) => { if (done) return; done = true; clearTimeout(to); try { peer.destroy(); } catch {} reject(new Error(why)); };
     const to = setTimeout(() => fail('timeout'), 15000);
     peer.on('open', () => {
+      if (done) return;   // 중개 재연결 때 또 오는 open — 이미 붙었으면 무시
       const conn = peer.connect(PEER_PREFIX + code, { reliable: true, serialization: 'raw' });
       conn.on('open', () => {
         if (done) return; done = true; clearTimeout(to);
@@ -1146,7 +1170,7 @@ function onNetLost(){
 function guestReconnect(n){
   clearTimeout(reconnectT);
   const code = roomCode;
-  if (!code || !token || n > 7){
+  if (!code || !token || n > (mode === 'game' ? 10 : 40)){
     if (code){ netClose(); roomCode = null; token = null; room = null; sess.clear(); stopGame(); resultOpen = false; $('ov').classList.add('hide'); hideNote(); show('lobby'); $('codeIn').value = code; status($('lobbyStatus'), '방장과 연결이 끊겼어요. 방이 남아 있으면 번호로 다시 들어가 보세요.', true); }
     return;
   }
@@ -1207,8 +1231,12 @@ function onOppSnap(m){
 }
 async function joinRoom(code, pw){
   ac(); status($('lobbyStatus'), '방장 기기에 연결하는 중…');
-  try { await guestStart(code); }
-  catch (e){
+  let err = null;
+  for (let i = 0; i < 4; i++){
+    try { await guestStart(code); err = null; break; }
+    catch (e){ err = e; if (e.message !== 'noroom') break; status($('lobbyStatus'), '방을 찾는 중… (' + (i + 1) + '/4) 방장이 화면을 켜 두었는지 확인해 주세요'); await new Promise(r => setTimeout(r, 2500)); }
+  }
+  if (err){ const e = err;
     status($('lobbyStatus'), e.message === 'noroom' ? '그 방이 없어요. 방 번호를 확인해 주세요(방장이 화면을 켜 두어야 해요).' : '연결하지 못했어요. 다른 와이파이나 데이터로 바꿔 다시 해 보세요.', true);
     return;
   }
@@ -1230,9 +1258,15 @@ $('guideBack').onclick = () => show('home');
 $('btnGuide').onclick = () => show('guide');
 $('btnLeave').onclick = () => { send({ t:'leave' }); setTimeout(netClose, 400); roomCode = null; token = null; room = null; sess.clear(); resultOpen = false; curRound = 0; stopGame(); $('ov').classList.add('hide'); hideNote(); show('lobby'); };
 $('btnReady').onclick = () => { ac(); const me = room && room.players.find(p => p.id === myId); send({ t:'ready', v: !(me && me.ready) }); };
+if (navigator.share) $('btnShare').classList.remove('hide');
+$('btnShare').onclick = async () => {
+  if (!room) return;
+  const u = location.origin + location.pathname + '?room=' + room.code;
+  try { await navigator.share({ title: '말랑 대전', text: '말랑 대전 한 판 붙자! 방 번호 ' + room.code + (room.pw ? ' · 비번 ' + room.pw : ''), url: u }); status($('wrStatus'), '보냈어요. 이 화면에서 친구를 기다려 주세요.'); } catch {}
+};
 $('btnCopy').onclick = async () => {
   const u = location.origin + location.pathname + '?room=' + (room ? room.code : '');
-  try { await navigator.clipboard.writeText(u); status($('wrStatus'), '주소를 복사했어요. 상대에게 보내 주세요.'); }
+  try { await navigator.clipboard.writeText(u); status($('wrStatus'), '주소를 복사했어요. 카톡 등으로 보낸 뒤 이 화면으로 돌아와 기다려 주세요.'); }
   catch { status($('wrStatus'), u); }
 };
 
@@ -1263,7 +1297,7 @@ function onRoom(m){
       b.onclick = () => { if (host) send({ t:'qd', v }); }; qs.appendChild(b);
     }
     $('btnReady').textContent = me && me.ready ? '준비 취소' : '준비';
-    status($('wrStatus'), !op ? '상대를 기다리고 있어요.' : (me && me.ready) ? '상대가 준비하면 시작합니다.' : '둘 다 준비하면 시작합니다.');
+    status($('wrStatus'), !op ? '친구에게 방 번호를 보낸 뒤 이 화면으로 돌아와 기다려 주세요. 방은 그대로 유지돼요.' : (me && me.ready) ? '상대가 준비하면 시작합니다.' : '둘 다 준비하면 시작합니다.');
   }
   // 경기 화면 이름·전적
   if (me) $('pnMe').textContent = me.name;
