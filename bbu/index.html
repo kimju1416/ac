@@ -311,6 +311,7 @@ body.port .bar .sc b{font-size:12px}
       <li>«친구와 대전»에서 방을 만들면 <b>방 번호 4자리</b>가 나옵니다. 번호나 «주소 복사»로 친구를 부르세요.</li>
       <li>비밀번호(숫자 4자리)를 걸면 아는 사람만 들어옵니다.</li>
       <li>둘 다 «준비»를 누르면 시작. 먼저 정한 판수를 이기면 승리입니다.</li>
+      <li>서버 없이 두 기기가 바로 연결됩니다. 방을 만든 사람은 경기가 끝날 때까지 화면을 켜 두세요. 연결이 안 되면 다른 와이파이나 데이터로 바꿔 보세요.</li>
     </ul>
   </div>
 </section>
@@ -322,11 +323,11 @@ body.port .bar .sc b{font-size:12px}
     <div class="brand"><h1>친구와 대전</h1><span>방 번호 4자리로 1:1</span></div>
     <label class="lbl" for="nick">닉네임</label>
     <input id="nick" class="inp" maxlength="10" placeholder="10자 이내" autocomplete="off">
-    <div class="tabs"><button id="tabList" class="on">방 목록</button><button id="tabMake">방 만들기</button></div>
+    <div class="tabs"><button id="tabList" class="on">방 들어가기</button><button id="tabMake">방 만들기</button></div>
 
     <div id="paneList">
-      <div class="rooms" id="roomList"><div class="empty">서버에 연결하는 중…</div></div>
-      <label class="lbl" for="codeIn">코드로 들어가기</label>
+      <p class="help" id="roomList" style="margin-top:12px">친구가 만든 방의 <b>번호 4자리</b>를 넣고 입장하세요. 서버 없이 두 기기가 바로 연결됩니다.</p>
+      <label class="lbl" for="codeIn">방 번호</label>
       <div class="row"><input id="codeIn" class="inp" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="방 번호 4자리" autocomplete="off"><input id="pwIn" class="inp" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="비번(있으면)" autocomplete="off"><button id="btnJoin" class="btn sec">입장</button></div>
     </div>
 
@@ -338,6 +339,7 @@ body.port .bar .sc b{font-size:12px}
       <label class="lbl">선승 (먼저 이기면 끝)</label>
       <div class="seg" id="ftSeg"></div>
       <button id="btnMake" class="btn pri full" style="margin-top:16px">방 만들기</button>
+      <p class="help">방을 만든 사람의 기기가 경기를 진행합니다. 경기가 끝날 때까지 이 화면을 켜 두세요.</p>
     </div>
 
     <div class="status" id="lobbyStatus"></div>
@@ -415,6 +417,8 @@ body.port .bar .sc b{font-size:12px}
   <canvas id="fx"></canvas>
 </section>
 
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="room.js"></script>
 <script>
 "use strict";
 // ================= 규칙 상수 (뿌요뿌요 통 기준) =================
@@ -963,18 +967,20 @@ document.addEventListener('touchend', e => { const t = Date.now(); if (t - lastT
 // ================= 화면·연결 =================
 const $ = id => document.getElementById(id);
 const store = { get(k){ try { return localStorage.getItem(k); } catch { return null; } }, set(k, v){ try { localStorage.setItem(k, v); } catch {} } };
-// 페이지가 있는 경로 기준으로 ws를 붙인다(/ → /ws)
-// kimju.kr(정적 페이지)에서는 대전 서버에 따로 붙는다. 로컬 시험은 같은 서버의 /ws
-const WS_URL = (location.hostname === 'kimju.kr' || location.hostname.endsWith('.kimju.kr') || location.hostname.endsWith('github.io')) ? 'wss://game.kimju.kr/mallang-7xq4/ws'
-  : (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + location.pathname.replace(/[^/]*$/, '') + 'ws';
+// ================= 연결: 서버 없이 1:1 직접 연결(P2P) =================
+// 방장 기기가 room.js(원래 서버의 방·판정 코드 그대로)를 품고, 손님은 WebRTC로 방장에게 바로 붙는다.
+// 서로 찾는 순간에만 공개 중개(PeerJS)를 쓴다. 피어 이름 = 'mallangbbu-' + 방 번호
+const PEER_PREFIX = 'mallangbbu-';
+const ICE = { iceServers: [{ urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'] }, { urls: 'stun:global.stun.twilio.com:3478' }] };
+const NET = { role: null, peer: null, conn: null, wss: null, local: null, send: null, code: null };
 let ws = null, wsOk = false, myId = null, token = null, roomCode = null, room = null;
 let game = null, oppSnap = null, oppDead = false, mode = 'home', solo = false, reconnectT = null, lastSnapAt = 0;
 let makeFt = 3;
 let curRound = 0, roundEnded = false, resultOpen = false;
 const sess = {
-  save(){ try { sessionStorage.setItem('ml_sess', JSON.stringify({ roomCode, token })); } catch {} },
+  save(){ try { sessionStorage.setItem('ml_sess', JSON.stringify({ roomCode, token, role: NET.role })); } catch {} },
   clear(){ try { sessionStorage.removeItem('ml_sess'); } catch {} },
-  load(){ try { const v = JSON.parse(sessionStorage.getItem('ml_sess') || 'null'); if (v && v.roomCode && v.token){ roomCode = v.roomCode; token = v.token; } } catch {} },
+  load(){ try { const v = JSON.parse(sessionStorage.getItem('ml_sess') || 'null'); if (v && v.roomCode && v.token && v.role === 'guest'){ roomCode = v.roomCode; token = v.token; } else sessionStorage.removeItem('ml_sess'); } catch {} },
 };
 sess.load();
 
@@ -1048,29 +1054,112 @@ seg($('ftSeg'), makeFt, function pick(v){ makeFt = v; seg($('ftSeg'), v, pick); 
 $('tabList').onclick = () => { $('tabList').classList.add('on'); $('tabMake').classList.remove('on'); $('paneList').classList.remove('hide'); $('paneMake').classList.add('hide'); };
 $('tabMake').onclick = () => { $('tabMake').classList.add('on'); $('tabList').classList.remove('on'); $('paneMake').classList.remove('hide'); $('paneList').classList.add('hide'); };
 
-function connect(){
-  try { ws = new WebSocket(WS_URL); } catch { return scheduleReconnect(); }
-  ws.onopen = () => {
-    wsOk = true; clearTimeout(reconnectT);
-    if (roomCode && token) ws.send(JSON.stringify({ t:'resume', code: roomCode, token, round: curRound, ended: roundEnded }));
-    else status($('lobbyStatus'), '');
-    const q = new URLSearchParams(location.search).get('room');
-    if (q && !roomCode && (mode === 'lobby' || mode === 'home')){ $('codeIn').value = q.replace(/[^0-9]/g, '').slice(0, 4); if (mode === 'home') show('lobby'); }
-  };
-  ws.onmessage = (e) => { let m; try { m = JSON.parse(e.data); } catch { return; } onMsg(m); };
-  ws.onclose = () => { wsOk = false; if (roomCode && mode === 'game' && !solo) note('연결을 다시 잇는 중… 내 판은 잠시 멈춥니다'); scheduleReconnect(); };
-  ws.onerror = () => {};
+class FakeWSS { constructor(){ this.h = {}; this.clients = new Set(); } on(e, f){ (this.h[e] = this.h[e] || []).push(f); } emit(e, ...a){ (this.h[e] || []).forEach(f => f(...a)); } }
+class FakeSock {
+  constructor(sendFn, closeFn, bufFn){ this.h = {}; this.readyState = 1; this._s = sendFn; this._c = closeFn; this._b = bufFn; }
+  get bufferedAmount(){ return this._b ? this._b() : 0; }
+  on(e, f){ (this.h[e] = this.h[e] || []).push(f); }
+  emit(e, ...a){ (this.h[e] || []).forEach(f => { try { f(...a); } catch (x) { console.warn(x); } }); }
+  send(d){ if (this.readyState === 1) this._s(d); }
+  ping(){ this.emit('pong'); }
+  close(){ if (this.readyState !== 1) return; this.readyState = 3; try { this._c && this._c(); } catch {} this.emit('close'); }
+  terminate(){ this.close(); }
 }
-function scheduleReconnect(){
+function srvAttach(wss, sock, id){ wss.clients.add(sock); sock.on('close', () => wss.clients.delete(sock)); wss.emit('connection', sock, { headers: {}, socket: { remoteAddress: id } }); }
+function netClose(){
   clearTimeout(reconnectT);
-  if (mode === 'lobby') $('roomList').innerHTML = '<div class="empty">서버에 연결하는 중… (처음엔 1분 가까이 걸릴 수 있어요)</div>';
-  reconnectT = setTimeout(connect, 1500);
+  try { NET.conn && NET.conn.close(); } catch {}
+  try { NET.peer && NET.peer.destroy(); } catch {}
+  Object.assign(NET, { role: null, peer: null, conn: null, wss: null, local: null, send: null, code: null });
+  wsOk = false;
 }
-function send(o){ if (ws && ws.readyState === 1) ws.send(JSON.stringify(o)); }
+// 방장: 중개 서버에 «mallangbbu-번호»를 잡고, 내 기기 안에 방 서버를 띄운다
+function hostStart(){
+  return new Promise((resolve, reject) => {
+    netClose();
+    let tries = 0;
+    const attempt = () => {
+      const code = String(1000 + Math.floor(Math.random() * 9000));
+      const peer = new Peer(PEER_PREFIX + code, { config: ICE, debug: 0 });
+      let opened = false;
+      const to = setTimeout(() => { if (!opened){ try { peer.destroy(); } catch {} reject(new Error('timeout')); } }, 12000);
+      peer.on('open', () => {
+        opened = true; clearTimeout(to);
+        window.__ML_CODE = code;
+        const wss = createPuyoServer(FakeWSS);
+        // 방장 자신도 같은 규칙으로 방 서버에 붙는다(기기 안 연결)
+        const mine = new FakeSock(d => queueMicrotask(() => { let m; try { m = JSON.parse(d); } catch { return; } onMsg(m); }));
+        srvAttach(wss, mine, 'host');
+        Object.assign(NET, { role: 'host', peer, wss, local: mine, code, send: d => queueMicrotask(() => mine.emit('message', d)) });
+        wsOk = true;
+        peer.on('connection', conn => {
+          conn.on('open', () => {
+            const sock = new FakeSock(d => { try { conn.send(d); } catch {} }, () => { try { conn.close(); } catch {} }, () => (conn.dataChannel ? conn.dataChannel.bufferedAmount : 0));
+            srvAttach(wss, sock, 'p2p-' + conn.peer);
+            conn.on('data', d => sock.emit('message', typeof d === 'string' ? d : String(d)));
+            conn.on('close', () => { if (sock.readyState === 1){ sock.readyState = 3; sock.emit('close'); } });
+            conn.on('error', () => {});
+          });
+        });
+        peer.on('disconnected', () => { try { peer.reconnect(); } catch {} });   // 중개와만 끊긴 것 — 게임 연결은 그대로
+        resolve(code);
+      });
+      peer.on('error', e => {
+        if (opened) return;
+        clearTimeout(to); try { peer.destroy(); } catch {}
+        if (e.type === 'unavailable-id' && tries++ < 5) attempt(); else reject(e);
+      });
+    };
+    attempt();
+  });
+}
+// 손님: 방 번호로 방장 기기에 바로 붙는다
+function guestStart(code){
+  return new Promise((resolve, reject) => {
+    netClose();
+    const peer = new Peer(undefined, { config: ICE, debug: 0 });
+    let done = false;
+    const fail = (why) => { if (done) return; done = true; clearTimeout(to); try { peer.destroy(); } catch {} reject(new Error(why)); };
+    const to = setTimeout(() => fail('timeout'), 15000);
+    peer.on('open', () => {
+      const conn = peer.connect(PEER_PREFIX + code, { reliable: true, serialization: 'raw' });
+      conn.on('open', () => {
+        if (done) return; done = true; clearTimeout(to);
+        Object.assign(NET, { role: 'guest', peer, conn, code, send: d => { try { conn.send(d); } catch {} } });
+        wsOk = true; resolve();
+      });
+      conn.on('data', d => { let m; try { m = JSON.parse(typeof d === 'string' ? d : String(d)); } catch { return; } onMsg(m); });
+      conn.on('close', () => { if (NET.conn === conn) onNetLost(); });
+      conn.on('error', () => {});
+    });
+    peer.on('error', e => fail(e.type === 'peer-unavailable' ? 'noroom' : (e.type || 'error')));
+  });
+}
+// 손님 쪽 연결이 끊기면: 판을 멈추고 몇 번 다시 붙어 본다(방장 쪽 방 서버가 15초 자리를 지켜 준다)
+function onNetLost(){
+  wsOk = false;
+  // 결과 화면(상대가 나감)이 떠 있으면 방장이 방을 닫은 것 — 다시 붙지 않는다
+  if (resultOpen){ netClose(); roomCode = null; token = null; sess.clear(); return; }
+  if (roomCode && mode === 'game' && !solo) note('연결을 다시 잇는 중… 내 판은 잠시 멈춥니다');
+  guestReconnect(0);
+}
+function guestReconnect(n){
+  clearTimeout(reconnectT);
+  const code = roomCode;
+  if (!code || !token || n > 7){
+    if (code){ netClose(); roomCode = null; token = null; room = null; sess.clear(); stopGame(); resultOpen = false; $('ov').classList.add('hide'); hideNote(); show('lobby'); $('codeIn').value = code; status($('lobbyStatus'), '방장과 연결이 끊겼어요. 방이 남아 있으면 번호로 다시 들어가 보세요.', true); }
+    return;
+  }
+  reconnectT = setTimeout(() => {
+    guestStart(code).then(() => { send({ t:'resume', code, token, round: curRound, ended: roundEnded }); hideNote(); })
+      .catch(() => guestReconnect(n + 1));
+  }, 1500);
+}
+function send(o){ if (NET.send) NET.send(JSON.stringify(o)); }
 
 function onMsg(m){
   switch (m.t){
-    case 'rooms': renderRooms(m.list); break;
+    case 'rooms': break;   // 서버 없는 방식엔 방 목록이 없다
     case 'err':
       if (roomCode === 'new') roomCode = null;
       status(mode === 'waitRoom' ? $('wrStatus') : $('lobbyStatus'), m.msg, true);
@@ -1116,41 +1205,30 @@ function onOppSnap(m){
   const cnt = f => (f.match(/[Oo]/g) || []).length;
   if (prev && cnt(m.f) - cnt(prev.f) >= 6) shake(oppBoardEl().parentElement);
 }
-function renderRooms(list){
-  const el = $('roomList');
-  if (!list.length){ el.innerHTML = '<div class="empty">열린 방이 없어요. 방을 만들어 보세요.</div>'; return; }
-  el.innerHTML = '';
-  list.sort((a, b) => (a.n - b.n));
-  for (const r of list){
-    const d = document.createElement('div'); d.className = 'room';
-    const full = r.n >= 2;
-    d.innerHTML = `<div class="nm"><b></b><small></small></div><button class="btn ${full ? 'sec' : 'pri'}" ${full ? 'disabled' : ''}>${full ? '경기 중' : '입장'}</button>`;
-    d.querySelector('b').textContent = r.name;
-    d.querySelector('small').textContent = `${r.lock ? '비번 · ' : ''}${r.host} · ${r.ft}선승 · ${r.n}/2 · ${r.code}번`;
-    if (!full) d.querySelector('button').onclick = () => {
-      if (r.lock && !/^[0-9]{4}$/.test($('pwIn').value)){ $('codeIn').value = r.code; $('pwIn').focus(); status($('lobbyStatus'), '비밀번호가 걸린 방이에요. 비번 4자리를 넣고 입장을 눌러 주세요.'); return; }
-      joinRoom(r.code, r.lock ? $('pwIn').value : '');
-    };
-    el.appendChild(d);
+async function joinRoom(code, pw){
+  ac(); status($('lobbyStatus'), '방장 기기에 연결하는 중…');
+  try { await guestStart(code); }
+  catch (e){
+    status($('lobbyStatus'), e.message === 'noroom' ? '그 방이 없어요. 방 번호를 확인해 주세요(방장이 화면을 켜 두어야 해요).' : '연결하지 못했어요. 다른 와이파이나 데이터로 바꿔 다시 해 보세요.', true);
+    return;
   }
-}
-function joinRoom(code, pw){
-  if (!wsOk) return status($('lobbyStatus'), '서버에 아직 연결되지 않았어요.', true);
-  ac(); roomCode = code; send({ t:'join', code, pw: pw || '', name: nick() });
+  roomCode = code; send({ t:'join', code, pw: pw || '', name: nick() });
 }
 $('btnJoin').onclick = () => { const c = $('codeIn').value.trim(); if (!/^[0-9]{4}$/.test(c)) return status($('lobbyStatus'), '방 번호 4자리를 넣어 주세요.', true); joinRoom(c, $('pwIn').value.trim()); };
 $('pwIn').addEventListener('keydown', e => { if (e.key === 'Enter') $('btnJoin').click(); });
 $('codeIn').addEventListener('keydown', e => { if (e.key === 'Enter') $('btnJoin').click(); });
-$('btnMake').onclick = () => {
-  if (!wsOk) return status($('lobbyStatus'), '서버에 아직 연결되지 않았어요.', true);
+$('btnMake').onclick = async () => {
   ac(); const pw = $('roomPw').value.trim();
   if (pw && !/^[0-9]{4}$/.test(pw)) return status($('lobbyStatus'), '비밀번호는 숫자 4자리로 넣어 주세요.', true);
+  status($('lobbyStatus'), '방을 여는 중…');
+  try { await hostStart(); } catch { return status($('lobbyStatus'), '방을 열지 못했어요. 인터넷 연결을 확인해 주세요.', true); }
+  status($('lobbyStatus'), '');
   roomCode = 'new'; send({ t:'create', name: nick(), room: $('roomName').value.trim() || (nick() + '의 방'), ft: makeFt, pw });
 };
 $('lobbyBack').onclick = () => show('home');
 $('guideBack').onclick = () => show('home');
 $('btnGuide').onclick = () => show('guide');
-$('btnLeave').onclick = () => { send({ t:'leave' }); roomCode = null; token = null; room = null; sess.clear(); resultOpen = false; curRound = 0; stopGame(); $('ov').classList.add('hide'); hideNote(); show('lobby'); };
+$('btnLeave').onclick = () => { send({ t:'leave' }); setTimeout(netClose, 400); roomCode = null; token = null; room = null; sess.clear(); resultOpen = false; curRound = 0; stopGame(); $('ov').classList.add('hide'); hideNote(); show('lobby'); };
 $('btnReady').onclick = () => { ac(); const me = room && room.players.find(p => p.id === myId); send({ t:'ready', v: !(me && me.ready) }); };
 $('btnCopy').onclick = async () => {
   const u = location.origin + location.pathname + '?room=' + (room ? room.code : '');
@@ -1269,7 +1347,7 @@ function onForfeit(m){
   ov.innerHTML = `<div class="big">승리</div><div class="msg">${m.why === 'away' ? '상대 연결이 끊겨 경기를 끝냈어요.' : '상대가 나갔어요.'}</div>
     <div class="btns"><button class="btn sec" id="ovLeave">나가기</button><button class="btn pri" id="ovWait">대기실로</button></div>`;
   $('ovLeave').onclick = () => $('btnLeave').click();
-  $('ovWait').onclick = () => { resultOpen = false; ov.classList.add('hide'); show('waitRoom'); if (room) onRoom(room); };
+  $('ovWait').onclick = () => { resultOpen = false; ov.classList.add('hide'); if (!roomCode){ show('lobby'); status($('lobbyStatus'), '방장이 방을 닫았어요. 새 방을 만들거나 다른 방에 들어가세요.'); return; } show('waitRoom'); if (room) onRoom(room); };
   hideNote();
 }
 $('btnQuit').onclick = () => {
@@ -1650,7 +1728,15 @@ function loadBg(){
 loadBg(); addEventListener('resize', loadBg);
 if (new URLSearchParams(location.search).get('room') && !roomCode) show('lobby'); else show('splash');
 requestAnimationFrame(frame);
-connect();
+{
+  const q = new URLSearchParams(location.search).get('room');
+  if (q && !roomCode) $('codeIn').value = q.replace(/[^0-9]/g, '').slice(0, 4);
+  if (roomCode && token){
+    const code = roomCode; show('lobby'); status($('lobbyStatus'), '방에 다시 연결하는 중…');
+    guestStart(code).then(() => send({ t:'resume', code, token, round: curRound, ended: roundEnded }))
+      .catch(() => { roomCode = null; token = null; sess.clear(); status($('lobbyStatus'), '방에 다시 들어가지 못했어요. 번호로 다시 입장해 주세요.', true); $('codeIn').value = code; });
+  }
+}
 </script>
 </body>
 </html>
