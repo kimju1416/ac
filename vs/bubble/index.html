@@ -227,7 +227,7 @@ const G = {
   turnBased: false, countdown: true, ft: 3, cpuFt: 2,
   levels: [{ k: 'easy', name: '쉬움', desc: '느긋하게 쏴요' }, { k: 'normal', name: '보통', desc: '제법 맞춰요' }, { k: 'hard', name: '어려움', desc: '빠르고 정확해요' }],
   rules: `<ul><li>각자 자기 판에서 방울을 쏩니다. 같은 색이 <b>3개 이상</b> 이어지면 터지고, 천장과 끊긴 방울은 함께 떨어집니다.</li><li>많이 터뜨리고 떨어뜨릴수록 상대에게 <b>방해 방울</b>을 보냅니다(터진 수 + 떨어진 수×2 − 3).</li><li>받을 방해는 판 위 막대에 예고됩니다. 내가 터뜨리면 먼저 상쇄되고, 못 터뜨린 발사 뒤에 아래에서 올라와 붙습니다.</li><li>몇 발마다 천장이 한 줄씩 내려오고, 시간이 지날수록 더 자주 내려옵니다.</li><li>방울이 <b>빨간 선</b>을 넘으면 집니다. 판을 다 비우면 큰 공격이 나갑니다.</li><li>10초 동안 안 쏘면 저절로 발사됩니다.</li><li>첫 판에만 날아가는 길이 보여요. 둘째 판부터는 짧은 방향 표시만 나옵니다.</li></ul>`,
-  controls: `<ul><li><b>폰</b>: 왼쪽 아래 <b>레버</b>를 좌우로 끌면 조준이 그쪽으로 돕니다. 조금 끌면 천천히, 끝까지 끌면 빠르게 돌고, 손을 떼면 멈춥니다. 오른쪽 아래 둥근 <b>발사</b> 버튼으로 쏩니다(레버를 잡은 채로 눌러도 됩니다).</li><li>판을 끌어서 조준해도 됩니다. 손을 떼도 발사되지 않습니다.</li><li><b>PC</b>: 마우스로 조준, 클릭으로 발사. 키보드는 <kbd>←</kbd><kbd>→</kbd> 조준, <kbd>스페이스</kbd> 발사. 아래 «다음» 칸은 그다음에 쏠 방울 미리 보기입니다.</li><li>방울마다 색 표시(점·줄·세모·십자·마름모)가 흐리게 있어 색이 헷갈려도 구별됩니다.</li></ul>`,
+  controls: `<ul><li><b>폰</b>: 왼쪽 아래 <b>레버</b>를 좌우로 끌면 조준이 그쪽으로 일정한 속도로 돕니다. 손을 떼면 그 자리에 멈춥니다. 오른쪽 아래 둥근 <b>발사</b> 버튼으로 쏩니다(레버를 잡은 채로 눌러도 됩니다).</li><li>판을 끌어서 조준해도 됩니다. 손을 떼도 발사되지 않습니다.</li><li><b>PC</b>: 마우스로 조준, 클릭으로 발사. 키보드는 <kbd>←</kbd><kbd>→</kbd> 조준, <kbd>스페이스</kbd> 발사. 아래 «다음» 칸은 그다음에 쏠 방울 미리 보기입니다.</li><li>방울마다 색 표시(점·줄·세모·십자·마름모)가 흐리게 있어 색이 헷갈려도 구별됩니다.</li></ul>`,
   mount(stage){
     cv = document.createElement('canvas'); cv.id = 'bbCv'; stage.appendChild(cv); cx = cv.getContext('2d');
     cv.addEventListener('pointerdown', onDown);
@@ -366,7 +366,7 @@ function makePad(stage){
     + '<button class="bbBtn bbFire" id="bbFireBtn" aria-label="발사">발사</button>';
   stage.appendChild(pad);
   const on = (el, v) => el.classList.toggle('bbOn', v);
-  // 레버: 받침 어디든 눌러 끌면 된다. 가운데에서 떨어진 거리 → 회전 속도
+  // 레버: 받침 어디든 눌러 좌우로 넘기면 그쪽으로 돈다(속도는 늘 같다)
   const joy = document.getElementById('bbJoy');
   const setV = e => {
     const r = joy.getBoundingClientRect(), range = Math.max(20, r.width / 2 - 30);
@@ -383,24 +383,26 @@ function makePad(stage){
   joy.addEventListener('pointermove', e => { if (hold && hold.id === e.pointerId){ e.preventDefault(); setV(e); } });
   const end = e => { if (hold && hold.id === e.pointerId) joyReset(); };
   for (const k of ['pointerup', 'pointercancel', 'lostpointercapture']) joy.addEventListener(k, end);
+  // 손가락이 레버 밖에서 떨어져도 확실히 멈추게 화면 전체에서도 받는다
+  for (const k of ['pointerup', 'pointercancel']) addEventListener(k, end, true);
   joy.addEventListener('contextmenu', e => e.preventDefault());
   const fb = document.getElementById('bbFireBtn');
   fb.addEventListener('pointerdown', e => { e.preventDefault(); VS.ac(); on(fb, true); if (canPlay() && VS.live() && !st.me.fly){ shoot(); VS.buzz(10); } });
   for (const k of ['pointerup', 'pointercancel', 'pointerleave']) fb.addEventListener(k, () => on(fb, false));
   for (const bt of pad.querySelectorAll('button')) bt.addEventListener('click', e => e.preventDefault());
 }
-// 레버를 놓으면 손잡이가 가운데로 톡 돌아가고 회전이 멈춘다
+// 레버를 놓으면 손잡이만 가운데로 돌아가고, 조준은 그 자리에 그대로 둔다
 function joyReset(){
   hold = null;
   const j = document.getElementById('bbJoy'), k = document.getElementById('bbKnob');
   if (j){ j.classList.remove('bbDrag'); j.setAttribute('aria-valuenow', '0'); }
   if (k) k.style.transform = '';
 }
-// 조금 끌면 천천히(약 15도/초), 끝까지 끌면 빠르게(약 125도/초)
+// 원래 게임처럼: 레버를 넘기면 늘 같은 속도(방향키와 같은 초당 약 86도)로 돈다
 function holdTick(dt){
   if (!hold || !st) return;
-  const a = Math.abs(hold.v); if (a < 0.08) return;
-  const sp = 0.2 + 1.98 * Math.pow((a - 0.08) / 0.92, 1.6);   // 라디안/초
+  if (Math.abs(hold.v) < 0.15) return;
+  const sp = 1.5;   // 라디안/초 — 방향키와 같다
   st.me.ang = clampA(st.me.ang - Math.sign(hold.v) * sp * dt / 1000);   // 오른쪽으로 끌면 오른쪽(각도 감소)
 }
 function onKey(e){
