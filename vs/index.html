@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>1:1 오락실 — 서버 없이 친구와 바로 한 판</title>
+<meta name="description" content="말랑 대전·오목·알까기·블록 대전·방울 대전. 방 번호 4자리로 친구와 바로 1:1, 컴퓨터와도 대결. 설치·가입 없이 폰과 PC에서.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kimju.kr/vs/">
+<meta property="og:title" content="1:1 오락실 — 친구와 바로 한 판">
+<meta property="og:description" content="말랑 대전·오목·알까기·블록 대전·방울 대전. 방 번호 4자리로 친구와 1:1, 컴퓨터와도 대결.">
+<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#2361C4">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{--navy:#1C2340;--pt:#E05A1E;--tx:#2E2418;--sub:#8A796A}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%}
+body{font-family:"Pretendard Variable",Pretendard,sans-serif;color:var(--tx);background:#3F8FE6;word-break:keep-all;-webkit-tap-highlight-color:transparent}
+#bg{position:fixed;inset:0;z-index:-1;background:#3F8FE6 center/cover no-repeat url(common/bg-wide.jpg)}
+#bg::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(10,18,48,.15),rgba(10,18,48,.6))}
+@media (orientation:portrait){#bg{background-image:url(common/bg-tall.jpg)}}
+.wrap{max-width:1080px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))}
+.home{display:inline-flex;align-items:center;height:40px;padding:0 14px;border-radius:12px;background:rgba(20,28,64,.72);color:#fff;font-weight:800;font-size:14px;text-decoration:none}
+h1{margin:22px 0 6px;text-align:center;color:#fff;font-weight:900;letter-spacing:-.02em;line-height:1;font-size:clamp(44px,9vw,84px);
+  text-shadow:0 5px 0 var(--navy),4px 0 0 var(--navy),-4px 0 0 var(--navy),0 -4px 0 var(--navy),3px 3px 0 var(--navy),-3px 3px 0 var(--navy),3px -3px 0 var(--navy),-3px -3px 0 var(--navy),0 12px 24px rgba(0,0,0,.35)}
+.lead{text-align:center;color:#fff;font-weight:700;font-size:clamp(15px,2.2vw,19px);text-shadow:0 2px 6px rgba(0,0,0,.5);margin:14px 0 26px;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+.card{display:flex;flex-direction:column;background:#FBF6F1;border-radius:18px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 6px 0 rgba(0,0,0,.25);transition:transform .12s}
+.card:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.25)}
+@media (hover:hover){.card:hover{transform:translateY(-3px)}}
+.shot{aspect-ratio:16/9;background:#2A5FB2 center/cover no-repeat;position:relative}
+.tag{position:absolute;left:10px;top:10px;background:var(--navy);color:#fff;font-size:12px;font-weight:800;padding:5px 9px;border-radius:8px}
+.tag.new{background:var(--pt)}
+.body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px}
+.body b{font-size:22px;font-weight:900}
+.body p{font-size:14px;color:var(--sub);line-height:1.5}
+.meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.meta span{font-size:12px;font-weight:700;padding:4px 8px;border-radius:999px;background:#fff;border:1px solid #EFE2D6}
+.how{margin-top:30px;background:rgba(251,246,241,.96);border-radius:18px;padding:20px 20px 18px}
+.how h2{font-size:18px;font-weight:900;margin-bottom:10px}
+.how ol{padding-left:20px}.how li{font-size:14px;line-height:1.7}
+.foot{text-align:center;color:rgba(255,255,255,.85);font-size:13px;margin-top:22px}
+.foot a{color:#fff}
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<div class="wrap">
+  <a class="home" href="/">‹ kimju.kr</a>
+  <h1>1:1 오락실</h1>
+  <p class="lead">방 번호 4자리만 알려 주면 친구와 바로 한 판.<br>설치도 가입도 없이, 컴퓨터와도 겨룰 수 있어요.</p>
+  <div class="grid" id="grid"></div>
+  <section class="how">
+    <h2>친구와 하는 법</h2>
+    <ol>
+      <li>게임을 고르고 <b>친구와 대전 → 방 만들기 → 방 열기</b>를 누르면 방 번호 4자리가 나옵니다.</li>
+      <li>«카톡 등으로 보내기»로 친구에게 번호를 보내고, 이 화면으로 돌아와 기다리세요.</li>
+      <li>친구는 같은 게임에서 <b>방 들어가기</b>에 번호를 넣으면 바로 연결됩니다. 둘 다 «준비»를 누르면 시작!</li>
+    </ol>
+  </section>
+  <p class="foot">서버 없이 두 기기가 직접 연결됩니다. 방을 만든 사람은 경기가 끝날 때까지 화면을 켜 두세요.</p>
+</div>
+<script>
+const GAMES = [
+  { href: '/bbu/', shot: 'shots/bbu.jpg', name: '말랑 대전', desc: '같은 색 말랑이 4개를 이어 터뜨리고, 연쇄로 상대에게 방해 말랑이를 쏟아부어요.', tags: ['실시간', '연쇄 퍼즐'] },
+  { href: '/vs/block/', shot: 'shots/block.jpg', name: '블록 대전', desc: '떨어지는 블록으로 줄을 지우면 상대 판 아래에서 방해 줄이 올라와요.', tags: ['실시간', '블록 쌓기'], isNew: true },
+  { href: '/vs/bubble/', shot: 'shots/bubble.jpg', name: '방울 대전', desc: '방울을 쏘아 같은 색 3개를 터뜨리고, 떨어뜨린 만큼 상대에게 보내요.', tags: ['실시간', '쏘기'], isNew: true },
+  { href: '/vs/alkkagi/', shot: 'shots/alkkagi.jpg', name: '알까기', desc: '내 돌을 당겼다 놓아 튕기고, 상대 돌을 판 밖으로 쳐내요.', tags: ['차례', '튕기기'], isNew: true },
+  { href: '/vs/omok/', shot: 'shots/omok.jpg', name: '오목', desc: '다섯 개를 먼저 잇는 사람이 이겨요. 흑 3·3 금지 한국식 규칙.', tags: ['차례', '두뇌'], isNew: true },
+];
+const grid = document.getElementById('grid');
+for (const g of GAMES){
+  const a = document.createElement('a'); a.className = 'card'; a.href = g.href;
+  a.innerHTML = `<div class="shot" style="background-image:url(${g.shot}?v=1)">${g.isNew ? '<span class="tag new">NEW</span>' : ''}</div><div class="body"><b></b><p></p><div class="meta"></div></div>`;
+  a.querySelector('b').textContent = g.name; a.querySelector('p').textContent = g.desc;
+  const m = a.querySelector('.meta'); for (const t of ['1:1', ...g.tags, '컴퓨터 대결']){ const s = document.createElement('span'); s.textContent = t; m.appendChild(s); }
+  grid.appendChild(a);
+}
+</script>
+</body>
+</html>

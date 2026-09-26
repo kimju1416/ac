@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>블록 대전 — 1:1 오락실</title>
+<meta name="description" content="떨어지는 블록으로 줄을 지워 상대에게 방해 줄을 보내는 1:1 실시간 대전. 방 번호 4자리로 친구와 바로, 컴퓨터(쉬움·보통·어려움)와도 대결.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kimju.kr/vs/block/">
+<meta property="og:title" content="블록 대전 — 1:1 오락실">
+<meta property="og:description" content="줄을 지워 상대 판에 방해 줄을 올려라. 방 번호 4자리로 친구와 바로 한 판.">
+<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#2361C4">
+<link rel="stylesheet" href="../common/vs.css">
+<style>
+/* 블록 대전 전용 — 이름은 모두 bk 접두어 */
+#bkCv{position:absolute;left:0;top:0}
+.bkPad{position:absolute;left:0;right:0;bottom:0;z-index:3;display:flex;justify-content:center;gap:6px;padding:6px 8px 8px}
+.bkPad button{width:var(--bkBs,52px);height:var(--bkBs,52px);flex:0 0 auto;border-radius:14px;background:rgba(255,255,255,.93);color:#1C2340;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 0 rgba(0,0,0,.28);touch-action:none;font-weight:900;font-size:15px}
+.bkPad button.bkRot{background:#1C2340;color:#fff}
+.bkPad button.bkHd{background:#E05A1E;color:#fff}
+.bkPad button.bkHold{background:#2361C4;color:#fff;font-size:14px}
+.bkPad button.bkOn{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.28)}
+.bkPad svg{width:50%;height:50%;fill:none;stroke:currentColor;stroke-width:2.7;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="../common/vs.js"></script>
+<script>
+"use strict";
+// ================= 블록 대전 =================
+// 10×20 판(위에 숨은 2줄), 7개 묶음(7-bag), SRS 회전·벽차기, 홀드, 다음 5개, 고스트, 잠금 지연 0.5초(15회).
+// 공격: 줄 1→0, 2→1, 3→2, 4→4 / T-스핀 싱글2·더블4·트리플6 / 백투백 +1 / 콤보 / 판 비우기 +10.
+// 판은 각자 자기 기기에서만 진행하고, 공격(atk)과 판 요약(bd)·조각 위치(pc)만 주고받는다.
+const W = 10, H = 22, HID = 2;                    // 가로 10, 세로 22(위 2줄은 숨은 줄)
+const LOCK_MS = 500, LOCK_RESETS = 15, SOFT_MS = 30, DAS = 150, ARR = 35;
+const GARB_DELAY = 500, MAX_RISE = 8, PRESS_AT = 120, PRESS_EVERY = 10;
+const COMBO = [0, 1, 1, 2, 2, 3, 3, 4, 4, 4, 5];
+const T_I = 1, T_O = 2, T_T = 3;
+// 색: I 하늘, O 노랑, T 보라, S 초록, Z 빨강, J 파랑, L 주황, 8 방해 줄(회색)
+const COLORS = [null, '#26CFEF', '#FFD02E', '#B25CF2', '#36D466', '#FF4757', '#3A78FF', '#FF9528', '#7D889E'];
+const BASE = { 1: [[0, 1], [1, 1], [2, 1], [3, 1]], 2: [[0, 0], [1, 0], [0, 1], [1, 1]], 3: [[1, 0], [0, 1], [1, 1], [2, 1]],
+  4: [[1, 0], [2, 0], [0, 1], [1, 1]], 5: [[0, 0], [1, 0], [1, 1], [2, 1]], 6: [[0, 0], [0, 1], [1, 1], [2, 1]], 7: [[2, 0], [0, 1], [1, 1], [2, 1]] };
+const BOX = { 1: 4, 2: 2, 3: 3, 4: 3, 5: 3, 6: 3, 7: 3 };
+const SH = {};   // SH[종류][회전] = [[x,y]...] — 시계 방향 회전은 상자 안에서 (x,y)→(n-1-y, x)
+for (let t = 1; t <= 7; t++){ SH[t] = [BASE[t]]; for (let r = 1; r < 4; r++) SH[t].push(t === T_O ? BASE[t] : SH[t][r - 1].map(([x, y]) => [BOX[t] - 1 - y, x])); }
+// SRS 벽차기 표(표준 표는 y가 위로 +, 여기 판은 y가 아래로 + 이라 쓸 때 부호를 뒤집는다)
+const K_N = { '01': [[0, 0], [-1, 0], [-1, 1], [0, -2], [-1, -2]], '10': [[0, 0], [1, 0], [1, -1], [0, 2], [1, 2]],
+  '12': [[0, 0], [1, 0], [1, -1], [0, 2], [1, 2]], '21': [[0, 0], [-1, 0], [-1, 1], [0, -2], [-1, -2]],
+  '23': [[0, 0], [1, 0], [1, 1], [0, -2], [1, -2]], '32': [[0, 0], [-1, 0], [-1, -1], [0, 2], [-1, 2]],
+  '30': [[0, 0], [-1, 0], [-1, -1], [0, 2], [-1, 2]], '03': [[0, 0], [1, 0], [1, 1], [0, -2], [1, -2]] };
+const K_I = { '01': [[0, 0], [-2, 0], [1, 0], [-2, -1], [1, 2]], '10': [[0, 0], [2, 0], [-1, 0], [2, 1], [-1, -2]],
+  '12': [[0, 0], [-1, 0], [2, 0], [-1, 2], [2, -1]], '21': [[0, 0], [1, 0], [-2, 0], [1, -2], [-2, 1]],
+  '23': [[0, 0], [2, 0], [-1, 0], [2, 1], [-1, -2]], '32': [[0, 0], [-2, 0], [1, 0], [-2, -1], [1, 2]],
+  '30': [[0, 0], [1, 0], [-2, 0], [1, -2], [-2, 1]], '03': [[0, 0], [-1, 0], [2, 0], [-1, 2], [2, -1]] };
+
+// ---------- 판 규칙(내 판·컴퓨터 판 공용) ----------
+function fitsG(g, t, r, x, y){
+  for (const [a, b] of SH[t][r]){
+    const cx = x + a, cy = y + b;
+    if (cx < 0 || cx >= W || cy >= H) return false;
+    if (cy >= 0 && g[cy][cx]) return false;
+  }
+  return true;
+}
+// 회전 시도(벽차기 포함). 성공하면 {r,x,y,k(몇 번째 킥)}
+function kickRot(g, t, r, x, y, dir){
+  if (t === T_O) return null;
+  const nr = (r + dir + 4) % 4, tb = (t === T_I ? K_I : K_N)['' + r + nr];
+  for (let i = 0; i < tb.length; i++){ const nx = x + tb[i][0], ny = y - tb[i][1]; if (fitsG(g, t, nr, nx, ny)) return { r: nr, x: nx, y: ny, k: i }; }
+  return null;
+}
+function spawnPos(t){ return { t, r: 0, x: t === T_O ? 4 : 3, y: 0 }; }
+const gravMs = sec => Math.max(40, 800 * Math.pow(0.86, sec / 15));   // 시간이 지날수록 빨라진다
+const speedLv = sec => 1 + Math.floor(sec / 15);
+
+class Plr {
+  constructor(seed, salt){
+    this.g = []; for (let i = 0; i < H; i++) this.g.push(new Uint8Array(W));
+    this.rng = VS.rng(seed);                        // 같은 seed → 두 사람이 같은 조각 순서
+    this.hr = VS.rng((seed ^ (salt * 7919)) + 13);  // 방해 줄 빈칸 위치(내 기기 것)
+    this.bag = []; this.q = []; this.fillQ();
+    this.hold = 0; this.canHold = true; this.cur = null;
+    this.pend = []; this.b2b = false; this.combo = -1; this.dead = false;
+    this.gT = 0; this.lockT = 0; this.resets = 0; this.low = 0; this.lastRot = false; this.lastKick = 0;
+    this.soft = false; this.sent = 0; this.lines = 0; this.pieces = 0; this.fx = null; this.ver = 0;
+  }
+  fillQ(){
+    while (this.q.length < 7){
+      if (!this.bag.length){ const b = [1, 2, 3, 4, 5, 6, 7]; for (let i = 6; i > 0; i--){ const j = Math.floor(this.rng() * (i + 1)); [b[i], b[j]] = [b[j], b[i]]; } this.bag = b; }
+      this.q.push(this.bag.shift());
+    }
+  }
+  emit(k, d){ if (this.fx) this.fx(k, d || {}); }
+  pendN(){ let n = 0; for (const e of this.pend) n += e.n; return n; }
+  spawn(t){
+    const p = this.cur = spawnPos(t);
+    this.gT = 0; this.lockT = 0; this.resets = 0; this.lastRot = false; this.lastKick = 0; this.ver++;
+    if (!fitsG(this.g, t, 0, p.x, p.y)){ this.cur = null; this.die(); return false; }   // 나올 자리가 막히면 진다
+    if (fitsG(this.g, t, 0, p.x, p.y + 1)) p.y++;
+    this.low = p.y;
+    return true;
+  }
+  next(){ const t = this.q.shift(); this.fillQ(); this.canHold = true; this.pieces++; return this.spawn(t); }
+  die(){ if (this.dead) return; this.dead = true; this.emit('dead'); }
+  touched(){ if (this.resets < LOCK_RESETS){ this.lockT = 0; this.resets++; } this.ver++; }
+  checkLow(){ const p = this.cur; if (p.y > this.low){ this.low = p.y; this.resets = 0; } }
+  move(dx){
+    const p = this.cur; if (!p || this.dead) return false;
+    if (!fitsG(this.g, p.t, p.r, p.x + dx, p.y)) return false;
+    p.x += dx; this.lastRot = false; this.touched(); this.emit('move'); return true;
+  }
+  rot(dir){
+    const p = this.cur; if (!p || this.dead) return false;
+    const k = kickRot(this.g, p.t, p.r, p.x, p.y, dir); if (!k) return false;
+    p.r = k.r; p.x = k.x; p.y = k.y; this.lastRot = true; this.lastKick = k.k; this.checkLow(); this.touched(); this.emit('rot'); return true;
+  }
+  down(){
+    const p = this.cur; if (!p || this.dead || !fitsG(this.g, p.t, p.r, p.x, p.y + 1)) return false;
+    p.y++; this.lastRot = false; this.checkLow(); this.ver++; return true;
+  }
+  hard(){ const p = this.cur; if (!p || this.dead) return; let n = 0; while (this.down()) n++; this.emit('hard', { n, p }); this.lock(); }
+  doHold(){
+    if (!this.cur || this.dead || !this.canHold) return false;
+    const t = this.cur.t;
+    if (this.hold){ const h = this.hold; this.hold = t; this.spawn(h); }
+    else { this.hold = t; const n = this.q.shift(); this.fillQ(); this.spawn(n); }
+    this.canHold = false; this.emit('hold'); return true;
+  }
+  tick(dt, grav){
+    const p = this.cur; if (!p || this.dead) return;
+    const iv = this.soft ? Math.min(grav, SOFT_MS) : grav;
+    this.gT += dt; let n = 0;
+    while (this.gT >= iv && n++ < H){ this.gT -= iv; if (!this.down()){ this.gT = 0; break; } }
+    if (!this.cur) return;
+    if (!fitsG(this.g, p.t, p.r, p.x, p.y + 1)){ this.lockT += dt; if (this.lockT >= LOCK_MS) this.lock(); }
+    else this.lockT = 0;
+  }
+  lock(){
+    const p = this.cur; if (!p) return; this.cur = null;
+    // T-스핀 3코너 판정
+    let spin = null;
+    if (p.t === T_T && this.lastRot){
+      const occ = ([a, b]) => { const x = p.x + a, y = p.y + b; return x < 0 || x >= W || y >= H || (y >= 0 && this.g[y][x] > 0); };
+      const n = [[0, 0], [2, 0], [0, 2], [2, 2]].filter(occ).length;
+      if (n >= 3){ const fr = [[[0, 0], [2, 0]], [[2, 0], [2, 2]], [[0, 2], [2, 2]], [[0, 0], [0, 2]]][p.r]; spin = (fr.every(occ) || this.lastKick === 4) ? 'full' : 'mini'; }
+    }
+    for (const [a, b] of SH[p.t][p.r]){ const y = p.y + b; if (y >= 0) this.g[y][p.x + a] = p.t; }
+    // 가득 찬 줄 지우기
+    const rows = [], cols = [];
+    for (let y = 0; y < H; y++) if (this.g[y].every(v => v)){ rows.push(y); cols.push(Array.from(this.g[y])); }
+    if (rows.length){ this.g = this.g.filter((_, y) => !rows.includes(y)); while (this.g.length < H) this.g.unshift(new Uint8Array(W)); }
+    const L = rows.length, tags = [];
+    let atk = 0;
+    if (L){
+      const diff = L === 4 || !!spin;   // 백투백 대상: 4줄, T-스핀
+      if (spin === 'full'){ atk = [0, 2, 4, 6][L]; tags.push('T-SPIN ' + ['', '싱글', '더블', '트리플'][L]); }
+      else { atk = [0, 0, 1, 2, 4][L]; if (spin === 'mini') tags.push('T-SPIN MINI'); if (L === 4) tags.push('4줄!'); else if (L >= 2 && !spin) tags.push(L + '줄'); }
+      if (diff && this.b2b){ atk++; tags.push('B2B'); }
+      this.b2b = diff;
+      this.combo++;
+      if (this.combo > 0){ atk += COMBO[Math.min(this.combo, COMBO.length - 1)]; tags.push(this.combo + ' 콤보'); }
+      if (this.g.every(r => r.every(v => !v))){ atk += 10; tags.push('PERFECT'); }
+      this.lines += L;
+    } else { this.combo = -1; if (spin === 'full') tags.push('T-SPIN'); }
+    // 받은 방해를 먼저 상쇄
+    let cancel = 0;
+    while (atk > 0 && this.pend.length){ const e = this.pend[0], k = Math.min(e.n, atk); e.n -= k; atk -= k; cancel += k; if (!e.n) this.pend.shift(); }
+    this.emit('lock', { p, rows, cols, L, tags, cancel, spin });
+    if (atk > 0){ this.sent += atk; this.emit('send', { n: atk, tags }); }
+    if (!L) this.rise();                   // 줄을 못 지웠으면 쌓인 방해가 올라온다
+    if (!this.dead) this.next();
+  }
+  receive(n){ if (n > 0 && !this.dead) this.pend.push({ n, hole: Math.floor(this.hr() * W), t: performance.now() }); }
+  rise(){
+    const now = performance.now(); let n = 0, top = false;
+    while (this.pend.length && n < MAX_RISE){
+      const e = this.pend[0]; if (now - e.t < GARB_DELAY) break;
+      const k = Math.min(e.n, MAX_RISE - n);
+      for (let i = 0; i < k; i++){ const old = this.g.shift(); if (old.some(v => v)) top = true; const r = new Uint8Array(W).fill(8); r[e.hole] = 0; this.g.push(r); }   // 한 묶음 안에서는 빈칸 위치가 같다
+      n += k; e.n -= k; if (!e.n) this.pend.shift();
+    }
+    if (n) this.emit('rise', { n });
+    if (top) this.die();
+  }
+}
+
+// ---------- 컴퓨터(휴리스틱) ----------
+// 회전 순서대로 돌리고 → 옆으로 옮기고 → 떨어뜨리는 길로 갈 수 있는 모든 자리
+function placements(g, t){
+  const s = spawnPos(t);
+  if (!fitsG(g, t, 0, s.x, s.y)) return [];
+  if (fitsG(g, t, 0, s.x, s.y + 1)) s.y++;
+  const out = [], rots = t === T_O ? [[]] : [[], [1], [1, 1], [-1]];
+  for (const seq of rots){
+    let p = { r: 0, x: s.x, y: s.y }, ok = true;
+    for (const d of seq){ const k = kickRot(g, t, p.r, p.x, p.y, d); if (!k){ ok = false; break; } p = { r: k.r, x: k.x, y: k.y }; }
+    if (!ok) continue;
+    const xs = [p.x];
+    for (let x = p.x - 1; fitsG(g, t, p.r, x, p.y); x--) xs.push(x);
+    for (let x = p.x + 1; fitsG(g, t, p.r, x, p.y); x++) xs.push(x);
+    for (const x of xs){ let y = p.y; while (fitsG(g, t, p.r, x, y + 1)) y++; out.push({ t, seq, r: p.r, x, y, sx: p.x }); }
+  }
+  return out;
+}
+function simPlace(g, t, r, x, y){
+  const g2 = g.map(row => row.slice());
+  for (const [a, b] of SH[t][r]){ const yy = y + b; if (yy >= 0) g2[yy][x + a] = t; }
+  const keep = g2.filter(row => !row.every(v => v)), L = H - keep.length;
+  while (keep.length < H) keep.unshift(new Uint8Array(W));
+  return { g: keep, L };
+}
+function evalGrid(g, L){
+  let agg = 0, holes = 0, bump = 0, maxH = 0, prev = -1, wellDeep = 0;
+  const hs = [];
+  for (let x = 0; x < W; x++){
+    let h = 0, seen = false;
+    for (let y = 0; y < H; y++){ if (g[y][x]){ if (!seen){ seen = true; h = H - y; } } else if (seen) holes++; }
+    hs.push(h); agg += h; if (h > maxH) maxH = h;
+    if (prev >= 0) bump += Math.abs(h - prev); prev = h;
+  }
+  for (let x = 0; x < W; x++){ const l = x ? hs[x - 1] : 99, r = x < W - 1 ? hs[x + 1] : 99, d = Math.min(l, r) - hs[x]; if (d > 2) wellDeep += d - 2; }
+  let v = -0.51 * agg - 0.95 * holes - 0.2 * bump - 0.15 * wellDeep + 0.76 * L + (L === 4 ? 4 : L >= 2 ? L * 0.4 : 0);
+  if (maxH > 12) v -= (maxH - 12) * 1.5;
+  return v;
+}
+// 한 조각의 목표 자리 고르기. 어려움은 홀드와 다음 조각까지 본다.
+function think(p, lv){
+  const cur = p.cur; if (!cur) return null;
+  const cands = [];
+  const tryPiece = (t, hold, nextT) => {
+    for (const pl of placements(p.g, t)){
+      const s = simPlace(p.g, t, pl.r, pl.x, pl.y);
+      let v = evalGrid(s.g, s.L);
+      if (lv === 'hard' && nextT){
+        let best = -1e9;
+        for (const p2 of placements(s.g, nextT)){ const s2 = simPlace(s.g, nextT, p2.r, p2.x, p2.y); const v2 = evalGrid(s2.g, s2.L); if (v2 > best) best = v2; }
+        v = best > -1e9 ? best + 0.76 * s.L + (s.L === 4 ? 4 : 0) : v - 50;
+      }
+      cands.push(Object.assign(pl, { hold, v }));
+    }
+  };
+  tryPiece(cur.t, false, p.q[0]);
+  if (lv === 'hard' && p.canHold){
+    if (p.hold) tryPiece(p.hold, true, p.q[0]);
+    else if (p.q[0] !== cur.t) tryPiece(p.q[0], true, p.q[1]);
+  }
+  if (!cands.length) return null;
+  if (lv === 'easy'){
+    for (const c of cands) c.v += Math.random() * 2.5;
+    if (Math.random() < 0.22) return cands[Math.floor(Math.random() * cands.length)];   // 가끔 나쁜 수
+  } else if (lv === 'normal') for (const c of cands) c.v += Math.random() * 0.3;
+  cands.sort((a, b) => b.v - a.v);
+  return cands[0];
+}
+function planSteps(pl){
+  const st = [];
+  if (pl.hold) st.push('H');
+  for (const d of pl.seq) st.push(d > 0 ? 'CW' : 'CCW');
+  const dx = pl.x - pl.sx; for (let i = 0; i < Math.abs(dx); i++) st.push(dx > 0 ? 'R' : 'L');
+  st.push('D');
+  return st;
+}
+function doStep(p, k){
+  if (k === 'H') p.doHold(); else if (k === 'CW') p.rot(1); else if (k === 'CCW') p.rot(-1);
+  else if (k === 'L') p.move(-1); else if (k === 'R') p.move(1); else if (k === 'D') p.hard();
+}
+const PIECE_MS = { easy: 1200, normal: 600, hard: 300 };
+class Bot {
+  constructor(p, lv){ this.p = p; this.lv = lv; this.steps = null; this.pc = -1; this.t = 0; this.dt = 100; }
+  update(dt){
+    const p = this.p; if (!p.cur || p.dead) return;
+    if (this.pc !== p.pieces || !this.steps){
+      this.pc = p.pieces; const pl = think(p, this.lv);
+      this.steps = pl ? planSteps(pl) : ['D'];
+      this.dt = PIECE_MS[this.lv] / (this.steps.length + 1); this.t = 0;   // 이동 과정을 여러 단계로 보여 준다
+    }
+    this.t += dt;
+    while (this.steps && this.steps.length && this.t >= this.dt){
+      this.t -= this.dt; const k = this.steps.shift(); doStep(p, k);
+      if (k === 'D' || !p.cur) { this.steps = null; break; }
+    }
+  }
+}
+
+// ---------- 화면 ----------
+let cv, cx, pad, DPR = 1, Lo = null;
+const spr = new Map();
+const FONT = '"Pretendard Variable",Pretendard,sans-serif';
+function rr(x, a, b, w, h, r){ x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + h, r); x.arcTo(a + w, b + h, a, b + h, r); x.arcTo(a, b + h, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
+// 둥근 모서리 + 밝은 윗면 블록(크기별로 한 번 그려 두고 재사용)
+function sprite(col, s){
+  const key = col + '|' + s + '|' + DPR;
+  let c = spr.get(key); if (c) return c;
+  c = document.createElement('canvas'); c.width = c.height = Math.max(1, Math.ceil(s * DPR));
+  const x = c.getContext('2d'); x.scale(DPR, DPR);
+  const i = Math.max(0.6, s * 0.045), r = Math.max(1.5, s * 0.2);
+  rr(x, i, i, s - 2 * i, s - 2 * i, r); x.fillStyle = col; x.fill();
+  const g = x.createLinearGradient(0, 0, 0, s);
+  g.addColorStop(0, 'rgba(255,255,255,.5)'); g.addColorStop(.45, 'rgba(255,255,255,.06)'); g.addColorStop(.46, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,.3)');
+  rr(x, i, i, s - 2 * i, s - 2 * i, r); x.fillStyle = g; x.fill();
+  if (s >= 8){ rr(x, s * .2, s * .13, s * .6, Math.max(1, s * .11), s * .05); x.fillStyle = 'rgba(255,255,255,.6)'; x.fill(); }
+  spr.set(key, c); return c;
+}
+function block(x, v, px, py, s, dead){ x.drawImage(sprite(dead ? '#5A6173' : COLORS[v], s), px, py, s, s); }
+function drawPiece(x, t, cxp, cyp, s, alpha){
+  const cells = SH[t][0]; let a0 = 9, a1 = -9, b0 = 9, b1 = -9;
+  for (const [a, b] of cells){ a0 = Math.min(a0, a); a1 = Math.max(a1, a); b0 = Math.min(b0, b); b1 = Math.max(b1, b); }
+  const ox = cxp - (a1 - a0 + 1) * s / 2 - a0 * s, oy = cyp - (b1 - b0 + 1) * s / 2 - b0 * s;
+  x.save(); x.globalAlpha = alpha == null ? 1 : alpha;
+  for (const [a, b] of cells) block(x, t, ox + a * s, oy + b * s, s);
+  x.restore();
+}
+// 밝은 배경 위에서도 읽히게 짙은 테두리를 두른 글자
+function label(x, t, px, py, sz, al, col){ x.font = `800 ${sz}px ${FONT}`; x.textAlign = al || 'left'; x.textBaseline = 'top'; x.lineJoin = 'round'; x.lineWidth = Math.max(3, sz * .28); x.strokeStyle = 'rgba(12,18,42,.9)'; x.strokeText(t, px, py); x.fillStyle = col || '#fff'; x.fillText(t, px, py); }
+function panel(x, a, b, w, h, al){ rr(x, a, b, w, h, Math.min(10, w * .08)); x.fillStyle = `rgba(12,18,42,${al || .82})`; x.fill(); x.strokeStyle = 'rgba(255,255,255,.18)'; x.lineWidth = 1.5; x.stroke(); }
+
+// 판 그리기(v: {g, cur, dead}), c: 칸 크기
+function drawBoard(x, v, bx, by, c, o){
+  panel(x, bx - 3, by - 3, W * c + 6, 20 * c + 6, .94);
+  if (c >= 12){ x.strokeStyle = 'rgba(255,255,255,.05)'; x.lineWidth = 1; x.beginPath();
+    for (let i = 1; i < W; i++){ x.moveTo(bx + i * c + .5, by); x.lineTo(bx + i * c + .5, by + 20 * c); }
+    for (let j = 1; j < 20; j++){ x.moveTo(bx, by + j * c + .5); x.lineTo(bx + W * c, by + j * c + .5); } x.stroke(); }
+  for (let y = 0; y < H; y++) for (let i = 0; i < W; i++){ const k = v.g[y][i]; if (k) block(x, k, bx + i * c, by + (y - HID) * c, c, v.dead); }
+  const p = v.cur;
+  if (p && !v.dead){
+    if (o && o.ghost){
+      let gy = p.y; while (fitsG(v.g, p.t, p.r, p.x, gy + 1)) gy++;
+      if (gy !== p.y){ x.save(); x.strokeStyle = COLORS[p.t]; x.globalAlpha = .7; x.lineWidth = Math.max(1.2, c * .07);
+        for (const [a, b] of SH[p.t][p.r]){ const px = bx + (p.x + a) * c, py = by + (gy + b - HID) * c; rr(x, px + c * .1, py + c * .1, c * .8, c * .8, c * .16); x.globalAlpha = .16; x.fillStyle = COLORS[p.t]; x.fill(); x.globalAlpha = .7; x.stroke(); }
+        x.restore(); }
+    }
+    for (const [a, b] of SH[p.t][p.r]) block(x, p.t, bx + (p.x + a) * c, by + (p.y + b - HID) * c, c);
+  }
+  if (v.dead){ x.fillStyle = 'rgba(10,16,38,.45)'; x.fillRect(bx, by, W * c, 20 * c); label(x, 'KO', bx + W * c / 2, by + 8 * c, Math.round(c * 2.4), 'center', '#FFE45C'); }
+}
+// 방해 예고 막대: 아래쪽이 먼저 올라올 것. 빨강 = 곧 올라옴, 주황 = 막 받은 것
+function drawMeter(x, pend, mx, by, mw, c, flash){
+  rr(x, mx, by - 3, mw, 20 * c + 6, mw / 2); x.fillStyle = 'rgba(10,16,38,.7)'; x.fill();
+  let y = by + 20 * c; const now = performance.now();
+  for (const e of pend){
+    const h = Math.min(e.n * c, y - by); if (h <= 0) break;
+    x.fillStyle = now - e.t >= GARB_DELAY ? '#FF3B3B' : '#FFB020';
+    rr(x, mx + 1.5, y - h + 1, mw - 3, h - 2, Math.min((mw - 3) / 2, 4)); x.fill(); y -= h;
+  }
+  if (flash > 0){ x.fillStyle = `rgba(255,255,255,${flash * .8})`; rr(x, mx, by - 3, mw, 20 * c + 6, mw / 2); x.fill(); }
+}
+
+// 연출 모음
+const FX = { parts: [], pops: [], shots: [], flashes: [], meterFlash: { me: 0, op: 0 }, shake: 0 };
+function boardOf(who){ return who === 'me' ? { x: Lo.bx, y: Lo.by, c: Lo.c } : { x: Lo.ox, y: Lo.oy, c: Lo.oc }; }
+function fxClear(who, rows, cols){
+  const b = boardOf(who), now = performance.now();
+  rows.forEach((row, i) => {
+    const yy = b.y + (row - HID) * b.c;
+    FX.flashes.push({ x: b.x, y: yy, w: W * b.c, h: b.c, t0: now });
+    for (let k = 0; k < W; k++){
+      const v = cols[i][k] || 8;
+      FX.parts.push({ x: b.x + (k + .5) * b.c, y: yy + b.c / 2, vx: (k - 4.5) * b.c * .02 + (Math.random() - .5) * b.c * .12, vy: -(Math.random() * .25 + .08) * b.c, s: b.c * (.35 + Math.random() * .35), col: COLORS[v], life: 1 });
+    }
+  });
+}
+function fxPop(who, tags){
+  if (!tags || !tags.length) return;
+  const b = boardOf(who), now = performance.now();
+  tags.forEach((tx, i) => FX.pops.push({ tx, x: b.x + W * b.c / 2, y: b.y + (7 + i * 1.5) * b.c, sz: Math.max(12, Math.round(b.c * (who === 'me' ? 1.05 : 1.2))), t0: now + i * 90,
+    col: /SPIN|PERFECT/.test(tx) ? '#FFE45C' : /B2B/.test(tx) ? '#8CF0FF' : /콤보/.test(tx) ? '#FFB3E6' : '#FFFFFF' }));
+}
+function fxShot(from, n){
+  const a = boardOf(from), b = boardOf(from === 'me' ? 'op' : 'me');
+  FX.shots.push({ x0: a.x + W * a.c / 2, y0: a.y + 10 * a.c, x1: b.x + W * b.c / 2, y1: b.y + 18 * b.c, t0: performance.now(), dur: 460, n, to: from === 'me' ? 'op' : 'me' });
+}
+
+// ---------- 게임 ----------
+const inp = { l: false, r: false, dir: 0, das: 0, arr: 0, soft: false };
+const G = {
+  id: 'block', title: '블록 대전', sub: '줄을 지워 상대 판에 방해 줄을 올려라',
+  turnBased: false, countdown: true, ft: 3, cpuFt: 2,
+  levels: [{ k: 'easy', name: '쉬움', desc: '천천히 둬요' }, { k: 'normal', name: '보통', desc: '제법 빨라요' }, { k: 'hard', name: '어려움', desc: '홀드까지 써요' }],
+  rules: `<ul><li>떨어지는 블록을 돌리고 옮겨 <b>가로 한 줄을 채우면</b> 그 줄이 사라집니다.</li>
+<li>한 번에 여러 줄을 지우면 상대 판 아래에 <b>방해 줄</b>을 보냅니다. 2줄→1, 3줄→2, 4줄→4줄.</li>
+<li>T 블록을 돌려 끼워 지우는 <b>T-스핀</b>(싱글 2·더블 4·트리플 6), 연속으로 지우는 <b>콤보</b>, 4줄·T-스핀을 잇는 <b>백투백</b>(+1), 판을 싹 비우는 <b>퍼펙트</b>(+10)는 더 많이 보냅니다.</li>
+<li>받은 방해는 판 왼쪽 막대에 쌓입니다. 줄을 지우면 먼저 막대가 줄고, 못 지우면 다음 블록을 놓을 때 한 번에 최대 8줄 올라옵니다.</li>
+<li>새 블록이 나올 자리가 막히면 집니다. 시간이 갈수록 빨라지고, 2분이 지나면 10초마다 방해 줄이 1줄씩 저절로 쌓입니다.</li></ul>`,
+  controls: `<p><b>PC</b> — <kbd>←</kbd><kbd>→</kbd> 이동, <kbd>↓</kbd> 천천히 내리기, <kbd>스페이스</kbd> 바로 떨어뜨리기, <kbd>↑</kbd>·<kbd>X</kbd> 시계 방향, <kbd>Z</kbd> 반시계, <kbd>C</kbd>·<kbd>Shift</kbd> 홀드(한 조각에 한 번).</p>
+<p><b>폰</b> — 아래 버튼(이동·내리기·떨어뜨리기·회전·홀드)을 쓰거나 판 위에서 <b>좌우로 끌어 이동</b>, <b>아래로 튕겨 떨어뜨리기</b>, <b>톡 눌러 회전</b>, 위로 튕겨 홀드. 이동 버튼은 누르고 있으면 계속 움직입니다.</p>`,
+  st: null,
+  mount(stage){
+    cv = document.createElement('canvas'); cv.id = 'bkCv'; stage.appendChild(cv); cx = cv.getContext('2d');
+    pad = document.createElement('div'); pad.className = 'bkPad hide'; pad.id = 'bkPad';
+    const sv = p => `<svg viewBox="0 0 24 24">${p}</svg>`;
+    pad.innerHTML = [
+      ['L', '', '왼쪽', sv('<path d="M15 5l-7 7 7 7"/>')],
+      ['R', '', '오른쪽', sv('<path d="M9 5l7 7-7 7"/>')],
+      ['SD', '', '천천히 내리기', sv('<path d="M5 9l7 7 7-7"/>')],
+      ['HD', 'bkHd', '바로 떨어뜨리기', sv('<path d="M6 4l6 6 6-6"/><path d="M6 11l6 6 6-6"/><path d="M5 21h14"/>')],
+      ['CCW', 'bkRot', '반시계 회전', sv('<path d="M4 12a8 8 0 1 0 2.5-5.8"/><path d="M4 4v5h5"/>')],
+      ['CW', 'bkRot', '시계 방향 회전', sv('<path d="M20 12a8 8 0 1 1-2.5-5.8"/><path d="M20 4v5h-5"/>')],
+      ['HOLD', 'bkHold', '홀드', '홀드'],
+    ].map(([k, c, a, h]) => `<button data-k="${k}" class="${c}" aria-label="${a}">${h}</button>`).join('');
+    stage.appendChild(pad);
+    wirePad(); wireKeys(); wireSwipe();
+    requestAnimationFrame(loop);
+  },
+  start(ctx){
+    const cpu = ctx.mode === 'cpu';
+    const s = G.st = { ctx, cpu, over: false, el: 0, me: new Plr(ctx.seed, ctx.mySeat + 1), op: null, bot: null,
+      ov: { g: emptyGrid(), cur: null, dead: false, pend: [], pn: 0 }, atkId: 0, seen: new Set(), bdDirty: true, lastPc: 0, pcKey: '', press: 0, turnT: 0, notedPress: false, overSent: false };
+    s.me.fx = (k, d) => onFx('me', k, d);
+    if (cpu){ s.op = new Plr(ctx.seed, 2 + (ctx.mySeat ? 0 : 1)); s.op.fx = (k, d) => onFx('op', k, d); s.bot = new Bot(s.op, ctx.level || 'normal'); s.op.next(); }
+    s.me.next();
+    FX.parts.length = 0; FX.pops.length = 0; FX.shots.length = 0; FX.flashes.length = 0; FX.shake = 0;
+    resetInp(); G.resize(); VS.setTurn('');
+  },
+  go(){ const s = G.st; if (s){ s.el = 0; s.bdDirty = true; } },
+  onNet(d){
+    const s = G.st; if (!s || s.cpu || !d || typeof d !== 'object') return;
+    if (d.k === 'atk'){
+      const n = d.n | 0; if (n < 1 || n > 40 || s.seen.has(d.id)) return; s.seen.add(d.id);
+      if (s.over) return;
+      s.me.receive(n); fxShot('op', n);
+      if (typeof d.tx === 'string') fxPop('op', d.tx.slice(0, 60).split('|').filter(Boolean).slice(0, 4));
+      VS.sfx('hit');
+    } else if (d.k === 'bd' && typeof d.b === 'string' && d.b.length === W * H){
+      const g = emptyGrid();
+      for (let i = 0; i < W * H; i++){ const v = d.b.charCodeAt(i) - 48; g[(i / W) | 0][i % W] = v >= 0 && v <= 8 ? v : 0; }
+      s.ov.g = g; s.ov.cur = null; s.ov.dead = !!d.d; s.ov.pn = Math.max(0, Math.min(40, d.p | 0));
+      s.ov.pend = s.ov.pn ? [{ n: s.ov.pn, t: 0 }] : [];
+    } else if (d.k === 'pc'){
+      const t = d.t | 0, r = d.r | 0, x = d.x | 0, y = d.y | 0;
+      if (t >= 1 && t <= 7 && r >= 0 && r < 4 && x > -4 && x < W + 2 && y > -4 && y < H + 2) s.ov.cur = { t, r, x, y };
+    }
+  },
+  stop(){ const s = G.st; if (s) s.over = true; resetInp(); },
+  lost(){ const s = G.st; return !!(s && s.me.dead); },
+  resize(){ if (cv) layout(); },
+  drawArt(x, w, h, t){
+    // 블록이 떨어져 한 줄이 지워지는 반복 그림
+    const n = 12, s = Math.floor(Math.min(h / 4.4, w / 13)), bx = Math.round((w - n * s) / 2), by = Math.round(h - 3 * s - 4);
+    const rows = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0], [6, 6, 0, 0, 0, 0, 0, 4, 4, 3, 3, 0], [5, 5, 1, 2, 0, 0, 0, 0, 2, 7, 7, 7]];
+    const T = 2800, k = (t % T) / T;
+    x.save(); x.globalAlpha = k < .06 ? k / .06 : k > .92 ? Math.max(0, (1 - k) / .08) : 1;
+    rr(x, bx - 4, by - 4 - s, n * s + 8, 4 * s + 8, 10); x.fillStyle = 'rgba(10,16,38,.55)'; x.fill();
+    const fall = Math.min(1, k / .42), clearK = k < .42 ? 0 : Math.min(1, (k - .42) / .18), slide = k < .6 ? 0 : Math.min(1, (k - .6) / .14);
+    for (let j = 0; j < 3; j++) for (let i = 0; i < n; i++){
+      const v = rows[j][i]; if (!v) continue;
+      if (j === 2 && clearK >= 1) continue;
+      block(x, v, bx + i * s, by + j * s + (j < 2 ? slide * s : 0), s);
+    }
+    // 떨어지는 I 블록
+    if (clearK < 1){ const yy = by - s + fall * 3 * s; for (let i = 4; i < 8; i++) block(x, 1, bx + i * s, Math.min(by + 2 * s, yy), s); }
+    // 지워지는 줄 번쩍임과 흩어짐
+    if (clearK > 0 && clearK < 1){
+      x.fillStyle = `rgba(255,255,255,${(1 - clearK) * .9})`; x.fillRect(bx, by + 2 * s, n * s, s);
+      for (let i = 0; i < n; i++){ x.fillStyle = COLORS[rows[2][i] || 1]; const px = bx + (i + .5) * s + (i - 5.5) * clearK * s * .5, py = by + 2.5 * s - Math.sin(clearK * 3) * s * .8; x.globalAlpha = 1 - clearK; x.fillRect(px - s * .15, py - s * .15, s * .3, s * .3); }
+    }
+    x.restore();
+  },
+};
+function emptyGrid(){ const g = []; for (let i = 0; i < H; i++) g.push(new Uint8Array(W)); return g; }
+function resetInp(){ inp.l = inp.r = inp.soft = false; inp.dir = 0; inp.das = inp.arr = 0; }
+
+// 판에서 생긴 일 → 소리·연출·상대에게 보내기
+function onFx(who, k, d){
+  const s = G.st; if (!s) return;
+  const mine = who === 'me';
+  if (k === 'move'){ if (mine) VS.sfx('move'); }
+  else if (k === 'rot'){ if (mine) VS.sfx('rot'); }
+  else if (k === 'hold'){ if (mine) VS.sfx('click'); }
+  else if (k === 'hard'){ if (mine){ VS.sfx('thud'); VS.buzz(8); } }
+  else if (k === 'lock'){
+    if (mine){ s.bdDirty = true; if (!d.L) VS.sfx('place'); }
+    if (d.L){
+      fxClear(who, d.rows, d.cols); fxPop(who, d.tags);
+      if (mine){ VS.sfx('pop', Math.max(0, s.me.combo) + (d.L === 4 || d.spin ? 3 : 0)); VS.buzz(d.L >= 4 ? 30 : 12); }
+    } else if (d.tags.length) fxPop(who, d.tags);
+  } else if (k === 'send'){
+    fxShot(who, d.n);
+    if (mine){
+      VS.sfx('whoosh');
+      if (s.cpu) s.op.receive(d.n);
+      else { VS.send({ k: 'atk', n: d.n, id: ++s.atkId, tx: d.tags.join('|') }); s.ov.pn += d.n; s.ov.pend = [{ n: s.ov.pn, t: 0 }]; }
+    } else if (s.cpu){ s.me.receive(d.n); VS.sfx('hit'); }
+  } else if (k === 'rise'){
+    if (mine){ VS.sfx('garbage'); FX.shake = Math.min(1, .35 + d.n * .1); VS.buzz(20); }
+  }
+}
+
+// ---------- 진행 ----------
+let lastT = 0;
+function loop(t){
+  const dt = Math.min(50, lastT ? t - lastT : 16); lastT = t;
+  const s = G.st;
+  try {
+    if (s && !s.over && VS.live()) update(s, dt);
+    if (s && cv && !VS.$('vsGame').classList.contains('hide')) draw(s, dt);
+  } catch (e){ if (!loop.warned){ loop.warned = true; console.warn('블록 대전 진행 오류', e); } }
+  requestAnimationFrame(loop);
+}
+function update(s, dt){
+  s.el += dt;
+  const sec = s.el / 1000, grav = gravMs(sec), m = s.me;
+  // 좌우 반복 이동(DAS/ARR)
+  if (inp.dir && m.cur){ inp.das += dt; if (inp.das >= DAS){ inp.arr += dt; while (inp.arr >= ARR){ inp.arr -= ARR; if (!m.move(inp.dir)){ inp.arr = 0; break; } } } }
+  m.soft = inp.soft;
+  m.tick(dt, grav);
+  if (s.bot && !s.op.dead){ s.bot.update(dt); s.op.tick(dt, grav); }
+  // 2분 뒤부터 추가 압박: 10초마다 방해 1줄
+  if (sec >= PRESS_AT){
+    const k = Math.floor((sec - PRESS_AT) / PRESS_EVERY) + 1;
+    if (!s.notedPress){ s.notedPress = true; VS.note('2분 경과 — 이제 방해 줄이 저절로 쌓여요', 2200); }
+    while (s.press < k){ s.press++; m.receive(1); if (s.op) s.op.receive(1); }
+  }
+  // 친구 대전: 판 요약·조각 위치 보내기
+  if (!s.cpu){
+    if (s.bdDirty){ s.bdDirty = false; sendBoard(s); }
+    const p = m.cur, key = p ? p.t + ',' + p.r + ',' + p.x + ',' + p.y : '';
+    const now = performance.now();
+    if (p && key !== s.pcKey && now - s.lastPc > 70){ s.pcKey = key; s.lastPc = now; VS.send({ k: 'pc', t: p.t, r: p.r, x: p.x, y: p.y }); }
+  }
+  // 승패
+  if (!s.overSent){
+    if (m.dead){ s.overSent = true; if (!s.cpu) sendBoard(s); VS.over(s.cpu ? 1 : 1 - s.ctx.mySeat); return; }
+    if (s.cpu && s.op.dead){ s.overSent = true; VS.over(0); return; }
+  }
+  // 위쪽 글자: 속도·시간
+  s.turnT -= dt;
+  if (s.turnT <= 0){ s.turnT = 500; const mm = Math.floor(sec / 60), ss = Math.floor(sec % 60);
+    VS.setTurn(`<span class="me">속도 ${speedLv(sec)}</span> · ${mm}:${String(ss).padStart(2, '0')}${sec >= PRESS_AT ? ' · <span class="op">압박</span>' : ''}`); }
+}
+function sendBoard(s){
+  let b = ''; for (let y = 0; y < H; y++) for (let i = 0; i < W; i++) b += s.me.g[y][i];
+  VS.send({ k: 'bd', b, p: s.me.pendN(), d: s.me.dead ? 1 : 0 });
+}
+
+// ---------- 배치 ----------
+function layout(){
+  const st = VS.$('vsStage'), w = st.clientWidth, h = st.clientHeight;
+  DPR = Math.min(devicePixelRatio || 1, 2); spr.clear();
+  cv.width = Math.round(w * DPR); cv.height = Math.round(h * DPR); cv.style.width = w + 'px'; cv.style.height = h + 'px';
+  let padH = 0;
+  if (VS.isTouch){
+    const bs = Math.max(44, Math.min(66, Math.floor((w - 16 - 6 * 6) / 7)));
+    pad.style.setProperty('--bkBs', bs + 'px'); pad.classList.remove('hide'); padH = bs + 16;
+  } else pad.classList.add('hide');
+  const port = w < 760 && h > w;
+  const avH = h - padH - 14;
+  const L = { w, h, port };
+  if (port){
+    // 세로 폰: [막대][내 판][오른쪽 칸: 상대 미니맵 · 홀드 · 다음]
+    const c = Math.max(8, Math.floor(Math.min(avH / 20.3, (w - 14) / 14.2)));
+    const tot = 14.2 * c, x0 = Math.round((w - tot) / 2);
+    L.c = c; L.mw = Math.max(6, Math.round(c * .42)); L.mx = x0; L.bx = x0 + L.mw + Math.round(c * .18);
+    L.by = Math.round(6 + Math.max(0, avH - 20 * c)) + 3;   // 판은 버튼 바로 위로(엄지에 가깝게)
+    const sx = L.bx + W * c + Math.round(c * .4), sw = w - sx - 6;
+    L.oc = Math.max(4, Math.floor(Math.min(c * .33, (sw - c * .4) / W)));
+    L.omw = Math.max(3, Math.round(L.oc * .7)); L.omx = sx; L.ox = sx + L.omw + 3; L.oy = L.by + Math.round(c * .6);
+    L.olab = { x: L.ox, y: L.by - 2, sz: Math.max(10, Math.round(c * .45)) };
+    const hy = L.oy + 20 * L.oc + Math.round(c * .45);
+    L.hold = { x: sx, y: hy + Math.round(c * .55), w: sw, h: Math.round(c * 2.1), ly: hy, ps: Math.max(6, Math.floor(c * .5)) };
+    const ny = L.hold.y + L.hold.h + Math.round(c * .4);
+    L.next = { x: sx, y: ny + Math.round(c * .55), w: sw, ly: ny, step: c * 1.42, ps: Math.max(6, Math.floor(c * .46)), ps0: Math.max(6, Math.floor(c * .5)) };
+    L.next.h = Math.min(L.next.step * 5 + c * .2, L.by + 20 * c - L.next.y);
+    L.stats = null;
+  } else {
+    // 넓은 화면: [홀드·기록][막대][내 판][다음] [상대 막대][상대 판]
+    const U = 27.8;
+    const c = Math.max(8, Math.min(40, Math.floor(Math.min(avH / 20.6, (w - 24) / U))));
+    const x0 = Math.round((w - U * c) / 2);
+    L.c = c; L.by = Math.round(Math.max(8, (avH - 20 * c) / 2 + 6));
+    L.hold = { x: x0, y: L.by + Math.round(c * .75), w: Math.round(c * 4.2), h: Math.round(c * 3), ly: L.by, ps: Math.floor(c * .72) };
+    L.stats = { x: x0, y: L.hold.y + L.hold.h + c * .8, sz: Math.max(11, Math.round(c * .44)) };
+    L.mw = Math.round(c * .45); L.mx = x0 + Math.round(c * 4.4); L.bx = L.mx + L.mw + Math.round(c * .15);
+    const nx = L.bx + W * c + Math.round(c * .35);
+    L.next = { x: nx, y: L.by + Math.round(c * .75), w: Math.round(c * 4.2), ly: L.by, step: c * 2.3, ps: Math.floor(c * .6), ps0: Math.floor(c * .72) };
+    L.next.h = L.next.step * 5 + c * .3;
+    L.oc = Math.max(4, Math.floor(c * .62));
+    L.omx = nx + Math.round(c * 5.6); L.omw = Math.max(4, Math.round(c * .32)); L.ox = L.omx + L.omw + Math.round(c * .12);
+    L.oy = L.by + (20 * c - 20 * L.oc) - 0; L.olab = { x: L.ox, y: L.oy - Math.round(c * .75), sz: Math.max(11, Math.round(c * .48)) };
+  }
+  Lo = L;
+}
+
+// ---------- 그리기 ----------
+function draw(s, dt){
+  const x = cx, L = Lo; if (!L) return;
+  x.setTransform(DPR, 0, 0, DPR, 0, 0); x.clearRect(0, 0, L.w, L.h);
+  const now = performance.now(), c = L.c, me = s.me;
+  // 상대 판
+  const opv = s.cpu ? { g: s.op.g, cur: s.op.cur, dead: s.op.dead } : s.ov;
+  const opPend = s.cpu ? s.op.pend : s.ov.pend;
+  const opName = s.cpu ? '컴퓨터' : ((s.ctx.names && s.ctx.names[1]) || '상대');
+  label(x, opName, L.olab.x, L.olab.y, L.olab.sz, 'left', '#FFD0C6');
+  drawMeter(x, opPend, L.omx, L.oy, L.omw, L.oc, FX.meterFlash.op);
+  drawBoard(x, opv, L.ox, L.oy, L.oc, { ghost: false });
+  // 내 판(방해가 올라오면 살짝 흔들림)
+  let sh = 0; if (FX.shake > 0){ FX.shake = Math.max(0, FX.shake - dt / 300); sh = Math.sin(now / 22) * FX.shake * c * .25; }
+  x.save(); x.translate(0, Math.abs(sh));
+  drawMeter(x, me.pend, L.mx, L.by, L.mw, c, FX.meterFlash.me);
+  drawBoard(x, me, L.bx, L.by, c, { ghost: true });
+  x.restore();
+  // 홀드
+  const hd = L.hold;
+  label(x, '홀드', hd.x + 2, hd.ly, Math.max(10, Math.round(c * (L.port ? .42 : .5))));
+  panel(x, hd.x, hd.y, hd.w, hd.h);
+  if (me.hold) drawPiece(x, me.hold, hd.x + hd.w / 2, hd.y + hd.h / 2, hd.ps, me.canHold ? 1 : .35);
+  // 다음 5개
+  const nx = L.next;
+  label(x, '다음', nx.x + 2, nx.ly, Math.max(10, Math.round(c * (L.port ? .42 : .5))));
+  panel(x, nx.x, nx.y, nx.w, nx.h);
+  for (let i = 0; i < 5; i++){
+    const cy = nx.y + nx.step * (i + .5) + c * .1; if (cy > nx.y + nx.h) break;
+    drawPiece(x, me.q[i], nx.x + nx.w / 2, cy, i ? nx.ps : nx.ps0, i ? .85 : 1);
+  }
+  // 기록(넓은 화면)
+  if (L.stats){
+    const st = L.stats, lh = st.sz * 1.7;
+    const rows = [['보낸 줄', me.sent], ['지운 줄', me.lines], ['놓은 블록', me.pieces]];
+    panel(x, L.hold.x, st.y - st.sz * .6, L.hold.w, rows.length * lh * 1.6 + st.sz * .5);
+    rows.forEach(([a, b], i) => { label(x, a, st.x + st.sz * .7, st.y + i * lh * 1.6, st.sz, 'left', '#AFC0E6'); label(x, String(b), st.x + st.sz * .7, st.y + i * lh * 1.6 + lh * .7, Math.round(st.sz * 1.35), 'left', '#fff'); });
+  }
+  // 줄 번쩍임
+  for (let i = FX.flashes.length - 1; i >= 0; i--){ const f = FX.flashes[i], k = (now - f.t0) / 260; if (k >= 1){ FX.flashes.splice(i, 1); continue; } x.fillStyle = `rgba(255,255,255,${(1 - k) * .9})`; x.fillRect(f.x, f.y + f.h * k * .3, f.w, f.h * (1 - k * .6)); }
+  // 흩어지는 조각
+  for (let i = FX.parts.length - 1; i >= 0; i--){
+    const p = FX.parts[i]; p.life -= dt / 700; if (p.life <= 0){ FX.parts.splice(i, 1); continue; }
+    p.vy += c * .0012 * dt; p.x += p.vx * dt / 16; p.y += p.vy * dt / 16;
+    x.globalAlpha = Math.min(1, p.life * 1.5); x.fillStyle = p.col; const z = p.s * (.5 + p.life * .5); rr(x, p.x - z / 2, p.y - z / 2, z, z, z * .2); x.fill();
+  }
+  x.globalAlpha = 1;
+  // 빛나는 공격 탄
+  for (let i = FX.shots.length - 1; i >= 0; i--){
+    const b = FX.shots[i], k = (now - b.t0) / b.dur;
+    if (k >= 1){ FX.shots.splice(i, 1); FX.meterFlash[b.to] = 1; const bb = boardOf(b.to);
+      for (let j = 0; j < 10; j++) FX.parts.push({ x: b.x1, y: b.y1, vx: (Math.random() - .5) * bb.c * .3, vy: -Math.random() * bb.c * .25, s: bb.c * .4, col: '#FFE45C', life: .7 }); continue; }
+    const cxp = (b.x0 + b.x1) / 2, cyp = Math.min(b.y0, b.y1) - c * 4;
+    const P = q => { const u = 1 - q; return [u * u * b.x0 + 2 * u * q * cxp + q * q * b.x1, u * u * b.y0 + 2 * u * q * cyp + q * q * b.y1]; };
+    const r = c * (.22 + .05 * Math.min(8, b.n));
+    x.save(); x.shadowColor = '#FFB020'; x.shadowBlur = r * 2.2;
+    for (let j = 6; j >= 0; j--){ const q = Math.max(0, k - j * .035); const [px, py] = P(q); x.globalAlpha = (1 - j / 7) * .9; x.fillStyle = j ? '#FFB020' : '#FFF6C8'; x.beginPath(); x.arc(px, py, r * (1 - j * .1), 0, 7); x.fill(); }
+    x.restore();
+  }
+  for (const k of ['me', 'op']) if (FX.meterFlash[k] > 0) FX.meterFlash[k] = Math.max(0, FX.meterFlash[k] - dt / 350);
+  // 글자 팝업
+  for (let i = FX.pops.length - 1; i >= 0; i--){
+    const p = FX.pops[i], k = (now - p.t0) / 1150; if (k < 0) continue; if (k >= 1){ FX.pops.splice(i, 1); continue; }
+    const sc = k < .12 ? .6 + k / .12 * .5 : k < .2 ? 1.1 - (k - .12) / .08 * .1 : 1;
+    x.save(); x.globalAlpha = k < .7 ? 1 : 1 - (k - .7) / .3; x.translate(p.x, p.y - k * c * 1.2); x.scale(sc, sc);
+    x.font = `900 ${p.sz}px ${FONT}`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.lineJoin = 'round';
+    x.lineWidth = Math.max(3, p.sz * .22); x.strokeStyle = '#1C2340'; x.strokeText(p.tx, 0, 0); x.fillStyle = p.col; x.fillText(p.tx, 0, 0);
+    x.restore();
+  }
+}
+
+// ---------- 조작 ----------
+function liveMe(){ const s = G.st; return s && !s.over && VS.live() && !s.me.dead && s.me.cur ? s.me : null; }
+function press(k){
+  if (k === 'L'){ inp.l = true; inp.dir = -1; inp.das = 0; inp.arr = 0; }
+  if (k === 'R'){ inp.r = true; inp.dir = 1; inp.das = 0; inp.arr = 0; }
+  if (k === 'SD') inp.soft = true;
+  const m = liveMe(); if (!m) return;
+  if (k === 'L') m.move(-1); else if (k === 'R') m.move(1);
+  else if (k === 'SD') m.down();
+  else if (k === 'HD') m.hard();
+  else if (k === 'CW') m.rot(1); else if (k === 'CCW') m.rot(-1);
+  else if (k === 'HOLD') m.doHold();
+}
+function release(k){
+  if (k === 'L'){ inp.l = false; inp.dir = inp.r ? 1 : 0; inp.das = 0; inp.arr = 0; }
+  if (k === 'R'){ inp.r = false; inp.dir = inp.l ? -1 : 0; inp.das = 0; inp.arr = 0; }
+  if (k === 'SD') inp.soft = false;
+}
+const KEYMAP = { ArrowLeft: 'L', ArrowRight: 'R', ArrowDown: 'SD', ' ': 'HD', ArrowUp: 'CW', x: 'CW', X: 'CW', z: 'CCW', Z: 'CCW', c: 'HOLD', C: 'HOLD', Shift: 'HOLD', 'ㅌ': 'CW', 'ㅋ': 'CCW', 'ㅊ': 'HOLD' };
+function inGame(){ return G.st && !VS.$('vsGame').classList.contains('hide'); }
+function wireKeys(){
+  addEventListener('keydown', e => {
+    if (!inGame() || (e.target && /INPUT|TEXTAREA/.test(e.target.tagName))) return;
+    const k = KEYMAP[e.key]; if (!k) return;
+    e.preventDefault(); if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+    if (e.repeat) return;
+    VS.ac(); press(k);
+  });
+  addEventListener('keyup', e => { const k = KEYMAP[e.key]; if (k) release(k); });
+  addEventListener('blur', resetInp);
+}
+function wirePad(){
+  const held = new Map();
+  const btn = k => pad.querySelector(`button[data-k="${k}"]`);
+  const MOVES = new Set(['L', 'R', 'SD']);
+  for (const b of pad.querySelectorAll('button')){
+    b.addEventListener('pointerdown', e => {
+      e.preventDefault(); VS.ac();
+      const k = b.dataset.k; held.set(e.pointerId, k); try { b.setPointerCapture(e.pointerId); } catch {}
+      b.classList.add('bkOn'); press(k); VS.buzz(6);
+    });
+    // 누른 채로 옆 이동 버튼으로 미끄러지면 그 버튼으로 바꾼다
+    b.addEventListener('pointermove', e => {
+      const old = held.get(e.pointerId); if (!old || !MOVES.has(old)) return;
+      const el = document.elementFromPoint(e.clientX, e.clientY), nb = el && el.closest && el.closest('.bkPad button'), k = nb && nb.dataset.k;
+      if (k && k !== old && MOVES.has(k)){ release(old); btn(old).classList.remove('bkOn'); held.set(e.pointerId, k); nb.classList.add('bkOn'); press(k); VS.buzz(6); }
+    });
+    const up = e => { const k = held.get(e.pointerId); if (!k) return; held.delete(e.pointerId); btn(k).classList.remove('bkOn'); release(k); };
+    b.addEventListener('pointerup', up); b.addEventListener('pointercancel', up); b.addEventListener('lostpointercapture', up);
+    b.addEventListener('contextmenu', e => e.preventDefault());
+  }
+}
+// 판 위 손가락 조작: 좌우로 끌기 = 이동, 아래로 끌기 = 천천히, 아래로 튕기기 = 바로 떨어뜨리기, 위로 튕기기 = 홀드, 톡 = 회전
+function wireSwipe(){
+  let sw = null;
+  cv.addEventListener('pointerdown', e => {
+    if (e.pointerType === 'mouse') return;
+    VS.ac(); const t = performance.now();
+    sw = { id: e.pointerId, x: e.clientX, y: e.clientY, t, mx: 0, my: 0, moved: false, lx: e.clientX, ly: e.clientY, lt: t, vy: 0 };
+    try { cv.setPointerCapture(e.pointerId); } catch {}
+  });
+  cv.addEventListener('pointermove', e => {
+    if (!sw || e.pointerId !== sw.id || !Lo) return;
+    const t = performance.now(), step = Lo.c * .9, dx = e.clientX - sw.x, dy = e.clientY - sw.y;
+    if (t > sw.lt){ sw.vy = (e.clientY - sw.ly) / (t - sw.lt); sw.lx = e.clientX; sw.ly = e.clientY; sw.lt = t; }
+    const m = liveMe(); if (!m) return;
+    const tx = Math.trunc(dx / step);
+    while (sw.mx < tx){ sw.mx++; sw.moved = true; m.move(1); }
+    while (sw.mx > tx){ sw.mx--; sw.moved = true; m.move(-1); }
+    if (Math.abs(dy) > Math.abs(dx) * 1.2){ const ty = Math.trunc(dy / step); while (sw.my < ty){ sw.my++; sw.moved = true; m.down(); } }
+  });
+  const end = e => {
+    if (!sw || e.pointerId !== sw.id) return;
+    const t = performance.now(), dx = e.clientX - sw.x, dy = e.clientY - sw.y, dur = t - sw.t, c = Lo ? Lo.c : 20;
+    const m = liveMe(), fast = t - sw.lt < 90 ? sw.vy : 0;
+    if (m){
+      if (!sw.moved && Math.abs(dx) < 12 && Math.abs(dy) < 12 && dur < 320) m.rot(1);
+      else if (dy > c * 1.4 && fast > .7 && Math.abs(dy) > Math.abs(dx) * 1.4) m.hard();
+      else if (dy < -c * 1.4 && fast < -.7 && Math.abs(dy) > Math.abs(dx) * 1.4) m.doHold();
+    }
+    sw = null;
+  };
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', e => { if (sw && e.pointerId === sw.id) sw = null; });
+}
+
+// 시험용: 한 번 부를 때마다 내 판에 한 조각을 둔다(rand = 아무 데나 둘 확률). 기본 동작에는 영향 없음.
+window.__bkBot = function(rand){
+  const m = liveMe(); if (!m) return false;
+  let pl = think(m, 'normal');
+  if (Math.random() < (rand == null ? .25 : rand)){ const all = placements(m.g, m.cur.t); if (all.length) pl = all[Math.floor(Math.random() * all.length)]; }
+  if (!pl){ m.hard(); return true; }
+  for (const k of planSteps(pl)){ if (!m.cur) break; doStep(m, k); }
+  return true;
+};
+VS.init(G);
+</script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>오목 — 1:1 오락실</title>
+<meta name="description" content="친구와 서버 없이 바로 두는 1:1 오목. 흑 3·3 금지 한국식 규칙, 컴퓨터(쉬움·보통·어려움)와도 대결.">
+<meta property="og:title" content="오목 — 1:1 오락실">
+<meta property="og:description" content="방 번호 4자리로 친구와 바로 한 판. 컴퓨터와도 대결.">
+<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg">
+<meta name="theme-color" content="#2361C4">
+<link rel="stylesheet" href="../common/vs.css">
+<style>
+#omokCv{display:block}
+.omokDo{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);height:52px;padding:0 30px;border-radius:999px;background:#E05A1E;color:#fff;font-size:18px;font-weight:900;box-shadow:0 4px 0 rgba(0,0,0,.25)}
+.omokTimer{position:absolute;top:6px;left:50%;transform:translateX(-50%);font:800 14px/1 "Pretendard Variable",sans-serif;color:#fff;background:rgba(20,28,64,.72);padding:6px 12px;border-radius:999px}
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="../common/vs.js"></script>
+<script>
+"use strict";
+// ================= 오목 =================
+// 15×15, 흑(선공)부터. 흑은 3·3(열린 셋 두 개 동시) 금지·장목(6목 이상) 무효, 백은 제한 없음.
+const N = 15, EMPTY = 0, BLACK = 1, WHITE = 2, TURN_SEC = 40;
+const DIRS = [[1, 0], [0, 1], [1, 1], [1, -1]];
+let cv, cx, box = { s: 30, x: 0, y: 0 }, doBtn, timerEl;
+const G = {
+  id: 'omok', title: '오목', sub: '다섯 개를 먼저 잇는 사람이 이긴다',
+  turnBased: true, countdown: false, ft: 3, cpuFt: 2,
+  levels: [{ k: 'easy', name: '쉬움', desc: '초보 컴퓨터' }, { k: 'normal', name: '보통', desc: '막고 공격해요' }, { k: 'hard', name: '어려움', desc: '수를 내다봐요' }],
+  rules: `<ul><li>검은 돌(흑)이 먼저 두고, 번갈아 한 수씩 둡니다. 판마다 선공이 바뀝니다.</li><li>가로·세로·대각선으로 <b>정확히 다섯 개</b>를 먼저 이으면 이깁니다.</li><li>한국식 규칙: <b>흑은 3·3 금지</b>(한 수로 열린 삼을 두 개 만드는 자리)이고, 흑의 6목 이상은 승리로 치지 않습니다. 백은 제한이 없습니다. 흑 차례에 금지 자리는 붉은 ×로 표시됩니다.</li><li>한 수에 ${TURN_SEC}초가 넘으면 컴퓨터가 대신 둡니다.</li></ul>`,
+  controls: `<p>원하는 자리를 누르면 돌이 흐리게 놓이고, <b>같은 자리를 한 번 더 누르거나 «착수»</b>를 누르면 둡니다. PC에서는 마우스로 바로 클릭해도 됩니다.</p>`,
+  st: null,
+  mount(stage){
+    cv = document.createElement('canvas'); cv.id = 'omokCv'; stage.appendChild(cv); cx = cv.getContext('2d');
+    doBtn = document.createElement('button'); doBtn.className = 'omokDo hide'; doBtn.textContent = '착수'; stage.appendChild(doBtn);
+    timerEl = document.createElement('div'); timerEl.className = 'omokTimer hide'; stage.appendChild(timerEl);
+    doBtn.onclick = () => { const s = G.st; if (s && s.pre) tryPlace(s.pre[0], s.pre[1]); };
+    cv.addEventListener('pointerdown', onTap);
+    cv.addEventListener('pointermove', e => { if (e.pointerType !== 'mouse' || !G.st) return; const p = hit(e); G.st.hover = p; });
+    cv.addEventListener('pointerleave', () => { if (G.st) G.st.hover = null; });
+    requestAnimationFrame(loop);
+  },
+  start(ctx){
+    const s = G.st = { g: Array.from({ length: N }, () => Array(N).fill(EMPTY)), ctx, turn: BLACK, moves: [], over: false, pre: null, hover: null, win: null,
+      myColor: ctx.first === ctx.mySeat ? BLACK : WHITE, t0: 0, timeLeft: TURN_SEC, cpuT: 0 };
+    s.oppColor = 3 - s.myColor;
+    doBtn.classList.add('hide'); timerEl.classList.add('hide');
+    G.resize(); setTurnLabel();
+  },
+  go(){ const s = G.st; s.t0 = performance.now(); timerEl.classList.remove('hide'); setTurnLabel(); },
+  onNet(d){
+    const s = G.st; if (!s || s.over) return;
+    if (d && d.k === 'mv' && Number.isInteger(d.x) && Number.isInteger(d.y) && s.turn === s.oppColor) place(d.x, d.y, s.oppColor, true);
+  },
+  stop(){ const s = G.st; if (s) s.over = true; doBtn.classList.add('hide'); timerEl.classList.add('hide'); },
+  lost(){ const s = G.st; return !!(s && s.win && s.win.color === s.oppColor); },
+  resize(){
+    if (!cv) return;
+    const st = document.getElementById('vsStage'), w = st.clientWidth, h = st.clientHeight - (VS.isTouch ? 70 : 10);
+    const size = Math.max(200, Math.min(w - 16, h - 8)), d = Math.min(devicePixelRatio || 1, 2);
+    cv.width = Math.round(size * d); cv.height = Math.round(size * d); cv.style.width = size + 'px'; cv.style.height = size + 'px';
+    cv.style.marginBottom = VS.isTouch ? '60px' : '0';
+    cx.setTransform(d, 0, 0, d, 0, 0);
+    box = { size, s: size / (N + 1), x: size / (N + 1), y: size / (N + 1) };
+  },
+  drawArt(x, w, h, t){
+    const s = Math.min(h * .5, w / 9), y = h / 2;
+    for (let i = 0; i < 5; i++){
+      const b = Math.max(0, Math.sin(t / 380 + i * .9)) * h * .18, cxx = w / 2 + (i - 2) * s * 1.35;
+      stone(x, cxx, y + h * .1 - b, s / 2, i % 2 ? WHITE : BLACK);
+    }
+  },
+};
+function setTurnLabel(){
+  const s = G.st; if (!s) return;
+  const mine = s.turn === s.myColor, col = s.turn === BLACK ? '흑' : '백';
+  VS.setTurn(s.over ? '' : mine ? `<span class="me">내 차례</span> · ${col}` : `<span class="op">${s.ctx.mode === 'cpu' ? '컴퓨터' : '상대'} 차례</span> · ${col}`);
+}
+// ---------- 규칙 ----------
+function inb(x, y){ return x >= 0 && y >= 0 && x < N && y < N; }
+function lineLen(g, x, y, dx, dy, c){ let n = 1, i = 1; while (inb(x + dx * i, y + dy * i) && g[x + dx * i][y + dy * i] === c){ n++; i++; } i = 1; while (inb(x - dx * i, y - dy * i) && g[x - dx * i][y - dy * i] === c){ n++; i++; } return n; }
+// 놓았을 때 이기는가(흑은 정확히 5, 백은 5 이상)
+function winsAt(g, x, y, c){ for (const [dx, dy] of DIRS){ const n = lineLen(g, x, y, dx, dy, c); if (c === BLACK ? n === 5 : n >= 5) return [dx, dy]; } return null; }
+// 한 방향에서 (x,y)의 돌이 «열린 넷»(양끝 비고 한 수로 5)이 되는지
+function openFourDir(g, x, y, dx, dy, c){
+  if (lineLen(g, x, y, dx, dy, c) !== 4) return false;
+  let i = 1; while (inb(x + dx * i, y + dy * i) && g[x + dx * i][y + dy * i] === c) i++;
+  const ax = x + dx * i, ay = y + dy * i;
+  i = 1; while (inb(x - dx * i, y - dy * i) && g[x - dx * i][y - dy * i] === c) i++;
+  const bx = x - dx * i, by = y - dy * i;
+  const ok = (px, py) => { if (!inb(px, py) || g[px][py] !== EMPTY) return false; g[px][py] = c; const five = lineLen(g, px, py, dx, dy, c) === 5; g[px][py] = EMPTY; return five; };
+  return ok(ax, ay) && ok(bx, by);
+}
+// 한 방향이 «열린 셋»인가: 그 선 위 빈칸 하나를 더 두면 열린 넷이 되는 경우가 있는가
+function openThreeDir(g, x, y, dx, dy, c){
+  for (let k = -4; k <= 4; k++){
+    if (!k) continue;
+    const px = x + dx * k, py = y + dy * k;
+    if (!inb(px, py) || g[px][py] !== EMPTY) continue;
+    g[px][py] = c;
+    const f = openFourDir(g, px, py, dx, dy, c) && lineLen(g, px, py, dx, dy, c) === 4;
+    g[px][py] = EMPTY;
+    if (f) return true;
+  }
+  return false;
+}
+// 흑 금수(3·3, 장목) — 이기는 수(정확히 5)는 금수가 아니다
+function forbidden(g, x, y){
+  if (g[x][y] !== EMPTY) return false;
+  g[x][y] = BLACK;
+  let bad = false;
+  if (winsAt(g, x, y, BLACK)) bad = false;
+  else {
+    let threes = 0, over = false;
+    for (const [dx, dy] of DIRS){ if (lineLen(g, x, y, dx, dy, BLACK) >= 6) over = true; if (openThreeDir(g, x, y, dx, dy, BLACK)) threes++; }
+    bad = over || threes >= 2;
+  }
+  g[x][y] = EMPTY;
+  return bad;
+}
+function legal(g, x, y, c){ return inb(x, y) && g[x][y] === EMPTY && !(c === BLACK && forbidden(g, x, y)); }
+
+// ---------- 두기 ----------
+function tryPlace(x, y){
+  const s = G.st; if (!s || s.over || !VS.live() || s.turn !== s.myColor) return;
+  if (!legal(s.g, x, y, s.myColor)){ VS.note(s.g[x][y] ? '이미 돌이 있어요' : '흑은 3·3 금지 자리예요', 1400); VS.sfx('hit'); return; }
+  VS.send({ k: 'mv', x, y });
+  place(x, y, s.myColor, false);
+}
+function place(x, y, c, fromOpp){
+  const s = G.st; if (!legal(s.g, x, y, c)) return;
+  s.g[x][y] = c; s.moves.push([x, y, c, performance.now()]); s.pre = null; doBtn.classList.add('hide');
+  VS.sfx('place'); VS.buzz(8);
+  const w = winsAt(s.g, x, y, c);
+  if (w){ s.over = true; s.win = { x, y, d: w, color: c, t: performance.now() }; setTurnLabel(); VS.over(c === s.myColor ? s.ctx.mySeat : 1 - s.ctx.mySeat); return; }
+  if (s.moves.length >= N * N){ s.over = true; VS.over(-1); return; }
+  s.turn = 3 - c; s.t0 = performance.now(); s.cpuT = 0; setTurnLabel();
+  if (s.turn === s.myColor) VS.sfx('turn');
+}
+function onTap(e){
+  const s = G.st; if (!s || s.over || !VS.live() || s.turn !== s.myColor) return;
+  const p = hit(e); if (!p) return;
+  VS.ac();
+  if (e.pointerType === 'mouse'){ tryPlace(p[0], p[1]); return; }
+  if (s.pre && s.pre[0] === p[0] && s.pre[1] === p[1]){ tryPlace(p[0], p[1]); return; }
+  s.pre = p; doBtn.classList.remove('hide'); VS.sfx('click');
+}
+function hit(e){
+  const r = cv.getBoundingClientRect(), x = Math.round((e.clientX - r.left - box.x) / box.s), y = Math.round((e.clientY - r.top - box.y) / box.s);
+  return inb(x, y) ? [x, y] : null;
+}
+
+// ---------- 컴퓨터 ----------
+// 각 빈칸에 «내가 두면 생기는 줄»과 «상대가 두면 생기는 줄»을 점수로 매긴다
+function lineScore(g, x, y, c){
+  let total = 0;
+  for (const [dx, dy] of DIRS){
+    let n = 1, open = 0, i = 1;
+    while (inb(x + dx * i, y + dy * i) && g[x + dx * i][y + dy * i] === c){ n++; i++; }
+    if (inb(x + dx * i, y + dy * i) && g[x + dx * i][y + dy * i] === EMPTY) open++;
+    i = 1; while (inb(x - dx * i, y - dy * i) && g[x - dx * i][y - dy * i] === c){ n++; i++; }
+    if (inb(x - dx * i, y - dy * i) && g[x - dx * i][y - dy * i] === EMPTY) open++;
+    if (n >= 5) total += 1e6;
+    else if (n === 4) total += open === 2 ? 1e5 : open === 1 ? 1e4 : 0;
+    else if (n === 3) total += open === 2 ? 5000 : open === 1 ? 400 : 0;
+    else if (n === 2) total += open === 2 ? 300 : open === 1 ? 40 : 0;
+    else total += open * 4;
+  }
+  return total;
+}
+function candidates(g){
+  const out = [], seen = new Set(); let any = false;
+  for (let x = 0; x < N; x++) for (let y = 0; y < N; y++) if (g[x][y]){ any = true;
+    for (let dx = -2; dx <= 2; dx++) for (let dy = -2; dy <= 2; dy++){ const px = x + dx, py = y + dy; if (inb(px, py) && !g[px][py] && !seen.has(px * 32 + py)){ seen.add(px * 32 + py); out.push([px, py]); } } }
+  if (!any) out.push([7, 7]);
+  return out;
+}
+function evalMove(g, x, y, me, lv){
+  const att = lineScore(g, x, y, me), def = lineScore(g, x, y, 3 - me);
+  const center = 14 - (Math.abs(x - 7) + Math.abs(y - 7));
+  return att * 1.1 + def * (lv === 'easy' ? .25 : lv === 'normal' ? .9 : 1) + center;
+}
+function cpuMove(me, lv){
+  const s = G.st, g = s.g;
+  let list = candidates(g).filter(([x, y]) => legal(g, x, y, me));
+  if (!list.length) return null;
+  // 이기는 수 · 막아야 하는 수 먼저
+  for (const [x, y] of list){ g[x][y] = me; const w = winsAt(g, x, y, me); g[x][y] = EMPTY; if (w) return [x, y]; }
+  if (lv !== 'easy') for (const [x, y] of list){ g[x][y] = 3 - me; const w = winsAt(g, x, y, 3 - me); g[x][y] = EMPTY; if (w) return [x, y]; }
+  let scored = list.map(([x, y]) => ({ x, y, v: evalMove(g, x, y, me, lv) + (lv === 'easy' ? Math.random() * 9000 : lv === 'normal' ? Math.random() * 300 : Math.random() * 5) }));
+  scored.sort((a, b) => b.v - a.v);
+  if (lv === 'hard'){
+    // 상위 후보들에 상대의 가장 좋은 응수까지 한 수 내다보고 고른다
+    const top = scored.slice(0, 8);
+    let best = null, bestV = -Infinity;
+    for (const m of top){
+      g[m.x][m.y] = me;
+      let worst = 0;
+      const opp = candidates(g).filter(([x, y]) => legal(g, x, y, 3 - me));
+      for (const [x, y] of opp){ const v = lineScore(g, x, y, 3 - me); if (v > worst) worst = v; }
+      g[m.x][m.y] = EMPTY;
+      const v = m.v - worst * .7;
+      if (v > bestV){ bestV = v; best = m; }
+    }
+    return [best.x, best.y];
+  }
+  return [scored[0].x, scored[0].y];
+}
+
+// ---------- 그리기·진행 ----------
+function stone(x, px, py, r, c, a = 1){
+  x.save(); x.globalAlpha = a;
+  const g = x.createRadialGradient(px - r * .35, py - r * .4, r * .1, px, py, r * 1.05);
+  if (c === BLACK){ g.addColorStop(0, '#6A6A6A'); g.addColorStop(.45, '#222'); g.addColorStop(1, '#050505'); }
+  else { g.addColorStop(0, '#FFFFFF'); g.addColorStop(.6, '#F1ECE0'); g.addColorStop(1, '#CFC6B0'); }
+  x.fillStyle = g; x.beginPath(); x.arc(px, py, r, 0, 7); x.fill();
+  x.fillStyle = 'rgba(0,0,0,.18)'; x.beginPath(); x.ellipse(px + r * .12, py + r * .9, r * .85, r * .22, 0, 0, 7); x.globalCompositeOperation = 'destination-over'; x.fill();
+  x.restore();
+}
+function loop(t){
+  const s = G.st;
+  if (s && cv && !document.getElementById('vsGame').classList.contains('hide')) draw(t);
+  if (s && !s.over && VS.live()){
+    // 시간 제한
+    const left = Math.max(0, TURN_SEC - (performance.now() - s.t0) / 1000);
+    timerEl.textContent = (s.turn === s.myColor ? '내 차례 ' : '상대 차례 ') + Math.ceil(left) + '초';
+    timerEl.style.background = left < 10 ? 'rgba(200,64,44,.85)' : 'rgba(20,28,64,.72)';
+    if (left <= 0 && s.turn === s.myColor){ const m = cpuMove(s.myColor, 'easy'); if (m) tryPlace(m[0], m[1]); }
+    // 컴퓨터 차례
+    if (s.ctx.mode === 'cpu' && s.turn === s.oppColor){
+      if (!s.cpuT) s.cpuT = performance.now() + (s.ctx.level === 'hard' ? 450 : 650) + Math.random() * 500;
+      else if (performance.now() >= s.cpuT){ s.cpuT = 0; const m = cpuMove(s.oppColor, s.ctx.level); if (m) place(m[0], m[1], s.oppColor, true); }
+    }
+  }
+  requestAnimationFrame(loop);
+}
+function draw(t){
+  const s = G.st, x = cx, { size, s: c } = box;
+  x.clearRect(0, 0, size, size);
+  // 나무판
+  const wood = x.createLinearGradient(0, 0, size, size); wood.addColorStop(0, '#E9C88A'); wood.addColorStop(1, '#D8AE67');
+  x.fillStyle = wood; x.beginPath(); x.roundRect ? x.roundRect(0, 0, size, size, 14) : x.rect(0, 0, size, size); x.fill();
+  x.strokeStyle = 'rgba(80,50,20,.75)'; x.lineWidth = 1;
+  for (let i = 0; i < N; i++){ x.beginPath(); x.moveTo(c, c + i * c); x.lineTo(c * N, c + i * c); x.stroke(); x.beginPath(); x.moveTo(c + i * c, c); x.lineTo(c + i * c, c * N); x.stroke(); }
+  x.fillStyle = 'rgba(80,50,20,.85)';
+  for (const [a, b] of [[3, 3], [11, 3], [7, 7], [3, 11], [11, 11]]){ x.beginPath(); x.arc(c + a * c, c + b * c, c * .12, 0, 7); x.fill(); }
+  // 흑 차례(내 차례)면 금수 자리 표시
+  if (!s.over && s.turn === BLACK && s.myColor === BLACK && s.moves.length > 3){
+    if (!s.fbCache || s.fbCache.n !== s.moves.length){ const list = []; for (const [px, py] of candidates(s.g)) if (forbidden(s.g, px, py)) list.push([px, py]); s.fbCache = { n: s.moves.length, list }; }
+    x.strokeStyle = 'rgba(200,40,40,.8)'; x.lineWidth = 2.2;
+    for (const [px, py] of s.fbCache.list){ const X = c + px * c, Y = c + py * c, m = c * .22; x.beginPath(); x.moveTo(X - m, Y - m); x.lineTo(X + m, Y + m); x.moveTo(X + m, Y - m); x.lineTo(X - m, Y + m); x.stroke(); }
+  }
+  // 돌
+  const r = c * .46;
+  for (let px = 0; px < N; px++) for (let py = 0; py < N; py++) if (s.g[px][py]) {
+    const mv = s.moves.find(m => m[0] === px && m[1] === py), age = mv ? (t - mv[3]) : 999, k = Math.min(1, age / 160);
+    stone(x, c + px * c, c + py * c, r * (1.25 - .25 * k), s.g[px][py], .4 + .6 * k);
+  }
+  // 마지막 수 표시
+  const last = s.moves[s.moves.length - 1];
+  if (last){ x.fillStyle = '#E05A1E'; x.beginPath(); x.arc(c + last[0] * c, c + last[1] * c, c * .13, 0, 7); x.fill(); }
+  // 미리 놓기·마우스 위치
+  const p = s.pre || s.hover;
+  if (p && !s.over && s.turn === s.myColor && !s.g[p[0]][p[1]]) stone(x, c + p[0] * c, c + p[1] * c, r, s.myColor, .5);
+  // 이긴 줄
+  if (s.win){
+    const { x: wx, y: wy, d: [dx, dy], color } = s.win, k = Math.min(1, (t - s.win.t) / 400);
+    let a = 0; while (inb(wx - dx * (a + 1), wy - dy * (a + 1)) && s.g[wx - dx * (a + 1)][wy - dy * (a + 1)] === color) a++;
+    let b = 0; while (inb(wx + dx * (b + 1), wy + dy * (b + 1)) && s.g[wx + dx * (b + 1)][wy + dy * (b + 1)] === color) b++;
+    const x1 = c + (wx - dx * a) * c, y1 = c + (wy - dy * a) * c, x2 = c + (wx + dx * b) * c, y2 = c + (wy + dy * b) * c;
+    x.strokeStyle = '#FF2E97'; x.lineWidth = c * .22; x.lineCap = 'round'; x.globalAlpha = .85;
+    x.beginPath(); x.moveTo(x1, y1); x.lineTo(x1 + (x2 - x1) * k, y1 + (y2 - y1) * k); x.stroke(); x.globalAlpha = 1;
+  }
+}
+VS.init(G);
+</script>
+</body>
+</html>

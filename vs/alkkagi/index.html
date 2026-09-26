@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>알까기 — 1:1 오락실</title>
+<meta name="description" content="바둑돌을 튕겨 상대 돌을 판 밖으로! 친구와 서버 없이 바로 하는 1:1 알까기. 컴퓨터(쉬움·보통·어려움)와도 대결.">
+<meta property="og:title" content="알까기 — 1:1 오락실">
+<meta property="og:description" content="방 번호 4자리로 친구와 바로 한 판. 돌을 튕겨 상대 돌을 밖으로 쳐내요.">
+<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg">
+<meta name="theme-color" content="#2361C4">
+<link rel="stylesheet" href="../common/vs.css">
+<style>
+#akCv{display:block;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="../common/vs.js"></script>
+<script>
+"use strict";
+// ================= 알까기 =================
+// 판은 가로·세로 L(1000) 단위의 정사각형. 흑은 아래쪽(y 큰 쪽), 백은 위쪽에서 시작한다.
+// 화면에서는 항상 내 돌이 아래에 오도록, 내가 백이면 판을 180도 돌려 그린다(시뮬레이션 좌표는 그대로).
+const L = 1000, R = 36, REST = 0.92, DT = 1 / 120, FR = 1500, DAMP = 0.8, VMAX = 2600;
+const PULLMAX = 300, PULLMIN = 0.12, TURN_SEC = 30, MAXMOVES = 50, BLACK = 1, WHITE = 2, PER = 7;
+let cv, cx, box = { size: 300, m: 10, k: .3 }, woodCv = null, lastHitSfx = 0;
+const colorOf = i => i < PER ? BLACK : WHITE;
+
+const G = {
+  id: 'alkkagi', title: '알까기', sub: '돌을 튕겨 상대 돌을 판 밖으로',
+  turnBased: true, countdown: false, ft: 3, cpuFt: 2,
+  levels: [{ k: 'easy', name: '쉬움', desc: '자주 빗나가요' }, { k: 'normal', name: '보통', desc: '제법 잘 맞혀요' }, { k: 'hard', name: '어려움', desc: '거의 안 놓쳐요' }],
+  rules: `<ul><li>흑돌 7개, 백돌 7개로 합니다. 판마다 먼저 하는 사람이 <b>흑돌</b>이에요.</li><li>내 차례가 오면 <b>내 돌 하나를 튕겨서</b> 상대 돌을 판 밖으로 밀어내요.</li><li>내 돌이 밖으로 나가도 잃어요. 돌이 모두 멈추면 차례가 넘어가요.</li><li>돌이 <b>먼저 다 없어진 사람이 져요</b>. 한 번에 둘 다 없어지면 튕긴 사람이 져요.</li><li>${MAXMOVES}번을 넘게 튕기면 돌이 더 많이 남은 쪽이 이겨요(같으면 비김).</li><li>한 번에 ${TURN_SEC}초 안에 튕겨요. 시간이 지나면 컴퓨터가 대신 약하게 튕겨요.</li></ul>`,
+  controls: `<p><b>파란 고리가 있는 돌</b>이 내 돌이에요. 내 돌을 누른 채로 <b>뒤로 당겼다가 놓으면</b> 반대쪽으로 날아가요. 많이 당길수록 세게 나가요.</p><p>당기는 동안 <b>점선</b>은 날아갈 방향, 돌 위 <b>막대</b>는 힘이에요. 조금만 당기고 놓으면 취소돼요.</p>`,
+  st: null,
+  mount(stage){
+    cv = document.createElement('canvas'); cv.id = 'akCv'; stage.appendChild(cv); cx = cv.getContext('2d');
+    cv.addEventListener('pointerdown', onDown);
+    cv.addEventListener('pointermove', onMove);
+    cv.addEventListener('pointerup', onUp);
+    cv.addEventListener('pointercancel', onCancel);
+    cv.addEventListener('contextmenu', e => e.preventDefault());
+    requestAnimationFrame(loop);
+  },
+  start(ctx){
+    const myColor = ctx.first === ctx.mySeat ? BLACK : WHITE;
+    G.st = { ctx, stones: initStones(), turn: BLACK, myColor, oppColor: 3 - myColor, flip: myColor === WHITE,
+      moves: 0, over: false, win: null, started: false, moving: false, shooter: 0, acc: 0, steps: 0, lastT: 0,
+      aim: null, drag: null, waitRest: 0, pendingRest: null, t0: 0, cpuT: 0, cpuPlan: null, falls: [], fx: [], lbl: '' };
+    G.resize(); setTurnLabel();
+  },
+  go(){ const s = G.st; s.started = true; s.t0 = performance.now(); s.cpuT = 0; setTurnLabel(); if (s.turn === s.myColor) VS.sfx('turn'); },
+  onNet(d){
+    const s = G.st; if (!s || s.over || !d) return;
+    if (d.k === 'shot'){
+      // 상대가 튕겼다: 같은 값으로 같은 시뮬레이션을 돌린다
+      const i = d.i, vx = +d.vx, vy = +d.vy;
+      if (!Number.isInteger(i) || i < 0 || i >= PER * 2 || !isFinite(vx) || !isFinite(vy)) return;
+      if (s.turn !== s.oppColor || s.moving || colorOf(i) !== s.oppColor || !s.stones[i].a) return;
+      const sp = Math.sqrt(vx * vx + vy * vy); if (sp > VMAX * 1.001) return;
+      launch(i, vx, vy, s.oppColor);
+    } else if (d.k === 'rest'){
+      // 튕긴 쪽이 멈춘 뒤 보낸 최종 위치: 이 값으로 맞춘 뒤에만 차례를 넘긴다
+      if (s.turn !== s.oppColor || !Array.isArray(d.pos) || d.pos.length !== PER * 2) return;
+      if (Number.isInteger(d.n)) s.moves = d.n;
+      s.shooter = s.oppColor;
+      if (s.moving) s.pendingRest = d;
+      else { applyRest(d); s.waitRest = 0; judge(); }
+    }
+  },
+  stop(){ const s = G.st; if (s){ s.over = true; s.aim = null; s.drag = null; s.cpuPlan = null; } },
+  lost(){ const s = G.st; return !!(s && s.over && s.win === s.oppColor); },
+  resize(){
+    if (!cv) return;
+    const st = document.getElementById('vsStage'), w = st.clientWidth, h = st.clientHeight;
+    const size = Math.max(200, Math.min(w - 8, h - 8)), d = Math.min(devicePixelRatio || 1, 2);
+    cv.width = Math.round(size * d); cv.height = Math.round(size * d); cv.style.width = size + 'px'; cv.style.height = size + 'px';
+    cx.setTransform(d, 0, 0, d, 0, 0);
+    // 판 둘레에 여백을 두어 떨어지는 돌이 보이게 한다(여백은 투명 → 공용 배경이 보임)
+    const m = Math.round(size * .045);
+    box = { size, m, B: size - m * 2, k: (size - m * 2) / L, d };
+    makeWood();
+  },
+  drawArt(x, w, h, t){
+    // 흑돌이 미끄러져 와 백돌을 쳐내는 짧은 반복 장면
+    const r = Math.min(h * .2, w / 12), y = h * .56, P = 2600, p = (t % P) / P;
+    const ease = q => 1 - (1 - q) * (1 - q);
+    const hitP = .38, bx0 = w * .14, hitX = w * .5 - r * 2.02, wx0 = w * .5;
+    let bx, wx = wx0, wa = 1;
+    if (p < hitP) bx = bx0 + (hitX - bx0) * ease(p / hitP);
+    else bx = hitX + r * .12 * ease(Math.min(1, (p - hitP) / .2));
+    if (p >= hitP){ const q = Math.min(1, (p - hitP) / .42); wx = wx0 + (w * .9 - wx0) * ease(q); if (p > .78) wa = Math.max(0, 1 - (p - .78) / .14); }
+    if (p < .1) x.globalAlpha = p / .1;
+    stone(x, bx, y, r, BLACK, '#2E7BFF');
+    x.globalAlpha = 1;
+    if (wa > 0){ const sc = p > .78 ? 1 - .5 * (1 - wa) : 1; x.globalAlpha = wa; stone(x, wx, y + (1 - sc) * r * .6, r * sc, WHITE, '#E0402C'); x.globalAlpha = 1; }
+    if (p >= hitP && p < hitP + .1){
+      const a = 1 - (p - hitP) / .1, sx = hitX + r;
+      x.strokeStyle = `rgba(255,214,110,${a})`; x.lineWidth = 2.5; x.lineCap = 'round';
+      for (const [dx, dy] of [[0, -1], [.7, -.7], [.7, .7], [0, 1], [-.5, -.85], [-.5, .85]]){ x.beginPath(); x.moveTo(sx + dx * r * .3, y + dy * r * .3); x.lineTo(sx + dx * r * (.5 + .5 * (1 - a)), y + dy * r * (.5 + .5 * (1 - a))); x.stroke(); }
+    }
+  },
+  // 시험용: 내 차례이고 한가하면 보통 수준 컴퓨터로 한 수를 둔다
+  bot(){ const s = G.st; if (!s || s.over || !VS.live() || s.turn !== s.myColor || !idle(s)) return false; const m = plan(s.myColor, 'normal'); if (m) fireMine(m.i, m.vx, m.vy); return !!m; },
+};
+window.akBot = () => G.bot();
+
+// ---------- 돌 배치·물리 ----------
+function initStones(){
+  const a = [], row = (y, xs) => xs.forEach(x => a.push({ x, y, vx: 0, vy: 0, a: 1 }));
+  row(850, [200, 400, 600, 800]); row(750, [300, 500, 700]);   // 흑 0~6
+  row(150, [800, 600, 400, 200]); row(250, [700, 500, 300]);   // 백 7~13
+  return a;
+}
+// 한 걸음(1/120초). 사칙연산과 Math.sqrt만 써서 기기마다 결과가 최대한 같게 한다.
+// ev(kind, ...): 충돌·낙하 알림(연출용, 없으면 무시)
+function step(A, ev){
+  const n = A.length, D = R * 2, D2 = D * D;
+  let moving = false;
+  for (let i = 0; i < n; i++){
+    const s = A[i]; if (!s.a || (s.vx === 0 && s.vy === 0)) continue;
+    s.x += s.vx * DT; s.y += s.vy * DT;
+    const sp = Math.sqrt(s.vx * s.vx + s.vy * s.vy), ns = sp - (FR + DAMP * sp) * DT;
+    if (ns <= 0){ s.vx = 0; s.vy = 0; } else { const f = ns / sp; s.vx *= f; s.vy *= f; }
+  }
+  for (let i = 0; i < n; i++){
+    const a = A[i]; if (!a.a) continue;
+    for (let j = i + 1; j < n; j++){
+      const b = A[j]; if (!b.a) continue;
+      const dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy;
+      if (d2 >= D2) continue;
+      let d = Math.sqrt(d2), nx = 1, ny = 0;
+      if (d > 1e-9){ nx = dx / d; ny = dy / d; } else d = 0;
+      const ov = (D - d) / 2;
+      a.x -= nx * ov; a.y -= ny * ov; b.x += nx * ov; b.y += ny * ov;
+      const rv = (a.vx - b.vx) * nx + (a.vy - b.vy) * ny;
+      if (rv > 0){
+        const J = rv * (1 + REST) / 2;
+        a.vx -= J * nx; a.vy -= J * ny; b.vx += J * nx; b.vy += J * ny;
+        if (ev) ev('hit', a.x + nx * R, a.y + ny * R, rv);
+      }
+    }
+  }
+  for (let i = 0; i < n; i++){
+    const s = A[i]; if (!s.a) continue;
+    if (s.x < 0 || s.x > L || s.y < 0 || s.y > L){ s.a = 0; if (ev) ev('out', i); continue; }
+    if (s.vx !== 0 || s.vy !== 0) moving = true;
+  }
+  return moving;
+}
+function simulate(A, i, vx, vy){
+  const B = A.map(s => ({ x: s.x, y: s.y, vx: 0, vy: 0, a: s.a }));
+  B[i].vx = vx; B[i].vy = vy;
+  for (let k = 0; k < 1500 && step(B); k++);
+  return B;
+}
+function count(c){ const s = G.st; let n = 0; s.stones.forEach((st, i) => { if (st.a && colorOf(i) === c) n++; }); return n; }
+function idle(s){ return s.started && !s.moving && !s.waitRest && !s.pendingRest && !s.aim && !s.cpuPlan; }
+function seatOf(c){ const s = G.st; return c === BLACK ? s.ctx.first : 1 - s.ctx.first; }
+
+// ---------- 튕기기·차례 ----------
+function fireMine(i, vx, vy){
+  const s = G.st; if (!s || s.over || !VS.live() || s.turn !== s.myColor || s.moving) return;
+  if (colorOf(i) !== s.myColor || !s.stones[i].a) return;
+  VS.send({ k: 'shot', i, vx, vy, n: s.moves });
+  launch(i, vx, vy, s.myColor);
+}
+function launch(i, vx, vy, c){
+  const s = G.st, st = s.stones[i];
+  st.vx = vx; st.vy = vy;
+  s.moving = true; s.shooter = c; s.moves++; s.acc = 0; s.steps = 0; s.aim = null; s.drag = null; s.cpuPlan = null;
+  VS.sfx('whoosh'); VS.buzz(10);
+}
+// 시뮬레이션이 멈췄을 때
+function onStop(){
+  const s = G.st; s.moving = false;
+  if (s.ctx.mode === 'net' && s.shooter === s.oppColor){
+    // 받는 쪽: 튕긴 쪽의 최종 위치(rest)를 받아 맞춘 뒤에만 넘긴다
+    if (s.pendingRest){ const d = s.pendingRest; s.pendingRest = null; applyRest(d); judge(); }
+    else s.waitRest = performance.now();
+    return;
+  }
+  if (s.ctx.mode === 'net') VS.send({ k: 'rest', n: s.moves, pos: s.stones.map(st => [st.x, st.y, st.a]) });
+  judge();
+}
+function applyRest(d){
+  const s = G.st, now = performance.now();
+  d.pos.forEach((p, k) => {
+    if (!Array.isArray(p)) return;
+    const st = s.stones[k], x = +p[0], y = +p[1], a = p[2] ? 1 : 0;
+    if (!isFinite(x) || !isFinite(y)) return;
+    if (st.a && !a) s.falls.push({ x, y, vx: 0, vy: 0, c: colorOf(k), t0: now });
+    st.x = x; st.y = y; st.a = a; st.vx = 0; st.vy = 0;
+  });
+}
+// 승패 판정 — 튕긴 사람(shooter) 기준. 양쪽이 같은 상태로 부르므로 같은 결과가 나온다.
+function judge(){
+  const s = G.st; if (s.over) return;
+  const sh = s.shooter, ot = 3 - sh, nb = count(BLACK), nw = count(WHITE);
+  const ns = sh === BLACK ? nb : nw, no = sh === BLACK ? nw : nb;
+  let w = null;
+  if (ns === 0) w = ot;                    // 튕긴 사람 돌이 없음(둘 다 0개도 여기) → 튕긴 사람 패
+  else if (no === 0) w = sh;
+  else if (s.moves >= MAXMOVES) w = nb > nw ? BLACK : nw > nb ? WHITE : 0;
+  if (w !== null){
+    s.over = true; s.win = w; s.lbl = ''; setTurnLabel();
+    VS.over(w === 0 ? -1 : seatOf(w));
+    return;
+  }
+  s.turn = ot; s.t0 = performance.now(); s.cpuT = 0; s.cpuPlan = null; setTurnLabel();
+  if (s.turn === s.myColor) VS.sfx('turn');
+}
+
+// ---------- 컴퓨터 ----------
+// 내 돌 × 상대 돌 × 조준점 × 힘 조합을 끝까지 시뮬레이션해 보고 가장 좋은 수를 고른다
+function plan(c, lv){
+  const s = G.st, A = s.stones, mine = [], opp = [];
+  A.forEach((st, i) => { if (st.a) (colorOf(i) === c ? mine : opp).push(i); });
+  if (!mine.length || !opp.length) return null;
+  const offs = lv === 'easy' ? [0] : lv === 'normal' ? [-.5, 0, .5] : [-.8, -.4, 0, .4, .8];
+  const pows = lv === 'easy' ? [.75, 1] : [.55, .78, 1];
+  const score = B => {
+    let v = 0;
+    B.forEach((st, k) => {
+      if (!A[k].a) return;
+      const mk = colorOf(k) === c;
+      if (!st.a){ v += mk ? -140 : 100; return; }
+      const e = Math.min(st.x, L - st.x, st.y, L - st.y), q = Math.min(e, 250) / 250;
+      v += mk ? q * 4 : -q * 3;
+    });
+    return v;
+  };
+  const list = [];
+  for (const i of mine) for (const j of opp){
+    const dx = A[j].x - A[i].x, dy = A[j].y - A[i].y, d = Math.sqrt(dx * dx + dy * dy); if (d < 1) continue;
+    const ux = dx / d, uy = dy / d;
+    for (const o of offs){
+      const ax = A[j].x - uy * o * R * 1.6 - A[i].x, ay = A[j].y + ux * o * R * 1.6 - A[i].y, ad = Math.sqrt(ax * ax + ay * ay);
+      const tx = ax / ad, ty = ay / ad;
+      for (const p of pows){
+        const vx = tx * p * VMAX, vy = ty * p * VMAX;
+        list.push({ i, vx, vy, v: score(simulate(A, i, vx, vy)) + Math.random() * (lv === 'easy' ? 30 : 2) });
+      }
+    }
+  }
+  if (!list.length) return null;
+  list.sort((a, b) => b.v - a.v);
+  const pick = lv === 'easy' ? list[Math.floor(Math.random() * Math.min(5, list.length))] : list[0];
+  // 조준 오차: 방향에 수직 성분을 조금 섞는다(쉬움은 크게, 어려움은 작게)
+  const E = { easy: .12, normal: .035, hard: .008, weak: .06 }[lv] || .035;
+  const sp = Math.sqrt(pick.vx * pick.vx + pick.vy * pick.vy), ux = pick.vx / sp, uy = pick.vy / sp, e = (Math.random() * 2 - 1) * E;
+  let nx = ux - uy * e, ny = uy + ux * e; const nd = Math.sqrt(nx * nx + ny * ny); nx /= nd; ny /= nd;
+  const p2 = Math.min(VMAX, sp * (1 + (Math.random() * 2 - 1) * E * .8));
+  return { i: pick.i, vx: nx * p2, vy: ny * p2 };
+}
+// 시간 초과: 컴퓨터가 대신 약하게 튕긴다
+function autoShot(){
+  const s = G.st; s.drag = null; s.aim = null;
+  const m = plan(s.myColor, 'easy'); if (!m) return;
+  fireMine(m.i, m.vx * .5, m.vy * .5);
+  VS.note('시간이 지나 대신 약하게 튕겼어요', 1600);
+}
+
+// ---------- 입력(새총) ----------
+function toWorld(e){
+  const r = cv.getBoundingClientRect(), s = G.st;
+  let x = (e.clientX - r.left - box.m) / box.k, y = (e.clientY - r.top - box.m) / box.k;
+  if (s && s.flip){ x = L - x; y = L - y; }
+  return [x, y];
+}
+function canAct(){ const s = G.st; return s && !s.over && VS.live() && s.turn === s.myColor && s.started && !s.moving && !s.waitRest && !s.pendingRest; }
+function onDown(e){
+  const s = G.st; if (!canAct() || s.drag) return;
+  VS.ac();
+  const [wx, wy] = toWorld(e), hr = Math.max(R * 1.6, 26 / box.k);
+  let best = -1, bd = hr * hr;
+  s.stones.forEach((st, i) => { if (!st.a || colorOf(i) !== s.myColor) return; const d = (st.x - wx) ** 2 + (st.y - wy) ** 2; if (d < bd){ bd = d; best = i; } });
+  if (best < 0) return;
+  e.preventDefault();
+  try { cv.setPointerCapture(e.pointerId); } catch {}
+  s.drag = { i: best, id: e.pointerId };
+  s.aim = { i: best, ux: 0, uy: -1, p: 0, hx: wx, hy: wy };
+  VS.sfx('click');
+}
+function onMove(e){
+  const s = G.st; if (!s || !s.drag || e.pointerId !== s.drag.id) return;
+  if (!canAct()){ onCancel(); return; }
+  const st = s.stones[s.drag.i], [wx, wy] = toWorld(e);
+  const px = st.x - wx, py = st.y - wy, len = Math.sqrt(px * px + py * py);
+  const p = Math.min(len, PULLMAX) / PULLMAX;
+  if (len > 1) s.aim = { i: s.drag.i, ux: px / len, uy: py / len, p, hx: wx, hy: wy };
+  else s.aim = { i: s.drag.i, ux: s.aim.ux, uy: s.aim.uy, p: 0, hx: wx, hy: wy };
+}
+function onUp(e){
+  const s = G.st; if (!s || !s.drag || e.pointerId !== s.drag.id) return;
+  onMove(e);
+  const a = s.aim; s.drag = null; s.aim = null;
+  if (!a || !canAct()) return;
+  if (a.p < PULLMIN){ VS.note('조금 더 당겼다 놓아야 날아가요', 1200); return; }
+  fireMine(a.i, a.ux * a.p * VMAX, a.uy * a.p * VMAX);
+}
+function onCancel(){ const s = G.st; if (s){ s.drag = null; s.aim = null; } }
+
+// ---------- 진행 루프 ----------
+function loop(t){
+  const s = G.st, now = performance.now();
+  if (s){
+    // 물리: 고정 간격 적분(프레임이 길어도 한 번에 최대 0.1초만)
+    const dt = s.lastT ? Math.min(.1, (now - s.lastT) / 1000) : 0; s.lastT = now;
+    if (s.moving){
+      s.acc += dt;
+      const ev = (k, a, b, c) => {
+        if (k === 'hit'){ if (c > 250){ addSpark(a, b, c); if (now - lastHitSfx > 50){ lastHitSfx = now; VS.sfx('hit'); } } }
+        else if (k === 'out'){ const st = s.stones[a]; s.falls.push({ x: st.x, y: st.y, vx: st.vx, vy: st.vy, c: colorOf(a), t0: now }); VS.sfx('thud'); VS.buzz(20); }
+      };
+      while (s.acc >= DT && s.moving){
+        s.acc -= DT; s.steps++;
+        if (!step(s.stones, ev) || s.steps > 2400){ s.stones.forEach(st => { st.vx = 0; st.vy = 0; }); onStop(); break; }
+      }
+    }
+    if (!s.over && s.started && VS.live()){
+      // 받는 쪽이 rest를 너무 오래 못 받으면 내 계산대로 진행(안전장치)
+      if (s.waitRest && now - s.waitRest > 8000){ s.waitRest = 0; judge(); }
+      // 시간 제한(내 차례)
+      const left = TURN_SEC - (now - s.t0) / 1000;
+      if (left <= 0 && s.turn === s.myColor && !s.moving && !s.waitRest && !s.pendingRest) autoShot();
+      // 컴퓨터 차례: 0.8~1.4초 뒤, 잠깐 당기는 모습을 보여 주고 튕긴다
+      if (s.ctx.mode === 'cpu' && s.turn === s.oppColor && !s.moving){
+        if (!s.cpuT && !s.cpuPlan) s.cpuT = now + 300 + Math.random() * 500;
+        else if (s.cpuT && now >= s.cpuT){
+          s.cpuT = 0;
+          const m = plan(s.oppColor, s.ctx.level);
+          if (m){ const sp = Math.sqrt(m.vx * m.vx + m.vy * m.vy); s.cpuPlan = { m, ux: m.vx / sp, uy: m.vy / sp, p: sp / VMAX, t1: performance.now(), dur: 520 }; }
+        }
+        if (s.cpuPlan){
+          const cp = s.cpuPlan, q = Math.min(1, (performance.now() - cp.t1) / cp.dur);
+          s.aim = { i: cp.m.i, ux: cp.ux, uy: cp.uy, p: cp.p * (1 - (1 - q) * (1 - q)), cpu: true };
+          if (q >= 1 && performance.now() - cp.t1 > cp.dur + 120){ s.aim = null; s.cpuPlan = null; launch(cp.m.i, cp.m.vx, cp.m.vy, s.oppColor); }
+        }
+      }
+    }
+    setTurnLabel();
+    if (cv && !document.getElementById('vsGame').classList.contains('hide')) draw(now);
+  }
+  requestAnimationFrame(loop);
+}
+function setTurnLabel(){
+  const s = G.st; if (!s) return;
+  const nm = count(s.myColor), no = count(s.oppColor), who = s.ctx.mode === 'cpu' ? '컴퓨터' : '상대';
+  let h;
+  if (s.over) h = `남은 돌 ${nm}:${no}`;
+  else {
+    const mine = s.turn === s.myColor;
+    h = (mine ? '<span class="me">내 차례</span>' : `<span class="op">${who} 차례</span>`) + ` · 남은 돌 ${nm}:${no}`;
+    if (s.started && !s.moving && !s.waitRest){ const left = Math.max(0, Math.ceil(TURN_SEC - (performance.now() - s.t0) / 1000)); h += ` · ${left}초`; }
+  }
+  if (h !== s.lbl){ s.lbl = h; VS.setTurn(h); }
+}
+
+// ---------- 그리기 ----------
+function stone(x, px, py, r, c, ring){
+  // 그림자
+  x.save();
+  const a0 = x.globalAlpha;
+  x.globalAlpha = a0 * .28; x.fillStyle = '#000'; x.beginPath(); x.ellipse(px + r * .14, py + r * .22, r * 1.02, r * .96, 0, 0, 7); x.fill();
+  x.globalAlpha = a0;
+  // 발밑 고리(내 돌 파랑, 상대 돌 빨강)
+  if (ring){ x.strokeStyle = ring; x.lineWidth = Math.max(2.5, r * .16); x.beginPath(); x.arc(px, py, r * 1.14, 0, 7); x.stroke(); }
+  const g = x.createRadialGradient(px - r * .35, py - r * .4, r * .1, px, py, r * 1.05);
+  if (c === BLACK){ g.addColorStop(0, '#6A6A6A'); g.addColorStop(.45, '#222'); g.addColorStop(1, '#050505'); }
+  else { g.addColorStop(0, '#FFFFFF'); g.addColorStop(.6, '#F1ECE0'); g.addColorStop(1, '#CFC6B0'); }
+  x.fillStyle = g; x.beginPath(); x.arc(px, py, r, 0, 7); x.fill();
+  x.restore();
+}
+// 나무결 판은 크기가 바뀔 때만 한 번 그려 둔다
+function makeWood(){
+  const { B, d } = box; if (!B) return;
+  woodCv = document.createElement('canvas'); woodCv.width = Math.round(B * d); woodCv.height = Math.round(B * d);
+  const x = woodCv.getContext('2d'); x.setTransform(d, 0, 0, d, 0, 0);
+  const g = x.createLinearGradient(0, 0, B, B); g.addColorStop(0, '#EBC98C'); g.addColorStop(.5, '#DDB472'); g.addColorStop(1, '#D3A660');
+  x.fillStyle = g; x.beginPath(); x.roundRect ? x.roundRect(0, 0, B, B, B * .02) : x.rect(0, 0, B, B); x.fill();
+  x.save(); x.clip();
+  // 나무결: 고정 씨앗으로 늘 같은 무늬
+  const rnd = VS.rng(20260927);
+  for (let i = 0; i < 46; i++){
+    const y0 = rnd() * B, amp = 2 + rnd() * 6, fq = 1.5 + rnd() * 3, ph = rnd() * 6;
+    x.strokeStyle = `rgba(120,72,28,${.05 + rnd() * .09})`; x.lineWidth = .6 + rnd() * 1.6;
+    x.beginPath();
+    for (let px = 0; px <= B; px += 6){ const py = y0 + Math.sin(px / B * fq * 6.283 + ph) * amp; px ? x.lineTo(px, py) : x.moveTo(px, py); }
+    x.stroke();
+  }
+  x.restore();
+  // 격자 19줄
+  const k = B / L;
+  x.strokeStyle = 'rgba(70,42,14,.62)'; x.lineWidth = 1;
+  for (let i = 0; i < 19; i++){
+    const p = (50 + i * 50) * k;
+    x.beginPath(); x.moveTo(50 * k, p); x.lineTo(950 * k, p); x.stroke();
+    x.beginPath(); x.moveTo(p, 50 * k); x.lineTo(p, 950 * k); x.stroke();
+  }
+  x.fillStyle = 'rgba(70,42,14,.8)';
+  for (const a of [200, 500, 800]) for (const b of [200, 500, 800]){ x.beginPath(); x.arc(a * k, b * k, Math.max(2, 5 * k), 0, 7); x.fill(); }
+  // 테두리
+  x.strokeStyle = 'rgba(90,52,18,.9)'; x.lineWidth = Math.max(2, B * .006);
+  x.beginPath(); x.roundRect ? x.roundRect(1, 1, B - 2, B - 2, B * .02) : x.rect(1, 1, B - 2, B - 2); x.stroke();
+}
+function addSpark(wx, wy, power){
+  const s = G.st, n = Math.min(10, 4 + Math.floor(power / 300)), now = performance.now();
+  for (let i = 0; i < n; i++){ const a = Math.random() * 6.283, sp = 120 + Math.random() * 260; s.fx.push({ x: wx, y: wy, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, t0: now, life: 220 + Math.random() * 160 }); }
+}
+function sp(x, y){ const s = G.st; if (s.flip){ x = L - x; y = L - y; } return [box.m + x * box.k, box.m + y * box.k]; }
+function draw(now){
+  const s = G.st, x = cx, { size, m, B, k } = box;
+  x.clearRect(0, 0, size, size);
+  // 판(나무 받침 그림자 + 나무결)
+  x.save(); x.fillStyle = 'rgba(0,0,0,.35)'; x.beginPath(); x.roundRect ? x.roundRect(m + 3, m + 6, B, B, B * .02) : x.rect(m + 3, m + 6, B, B); x.fill(); x.restore();
+  if (woodCv) x.drawImage(woodCv, m, m, B, B);
+  const r = R * k;
+  // 떨어지는 돌: 판 밖으로 미끄러지며 작아지고 흐려진다
+  s.falls = s.falls.filter(f => now - f.t0 < 650);
+  for (const f of s.falls){
+    const q = (now - f.t0) / 650, tt = q * .65, fx = f.x + f.vx * tt * .35, fy = f.y + f.vy * tt * .35;
+    const [px, py] = sp(fx, fy);
+    x.globalAlpha = 1 - q; stone(x, px, py + q * r * .8, r * (1 - q * .7), f.c, null); x.globalAlpha = 1;
+  }
+  // 돌
+  s.stones.forEach((st, i) => {
+    if (!st.a) return;
+    const [px, py] = sp(st.x, st.y), c = colorOf(i);
+    stone(x, px, py, r, c, c === s.myColor ? '#2E7BFF' : '#E0402C');
+  });
+  // 내 차례에 움직일 수 있는 돌을 은은하게 표시
+  if (!s.over && s.started && s.turn === s.myColor && !s.moving && !s.aim && VS.live()){
+    const a = .25 + .2 * Math.sin(now / 260);
+    x.strokeStyle = `rgba(120,190,255,${a})`; x.lineWidth = 2;
+    s.stones.forEach((st, i) => { if (!st.a || colorOf(i) !== s.myColor) return; const [px, py] = sp(st.x, st.y); x.beginPath(); x.arc(px, py, r * 1.4, 0, 7); x.stroke(); });
+  }
+  // 조준(새총)
+  if (s.aim && s.stones[s.aim.i] && s.stones[s.aim.i].a){
+    const a = s.aim, st = s.stones[a.i], [px, py] = sp(st.x, st.y), f = s.flip ? -1 : 1, ux = a.ux * f, uy = a.uy * f;
+    // 당긴 고무줄
+    const bl = a.p * PULLMAX * k;
+    x.strokeStyle = 'rgba(255,255,255,.75)'; x.lineWidth = 3; x.lineCap = 'round';
+    x.beginPath(); x.moveTo(px, py); x.lineTo(px - ux * bl, py - uy * bl); x.stroke();
+    x.fillStyle = 'rgba(255,255,255,.9)'; x.beginPath(); x.arc(px - ux * bl, py - uy * bl, Math.max(4, r * .28), 0, 7); x.fill();
+    // 예상 방향(점선)
+    if (a.p >= PULLMIN){
+      const L1 = r * 1.3, L2 = (R + 140 + a.p * 620) * k;
+      x.save(); x.setLineDash([Math.max(4, r * .35), Math.max(4, r * .3)]); x.strokeStyle = a.cpu ? 'rgba(255,160,140,.95)' : 'rgba(255,232,150,.95)'; x.lineWidth = Math.max(2, r * .14);
+      x.beginPath(); x.moveTo(px + ux * L1, py + uy * L1); x.lineTo(px + ux * L2, py + uy * L2); x.stroke(); x.restore();
+    }
+    // 힘 막대(돌 위쪽)
+    const bw = Math.max(46, r * 3.2), bh = Math.max(6, r * .32), bx = px - bw / 2, by = py - r * 1.6 - bh - 4;
+    const byy = by < 2 ? py + r * 1.6 + 4 : by;
+    x.fillStyle = 'rgba(20,28,64,.75)'; x.fillRect(bx - 2, byy - 2, bw + 4, bh + 4);
+    x.fillStyle = a.p < PULLMIN ? '#8A93A6' : a.p < .55 ? '#4CC37A' : a.p < .85 ? '#F2B233' : '#E5533A';
+    x.fillRect(bx, byy, bw * a.p, bh);
+  }
+  // 충돌 불꽃
+  s.fx = s.fx.filter(p => now - p.t0 < p.life);
+  x.lineCap = 'round';
+  for (const p of s.fx){
+    const q = (now - p.t0) / p.life, t2 = (now - p.t0) / 1000;
+    const [ax, ay] = sp(p.x + p.vx * t2, p.y + p.vy * t2), [bx, by] = sp(p.x + p.vx * t2 * .6, p.y + p.vy * t2 * .6);
+    x.strokeStyle = `rgba(255,${200 + Math.round(40 * (1 - q))},110,${1 - q})`; x.lineWidth = Math.max(1.5, r * .12);
+    x.beginPath(); x.moveTo(bx, by); x.lineTo(ax, ay); x.stroke();
+  }
+}
+VS.init(G);
+</script>
+</body>
+</html>
