@@ -9,7 +9,7 @@
 <meta property="og:url" content="https://kimju.kr/vs/block/">
 <meta property="og:title" content="블록 대전 — 1:1 오락실">
 <meta property="og:description" content="줄을 지워 상대 판에 방해 줄을 올려라. 방 번호 4자리로 친구와 바로 한 판.">
-<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg">
+<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg?v=2">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#2361C4">
 <link rel="stylesheet" href="../common/vs.css">
@@ -376,6 +376,7 @@ function fxShot(from, n){
 // ---------- 게임 ----------
 const inp = { l: false, r: false, dir: 0, das: 0, arr: 0, soft: false };
 const G = {
+  bg: { wide: '/vs/common/bg-neon-wide.jpg', tall: '/vs/common/bg-neon-tall.jpg' },
   id: 'block', title: '블록 대전', sub: '줄을 지워 상대 판에 방해 줄을 올려라',
   turnBased: false, countdown: true, ft: 3, cpuFt: 2,
   levels: [{ k: 'easy', name: '쉬움', desc: '천천히 둬요' }, { k: 'normal', name: '보통', desc: '제법 빨라요' }, { k: 'hard', name: '어려움', desc: '홀드까지 써요' }],

@@ -7,7 +7,7 @@
 <meta name="description" content="방울을 쏘아 같은 색 셋을 맞추고 상대에게 방해 방울을 보내는 1:1 실시간 대전. 친구와 서버 없이 바로, 컴퓨터(쉬움·보통·어려움)와도 대결.">
 <meta property="og:title" content="방울 대전 — 1:1 오락실">
 <meta property="og:description" content="방울을 쏘아 터뜨리고 방해 방울을 보내라! 방 번호 4자리로 친구와 바로 한 판.">
-<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg">
+<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg?v=2">
 <meta name="theme-color" content="#2361C4">
 <link rel="stylesheet" href="../common/vs.css">
 <style>
@@ -209,6 +209,7 @@ let dragging = false;
 function ceilEvery(ms){ if (window.__bbFast) return 3; const s = ms / 1000; return s < 40 ? 8 : s < 80 ? 6 : s < 110 ? 5 : s < 140 ? 4 : 3; }
 
 const G = {
+  bg: { wide: '/vs/common/bg-sky-wide.jpg', tall: '/vs/common/bg-sky-tall.jpg' },
   id: 'bubble', title: '방울 대전', sub: '같은 색 셋을 맞춰 터뜨리고 방해 방울을 보내라',
   turnBased: false, countdown: true, ft: 3, cpuFt: 2,
   levels: [{ k: 'easy', name: '쉬움', desc: '느긋하게 쏴요' }, { k: 'normal', name: '보통', desc: '제법 맞춰요' }, { k: 'hard', name: '어려움', desc: '빠르고 정확해요' }],

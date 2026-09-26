@@ -7,7 +7,7 @@
 <meta name="description" content="친구와 서버 없이 바로 두는 1:1 오목. 흑 3·3 금지 한국식 규칙, 컴퓨터(쉬움·보통·어려움)와도 대결.">
 <meta property="og:title" content="오목 — 1:1 오락실">
 <meta property="og:description" content="방 번호 4자리로 친구와 바로 한 판. 컴퓨터와도 대결.">
-<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg">
+<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg?v=2">
 <meta name="theme-color" content="#2361C4">
 <link rel="stylesheet" href="../common/vs.css">
 <style>
@@ -26,7 +26,10 @@
 const N = 15, EMPTY = 0, BLACK = 1, WHITE = 2, TURN_SEC = 40;
 const DIRS = [[1, 0], [0, 1], [1, 1], [1, -1]];
 let cv, cx, box = { s: 30, x: 0, y: 0 }, doBtn, timerEl;
+// 나무 판 무늬(그림이 늦게 오면 그라디언트로 먼저 그린다)
+const WOOD = new Image(); WOOD.src = '/vs/common/wood.jpg';
 const G = {
+  bg: { wide: '/vs/common/bg-hanok-wide.jpg', tall: '/vs/common/bg-hanok-tall.jpg' },
   id: 'omok', title: '오목', sub: '다섯 개를 먼저 잇는 사람이 이긴다',
   turnBased: true, countdown: false, ft: 3, cpuFt: 2,
   levels: [{ k: 'easy', name: '쉬움', desc: '초보 컴퓨터' }, { k: 'normal', name: '보통', desc: '막고 공격해요' }, { k: 'hard', name: '어려움', desc: '수를 내다봐요' }],
@@ -243,6 +246,8 @@ function draw(t){
   // 나무판
   const wood = x.createLinearGradient(0, 0, size, size); wood.addColorStop(0, '#E9C88A'); wood.addColorStop(1, '#D8AE67');
   x.fillStyle = wood; x.beginPath(); x.roundRect ? x.roundRect(0, 0, size, size, 14) : x.rect(0, 0, size, size); x.fill();
+  if (WOOD.complete && WOOD.naturalWidth){ x.save(); x.clip(); x.drawImage(WOOD, 0, 0, size, size); x.restore(); }
+  x.strokeStyle = 'rgba(90,52,18,.85)'; x.lineWidth = 3; x.beginPath(); x.roundRect ? x.roundRect(1.5, 1.5, size - 3, size - 3, 13) : x.rect(1.5, 1.5, size - 3, size - 3); x.stroke();
   x.strokeStyle = 'rgba(80,50,20,.75)'; x.lineWidth = 1;
   for (let i = 0; i < N; i++){ x.beginPath(); x.moveTo(c, c + i * c); x.lineTo(c * N, c + i * c); x.stroke(); x.beginPath(); x.moveTo(c + i * c, c); x.lineTo(c + i * c, c * N); x.stroke(); }
   x.fillStyle = 'rgba(80,50,20,.85)';

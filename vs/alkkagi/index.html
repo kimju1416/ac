@@ -7,7 +7,7 @@
 <meta name="description" content="바둑돌을 튕겨 상대 돌을 판 밖으로! 친구와 서버 없이 바로 하는 1:1 알까기. 컴퓨터(쉬움·보통·어려움)와도 대결.">
 <meta property="og:title" content="알까기 — 1:1 오락실">
 <meta property="og:description" content="방 번호 4자리로 친구와 바로 한 판. 돌을 튕겨 상대 돌을 밖으로 쳐내요.">
-<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg">
+<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg?v=2">
 <meta name="theme-color" content="#2361C4">
 <link rel="stylesheet" href="../common/vs.css">
 <style>
@@ -28,6 +28,7 @@ let cv, cx, box = { size: 300, m: 10, k: .3 }, woodCv = null, lastHitSfx = 0;
 const colorOf = i => i < PER ? BLACK : WHITE;
 
 const G = {
+  bg: { wide: '/vs/common/bg-hanok-wide.jpg', tall: '/vs/common/bg-hanok-tall.jpg' },
   id: 'alkkagi', title: '알까기', sub: '돌을 튕겨 상대 돌을 판 밖으로',
   turnBased: true, countdown: false, ft: 3, cpuFt: 2,
   levels: [{ k: 'easy', name: '쉬움', desc: '자주 빗나가요' }, { k: 'normal', name: '보통', desc: '제법 잘 맞혀요' }, { k: 'hard', name: '어려움', desc: '거의 안 놓쳐요' }],
@@ -374,6 +375,8 @@ function stone(x, px, py, r, c, ring){
   x.restore();
 }
 // 나무결 판은 크기가 바뀔 때만 한 번 그려 둔다
+// 나무 판 무늬 그림 — 도착하면 판을 다시 만든다
+const WOOD = new Image(); WOOD.onload = () => makeWood(); WOOD.src = '/vs/common/wood.jpg';
 function makeWood(){
   const { B, d } = box; if (!B) return;
   woodCv = document.createElement('canvas'); woodCv.width = Math.round(B * d); woodCv.height = Math.round(B * d);
@@ -381,6 +384,7 @@ function makeWood(){
   const g = x.createLinearGradient(0, 0, B, B); g.addColorStop(0, '#EBC98C'); g.addColorStop(.5, '#DDB472'); g.addColorStop(1, '#D3A660');
   x.fillStyle = g; x.beginPath(); x.roundRect ? x.roundRect(0, 0, B, B, B * .02) : x.rect(0, 0, B, B); x.fill();
   x.save(); x.clip();
+  if (WOOD.complete && WOOD.naturalWidth) x.drawImage(WOOD, 0, 0, B, B);
   // 나무결: 고정 씨앗으로 늘 같은 무늬
   const rnd = VS.rng(20260927);
   for (let i = 0; i < 46; i++){

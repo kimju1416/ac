@@ -9,7 +9,7 @@
 <meta property="og:url" content="https://kimju.kr/vs/">
 <meta property="og:title" content="1:1 오락실 — 친구와 바로 한 판">
 <meta property="og:description" content="말랑 대전·오목·알까기·블록 대전·방울 대전. 방 번호 4자리로 친구와 1:1, 컴퓨터와도 대결.">
-<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg">
+<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg?v=2">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
@@ -19,11 +19,20 @@
 :root{--navy:#1C2340;--pt:#E05A1E;--tx:#2E2418;--sub:#8A796A}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{min-height:100%}
+html{scroll-behavior:smooth}
 body{font-family:"Pretendard Variable",Pretendard,sans-serif;color:var(--tx);background:#3F8FE6;word-break:keep-all;-webkit-tap-highlight-color:transparent}
 #bg{position:fixed;inset:0;z-index:-1;background:#3F8FE6 center/cover no-repeat url(common/bg-wide.jpg)}
 #bg::after{content:"";position:absolute;inset:0;background:linear-gradient(rgba(10,18,48,.15),rgba(10,18,48,.6))}
 @media (orientation:portrait){#bg{background-image:url(common/bg-tall.jpg)}}
-.wrap{max-width:1080px;margin:0 auto;padding:calc(28px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))}
+.hero{position:relative;height:min(100svh,760px);min-height:520px;background:#3F8FE6 center/cover no-repeat url(common/hero-wide.jpg);display:flex;flex-direction:column;align-items:center;padding:calc(18px + env(safe-area-inset-top)) 16px 0}
+.hero::after{content:"";position:absolute;inset:auto 0 0 0;height:30%;background:linear-gradient(transparent,rgba(10,18,48,.55))}
+@media (orientation:portrait){.hero{background-image:url(common/hero-tall.jpg);height:min(100svh,900px)}}
+.hero .home{align-self:flex-start;position:relative;z-index:2}
+.hero h1{margin-top:clamp(10px,4vh,40px);position:relative;z-index:2}
+.hero .lead{position:relative;z-index:2;margin:12px 0 0}
+.cue{position:absolute;z-index:2;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);height:52px;padding:0 26px;border-radius:999px;background:#E05A1E;color:#fff;font-weight:900;font-size:17px;display:flex;align-items:center;gap:8px;text-decoration:none;box-shadow:0 5px 0 rgba(0,0,0,.28)}
+.cue svg{width:18px;height:18px;fill:none;stroke:#fff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.wrap{max-width:1080px;margin:0 auto;padding:28px 16px calc(40px + env(safe-area-inset-bottom))}
 .home{display:inline-flex;align-items:center;height:40px;padding:0 14px;border-radius:12px;background:rgba(20,28,64,.72);color:#fff;font-weight:800;font-size:14px;text-decoration:none}
 h1{margin:22px 0 6px;text-align:center;color:#fff;font-weight:900;letter-spacing:-.02em;line-height:1;font-size:clamp(44px,9vw,84px);
   text-shadow:0 5px 0 var(--navy),4px 0 0 var(--navy),-4px 0 0 var(--navy),0 -4px 0 var(--navy),3px 3px 0 var(--navy),-3px 3px 0 var(--navy),3px -3px 0 var(--navy),-3px -3px 0 var(--navy),0 12px 24px rgba(0,0,0,.35)}
@@ -32,7 +41,7 @@ h1{margin:22px 0 6px;text-align:center;color:#fff;font-weight:900;letter-spacing
 .card{display:flex;flex-direction:column;background:#FBF6F1;border-radius:18px;overflow:hidden;text-decoration:none;color:inherit;box-shadow:0 6px 0 rgba(0,0,0,.25);transition:transform .12s}
 .card:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.25)}
 @media (hover:hover){.card:hover{transform:translateY(-3px)}}
-.shot{aspect-ratio:16/9;background:#2A5FB2 center/cover no-repeat;position:relative}
+.shot{aspect-ratio:3/2;background:#2A5FB2 center/cover no-repeat;position:relative}
 .tag{position:absolute;left:10px;top:10px;background:var(--navy);color:#fff;font-size:12px;font-weight:800;padding:5px 9px;border-radius:8px}
 .tag.new{background:var(--pt)}
 .body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:6px}
@@ -49,10 +58,13 @@ h1{margin:22px 0 6px;text-align:center;color:#fff;font-weight:900;letter-spacing
 </head>
 <body>
 <div id="bg"></div>
-<div class="wrap">
+<header class="hero">
   <a class="home" href="/">‹ kimju.kr</a>
   <h1>1:1 오락실</h1>
   <p class="lead">방 번호 4자리만 알려 주면 친구와 바로 한 판.<br>설치도 가입도 없이, 컴퓨터와도 겨룰 수 있어요.</p>
+  <a class="cue" href="#games">게임 고르기<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></a>
+</header>
+<div class="wrap" id="games">
   <div class="grid" id="grid"></div>
   <section class="how">
     <h2>친구와 하는 법</h2>
@@ -66,16 +78,16 @@ h1{margin:22px 0 6px;text-align:center;color:#fff;font-weight:900;letter-spacing
 </div>
 <script>
 const GAMES = [
-  { href: '/bbu/', shot: 'shots/bbu.jpg', name: '말랑 대전', desc: '같은 색 말랑이 4개를 이어 터뜨리고, 연쇄로 상대에게 방해 말랑이를 쏟아부어요.', tags: ['실시간', '연쇄 퍼즐'] },
-  { href: '/vs/block/', shot: 'shots/block.jpg', name: '블록 대전', desc: '떨어지는 블록으로 줄을 지우면 상대 판 아래에서 방해 줄이 올라와요.', tags: ['실시간', '블록 쌓기'], isNew: true },
-  { href: '/vs/bubble/', shot: 'shots/bubble.jpg', name: '방울 대전', desc: '방울을 쏘아 같은 색 3개를 터뜨리고, 떨어뜨린 만큼 상대에게 보내요.', tags: ['실시간', '쏘기'], isNew: true },
-  { href: '/vs/alkkagi/', shot: 'shots/alkkagi.jpg', name: '알까기', desc: '내 돌을 당겼다 놓아 튕기고, 상대 돌을 판 밖으로 쳐내요.', tags: ['차례', '튕기기'], isNew: true },
-  { href: '/vs/omok/', shot: 'shots/omok.jpg', name: '오목', desc: '다섯 개를 먼저 잇는 사람이 이겨요. 흑 3·3 금지 한국식 규칙.', tags: ['차례', '두뇌'], isNew: true },
+  { href: '/bbu/', shot: 'shots/cover-bbu.jpg', name: '말랑 대전', desc: '같은 색 말랑이 4개를 이어 터뜨리고, 연쇄로 상대에게 방해 말랑이를 쏟아부어요.', tags: ['실시간', '연쇄 퍼즐'] },
+  { href: '/vs/block/', shot: 'shots/cover-block.jpg', name: '블록 대전', desc: '떨어지는 블록으로 줄을 지우면 상대 판 아래에서 방해 줄이 올라와요.', tags: ['실시간', '블록 쌓기'], isNew: true },
+  { href: '/vs/bubble/', shot: 'shots/cover-bubble.jpg', name: '방울 대전', desc: '방울을 쏘아 같은 색 3개를 터뜨리고, 떨어뜨린 만큼 상대에게 보내요.', tags: ['실시간', '쏘기'], isNew: true },
+  { href: '/vs/alkkagi/', shot: 'shots/cover-alkkagi.jpg', name: '알까기', desc: '내 돌을 당겼다 놓아 튕기고, 상대 돌을 판 밖으로 쳐내요.', tags: ['차례', '튕기기'], isNew: true },
+  { href: '/vs/omok/', shot: 'shots/cover-omok.jpg', name: '오목', desc: '다섯 개를 먼저 잇는 사람이 이겨요. 흑 3·3 금지 한국식 규칙.', tags: ['차례', '두뇌'], isNew: true },
 ];
 const grid = document.getElementById('grid');
 for (const g of GAMES){
   const a = document.createElement('a'); a.className = 'card'; a.href = g.href;
-  a.innerHTML = `<div class="shot" style="background-image:url(${g.shot}?v=1)">${g.isNew ? '<span class="tag new">NEW</span>' : ''}</div><div class="body"><b></b><p></p><div class="meta"></div></div>`;
+  a.innerHTML = `<div class="shot" style="background-image:url(${g.shot}?v=2)">${g.isNew ? '<span class="tag new">NEW</span>' : ''}</div><div class="body"><b></b><p></p><div class="meta"></div></div>`;
   a.querySelector('b').textContent = g.name; a.querySelector('p').textContent = g.desc;
   const m = a.querySelector('.meta'); for (const t of ['1:1', ...g.tags, '컴퓨터 대결']){ const s = document.createElement('span'); s.textContent = t; m.appendChild(s); }
   grid.appendChild(a);

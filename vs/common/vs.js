@@ -617,7 +617,8 @@ VS.setTurn = t => { $('vsTurn').innerHTML = t || ''; };
    G.onNet(d)    : 상대가 VS.send(d)로 보낸 것
    G.stop()      : 판 멈춤(결과·나가기), G.resize(): 화면 크기 바뀜
    G.lost()      : (선택) 내가 이미 진 상태인지 — 재연결 때 결과를 다시 보냄
-   G.drawArt(ctx2d, w, h, t): (선택) 메뉴 화면 위쪽 그림 */
+   G.drawArt(ctx2d, w, h, t): (선택) 메뉴 화면 위쪽 그림
+   G.bg          : (선택) { wide, tall } 게임 전용 배경 이미지 주소 */
 VS.init = function(G){
   S.G = G; S.prefix = 'kimjuvs-' + G.id + '-'; S.cpuFt = G.cpuFt || 2;
   document.title = G.title + ' — 1:1 오락실';
@@ -625,7 +626,9 @@ VS.init = function(G){
   G.mount($('vsStage'));
   addEventListener('resize', () => { if (S.screen === 'game' && G.resize) G.resize(); });
   // 배경
-  const pick = () => innerHeight > innerWidth ? '/vs/common/bg-tall.jpg' : '/vs/common/bg-wide.jpg';
+  // 게임마다 배경을 따로 줄 수 있다: G.bg = { wide, tall } (없으면 공용 경기장)
+  const bg = G.bg || { wide: '/vs/common/bg-wide.jpg', tall: '/vs/common/bg-tall.jpg' };
+  const pick = () => innerHeight > innerWidth ? bg.tall : bg.wide;
   let cur = ''; const setBg = () => { const u = pick(); if (u === cur) return; cur = u; const im = new Image(); im.onload = () => { document.querySelector('#vsBg .img').style.backgroundImage = `url(${u})`; }; im.src = u; };
   setBg(); addEventListener('resize', setBg);
   // 메뉴 그림
