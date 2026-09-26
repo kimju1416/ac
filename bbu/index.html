@@ -90,6 +90,10 @@ input,select{font:inherit;color:inherit}
 .tabs button.on{background:#fff;border:1px solid var(--line);color:var(--tx)}
 .help{margin-top:16px;font-size:13px;color:var(--sub);line-height:1.7}
 .help kbd{display:inline-block;min-width:22px;padding:0 5px;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;background:#fff;font:600 12px/18px inherit;text-align:center;color:var(--tx)}
+.inapp{margin:4px 0 10px;padding:12px;border-radius:var(--r1);background:#FFF4D6;border:1px solid #F0D48A;font-size:14px;line-height:1.5}
+.inapp .btn{display:block;width:100%;margin-top:8px;height:44px}
+.lobbyMsg{margin:0 0 10px;padding:12px 14px;border-radius:var(--r1);font-size:15px;font-weight:700;line-height:1.45;background:#E7F0FF;color:#1C4487}
+.lobbyMsg.err{background:#F9E8E6;color:#C0392B}
 .status{font-size:13px;color:var(--sub);margin-top:10px;min-height:18px}
 .status.err{color:var(--err)}
 .code{font-size:32px;font-weight:800;letter-spacing:.12em;color:var(--pt)}
@@ -320,6 +324,8 @@ body.port .bar .sc b{font-size:12px}
   <div class="panel">
     <button class="back" id="lobbyBack">‹ 처음으로</button>
     <div class="brand"><h1>친구와 대전</h1><span>방 번호 4자리로 1:1</span></div>
+    <div class="inapp hide" id="inappTip">카카오톡 안에서 열렸어요. 친구 대전은 <b>크롬·사파리</b>에서 더 잘 됩니다.<button class="btn pri" id="btnExt">크롬·사파리로 열기</button></div>
+    <div class="lobbyMsg hide" id="lobbyMsg"></div>
     <label class="lbl" for="nick">닉네임</label>
     <input id="nick" class="inp" maxlength="10" placeholder="10자 이내" autocomplete="off">
     <div class="tabs"><button id="tabList" class="on">방 들어가기</button><button id="tabMake">방 만들기</button></div>
@@ -337,7 +343,7 @@ body.port .bar .sc b{font-size:12px}
       <input id="roomPw" class="inp" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="예: 1234" autocomplete="off">
       <label class="lbl">선승 (먼저 이기면 끝)</label>
       <div class="seg" id="ftSeg"></div>
-      <button id="btnMake" class="btn pri full" style="margin-top:16px">방 만들기</button>
+      <button id="btnMake" class="btn pri full" style="margin-top:16px">방 열기</button>
       <p class="help">방을 만든 사람의 기기가 경기를 진행합니다. 경기가 끝날 때까지 이 화면을 켜 두세요.</p>
     </div>
 
@@ -1037,7 +1043,10 @@ function show(id){ for (const s of ['splash', 'home', 'soloSel', 'guide', 'lobby
   document.body.classList.toggle('ingame', id === 'game');
   if (id !== 'splash') bgmPlay(id === 'game' ? 'battle' : 'menu');
   if (id === 'game') layout(); }
-function status(el, t, err){ el.textContent = t || ''; el.classList.toggle('err', !!err); }
+function status(el, t, err){
+  el.textContent = t || ''; el.classList.toggle('err', !!err);
+  if (el.id === 'lobbyStatus'){ const m = $('lobbyMsg'); if (m){ m.textContent = t || ''; m.classList.toggle('err', !!err); m.classList.toggle('hide', !t); } }
+}
 function note(t, ms){ const n = $('note'); n.textContent = t; n.classList.remove('hide'); clearTimeout(note._t); if (ms) note._t = setTimeout(() => n.classList.add('hide'), ms); }
 function hideNote(){ $('note').classList.add('hide'); }
 
@@ -1051,7 +1060,7 @@ function seg(el, cur, onPick){
 seg($('ftSeg'), makeFt, function pick(v){ makeFt = v; seg($('ftSeg'), v, pick); });
 
 $('tabList').onclick = () => { $('tabList').classList.add('on'); $('tabMake').classList.remove('on'); $('paneList').classList.remove('hide'); $('paneMake').classList.add('hide'); };
-$('tabMake').onclick = () => { $('tabMake').classList.add('on'); $('tabList').classList.remove('on'); $('paneMake').classList.remove('hide'); $('paneList').classList.add('hide'); };
+$('tabMake').onclick = () => { $('tabMake').classList.add('on'); $('tabList').classList.remove('on'); $('paneMake').classList.remove('hide'); $('paneList').classList.add('hide'); setTimeout(() => { try { $('btnMake').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch {} }, 60); };
 
 class FakeWSS { constructor(){ this.h = {}; this.clients = new Set(); } on(e, f){ (this.h[e] = this.h[e] || []).push(f); } emit(e, ...a){ (this.h[e] || []).forEach(f => f(...a)); } }
 class FakeSock {
@@ -1229,6 +1238,10 @@ function onOppSnap(m){
   if (prev && cnt(m.f) - cnt(prev.f) >= 6) shake(oppBoardEl().parentElement);
 }
 async function joinRoom(code, pw){
+  const jb = $('btnJoin'); if (jb.disabled) return; jb.disabled = true; jb.textContent = '연결 중…';
+  try { await joinRoom2(code, pw); } finally { jb.disabled = false; jb.textContent = '입장'; }
+}
+async function joinRoom2(code, pw){
   ac(); status($('lobbyStatus'), '방장 기기에 연결하는 중…');
   let err = null;
   for (let i = 0; i < 4; i++){
@@ -1236,7 +1249,7 @@ async function joinRoom(code, pw){
     catch (e){ err = e; if (e.message !== 'noroom') break; status($('lobbyStatus'), '방을 찾는 중… (' + (i + 1) + '/4) 방장이 화면을 켜 두었는지 확인해 주세요'); await new Promise(r => setTimeout(r, 2500)); }
   }
   if (err){ const e = err;
-    status($('lobbyStatus'), e.message === 'noroom' ? '그 방이 없어요. 방 번호를 확인해 주세요(방장이 화면을 켜 두어야 해요).' : '연결하지 못했어요. 다른 와이파이나 데이터로 바꿔 다시 해 보세요.', true);
+    status($('lobbyStatus'), e.message === 'noroom' ? '그 방이 없어요. 방 번호를 확인해 주세요(방장이 화면을 켜 두어야 해요).' : e.message === 'browser-incompatible' || typeof Peer === 'undefined' ? netErrMsg(e) : '연결하지 못했어요. 다른 와이파이나 데이터로 바꿔 다시 해 보세요.', true);
     return;
   }
   roomCode = code; send({ t:'join', code, pw: pw || '', name: nick() });
@@ -1244,11 +1257,22 @@ async function joinRoom(code, pw){
 $('btnJoin').onclick = () => { const c = $('codeIn').value.trim(); if (!/^[0-9]{4}$/.test(c)) return status($('lobbyStatus'), '방 번호 4자리를 넣어 주세요.', true); joinRoom(c, $('pwIn').value.trim()); };
 $('pwIn').addEventListener('keydown', e => { if (e.key === 'Enter') $('btnJoin').click(); });
 $('codeIn').addEventListener('keydown', e => { if (e.key === 'Enter') $('btnJoin').click(); });
+function netErrMsg(e){
+  const t = e && (e.type || e.message) || '';
+  if (typeof Peer === 'undefined') return '연결 도구를 불러오지 못했어요. 인터넷 연결을 확인하고 페이지를 새로 열어 주세요.';
+  if (t === 'browser-incompatible') return '이 브라우저에서는 친구 대전이 안 돼요. 크롬이나 사파리로 열어 주세요.';
+  if (t === 'timeout') return '연결이 너무 오래 걸려요. 와이파이나 데이터를 확인하고 다시 눌러 주세요.';
+  return '방을 열지 못했어요(' + t + '). 인터넷 연결을 확인하고 다시 눌러 주세요.';
+}
 $('btnMake').onclick = async () => {
+  const btn = $('btnMake'); if (btn.disabled) return;
   ac(); const pw = $('roomPw').value.trim();
   if (pw && !/^[0-9]{4}$/.test(pw)) return status($('lobbyStatus'), '비밀번호는 숫자 4자리로 넣어 주세요.', true);
-  status($('lobbyStatus'), '방을 여는 중…');
-  try { await hostStart(); } catch { return status($('lobbyStatus'), '방을 열지 못했어요. 인터넷 연결을 확인해 주세요.', true); }
+  btn.disabled = true; btn.textContent = '방을 여는 중…';
+  status($('lobbyStatus'), '방을 여는 중… 잠시만요');
+  try { await hostStart(); }
+  catch (e){ btn.disabled = false; btn.textContent = '방 열기'; return status($('lobbyStatus'), netErrMsg(e), true); }
+  btn.disabled = false; btn.textContent = '방 열기';
   status($('lobbyStatus'), '');
   roomCode = 'new'; send({ t:'create', name: nick(), room: $('roomName').value.trim() || (nick() + '의 방'), ft: makeFt, pw });
 };
@@ -1760,6 +1784,22 @@ function loadBg(){
 }
 loadBg(); addEventListener('resize', loadBg);
 if (new URLSearchParams(location.search).get('room') && !roomCode) show('lobby'); else show('splash');
+// 카카오톡 안 브라우저면 바깥 브라우저로 여는 버튼을 보여 준다
+if (/KAKAOTALK/i.test(navigator.userAgent)){
+  $('inappTip').classList.remove('hide');
+  $('btnExt').onclick = () => { location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href); };
+}
+// 새 버전 확인: 폰에 옛 화면이 남아 있지 않게, 화면으로 돌아올 때·2분마다 확인해서 경기 중이 아니면 새로 고친다
+const APP_VER = '2026-09-27b';
+function checkVer(){
+  if (mode === 'game' || mode === 'waitRoom') return;
+  fetch(location.pathname + '?v=' + Date.now(), { cache: 'no-store' }).then(r => r.text()).then(tx => {
+    const m = tx.match(/const APP_VER = '([^']+)'/);
+    if (m && m[1] !== APP_VER && mode !== 'game' && mode !== 'waitRoom') location.reload();
+  }).catch(() => {});
+}
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') checkVer(); });
+setInterval(checkVer, 120000);
 requestAnimationFrame(frame);
 {
   const q = new URLSearchParams(location.search).get('room');
