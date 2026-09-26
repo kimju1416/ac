@@ -417,6 +417,7 @@ const apps = [
   { name:'AI 사용량 위젯', shot:'aiwidget',              desc:'Claude·Codex·Gemini 세 가지 AI 서비스의 사용량을 바탕화면에서 한눈에 확인하는 윈도우 전용 데스크톱 위젯. exe 설치 후 바로 사용 가능', cat:'기타 자료', badge:'exe',    date:'26.07.26', url:'https://github.com/kimju1416/ai-usage-widget/releases/latest/download/AIUsageWidget-Setup.exe' },
   { name:'공무원·교사 연금 비교 시뮬레이터', desc:'공무원연금과 국민연금을 조건별로 비교해 예상 수령액·납입액을 시뮬레이션하는 교사 전용 계산기', cat:'기타 자료', badge:'doc',    date:'26.07.26', url:'https://kimju1416.github.io/pension/' },
   // 8. 오락실 — 수업·쉬는시간에 바로 켜는 게임
+  { name:'말랑 대전', shot:'bbu', sub:'↳ 1:1 연쇄 퍼즐 대결 · 컴퓨터·친구 대전', desc:'같은 색 넷을 이어 터뜨리고, 연쇄로 방해뿌요를 보내 상대 판을 덮는 1:1 퍼즐 대전. 컴퓨터(쉬움·보통·어려움)와 2선승 대결하거나, 방 번호 4자리로 친구와 서버 없이 바로 연결해 겨룬다. 폰·PC 모두, 설치·로그인 없이 접속만 하면 시작', cat:'오락실', badge:'game', date:'26.09.27', url:'https://kimju.kr/bbu' },
   // Class Arcade: 서버 문제 해결 전까지 숨김 (2026-08-19) — 재개 시 아래 주석만 해제
   // { name:'Class Arcade (교실 아케이드)', shot:'arcade', sub:'↳ 실시간 멀티플레이 학급 게임', desc:'TV에 뜬 QR을 학생들이 폰으로 찍고 한 방에 모여 다 같이 즐기는 실시간 학급 게임. 레이싱·설원 러너·블록 배틀·퀴즈쇼·그림 퀴즈·사이먼 가라사대 등 서바이벌·점수 경쟁·퀴즈·기억력·복불복 게임이 계속 늘어나는 중, 한 반 40명까지 동시 참여. 설치·로그인 없이 접속만 하면 시작', cat:'오락실', badge:'game', date:'26.08.13', url:'https://game.kimju.kr/' },
   { name:'AI 모션 트레이닝 센터', sub:'↳ 카메라 자세인식 · 활동 15종', desc:'폰 카메라가 관절을 인식해 스쿼트·팔벌려뛰기를 자동으로 세어 주고, 두더지 잡기·풍선 팡팡·구름 계단 오르기 등 온몸으로 하는 미니게임 12종과 반응속도 훈련·자세 분석 처방까지 담은 체육 수업용 모션 아케이드. 영상은 기기 안에서만 처리', cat:'오락실', badge:'game', date:'26.07.16', url:'https://kimju1416.github.io/squat-coach/' },
@@ -433,7 +434,7 @@ const apps = [
   { name:'kimju.zip A/S 챗봇',          desc:'kimju.zip 앱 사용 중 오류나 궁금한 점을 AI 챗봇에게 바로 물어볼 수 있는 지원 창구',   cat:'A/S',        badge:'as',     date:'26.04.12', url:'https://kimju.kr/help' },
 ];
 
-const SHOTS = new Set(['aiwidget','arcade','archive','baseball','card','chekim','cho','classassign','classmemo','classtube','cmass','codex','consult','cowork','design','edu1','gb-edu-map','gb-edujob','gbe-seosik','gpt2','guide11','hakpok-case','hakpok-report','kimju-guide','kimjuzip','lostfound','maeumjido-cho','maeumjido-jung','motion-pulse-arcade','notice-cho','notice-jung','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','paps','pe-textbook','pension','saemcall','safe-school-game','safety','school-civildefense-drill','school-earthquake-drill','school-fire-drill','schoolrule','seat','sono','specialroom','sportsmap','squat-coach','ssamzip','td2','su333','teammix','timetable-swap','training','trip-escape','trip-escape-teen','uni1','vibev','youcall','youcall-board']);
+const SHOTS = new Set(['aiwidget','bbu','arcade','archive','baseball','card','chekim','cho','classassign','classmemo','classtube','cmass','codex','consult','cowork','design','edu1','gb-edu-map','gb-edujob','gbe-seosik','gpt2','guide11','hakpok-case','hakpok-report','kimju-guide','kimjuzip','lostfound','maeumjido-cho','maeumjido-jung','motion-pulse-arcade','notice-cho','notice-jung','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','paps','pe-textbook','pension','saemcall','safe-school-game','safety','school-civildefense-drill','school-earthquake-drill','school-fire-drill','schoolrule','seat','sono','specialroom','sportsmap','squat-coach','ssamzip','td2','su333','teammix','timetable-swap','training','trip-escape','trip-escape-teen','uni1','vibev','youcall','youcall-board']);
 
 /* 카드용 한 줄 소개 — 앱 이름이 바뀌면 여기 열쇠도 같이 바꾼다 */
 const ONE = {
