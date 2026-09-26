@@ -102,6 +102,28 @@ input,select{font:inherit;color:inherit}
 .slot.me{border-color:var(--pt)}
 .slot.wait b{color:var(--sub);font-weight:500}
 
+/* ---------- 메인 화면 ---------- */
+.home{max-width:460px;text-align:center;padding:22px 20px 18px}
+.home canvas#homeArt{display:block;width:100%;height:92px;margin:-4px 0 4px}
+.home h1{font-size:40px;font-weight:900;letter-spacing:-.03em;line-height:1.1}
+.home .tag{font-size:14px;color:var(--sub);margin-top:6px}
+.mcard{margin-top:18px;border:1px solid var(--line);border-radius:var(--r2);background:#fff;padding:16px;text-align:left}
+.mcard h2{font-size:17px;font-weight:800;margin-bottom:4px}
+.mcard p{font-size:13px;color:var(--sub);margin-bottom:12px;line-height:1.5}
+.mrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.linkbtn{margin-top:14px;font-size:14px;font-weight:700;color:var(--pt);padding:8px 10px}
+.back{display:inline-flex;align-items:center;gap:4px;font-size:14px;font-weight:700;color:var(--sub);padding:6px 4px;margin:-6px 0 6px -4px}
+/* 사용법 */
+.guide h2{font-size:17px;font-weight:800;margin:20px 0 8px}
+.guide h2:first-of-type{margin-top:4px}
+.guide p,.guide li{font-size:14px;line-height:1.65;color:var(--tx)}
+.guide ul{padding-left:18px}
+.guide .ctl{display:grid;grid-template-columns:auto 1fr;gap:6px 12px;align-items:center;font-size:14px}
+.guide .ctl kbd{display:inline-block;min-width:26px;padding:1px 6px;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;background:#fff;font:700 13px/22px inherit;text-align:center}
+.gfig{display:flex;gap:12px;align-items:center;margin:8px 0 4px;padding:10px;border:1px solid var(--line);border-radius:var(--r1);background:#fff}
+.gfig canvas{flex:none;border-radius:6px}
+.gfig span{font-size:13px;color:var(--sub);line-height:1.55}
+
 /* ---------- 경기 화면 ---------- */
 #game{position:fixed;inset:0;display:flex;flex-direction:column}
 .arena{flex:1;display:flex;align-items:center;justify-content:center;gap:var(--gap,14px);min-height:0;padding:10px 10px 0}
@@ -113,8 +135,7 @@ input,select{font:inherit;color:inherit}
 .scorebox{margin-top:6px;font:800 var(--sfs,26px)/1 "Pretendard Variable",sans-serif;color:#fff;letter-spacing:.06em;font-variant-numeric:tabular-nums;text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 6px rgba(0,0,0,.3)}
 .mid{display:flex;flex-direction:column;align-items:center;gap:10px}
 .nexts{display:flex;gap:8px;align-items:flex-start}
-.nx{border-radius:8px;padding:4px;background:linear-gradient(#2F7BE5,#2361C4)}
-.nx.o{background:linear-gradient(#E8593F,#C8402C)}
+.nx{background:none;padding:0}
 .nx canvas{display:block}
 .midinfo{background:rgba(20,28,50,.72);color:#fff;border-radius:8px;padding:8px 12px;text-align:center;font-size:13px;line-height:1.5;min-width:110px}
 .midinfo b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
@@ -183,10 +204,64 @@ body.port .bar .sc b{font-size:12px}
 <body>
 <div id="bgArt"><div class="rays"></div><div class="crowd"></div><div class="rail"></div><div class="img" id="bgImg"></div></div>
 
+<!-- 메인 -->
+<section id="home" class="screen">
+  <div class="panel home">
+    <canvas id="homeArt"></canvas>
+    <h1>말랑 대전</h1>
+    <div class="tag">같은 색 넷을 이어 터뜨리고, 연쇄로 상대 판을 덮어라</div>
+    <div class="mcard">
+      <h2>혼자 하기 · 컴퓨터와 대전</h2>
+      <p>컴퓨터와 2선승 대결. 연쇄로 방해뿌요를 주고받습니다.</p>
+      <div class="seg" id="lvSeg"></div>
+      <button id="btnCpu" class="btn pri full" style="margin-top:10px">대전 시작</button>
+    </div>
+    <div class="mrow">
+      <button id="btnOnline" class="btn sec">친구와 대전</button>
+      <button id="btnSolo" class="btn sec">연습 모드</button>
+    </div>
+    <button id="btnGuide" class="linkbtn">사용법 보기</button>
+  </div>
+</section>
+
+<!-- 사용법 -->
+<section id="guide" class="screen hide">
+  <div class="panel guide">
+    <button class="back" id="guideBack">‹ 처음으로</button>
+    <h2>이렇게 터집니다</h2>
+    <div class="gfig"><canvas id="gf1"></canvas><span>같은 색 뿌요가 가로·세로로 <b>4개 이상</b> 이어지면 터집니다.</span></div>
+    <div class="gfig"><canvas id="gf2"></canvas><span>터진 자리에 위의 뿌요가 떨어져 또 4개가 이어지면 <b>연쇄</b>. 연쇄가 길수록 공격이 세집니다.</span></div>
+    <h2>공격과 방어</h2>
+    <ul>
+      <li>연쇄를 하면 상대 판 위에 <b>방해뿌요</b>(회색) 예고가 쌓이고, 상대가 뿌요를 놓으면 떨어집니다.</li>
+      <li>내게 예고가 쌓였을 때 연쇄하면 그만큼 지우고 남는 만큼 되돌려 보냅니다(<b>상쇄</b>).</li>
+      <li>방해뿌요는 옆에서 뿌요가 터질 때 같이 사라집니다.</li>
+      <li>판을 전부 비우면(<b>전부 지움</b>) 다음 연쇄에 방해뿌요 30개가 더 붙습니다.</li>
+      <li>96초가 지나면 같은 연쇄로 보내는 방해뿌요가 점점 늘어납니다.</li>
+    </ul>
+    <div class="gfig"><canvas id="gf3"></canvas><span>왼쪽에서 셋째 줄 맨 위 <b style="color:#E8413A">✕</b> 칸까지 쌓이면 집니다.</span></div>
+    <h2>조작</h2>
+    <div class="ctl">
+      <span><kbd>←</kbd> <kbd>→</kbd></span><span>좌우 이동 (누르고 있으면 계속)</span>
+      <span><kbd>↓</kbd></span><span>빠르게 내리기</span>
+      <span><kbd>Z</kbd> <kbd>X</kbd></span><span>왼쪽 · 오른쪽 회전</span>
+      <span><kbd>↑</kbd></span><span>한 번에 떨구기 (방에서 켰을 때만)</span>
+    </div>
+    <p style="margin-top:8px">양옆이 막혀 회전이 안 되면 회전을 <b>빠르게 두 번</b> 눌러 위아래를 뒤집습니다(퀵턴). 폰에서는 화면 아래 버튼으로 조작하고, 이동 버튼은 손가락을 떼지 않고 미끄러뜨려도 됩니다.</p>
+    <h2>친구와 대전</h2>
+    <ul>
+      <li>«친구와 대전»에서 방을 만들면 <b>방 번호 4자리</b>가 나옵니다. 번호나 «주소 복사»로 친구를 부르세요.</li>
+      <li>비밀번호(숫자 4자리)를 걸면 아는 사람만 들어옵니다.</li>
+      <li>둘 다 «준비»를 누르면 시작. 먼저 정한 판수를 이기면 승리입니다.</li>
+    </ul>
+  </div>
+</section>
+
 <!-- 로비 -->
-<section id="lobby" class="screen">
+<section id="lobby" class="screen hide">
   <div class="panel">
-    <div class="brand"><h1>말랑 대전</h1><span>1:1 연쇄 퍼즐 대결</span></div>
+    <button class="back" id="lobbyBack">‹ 처음으로</button>
+    <div class="brand"><h1>친구와 대전</h1><span>방 번호 4자리로 1:1</span></div>
     <label class="lbl" for="nick">닉네임</label>
     <input id="nick" class="inp" maxlength="10" placeholder="10자 이내" autocomplete="off">
     <div class="tabs"><button id="tabList" class="on">방 목록</button><button id="tabMake">방 만들기</button></div>
@@ -208,11 +283,6 @@ body.port .bar .sc b{font-size:12px}
     </div>
 
     <div class="status" id="lobbyStatus"></div>
-    <button id="btnSolo" class="btn sec full" style="margin-top:8px">혼자 연습하기</button>
-    <p class="help">
-      <kbd>←</kbd><kbd>→</kbd> 이동 · <kbd>↓</kbd> 빠르게 내리기 · <kbd>Z</kbd> 왼쪽 회전 · <kbd>X</kbd> 오른쪽 회전 · <kbd>↑</kbd> 한 번에 떨구기(방에서 켰을 때)<br>
-      같은 색 4개를 이으면 터집니다. 연쇄가 길수록 상대 판에 방해뿌요가 많이 떨어집니다. 가운데 줄 맨 위(✕)까지 쌓이면 집니다.
-    </p>
   </div>
 </section>
 
@@ -560,6 +630,7 @@ class Game {
 }
 
 // ================= 그리기 =================
+if (!CanvasRenderingContext2D.prototype.roundRect) CanvasRenderingContext2D.prototype.roundRect = function(x, y, w, h, r){ r = Math.min(r, w / 2, h / 2); this.moveTo(x + r, y); this.arcTo(x + w, y, x + w, y + h, r); this.arcTo(x + w, y + h, x, y + h, r); this.arcTo(x, y + h, x, y, r); this.arcTo(x, y, x + w, y, r); this.closePath(); };
 const spriteCache = new Map();
 function puyoSprite(c, s, flash, blink){
   const key = c + '|' + s + '|' + (flash ? 1 : 0) + (blink ? 'b' : '');
@@ -696,16 +767,22 @@ function drawTray(cv, s, n, pending){
     x.globalAlpha = 1;
   });
 }
-function drawNext(cv, s, n){
-  const w = s*1.1, h = s*3.6, x = setupCanvas(cv, w, h);
-  x.fillStyle = '#16213F'; x.fillRect(0, 0, w, h);
+// 원작처럼 NEXT(큰 쌍)와 그다음(작은 쌍)을 따로 떨어진 칸에 계단식으로. mirror=상대 쪽(좌우 뒤집기)
+function drawNext(cv, s, n, mirror){
+  const s2 = s * 0.74, pad = Math.max(3, s * 0.1), lw = Math.max(2, s * 0.07);
+  const b1 = { w: s + pad * 2, h: s * 2 + pad * 2 }, b2 = { w: s2 + pad * 2, h: s2 * 2 + pad * 2 };
+  const w = b1.w + b2.w * 0.62 + 2, h = b1.h * 0.55 + b2.h + 2;
+  const x = setupCanvas(cv, w, h); x.clearRect(0, 0, w, h);
+  const col = mirror ? '#E8593F' : '#2F7BE5';
+  const box = (bx, by, bw, bh) => { x.fillStyle = '#16213F'; x.strokeStyle = col; x.lineWidth = lw;
+    x.beginPath(); x.roundRect(bx + lw / 2, by + lw / 2, bw - lw, bh - lw, s * 0.18); x.fill(); x.stroke(); };
+  const x1 = mirror ? w - b1.w - 1 : 1, x2 = mirror ? 1 : w - b2.w - 1, y1 = 1, y2 = h - b2.h - 1;
+  box(x2, y2, b2.w, b2.h); box(x1, y1, b1.w, b1.h);     // 작은 칸을 먼저 그려 큰 칸이 위로 겹치게
   if (!n || n.length < 4) return;
-  const q = s * 0.05;
-  x.drawImage(puyoSprite(n[1], s, false), q, q, s, s);
-  x.drawImage(puyoSprite(n[0], s, false), q, q + s, s, s);
-  const s2 = s * 0.72, ox = (w - s2) / 2;
-  x.drawImage(puyoSprite(n[3], s2, false), ox, s*2.1, s2, s2);
-  x.drawImage(puyoSprite(n[2], s2, false), ox, s*2.1 + s2, s2, s2);
+  x.drawImage(puyoSprite(n[1], s, false), x1 + pad, y1 + pad, s, s);
+  x.drawImage(puyoSprite(n[0], s, false), x1 + pad, y1 + pad + s, s, s);
+  x.drawImage(puyoSprite(n[3], s2, false), x2 + pad, y2 + pad, s2, s2);
+  x.drawImage(puyoSprite(n[2], s2, false), x2 + pad, y2 + pad + s2, s2, s2);
 }
 // ---------- 효과 층(조각·공격 구슬) — 화면 전체에 겹친 캔버스 ----------
 const FX = { parts: [], orbs: [] };
@@ -791,7 +868,9 @@ function tone(freq, dur, type, vol, slide){
   o.connect(g); g.connect(a.destination); o.start(t); o.stop(t + dur + 0.02);
 }
 let lastMove = 0;
+let SFX_QUIET = false;
 function sfx(k, n){
+  if (SFX_QUIET && k !== 'pop' && k !== 'garbage' && k !== 'dead') return;
   if (!AC) return;
   if (k === 'move'){ const t = performance.now(); if (t - lastMove < 30) return; lastMove = t; tone(520, 0.04, 'square', 0.025); }
   else if (k === 'rot') tone(760, 0.05, 'triangle', 0.05, 900);
@@ -831,7 +910,7 @@ const store = { get(k){ try { return localStorage.getItem(k); } catch { return n
 const WS_URL = (location.hostname === 'kimju.kr' || location.hostname.endsWith('.kimju.kr') || location.hostname.endsWith('github.io')) ? 'wss://game.kimju.kr/mallang-7xq4/ws'
   : (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + location.pathname.replace(/[^/]*$/, '') + 'ws';
 let ws = null, wsOk = false, myId = null, token = null, roomCode = null, room = null;
-let game = null, oppSnap = null, oppDead = false, mode = 'lobby', solo = false, reconnectT = null, lastSnapAt = 0;
+let game = null, oppSnap = null, oppDead = false, mode = 'home', solo = false, reconnectT = null, lastSnapAt = 0;
 let makeFt = 3;
 let curRound = 0, roundEnded = false, resultOpen = false;
 const sess = {
@@ -846,7 +925,7 @@ for (const id of ['codeIn', 'pwIn', 'roomPw']) $(id).addEventListener('input', e
 $('nick').addEventListener('input', () => store.set('ml_nick', $('nick').value.trim()));
 const nick = () => ($('nick').value.trim() || '플레이어').slice(0, 10);
 
-function show(id){ for (const s of ['lobby', 'waitRoom', 'game']) $(s).classList.toggle('hide', s !== id); mode = id; if (id === 'game') layout(); keepAwake(id !== 'lobby'); }
+function show(id){ for (const s of ['home', 'guide', 'lobby', 'waitRoom', 'game']) $(s).classList.toggle('hide', s !== id); mode = id; if (id === 'game') layout(); keepAwake(id === 'game' || id === 'waitRoom'); if (id === 'guide') drawGuide(); }
 function status(el, t, err){ el.textContent = t || ''; el.classList.toggle('err', !!err); }
 function note(t, ms){ const n = $('note'); n.textContent = t; n.classList.remove('hide'); clearTimeout(note._t); if (ms) note._t = setTimeout(() => n.classList.add('hide'), ms); }
 function hideNote(){ $('note').classList.add('hide'); }
@@ -870,7 +949,7 @@ function connect(){
     if (roomCode && token) ws.send(JSON.stringify({ t:'resume', code: roomCode, token, round: curRound, ended: roundEnded }));
     else status($('lobbyStatus'), '');
     const q = new URLSearchParams(location.search).get('room');
-    if (q && !roomCode && mode === 'lobby'){ $('codeIn').value = q.replace(/[^0-9]/g, '').slice(0, 4); }
+    if (q && !roomCode && (mode === 'lobby' || mode === 'home')){ $('codeIn').value = q.replace(/[^0-9]/g, '').slice(0, 4); if (mode === 'home') show('lobby'); }
   };
   ws.onmessage = (e) => { let m; try { m = JSON.parse(e.data); } catch { return; } onMsg(m); };
   ws.onclose = () => { wsOk = false; if (roomCode && mode === 'game' && !solo) note('연결을 다시 잇는 중… 내 판은 잠시 멈춥니다'); scheduleReconnect(); };
@@ -962,6 +1041,10 @@ $('btnMake').onclick = () => {
   if (pw && !/^[0-9]{4}$/.test(pw)) return status($('lobbyStatus'), '비밀번호는 숫자 4자리로 넣어 주세요.', true);
   roomCode = 'new'; send({ t:'create', name: nick(), room: $('roomName').value.trim() || (nick() + '의 방'), ft: makeFt, pw });
 };
+$('lobbyBack').onclick = () => show('home');
+$('guideBack').onclick = () => show('home');
+$('btnGuide').onclick = () => show('guide');
+$('btnOnline').onclick = () => { ac(); show('lobby'); };
 $('btnLeave').onclick = () => { send({ t:'leave' }); roomCode = null; token = null; room = null; sess.clear(); resultOpen = false; curRound = 0; stopGame(); $('ov').classList.add('hide'); hideNote(); show('lobby'); };
 $('btnReady').onclick = () => { ac(); const me = room && room.players.find(p => p.id === myId); send({ t:'ready', v: !(me && me.ready) }); };
 $('btnCopy').onclick = async () => {
@@ -1019,7 +1102,7 @@ setWins(0, 0, 3);
 let countT = 0, countLeft = 0, roundLive = false, oppDeadAt = 0;
 function startRound(m){
   curRound = m.round; roundEnded = false; resultOpen = false; hideNote();
-  solo = false; oppSnap = null; oppDead = false; oppDeadAt = 0; oppPopPt = null; FX.orbs = []; FX.parts = [];
+  solo = false; vsCpu = false; cpu = null; oppSnap = null; oppDead = false; oppDeadAt = 0; oppPopPt = null; FX.orbs = []; FX.parts = [];
   show('game'); $('sideOp').classList.remove('hide'); $('nxOpW').classList.remove('hide'); $('scBox').classList.remove('hide'); $('pnOp').classList.remove('hide');
   document.body.classList.remove('solo');
   newGame(m.seed, m.colors, false); game.quickDrop = !!m.qd;
@@ -1030,11 +1113,15 @@ function newGame(seed, colors, isSolo){
   game = new Game(seed, colors, {
     chain(ch, pts, lx, top){ buzz(Math.min(60, 12 + ch * 8)); myPopPt = cellPt($('bdMe'), cellS, lx, top); chainPop($('wrapMe'), cellS, ch + '연쇄!', lx, top, ch >= 5); $('miVal').textContent = ch; },
     allClear(){ chainPop($('wrapMe'), cellS, '전부 지움!', 2.5, 7, true, true); sfx('allclear'); },
-    attack(n, done, ch){ if (!isSolo) send({ t:'atk', n, done, ch, round: curRound }); if (n > 0 && !isSolo) orb(myPopPt, midPt(oppTrayEl()), n >= 30, '#7FD3FF'); },
+    attack(n, done, ch){
+      if (vsCpu){ if (cpu) cpu.receive(n, done); }
+      else if (!isSolo) send({ t:'atk', n, done, ch, round: curRound });
+      if (n > 0 && !isSolo) orb(myPopPt, midPt(oppTrayEl()), n >= 30, '#7FD3FF');
+    },
     offset(n){ orb(myPopPt, midPt($('trayMe')), n >= 30, '#FFE45C'); },
     popped(cells){ burst($('bdMe'), cellS, cells); },
     garbage(n){ if (n >= 6){ shake($('wrapMe')); buzz(45); } },
-    dead(){ buzz([70, 50, 140]); if (!isSolo) { sendSnap(true); send({ t:'dead', round: curRound }); } else soloOver(); },
+    dead(){ buzz([70, 50, 140]); if (vsCpu) cpuRoundEnd(false); else if (!isSolo) { sendSnap(true); send({ t:'dead', round: curRound }); } else soloOver(); },
   });
   $('sideMe').classList.remove('dead'); $('sideOp').classList.remove('dead'); $('mini').classList.remove('dead');
   $('miLabel').textContent = '연쇄'; $('miVal').textContent = '0';
@@ -1044,8 +1131,9 @@ function countdown(ms){
   countLeft = Math.ceil(ms / 1000);
   const ov = $('ov'); ov.classList.remove('hide');
   const tick = () => {
-    if (countLeft <= 0){ ov.classList.add('hide'); ov.innerHTML = ''; sfx('go'); game.start(); roundLive = true; return; }
-    ov.innerHTML = `<div class="big">${countLeft}</div><div class="msg">${room && !solo ? '라운드 ' + room.round : '연습'}</div>`;
+    if (countLeft <= 0){ ov.classList.add('hide'); ov.innerHTML = ''; sfx('go'); game.start(); if (vsCpu && cpu) cpu.start(); roundLive = true; return; }
+    const lbl = vsCpu ? '라운드 ' + (cpuMatch.me + cpuMatch.cpu + 1) + ' · 컴퓨터(' + CPU_LV[cpuMatch.lv].name + ')' : room && !solo ? '라운드 ' + room.round : '연습';
+    ov.innerHTML = `<div class="big">${countLeft}</div><div class="msg">${lbl}</div>`;
     sfx('count'); countLeft--; countT = setTimeout(tick, 1000);
   };
   clearTimeout(countT); tick();
@@ -1080,13 +1168,13 @@ function onForfeit(m){
   hideNote();
 }
 $('btnQuit').onclick = () => {
-  if (solo){ stopGame(); $('ov').classList.add('hide'); show('lobby'); return; }
+  if (solo || vsCpu){ stopGame(); clearTimeout(cpuNextT); vsCpu = false; cpu = null; $('ov').classList.add('hide'); show('home'); return; }
   if (roundLive && !confirm('경기 중에 나가면 집니다. 나갈까요?')) return;
   stopGame(); $('ov').classList.add('hide'); $('btnLeave').click();
 };
 
 // 혼자 연습
-$('btnSolo').onclick = () => { ac(); solo = true; startSolo(); };
+$('btnSolo').onclick = () => { ac(); solo = true; vsCpu = false; cpu = null; startSolo(); };
 function startSolo(){
   show('game'); document.body.classList.add('solo');
   $('sideOp').classList.add('hide'); $('nxOpW').classList.add('hide'); $('scBox').classList.add('hide'); $('pnOp').classList.add('hide');
@@ -1099,9 +1187,125 @@ function soloOver(){
   roundLive = false;
   const ov = $('ov'); ov.classList.remove('hide');
   ov.innerHTML = `<div class="big">끝</div><div class="msg">점수 ${game.score.toLocaleString()} · 최대 ${game.maxChain}연쇄</div>
-    <div class="btns"><button class="btn sec" id="ovLeave">로비로</button><button class="btn pri" id="ovAgain">다시</button></div>`;
-  $('ovLeave').onclick = () => { ov.classList.add('hide'); show('lobby'); };
+    <div class="btns"><button class="btn sec" id="ovLeave">처음으로</button><button class="btn pri" id="ovAgain">다시</button></div>`;
+  $('ovLeave').onclick = () => { ov.classList.add('hide'); show('home'); };
   $('ovAgain').onclick = () => { ov.classList.add('hide'); startSolo(); };
+}
+
+// ================= 컴퓨터와 대전 =================
+let vsCpu = false, cpu = null, cpuNextT = 0, brain = {};
+let cpuMatch = { me: 0, cpu: 0, ft: 2, lv: 'normal' };
+// think=쌍이 나오고 생각하는 시간, step=한 번 움직이는 간격, greedy=제대로 고를 확률, build=작은 연쇄는 아껴 두고 크게
+const CPU_LV = {
+  easy:   { name: '쉬움',   think: 650, step: 210, greedy: .45, soft: false, build: false },
+  normal: { name: '보통',   think: 300, step: 105, greedy: .9,  soft: true,  build: false },
+  hard:   { name: '어려움', think: 110, step: 45,  greedy: 1,   soft: true,  build: true },
+};
+let cpuLv = store.get('ml_cpu') || 'normal'; if (!CPU_LV[cpuLv]) cpuLv = 'normal';
+function drawLv(){
+  const el = $('lvSeg'); el.innerHTML = '';
+  for (const k of ['easy', 'normal', 'hard']){ const b = document.createElement('button'); b.textContent = CPU_LV[k].name; b.className = k === cpuLv ? 'on' : ''; b.onclick = () => { cpuLv = k; store.set('ml_cpu', k); drawLv(); }; el.appendChild(b); }
+}
+drawLv();
+$('btnCpu').onclick = () => { ac(); cpuMatch = { me: 0, cpu: 0, ft: 2, lv: cpuLv }; startCpuRound(); };
+function startCpuRound(){
+  clearTimeout(cpuNextT);
+  solo = false; vsCpu = true; roundEnded = false; resultOpen = false; hideNote();
+  oppSnap = null; oppDead = false; oppDeadAt = 0; oppPopPt = null; FX.orbs = []; FX.parts = [];
+  show('game'); document.body.classList.remove('solo');
+  for (const id of ['sideOp', 'nxOpW', 'scBox', 'pnOp']) $(id).classList.remove('hide');
+  document.querySelector('#pad .qd').classList.add('hide');
+  const seed = (Math.random() * 2147483646 | 0) + 1, cols = [0, 1, 2, 3, 4];
+  for (let i = cols.length - 1; i > 0; i--){ const j = Math.random() * (i + 1) | 0; [cols[i], cols[j]] = [cols[j], cols[i]]; }
+  const colors = cols.slice(0, 4);
+  newGame(seed, colors, false);
+  cpu = new Game(seed, colors, {
+    chain(ch, pts, lx, top){ const bd = oppBoardEl(); oppPopPt = cellPt(bd, oppCell(), lx, top); chainPop(bd.parentElement, oppCell(), ch + '연쇄!', lx, top, ch >= 5); },
+    attack(n, done){ if (game) game.receive(n, done); if (n > 0) orb(oppPopPt || midPt(oppBoardEl()), midPt($('trayMe')), n >= 30, '#FF7A59'); },
+    offset(n){ orb(oppPopPt || midPt(oppBoardEl()), midPt(oppTrayEl()), n >= 30, '#FFE45C'); },
+    popped(cells){ burst(oppBoardEl(), oppCell(), cells); },
+    garbage(n){ if (n >= 6) shake(oppBoardEl().parentElement); },
+    dead(){ cpuRoundEnd(true); },
+    allClear(){ const bd = oppBoardEl(); chainPop(bd.parentElement, oppCell(), '전부 지움!', 2.5, 7, true, true); },
+  });
+  brain = {};
+  $('pnMe').textContent = nick(); $('pnOp').textContent = '컴퓨터';
+  setWins(cpuMatch.me, cpuMatch.cpu, cpuMatch.ft); $('ftLbl').textContent = CPU_LV[cpuMatch.lv].name + ' · First to ' + cpuMatch.ft;
+  layout(); countdown(3000);
+}
+function cpuRoundEnd(playerWon){
+  if (roundEnded || !vsCpu) return;
+  roundEnded = true; stopGame(); if (cpu && cpu.state !== 'dead') cpu.state = 'stop';
+  if (playerWon){ cpuMatch.me++; sfx('dead'); } else cpuMatch.cpu++;
+  setWins(cpuMatch.me, cpuMatch.cpu, cpuMatch.ft);
+  const match = cpuMatch.me >= cpuMatch.ft || cpuMatch.cpu >= cpuMatch.ft;
+  const ov = $('ov'); ov.classList.remove('hide');
+  if (match){
+    ov.innerHTML = `<div class="big">${playerWon ? '최종 승리' : '최종 패배'}</div><div class="msg">${cpuMatch.me} : ${cpuMatch.cpu} · 컴퓨터(${CPU_LV[cpuMatch.lv].name})</div>
+      <div class="btns"><button class="btn sec" id="ovLeave">처음으로</button><button class="btn pri" id="ovAgain">다시 하기</button></div>`;
+    $('ovLeave').onclick = () => { ov.classList.add('hide'); vsCpu = false; cpu = null; show('home'); };
+    $('ovAgain').onclick = () => { ov.classList.add('hide'); cpuMatch = { me: 0, cpu: 0, ft: cpuMatch.ft, lv: cpuMatch.lv }; startCpuRound(); };
+  } else {
+    ov.innerHTML = `<div class="big">${playerWon ? '승리' : '패배'}</div><div class="msg">${cpuMatch.me} : ${cpuMatch.cpu} · 곧 다음 라운드</div>`;
+    cpuNextT = setTimeout(() => { if (vsCpu && mode === 'game') { ov.classList.add('hide'); startCpuRound(); } }, 3200);
+  }
+}
+// 둘 곳 고르기: 가능한 자리(6열×4방향)를 모두 떨어뜨려 보고 연쇄·이어짐·높이로 점수를 매긴다
+function cpuSim(g0, drops){
+  const g = g0.map(c => c.slice());
+  for (const [x, c] of drops){ let y = 0; while (y < H && g[x][y] !== -1) y++; if (y >= 12) return null; g[x][y] = c; }
+  let chain = 0;
+  for (;;){
+    const seen = g.map(c => c.map(() => false)), pop = [];
+    for (let x = 0; x < W; x++) for (let y = 0; y < VIS; y++){
+      const c = g[x][y]; if (c < 0 || c === OJAMA || seen[x][y]) continue;
+      const st = [[x, y]], cells = []; seen[x][y] = true;
+      while (st.length){ const [a, b] = st.pop(); cells.push([a, b]);
+        for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]){ const nx = a + dx, ny = b + dy;
+          if (nx < 0 || nx >= W || ny < 0 || ny >= VIS || seen[nx][ny] || g[nx][ny] !== c) continue; seen[nx][ny] = true; st.push([nx, ny]); } }
+      if (cells.length >= 4) pop.push(...cells);
+    }
+    if (!pop.length) break;
+    chain++; for (const [a, b] of pop) g[a][b] = -1;
+    for (let x = 0; x < W; x++){ const col = g[x].filter(v => v !== -1); for (let y = 0; y < H; y++) g[x][y] = y < col.length ? col[y] : -1; }
+  }
+  let adj = 0, three = 0, hmax = 0, h2 = 0;
+  for (let x = 0; x < W; x++){
+    let h = 0; while (h < H && g[x][h] !== -1) h++; hmax = Math.max(hmax, h); if (x === 2) h2 = h;
+    for (let y = 0; y < h; y++){ const c = g[x][y]; if (c === OJAMA) continue; if (x + 1 < W && g[x + 1][y] === c) adj++; if (y + 1 < h && g[x][y + 1] === c) adj++; }
+  }
+  return { chain, adj, hmax, h2 };
+}
+function cpuPlan(L){
+  const p = cpu.piece, opts = [];
+  const danger = (() => { let h = 0; while (h < H && cpu.g[2][h] !== -1) h++; return h >= 8; })();
+  const threat = cpu.incoming + cpu.incomingU;
+  for (let x = 0; x < W; x++) for (const r of [0, 1, 2, 3]){
+    const cx = x + (r === 1 ? 1 : r === 3 ? -1 : 0); if (cx < 0 || cx >= W) continue;
+    const drops = r === 0 ? [[x, p.a], [x, p.c]] : r === 2 ? [[x, p.c], [x, p.a]] : [[x, p.a], [cx, p.c]];
+    const e = cpuSim(cpu.g, drops); if (!e) continue;
+    let sc = e.adj * 3 - e.hmax * 2 - (e.h2 >= 9 ? 400 : e.h2 >= 7 ? 40 : 0) + Math.random() * 2;
+    if (e.chain){
+      if (L.build && e.chain < 3 && !danger && threat < 6) sc -= 25;      // 어려움: 작은 연쇄는 아껴 둔다
+      else sc += e.chain * (e.chain >= 2 ? 90 : 30) + (threat ? 60 : 0);
+    }
+    opts.push({ x, r, sc });
+  }
+  if (!opts.length) return { x: p.x, r: p.r };
+  if (Math.random() > L.greedy) return opts[Math.random() * opts.length | 0];
+  return opts.reduce((a, b) => b.sc > a.sc ? b : a);
+}
+function cpuTick(dt){
+  if (!cpu || cpu.state !== 'move' || !cpu.piece) return;
+  const L = CPU_LV[cpuMatch.lv], p = cpu.piece;
+  if (brain.piece !== p){ brain = { piece: p, t: 0, acc: 0, plan: null, tries: 0 }; cpu.release('down'); }
+  brain.t += dt;
+  if (!brain.plan){ if (brain.t < L.think) return; brain.plan = cpuPlan(L); }
+  brain.acc += dt; if (brain.acc < L.step) return; brain.acc = 0;
+  const pl = brain.plan;
+  if (p.r !== pl.r && brain.tries < 8){ brain.tries++; const d = (pl.r - p.r + 4) % 4; cpu.rotate(d === 3 ? -1 : 1); return; }
+  if (p.x !== pl.x){ if (!cpu.shift(pl.x > p.x ? 1 : -1)) pl.x = p.x; return; }
+  if (L.soft) cpu.inp.down = true;
 }
 
 let myPopPt = null;
@@ -1177,7 +1381,7 @@ function layout(){
     const s = Math.floor(Math.min(availH / (VIS + 0.9 + 0.25), (vw - 28) / (W + 2.7)));
     cellS = Math.max(16, s);
     const gap = Math.round(cellS * 0.45), rightW = vw - 20 - (W * cellS + 10) - gap;
-    const nextH = cellS * 0.9 * 3.6 + 8, infoH = 64 + 26;
+    const nextH = cellS * 0.7 * 3.2 + 8, infoH = 64 + 26;
     const byW = (rightW - 6) / W, byH = (availH - nextH - infoH - 30) / (VIS + 0.9 + 1.4);
     miniS = Math.max(8, Math.floor(Math.min(byW, byH, cellS * 0.62)));
   } else {
@@ -1200,9 +1404,12 @@ let lastT = performance.now();
 function frame(t){
   const dt = Math.min(50, t - lastT); lastT = t;
   try {
+    if (mode === 'home') homeArt(t);
     if (game && mode === 'game'){
-      if ((roundLive && (solo || wsOk)) || game.state === 'dead') game.update(dt);
-      if (!solo && game.dirty && roundLive) sendSnap(false);
+      const online = !solo && !vsCpu;
+      if ((roundLive && (!online || wsOk)) || game.state === 'dead') game.update(dt);
+      if (vsCpu && cpu && (roundLive || cpu.state === 'dead')){ SFX_QUIET = true; try { if (roundLive) cpuTick(dt); cpu.update(dt); } finally { SFX_QUIET = false; } }
+      if (online && game.dirty && roundLive) sendSnap(false);
     }
     if (mode === 'game'){ redrawAll(false); drawFx(dt); }
   } catch (e) { if (!frame.warned){ frame.warned = true; console.warn('그리기 오류', e); } }
@@ -1221,24 +1428,65 @@ function redrawAll(){
   const scTxt = g.calcT > 0 && g.calc ? g.calc[0] + ' × ' + g.calc[1] : pad8(g.score);
   $('scMe').textContent = scTxt; $('scMeP').textContent = scTxt;
   const nn = g.snapshot ? [g.pair(g.pieces)[0], g.pair(g.pieces)[1], g.pair(g.pieces+1)[0], g.pair(g.pieces+1)[1]] : null;
-  drawNext($('nxMe'), Math.round(cellS * 0.9), nn);
+  drawNext($('nxMe'), Math.round(cellS * (port ? 0.7 : 0.82)), nn, false);
   if (!solo){
-    const ov = oppSnap ? viewFromSnap(oppSnap) : { g: Array.from({length:W}, () => Array(H).fill(-1)), off:null, pop:null, piece:null };
-    ov.now = performance.now(); if (oppDeadAt) ov.deadT = performance.now() - oppDeadAt + 1;
-    const oppPend = oppSnap ? (oppSnap.p || 0) : 0;
+    let ov, oppPend, oppScore, oppNext;
+    if (vsCpu && cpu){
+      const c = cpu;
+      ov = { g: c.g, off: c.off, pop: c.pop, blink: c.pop && Math.floor(c.t / 80) % 2 === 0, piece: c.piece ? [c.piece.x, c.piece.yh, c.piece.r, c.piece.a, c.piece.c] : null, va: c.piece ? c.piece.va : null, sq: c.sq, deadT: c.state === 'dead' ? c.deadT + 1 : 0, now: performance.now() };
+      oppPend = c.incoming + c.incomingU;
+      oppScore = c.calcT > 0 && c.calc ? c.calc[0] + ' × ' + c.calc[1] : pad8(c.score);
+      oppNext = [c.pair(c.pieces)[0], c.pair(c.pieces)[1], c.pair(c.pieces + 1)[0], c.pair(c.pieces + 1)[1]];
+    } else {
+      ov = oppSnap ? viewFromSnap(oppSnap) : { g: Array.from({length:W}, () => Array(H).fill(-1)), off:null, pop:null, piece:null };
+      ov.now = performance.now(); if (oppDeadAt) ov.deadT = performance.now() - oppDeadAt + 1;
+      oppPend = oppSnap ? (oppSnap.p || 0) : 0;
+      oppScore = oppSnap && oppSnap.k ? oppSnap.k[0] + ' × ' + oppSnap.k[1] : pad8(oppSnap ? oppSnap.sc : 0);
+      oppNext = oppSnap ? oppSnap.n : null;
+    }
     if (port){
       drawBoard($('bdMini'), miniS, ov); drawTray($('trayMini'), miniS, oppPend, false);
-      $('scMini').textContent = oppSnap && oppSnap.k ? oppSnap.k[0] + ' × ' + oppSnap.k[1] : pad8(oppSnap ? oppSnap.sc : 0);
+      $('scMini').textContent = oppScore;
     } else {
       drawBoard($('bdOp'), oppS, ov); drawTray($('trayOp'), oppS, oppPend, false);
-      $('scOp').textContent = oppSnap && oppSnap.k ? oppSnap.k[0] + ' × ' + oppSnap.k[1] : pad8(oppSnap ? oppSnap.sc : 0);
+      $('scOp').textContent = oppScore;
     }
-    drawNext($('nxOp'), Math.round(cellS * (port ? 0.6 : 0.9)), oppSnap ? oppSnap.n : null);
+    drawNext($('nxOp'), Math.round(cellS * (port ? 0.46 : 0.82)), oppNext, true);
     if (!g.chain){ $('miLabel').textContent = '보낼 방해'; $('miVal').textContent = Math.floor(g.leftover / g.targetPoint()); }
     else { $('miLabel').textContent = '연쇄'; $('miVal').textContent = g.chain; }
   } else {
     $('miLabel').textContent = g.chain ? '연쇄' : '최대 연쇄'; $('miVal').textContent = g.chain || g.maxChain;
   }
+}
+function homeArt(t){
+  const cv = $('homeArt'); if (!cv || mode !== 'home') return;
+  const w = cv.clientWidth || 400, h = 92, x = setupCanvas(cv, w, h); x.clearRect(0, 0, w, h);
+  const s = 46, n = 5, gap = Math.min(s * 1.25, (w - 20) / n), x0 = w / 2 - gap * (n - 1) / 2;
+  const cs = [0, 3, 1, 2, 4];
+  for (let i = 0; i < n; i++){
+    const ph = t / 380 + i * .9, jump = Math.max(0, Math.sin(ph)) * 20, squash = Math.sin(ph) < 0 ? 1 + Math.sin(ph) * -.14 : 1;
+    const cx = x0 + i * gap, by = h - 8;
+    x.save(); x.translate(cx, by); x.scale(1 / squash, squash); x.translate(-s / 2, -s - jump);
+    x.drawImage(puyoSprite(cs[i], s, false, ((t / 1000 + i * 1.3) % 4) < .12), 0, 0, s, s); x.restore();
+    x.fillStyle = 'rgba(0,0,0,.12)'; x.beginPath(); x.ellipse(cx, by - 2, s * .38 * (1 - jump / 80), 4, 0, 0, 7); x.fill();
+  }
+}
+// 사용법 그림: 작은 판에 예시 배치를 그린다
+function drawGuide(){
+  const mk = (id, rows, opts = {}) => {
+    const cv = $(id), s = opts.s || 26, g = Array.from({ length: W }, () => Array(H).fill(-1));
+    rows.forEach((row, yy) => [...row].forEach((ch, x) => { const v = 'RGBYPO'.indexOf(ch); if (v >= 0) g[x][rows.length - 1 - yy] = v; }));
+    const pop = opts.pop ? new Set(opts.pop.map(([x, y]) => x * 16 + y)) : null;
+    const tmp = document.createElement('canvas');
+    drawBoard(tmp, s, { g, off: null, pop, blink: false, piece: null, now: 0 });
+    const show = opts.rows || VIS, d = DPR();
+    const x = setupCanvas(cv, W * s, show * s); x.drawImage(tmp, 0, (VIS - show) * s * d, W * s * d, show * s * d, 0, 0, W * s, show * s);
+    x.translate(0, -(VIS - show) * s);
+    if (opts.ring){ x.strokeStyle = '#FFE45C'; x.lineWidth = 3; for (const [cx, cy] of opts.ring){ x.beginPath(); x.arc(cx * s + s / 2, (VIS - 1 - cy) * s + s / 2, s * .62, 0, 7); x.stroke(); } }
+  };
+  mk('gf1', ['......', '......', '......', '......', '......', '......', '......', '......', 'R.....', 'RR....', 'RB..G.', 'YBGGYB'], { ring: [[0, 3], [0, 2], [0, 1], [1, 2]], rows: 5 });
+  mk('gf2', ['......', '......', '......', '......', '......', '......', '......', '......', 'G.....', 'RRRR..', 'GGGB..', 'YBYB..'], { ring: [[0, 3], [0, 1], [1, 1], [2, 1]], rows: 5 });
+  mk('gf3', ['......', '..G...', '..B...', '.YR...', '.GB.R.', 'RYG.B.', 'BGR.GY', 'GRBYGB', 'YBGRBY', 'RGBYRG', 'BYRGYB', 'GRBYGR'], { ring: [[2, 11]], s: 15 });
 }
 // 경기장 배경 그림(코덱스 생성). 세로 화면은 bg-tall, 없으면 bg-wide. 뜨기 전·실패 시엔 코드로 그린 경기장.
 function loadBg(){
@@ -1250,6 +1498,7 @@ function loadBg(){
   im.src = want;
 }
 loadBg(); addEventListener('resize', loadBg);
+if (new URLSearchParams(location.search).get('room') && !roomCode) show('lobby'); else show('home');
 requestAnimationFrame(frame);
 connect();
 </script>
