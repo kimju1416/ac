@@ -552,7 +552,7 @@ function thumb(a, cls){
 }
 
 /* «많이 쓰는 앱» 다섯 칸 — 형님이 고른 순서 그대로 (클릭 수와 무관) */
-const PICKS = ['TeacherDesk 2','유콜 (YOUCALL)','쌤콜 (SAEMCALL)','스마트 수업교체 시간표','연수 이수증 수거앱'];
+const PICKS = ['TeacherDesk 2','유콜 (YOUCALL)','쌤콜 (SAEMCALL)','스마트 수업교체 시간표','1:1 오락실'];
 function renderPop(){
   const list = PICKS.map(n=>apps.find(a=>a.name===n)).filter(Boolean);
   document.getElementById('pop').innerHTML = list.map((a,i)=>`
