@@ -420,6 +420,23 @@ function cmpVer(a, b) {   // "2.10"이 "2.9"보다 새 판이다 — 마디마�
 const kstToday = () => new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);
 function dayShift(s, n) { const d = new Date(s + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
 const wdOf = s => new Date(s + 'T00:00:00Z').getUTCDay();
+/* 공휴일 달력(대체·임시공휴일 포함) — 🔴 평일이어도 쉬는 날은 주말처럼 뺀다.
+   2026-09-24·25(추석, 목·금)를 평일로 세어 «줄었다»가 떴다 — 형님 «달력 보고 참고해야지».
+   해가 바뀌면 다음 해 줄을 보탠다(학교 재량휴업일은 학교마다 달라 넣지 않는다). */
+const HOLI = {
+  '2025-01-01': '신정', '2025-01-27': '임시공휴일', '2025-01-28': '설날', '2025-01-29': '설날', '2025-01-30': '설날',
+  '2025-03-01': '삼일절', '2025-03-03': '대체공휴일', '2025-05-05': '어린이날', '2025-05-06': '대체공휴일', '2025-06-03': '대통령 선거',
+  '2025-06-06': '현충일', '2025-08-15': '광복절', '2025-10-03': '개천절', '2025-10-05': '추석', '2025-10-06': '추석', '2025-10-07': '추석',
+  '2025-10-08': '대체공휴일', '2025-10-09': '한글날', '2025-12-25': '성탄절',
+  '2026-01-01': '신정', '2026-02-16': '설날', '2026-02-17': '설날', '2026-02-18': '설날', '2026-03-01': '삼일절', '2026-03-02': '대체공휴일',
+  '2026-05-05': '어린이날', '2026-05-24': '부처님오신날', '2026-05-25': '대체공휴일', '2026-06-03': '지방선거', '2026-06-06': '현충일',
+  '2026-08-15': '광복절', '2026-08-17': '대체공휴일', '2026-09-24': '추석', '2026-09-25': '추석', '2026-09-26': '추석',
+  '2026-10-03': '개천절', '2026-10-05': '대체공휴일', '2026-10-09': '한글날', '2026-12-25': '성탄절',
+  '2027-01-01': '신정', '2027-02-06': '설날', '2027-02-07': '설날', '2027-02-08': '설날', '2027-02-09': '대체공휴일', '2027-03-01': '삼일절',
+  '2027-05-05': '어린이날', '2027-05-13': '부처님오신날', '2027-06-06': '현충일', '2027-08-15': '광복절', '2027-08-16': '대체공휴일',
+  '2027-09-14': '추석', '2027-09-15': '추석', '2027-09-16': '추석', '2027-10-03': '개천절', '2027-10-04': '대체공휴일',
+  '2027-10-09': '한글날', '2027-10-11': '대체공휴일', '2027-12-25': '성탄절', '2027-12-27': '대체공휴일'
+};
 const md = s => +s.slice(5, 7) + '/' + +s.slice(8, 10);
 const kstDay = t => new Date(new Date(t).getTime() + 9 * 3600e3).toISOString().slice(0, 10);
 
@@ -817,26 +834,28 @@ function series() {
   only(DATA.daily).forEach(r => { by[r.day] = (by[r.day] || 0) + (r.users || 0); });
   only(DATA.nw).forEach(r => { nb[r.day] = (nb[r.day] || 0) + (r.news || 0); });
   const today = kstToday(), out = [];
-  for (let i = 29; i >= 0; i--) { const d = dayShift(today, -i); out.push({ day: d, users: by[d] || 0, news: nb[d] || 0, today: d === today, wd: wdOf(d) }); }
+  for (let i = 29; i >= 0; i--) { const d = dayShift(today, -i); out.push({ day: d, users: by[d] || 0, news: nb[d] || 0, today: d === today, wd: wdOf(d), holi: HOLI[d] || '' }); }
+  out.forEach(p => { p.off = p.wd === 0 || p.wd === 6 || !!p.holi; });   // 쉬는 날 = 토·일 + 공휴일
   /* 이동평균은 **평일 5일**로 센다. 🔴 토·일을 섞으면 평균이 통째로 눌려(주말은 평일의 10%대)
      «줄었다»가 늘 뜬다 — 형님 «특성상 토일은 무조건 빼야 돼». 오늘은 아직 안 끝나 넣지 않는다. */
   out.forEach((p, i) => {
-    if (p.today || p.wd === 0 || p.wd === 6) return;
+    if (p.today || p.off) return;
     const back = [];
-    for (let j = i; j >= 0 && back.length < 5; j--) if (out[j].wd > 0 && out[j].wd < 6 && !out[j].today) back.push(out[j].users);
+    for (let j = i; j >= 0 && back.length < 5; j--) if (!out[j].off && !out[j].today) back.push(out[j].users);
     if (back.length === 5) p.ma = back.reduce((x, y) => x + y, 0) / 5;
   });
   return out;
 }
 /* 평일만 골라 최근 n 영업일 평균 — skip 만큼 건너뛰면 «그 앞 n 영업일»이 된다.
-   오늘은 진행 중이라 언제나 뺀다. 공휴일은 가릴 길이 없어 평일로 세어진다(그 주는 낮게 나온다). */
-function weekdays(s) { return s.filter(p => !p.today && p.wd > 0 && p.wd < 6).map(p => p.users); }
+   오늘은 진행 중이라 언제나 뺀다. 공휴일(HOLI)도 주말처럼 뺀다. */
+function weekdays(s) { return s.filter(p => !p.today && !p.off).map(p => p.users); }
 function avgWd(s, n, skip = 0) {
   const w = weekdays(s), cut = w.slice(Math.max(0, w.length - n - skip), w.length - skip);
   return cut.length ? cut.reduce((x, y) => x + y, 0) / cut.length : 0;
 }
-const lastWd = s => { const w = s.filter(p => !p.today && p.wd > 0 && p.wd < 6); return w[w.length - 1] || {}; };
-function sameWdPrevWeek(s, day) { const i = s.findIndex(p => p.day === day); return i >= 7 ? s[i - 7] : {}; }
+const lastWd = s => { const w = s.filter(p => !p.today && !p.off); return w[w.length - 1] || {}; };
+/* 지난주 같은 요일이 공휴일이면 한 주 더 거슬러 올라간다 */
+function sameWdPrevWeek(s, day) { let i = s.findIndex(p => p.day === day); if (i < 0) return {}; for (i -= 7; i >= 0; i -= 7) if (!s[i].off) return s[i]; return {}; }
 
 function delta(nowV, prevV, goodUp = true, unit = '%') {
   if (!prevV) return '<span class="eq">비교할 자료 없음</span>';
@@ -928,7 +947,7 @@ function drawInsights() {
   if (p7 >= 20) {
     const ch = (a7 - p7) / p7;
     if (Math.abs(ch) >= .1) L.push({ lv: ch < 0 ? 'warn' : 'ok', t: 'use',
-      tx: `평일 하루 평균이 앞 5영업일보다 <b>${Math.abs(Math.round(ch * 100))}% ${ch < 0 ? '줄었습니다' : '늘었습니다'}</b>(${fmt(Math.round(p7))} → ${fmt(Math.round(a7))}). 주말은 빼고 셉니다.` + (ch < 0 ? ' 연휴·방학이 끼었는지 먼저 보십시오.' : '') });
+      tx: `평일 하루 평균이 앞 5영업일보다 <b>${Math.abs(Math.round(ch * 100))}% ${ch < 0 ? '줄었습니다' : '늘었습니다'}</b>(${fmt(Math.round(p7))} → ${fmt(Math.round(a7))}). 주말·공휴일은 빼고 셉니다.` + (ch < 0 ? ' 연휴·방학이 끼었는지 먼저 보십시오.' : '') });
   }
   const errs = only(DATA.err);
   const fresh = errs.filter(freshErr);
@@ -1016,7 +1035,7 @@ function drawDau(el, compact) {
   let bars = '', hits = '', lbl = '';
   s.forEach((p, i) => {
     const x = f.L + pw * i + (pw - bw) / 2;
-    const op = p.today ? .35 : (p.wd === 0 || p.wd === 6) ? .5 : 1;
+    const op = p.today ? .35 : p.off ? .5 : 1;
     const old = p.users - Math.min(p.news, p.users), nwH = base - Y(Math.min(p.news, p.users));
     // 새로 오신 분(아래) + 2px 틈 + 쓰던 분(위)
     if (p.news) bars += `<rect x="${x}" y="${base - nwH}" width="${bw}" height="${nwH}" fill="var(--s2)" opacity="${op}" rx="${nwH > 4 && !old ? 2 : 0}"/>`;
@@ -1031,18 +1050,18 @@ function drawDau(el, compact) {
   const line = pts.length > 1 ? `<path d="M${pts.map(q => q[0].toFixed(1) + ',' + q[1].toFixed(1)).join('L')}" fill="none" stroke="var(--tx)" stroke-width="2" stroke-linejoin="round" opacity=".7"/>` : '';
   const a7 = avgWd(s, 5);
   const nw30 = s.reduce((x, p) => x + p.news, 0);
-  $(el).innerHTML = `<div class="lg"><span><i style="background:var(--s1)"></i>쓰던 분</span><span><i style="background:var(--s2)"></i>새로 오신 분</span><span><i class="ln" style="background:var(--tx);opacity:.7"></i>평일 5일 평균</span><span class="sp"></span><span>주말은 옅게 · 오늘은 점선(진행 중)</span></div>
+  $(el).innerHTML = `<div class="lg"><span><i style="background:var(--s1)"></i>쓰던 분</span><span><i style="background:var(--s2)"></i>새로 오신 분</span><span><i class="ln" style="background:var(--tx);opacity:.7"></i>평일 5일 평균</span><span class="sp"></span><span>주말·공휴일은 옅게 · 오늘은 점선(진행 중)</span></div>
     <svg height="${f.H}" viewBox="0 0 ${f.W} ${f.H}">${yGrid(f, max)}<line class="base" x1="${f.L}" x2="${f.W - f.R}" y1="${base}" y2="${base}"/>${bars}${line}<g class="axis">${lbl}</g>${hits}</svg>
-    ${compact ? '' : `<div class="cap">최근 5영업일 평균 <b>${fmt(Math.round(a7))}명</b> <span class="mut">(토·일 뺀 값)</span> · 30일 동안 새로 오신 분 <b>${fmt(nw30)}대</b>. 주황이 줄어드는데 파랑이 그대로면 새 분은 안 오고 쓰던 분들이 버티는 중입니다.</div>`}`;
+    ${compact ? '' : `<div class="cap">최근 5영업일 평균 <b>${fmt(Math.round(a7))}명</b> <span class="mut">(토·일·공휴일 뺀 값)</span> · 30일 동안 새로 오신 분 <b>${fmt(nw30)}대</b>. 주황이 줄어드는데 파랑이 그대로면 새 분은 안 오고 쓰던 분들이 버티는 중입니다.</div>`}`;
   attachTip($(el), s.length, i => {
     const p = s[i];
-    return `<b>${md(p.day)} (${WD[p.wd]})${p.today ? ' · 진행 중' : ''}</b><br><i style="background:var(--s1)"></i>쓰신 분 ${fmt(p.users)}명<br><i style="background:var(--s2)"></i>그중 새로 ${fmt(p.news)}` + (p.ma != null ? `<br>평일 5일 평균 ${fmt(Math.round(p.ma))}` : '');
+    return `<b>${md(p.day)} (${WD[p.wd]})${p.holi ? ' · ' + esc(p.holi) : ''}${p.today ? ' · 진행 중' : ''}</b><br><i style="background:var(--s1)"></i>쓰신 분 ${fmt(p.users)}명<br><i style="background:var(--s2)"></i>그중 새로 ${fmt(p.news)}` + (p.ma != null ? `<br>평일 5일 평균 ${fmt(Math.round(p.ma))}` : '');
   });
 }
 
 /* 요일별 평균 — 학교 앱은 주말·월요일 결이 뚜렷하다. «줄었다»를 요일 탓과 가르는 잣대 */
 function drawWeekday() {
-  const s = series().filter(p => !p.today);
+  const s = series().filter(p => !p.today && !p.holi);   // 공휴일은 그 요일 평균을 끌어내리므로 뺀다
   const sum = [0, 0, 0, 0, 0, 0, 0], cnt = [0, 0, 0, 0, 0, 0, 0];
   s.forEach(p => { sum[p.wd] += p.users; cnt[p.wd]++; });
   const order = [1, 2, 3, 4, 5, 6, 0], av = order.map(w => cnt[w] ? sum[w] / cnt[w] : 0);
@@ -1059,7 +1078,7 @@ function drawWeekday() {
   });
   const wk = av.slice(0, 5).reduce((a, b) => a + b, 0) / 5, we = (av[5] + av[6]) / 2;
   $('#chWk').innerHTML = `<svg height="${f.H}" viewBox="0 0 ${f.W} ${f.H}"><line class="base" x1="${f.L}" x2="${f.W - f.R}" y1="${base}" y2="${base}"/>${g}${hits}</svg>
-    <div class="cap">지난 29일(오늘 뺌) 기준. 주말은 평일의 <b>${wk ? pct(we, wk) : '—'}</b>입니다 — 주말 낀 주의 «줄었다»는 대개 이 때문입니다.</div>`;
+    <div class="cap">지난 29일(오늘·공휴일 뺌) 기준. 주말은 평일의 <b>${wk ? pct(we, wk) : '—'}</b>입니다 — 주말 낀 주의 «줄었다»는 대개 이 때문입니다.</div>`;
   attachTip($('#chWk'), 7, i => `<b>${WD[order[i]]}요일</b><br>평균 ${fmt(Math.round(av[i]))}명 · ${cnt[order[i]]}일치`);
 }
 
