@@ -257,6 +257,13 @@ button,select,input{font:inherit;color:inherit}
 .xrow.sc{background:var(--head);border:1px solid var(--line2);border-radius:var(--r1);padding:9px 12px}
 .xrow.sc span{color:var(--tx)}
 .xrow.ck span{color:var(--warn)}
+.fdl{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.fdl .fd{display:inline-flex;align-items:center;border:1px solid var(--pt-line);border-radius:var(--r1);background:#fff;overflow:hidden;font-size:12.5px;line-height:1}
+.fdl .fd em{font-style:normal;font-weight:700;color:var(--tx2);padding:0 9px;white-space:nowrap}
+.fdl .fd a{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;border-left:1px solid var(--pt-line);text-decoration:none;font-weight:700;color:var(--pt)}
+.fdl .fd a:hover{background:var(--pt-soft)}
+.xrow .fwrap{min-width:0}
+.fall{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line2);font-size:12.5px;color:var(--sub)}
 .tip{position:fixed;z-index:60;max-width:380px;background:#1B2A41;color:#fff;border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.55;pointer-events:none;opacity:0;transition:opacity .12s;box-shadow:0 8px 24px rgba(15,23,42,.25);left:-999px;top:0}
 .tip.on{opacity:1}
 .tip b{display:block;font-size:14px;margin-bottom:4px}
@@ -736,6 +743,7 @@ function lawLink(name){ return 'https://www.law.go.kr/법령/' + encodeURICompon
 let flowState = null;
 function renderCase(id){
   const c = BYID[id];
+  formCase = c ? c.id : null;
   if (!c){ $app.innerHTML = `<div class="wrap page"><p>없는 사안입니다. <a href="#/">목록으로</a></p></div>`; return; }
   const idx = CASES.indexOf(c), prevC = CASES[idx - 1], nextC = CASES[idx + 1];
   const ck = 'chk:' + c.id;
@@ -778,7 +786,7 @@ function renderCase(id){
   if (c.sources && c.sources.length) main.push(sec('sources', '출처', `<div class="card"><ul class="src">${c.sources.map(s => `<li>${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>` : esc(s.title)} <span class="y">${esc(s.publisher || '')}${s.year ? ' · ' + esc(s.year) : ''}</span></li>`).join('')}</ul></div>`, `확인일 ${esc(c.verified || DATA.updated)}`));
 
   if (c.contacts && c.contacts.length) side.push(`<div class="sec" id="s-contacts"><div class="sech"><h2>연락처</h2></div><div class="card">${c.contacts.map(ctRow).join('')}</div></div>`);
-  if (c.forms && c.forms.length) side.push(`<div class="sec" id="s-forms"><div class="sech"><h2>서식·기록</h2></div><div class="card plain"><ul>${c.forms.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div></div>`);
+  if (c.forms && c.forms.length) side.push(`<div class="sec" id="s-forms"><div class="sech"><h2>서식·기록</h2></div><div class="card plain"><ul>${c.forms.map(x => `<li>${esc(x)}${formDl(x)}</li>`).join('')}</ul>${SV_CASES.has(c.id) ? `<div class="fall"><span>2026 학교폭력 사안처리 가이드북 부록 양식 23종</span><a class="btn" href="forms/all.zip" download="2026_학교폭력_사안처리_양식_전체.zip">전체 받기(zip)</a></div>` : ''}</div></div>`);
   const rel = (c.related || []).filter(r => BYID[r]);
   if (rel.length) side.push(`<div class="sec"><div class="sech"><h2>함께 볼 사안</h2></div><div class="card plain"><ul>${rel.map(r => `<li><a href="#/c/${r}">${esc(BYID[r].title)}</a></li>`).join('')}</ul></div></div>`);
   const tocItems = [['flow', '업무 흐름도'], ['deep', '깊이 보기'], ['tables', '한눈에 보는 표'], ['deadlines', '기한'], ['dont', '하지 말 것'], ['faq', '자주 묻는 질문'], ['record', '기록·보고'], ['law', '법령 근거'], ['uncertain', '확인할 것'], ['memo', '기록 메모'], ['sources', '출처']];
@@ -989,9 +997,27 @@ function stepExtra(s, lbl){
   let h = '';
   if (s.how && s.how.length) h += `${lbl ? '<div class="lbl2">하는 법</div>' : ''}<ol class="how">${s.how.map(x => `<li>${esc(x)}</li>`).join('')}</ol>`;
   if (s.check && s.check.length) h += `<div class="xrow ck"><b>놓치기 쉬움</b><span>${s.check.map(esc).join(' · ')}</span></div>`;
-  if (s.form) h += `<div class="xrow"><b>서식</b><span>${esc(s.form)}</span></div>`;
+  if (s.form) h += `<div class="xrow"><b>서식</b><div class="fwrap"><span>${esc(s.form)}</span>${formDl(s.form)}</div></div>`;
   if (s.neis) h += `<div class="xrow"><b>나이스</b><span>${esc(s.neis)}</span></div>`;
   return h;
+}
+// 2026학년도 학교폭력 사안처리 가이드북(교육부) 부록 양식 — forms/<번호>.pdf·.hwp
+const SV_FORMS = {"1-1":"학교폭력_신고_접수_대장","1-2":"가해자와_피해학생_분리_의사_확인서","1-3":"학교폭력사안_접수보고서","2-1":"학생_작성_확인서","2-2":"보호자_확인서","2-3":"(피해·가해학생)_긴급조치_보고서","2-4":"학교폭력_사안조사_보고서","2-5":"피해·가해학생_보호자_개인정보","2-6":"학교폭력대책심의위원회_개최_요구_공문","2-7":"학교폭력_전담_조사관_자료_관리_대장","3-1":"학교폭력_전담기구_심의결과_보고서","3-2":"학교장_자체해결_동의서","3-3":"학교장_자체해결_결과_보고서","3-4":"학교폭력대책심의위원회_개최_요청서","3-5":"학교폭력대책심의위원회_개최_요구_취소_요청서","3-6":"학교폭력_아닌_사안의_종결_보고서","3-7":"학교폭력대책심의위원회_미개최_동의서","4-1":"학교폭력_가해학생_조치사항_관리_대장","4-2":"학교폭력_가해학생_조건부_기재유보_관리대장","4-3":"학교폭력_피해학생_관련_정보_제공_동의서","4-4":"학교폭력_피해학생_관련_정보_카드","4-5":"집행정지_결정에_따른_분리_요청서","5-1":"분쟁조정_신청서"};
+const SV_CASES = new Set(['school-violence', 'sexual-violence', 'cyber-deepfake']);
+let formCase = null;   // 지금 그리는 사안 id — 학폭 가이드북 양식을 쓰는 사안에서만 내려받기 단추를 붙인다
+function formIds(t){
+  if (!SV_CASES.has(formCase) || !/양식/.test(t)) return [];
+  const ids = [];
+  for (const m of String(t).matchAll(/(?<![\d-])([1-5]-[1-7])(?!\d)/g)) if (SV_FORMS[m[1]] && !ids.includes(m[1])) ids.push(m[1]);
+  return ids;
+}
+function formDl(t){
+  const ids = formIds(t);
+  if (!ids.length) return '';
+  return `<div class="fdl">${ids.map(id => {
+    const nm = `양식${id}_${SV_FORMS[id]}`;
+    return `<span class="fd"><em>양식 ${id}</em><a href="forms/${id}.pdf" download="${esc(nm)}.pdf" title="${esc(nm)} PDF 내려받기">PDF</a><a href="forms/${id}.hwp" download="${esc(nm)}.hwp" title="${esc(nm)} 한글 파일 내려받기">HWP</a></span>`;
+  }).join('')}</div>`;
 }
 function memoTemplate(){
   return '일시:\n장소:\n관련 학생(이니셜):\n알게 된 경위:\n학생이 한 말(들은 그대로):\n본 것:\n한 조치와 시각:\n연락한 곳·사람:';
