@@ -78,16 +78,18 @@ h1{margin:22px 0 6px;text-align:center;color:#fff;font-weight:900;letter-spacing
 </div>
 <script>
 const GAMES = [
+  { href: '/vs/tennis/', shot: 'shots/cover-tennis.jpg', name: '말랑 테니스', desc: '3D 클레이 코트에서 샷과 로브로 랠리! 듀스·어드밴티지까지 정식 규칙이에요.', tags: ['실시간', '3D 스포츠'], isNew: true },
+  { href: '/vs/germ/', shot: 'shots/cover-germ.jpg', name: '세균전', desc: '한 칸은 복제, 두 칸은 점프! 옆 세균을 내 편으로 바꿔 더 많이 차지하면 이겨요.', tags: ['차례', '땅따먹기'], isNew: true },
   { href: '/bbu/', shot: 'shots/cover-bbu.jpg', name: '말랑 대전', desc: '같은 색 말랑이 4개를 이어 터뜨리고, 연쇄로 상대에게 방해 말랑이를 쏟아부어요.', tags: ['실시간', '연쇄 퍼즐'] },
-  { href: '/vs/block/', shot: 'shots/cover-block.jpg', name: '블록 대전', desc: '떨어지는 블록으로 줄을 지우면 상대 판 아래에서 방해 줄이 올라와요.', tags: ['실시간', '블록 쌓기'], isNew: true },
-  { href: '/vs/bubble/', shot: 'shots/cover-bubble.jpg', name: '방울 대전', desc: '방울을 쏘아 같은 색 3개를 터뜨리고, 떨어뜨린 만큼 상대에게 보내요.', tags: ['실시간', '쏘기'], isNew: true },
-  { href: '/vs/alkkagi/', shot: 'shots/cover-alkkagi.jpg', name: '알까기', desc: '내 돌을 당겼다 놓아 튕기고, 상대 돌을 판 밖으로 쳐내요.', tags: ['차례', '튕기기'], isNew: true },
-  { href: '/vs/omok/', shot: 'shots/cover-omok.jpg', name: '오목', desc: '다섯 개를 먼저 잇는 사람이 이겨요. 흑 3·3 금지 한국식 규칙.', tags: ['차례', '두뇌'], isNew: true },
+  { href: '/vs/block/', shot: 'shots/cover-block.jpg', name: '블록 대전', desc: '떨어지는 블록으로 줄을 지우면 상대 판 아래에서 방해 줄이 올라와요.', tags: ['실시간', '블록 쌓기'] },
+  { href: '/vs/bubble/', shot: 'shots/cover-bubble.jpg', name: '방울 대전', desc: '방울을 쏘아 같은 색 3개를 터뜨리고, 떨어뜨린 만큼 상대에게 보내요.', tags: ['실시간', '쏘기'] },
+  { href: '/vs/alkkagi/', shot: 'shots/cover-alkkagi.jpg', name: '알까기', desc: '내 돌을 당겼다 놓아 튕기고, 상대 돌을 판 밖으로 쳐내요.', tags: ['차례', '튕기기'] },
+  { href: '/vs/omok/', shot: 'shots/cover-omok.jpg', name: '오목', desc: '다섯 개를 먼저 잇는 사람이 이겨요. 흑 3·3 금지 한국식 규칙.', tags: ['차례', '두뇌'] },
 ];
 const grid = document.getElementById('grid');
 for (const g of GAMES){
   const a = document.createElement('a'); a.className = 'card'; a.href = g.href;
-  a.innerHTML = `<div class="shot" style="background-image:url(${g.shot}?v=2)">${g.isNew ? '<span class="tag new">NEW</span>' : ''}</div><div class="body"><b></b><p></p><div class="meta"></div></div>`;
+  a.innerHTML = `<div class="shot" style="background-image:url(${g.shot}?v=3)">${g.isNew ? '<span class="tag new">NEW</span>' : ''}</div><div class="body"><b></b><p></p><div class="meta"></div></div>`;
   a.querySelector('b').textContent = g.name; a.querySelector('p').textContent = g.desc;
   const m = a.querySelector('.meta'); for (const t of ['1:1', ...g.tags, '컴퓨터 대결']){ const s = document.createElement('span'); s.textContent = t; m.appendChild(s); }
   grid.appendChild(a);

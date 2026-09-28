@@ -1,0 +1,1225 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>말랑 테니스 — 1:1 오락실</title>
+<meta name="description" content="말랑이 선수들이 클레이 코트에서 겨루는 1:1 3D 테니스. 정식 테니스 규칙, 게임 선승제. 친구와 서버 없이 바로, 컴퓨터(쉬움·보통·어려움)와도 대결.">
+<meta property="og:title" content="말랑 테니스 — 1:1 오락실">
+<meta property="og:description" content="말랑이 선수들의 3D 테니스. 방 번호 4자리로 친구와 바로 한 게임.">
+<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg?v=2">
+<meta name="theme-color" content="#2361C4">
+<link rel="stylesheet" href="../common/vs.css">
+<style>
+#tnCv{position:absolute;left:0;top:0;width:100%;height:100%;display:block;touch-action:none}
+/* 경기 화면 위 글자판(누르기 막지 않음) */
+.tnHud{position:absolute;inset:0;pointer-events:none;z-index:2;font-family:"Pretendard Variable",Pretendard,sans-serif;color:#fff}
+.tnBoard{position:absolute;left:8px;top:8px;min-width:150px;max-width:min(240px,48%);background:rgba(14,20,44,.84);border-radius:6px;overflow:hidden;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.tnRow{display:flex;align-items:center;gap:6px;height:25px;padding-left:7px;font-size:13px;font-weight:800}
+.tnRow+.tnRow{border-top:1px solid rgba(255,255,255,.13)}
+.tnChip{width:9px;height:9px;border-radius:3px;flex:0 0 auto}
+.tnNm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tnSv{width:9px;height:9px;border-radius:50%;background:#DFF542;box-shadow:0 0 0 1px rgba(0,0,0,.35);flex:0 0 auto;visibility:hidden}
+.tnSv.tnOn{visibility:visible}
+.tnGm{width:26px;height:25px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;background:#E05A1E;font-size:15px;font-weight:900}
+.tnPts,.tnSpd{position:absolute;bottom:10px;background:rgba(14,20,44,.84);border-radius:6px;padding:5px 10px 6px;box-shadow:0 2px 0 rgba(0,0,0,.25)}
+.tnPts{left:8px}.tnSpd{right:8px;text-align:right}
+.tnPts b,.tnSpd b{display:block;font-size:22px;font-weight:900;line-height:1.05;letter-spacing:.01em;white-space:nowrap}
+.tnPts small,.tnSpd small{display:block;font-size:11px;font-weight:700;color:#AFC0E6;white-space:nowrap}
+.tnSpd b i{font-style:normal;font-size:13px;margin-left:3px;color:#FFD9C6}
+/* 폰: 아래는 레버·버튼 자리라 포인트·속도는 위 오른쪽 줄로(코트를 가리지 않게) */
+.tnTouch .tnPts,.tnTouch .tnSpd{top:8px;bottom:auto;padding:4px 8px 5px}
+.tnTouch .tnPts{left:auto;right:100px}.tnTouch .tnSpd{right:8px}
+.tnTouch .tnPts b,.tnTouch .tnSpd b{font-size:17px}
+.tnTouch .tnPts small,.tnTouch .tnSpd small{font-size:10px}
+.tnTouch .tnBoard{min-width:0;max-width:calc(100% - 196px)}
+/* 판정 글자: 영어 크게 + 한국어 풀이 작게 */
+.tnCall{position:absolute;left:50%;top:36%;transform:translate(-50%,-50%);text-align:center;opacity:0;transition:opacity .12s;white-space:nowrap}
+.tnCall.tnOn{opacity:1;animation:tnPop .34s cubic-bezier(.2,1.5,.4,1)}
+.tnCall b{display:block;font-size:clamp(38px,9vw,82px);font-weight:900;font-style:italic;letter-spacing:.02em;line-height:1;color:#fff;
+  text-shadow:0 4px 0 #1C2340,3px 0 0 #1C2340,-3px 0 0 #1C2340,0 -3px 0 #1C2340,0 10px 22px rgba(0,0,0,.35)}
+.tnCall.tnHot b{color:#FFE45C}
+.tnCall small{display:inline-block;margin-top:8px;font-size:clamp(13px,2.4vw,17px);font-weight:800;background:rgba(14,20,44,.8);padding:4px 12px;border-radius:999px}
+.tnCall small:empty{display:none}
+@keyframes tnPop{from{transform:translate(-50%,-50%) scale(.6)}to{transform:translate(-50%,-50%) scale(1)}}
+/* 폰 조작: 왼쪽 둥근 레버(360도), 오른쪽 샷·로브 */
+.tnPad{position:absolute;left:0;right:0;bottom:0;height:136px;z-index:3;pointer-events:none}
+.tnJoy{position:absolute;left:12px;bottom:10px;width:118px;height:118px;border-radius:50%;pointer-events:auto;touch-action:none;user-select:none;-webkit-user-select:none;
+  background:radial-gradient(circle,#243058 0,#161E3C 62%,#0E1430 100%);border:2px solid #3A4A80;box-shadow:inset 0 4px 12px rgba(0,0,0,.6),0 3px 0 rgba(0,0,0,.3)}
+.tnJoy::before{content:"";position:absolute;inset:26px;border-radius:50%;border:2px dashed rgba(159,179,232,.28)}
+.tnKnob{position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle at 34% 30%,#FFD2CF 0,#FF6B5E 22%,#E0282A 55%,#8E0E14 100%);box-shadow:0 5px 0 rgba(0,0,0,.35),0 0 0 3px rgba(0,0,0,.25);transition:transform .16s cubic-bezier(.3,1.6,.5,1)}
+.tnKnob::after{content:"";position:absolute;left:12px;top:9px;width:15px;height:8px;border-radius:50%;background:rgba(255,255,255,.75);transform:rotate(-30deg)}
+.tnJoy.tnDrag .tnKnob{transition:none}
+.tnJoy.tnDrag{border-color:#5B9BFF}
+.tnB{position:absolute;border-radius:50%;color:#fff;font-weight:900;pointer-events:auto;touch-action:none;user-select:none;-webkit-user-select:none;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 0 rgba(0,0,0,.32)}
+.tnShot{right:12px;bottom:20px;width:90px;height:90px;background:#E05A1E;border:3px solid #FFB08A;font-size:22px}
+.tnLob{right:112px;bottom:10px;width:66px;height:66px;background:#1C2340;border:2px solid #5B6CA8;font-size:16px}
+.tnB.tnOn{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,.32)}
+.tnShot.tnOn{background:#C24A15}
+.tnLob.tnOn{background:#2A3766}
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}</script>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="../common/vs.js"></script>
+<script type="module">
+// ================= 말랑 테니스 (3D) =================
+// 한 라운드 = 테니스 한 게임. 좌표는 미터: x = 코트 가로, z = 코트 길이(네트가 z=0), y = 위.
+// 자리 0은 z>0 쪽 절반, 자리 1은 z<0 쪽 절반. 각 기기 카메라는 늘 자기 선수 뒤에서 본다.
+// 친구 대전은 방장 권위: 방장이 공·선수·점수를 모두 계산하고, 손님은 입력만 보내고 상태를 받아 그린다.
+import * as THREE from 'three';
+const VS = window.VS;
+const $ = id => document.getElementById(id);
+
+// ---------- 규격(정식 코트) ----------
+const HL = 11.885, HW = 4.115, DW = 5.485, SV = 6.40;       // 반 길이, 단식 반폭, 복식 반폭, 서비스 라인(네트에서)
+const NET_C = 0.914, NET_P = 1.07, POST = 6.40;            // 네트 중앙·기둥 높이, 기둥 위치(복식 라인 밖 0.914m)
+const BR = 0.034, BALL_R = 0.075;                          // 판정용 공 반지름, 그림용 공 반지름(잘 보이게 조금 크게)
+const GRAV = 9.81, K_DRAG = 0.016;                         // 중력, 공기 저항 계수
+const RUN = 6.2, AUTO = 2.4;                               // 달리기 속도, 준비 자세 뒤 자동 위치 잡기 속도(m/s)
+const DT = 1 / 120;                                        // 물리 한 걸음
+const WALL_Z = HL + 6.4, WALL_X = DW + 4.2;                // 광고판 벽
+const sgnOf = s => s === 0 ? 1 : -1;
+const clamp = (v, a, b) => v < a ? a : v > b ? b : v;
+const lerp = (a, b, k) => a + (b - a) * k;
+const gauss = () => { let u = 0; while (!u) u = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * Math.random()); };
+const easeOut = u => 1 - Math.pow(1 - clamp(u, 0, 1), 3);
+const netH = x => NET_C + (NET_P - NET_C) * Math.min(1, Math.abs(x) / POST);
+// 라인에 걸치면 인: 라인은 코트 치수 안쪽에 있으니 공 중심이 치수 + 반지름 안이면 닿은 것
+const inCourt = (x, z) => Math.abs(x) <= HW + BR && Math.abs(z) <= HL + BR;
+// 서브 박스: 서버의 대각선. 듀스 코트(오른쪽)에서 치면 받는 쪽 절반의 서버 기준 왼쪽 박스
+function inBox(x, z, server, deuce){
+  const ss = sgnOf(server), zr = -z * ss;                  // 받는 쪽 절반으로 잰 네트부터의 거리
+  if (zr < -BR || zr > SV + BR) return false;
+  const u = x * ss;                                        // 서버 기준 오른쪽이 +
+  return deuce ? (u >= -HW - BR && u <= 0.025 + BR) : (u >= -0.025 - BR && u <= HW + BR);
+}
+
+// ---------- 점수 ----------
+const PN = ['0', '15', '30', '40'];
+class Score {
+  constructor(){ this.p = [0, 0]; this.done = -1; }
+  add(w){
+    const p = this.p, l = 1 - w; p[w]++;
+    if (p[w] >= 4 && p[w] - p[l] >= 2){ this.done = w; return { k: 'game', w }; }
+    if (p[w] >= 3 && p[l] >= 3){
+      if (p[w] === p[l]){ const n = p[w] - 3; p[0] -= n; p[1] -= n; return { k: 'deuce' }; }   // 듀스는 40-40으로 되돌려 센다(홀짝은 그대로)
+      return { k: 'adv', w: p[w] > p[l] ? w : l };
+    }
+    return { k: 'pt', w };
+  }
+  // 서버 점수를 먼저 부른다(테니스 관례)
+  text(server){
+    const a = this.p[server], b = this.p[1 - server];
+    if (a >= 3 && b >= 3) return a === b ? 'DEUCE' : a > b ? 'AD - 40' : '40 - AD';
+    return PN[Math.min(a, 3)] + ' - ' + PN[Math.min(b, 3)];
+  }
+}
+
+// ---------- 공 물리 ----------
+function stepBall(b, dt){
+  const k = K_DRAG * Math.hypot(b.vx, b.vy, b.vz);
+  b.vx -= k * b.vx * dt; b.vz -= k * b.vz * dt; b.vy -= (b.g + k * b.vy) * dt;
+  b.x += b.vx * dt; b.y += b.vy * dt; b.z += b.vz * dt;
+}
+function bounceBall(b){
+  b.rollT = 0; b.y = BR; b.vy = -b.vy * b.ey; b.vx *= b.eh; b.vz *= b.eh;
+  b.g = GRAV; b.ey = 0.68; b.eh = 0.72;                    // 튄 뒤엔 회전이 풀린다
+  if (b.vy < 0.45){ b.vy = 0; b.roll = true; }
+}
+// 첫 바운드까지 따라가 본다 → [착지 x, 착지 z, 시간, 네트 지날 때 높이, 그때 x]
+function simLand(x, y, z, vx, vy, vz, g){
+  const b = { x, y, z, vx, vy, vz, g }; let t = 0, yn = 99, xn = 0;
+  for (let i = 0; i < 700; i++){
+    const x0 = b.x, y0 = b.y, z0 = b.z; stepBall(b, DT); t += DT;
+    if (yn === 99 && z0 * b.z <= 0 && z0 !== b.z){ const f = z0 / (z0 - b.z); yn = y0 + (b.y - y0) * f; xn = x0 + (b.x - x0) * f; }
+    if (b.y <= BR && b.vy < 0) return [b.x, b.z, t, yn, xn];
+  }
+  return [b.x, b.z, t, yn, xn];
+}
+// 목표 지점(tx,tz)에 약 T초 만에 떨어지는 초속을 찾는다. 공기 저항 때문에 겨냥점을 몇 번 고쳐 맞춘다.
+// 네트 위 여유(clr)가 모자라면 T를 늘려(더 느리고 높게) 다시 푼다. clr이 음수면 일부러 네트에 걸리는 공.
+function solve(from, tx, tz, T, g, clr){
+  let v = [0, 0, 0];
+  for (let tries = 0; tries < 36; tries++){
+    let ax = tx, az = tz, r = null;
+    for (let it = 0; it < 6; it++){
+      v = [(ax - from.x) / T, (BR - from.y + 0.5 * g * T * T) / T, (az - from.z) / T];
+      r = simLand(from.x, from.y, from.z, v[0], v[1], v[2], g);
+      const ex = tx - r[0], ez = tz - r[1];
+      if (Math.abs(ex) + Math.abs(ez) < 0.02) break;
+      ax += ex; az += ez;
+    }
+    if (r[3] === 99 || r[3] >= netH(r[4]) + BR + clr) return v;
+    T *= 1.05;
+  }
+  return v;
+}
+// 공 궤적 미리보기(네트는 무시): 컴퓨터와 «준비 자세 뒤 자동 위치 잡기»가 같이 쓴다
+function predict(b, T = 2.4){
+  const s = { x: b.x, y: b.y, z: b.z, vx: b.vx, vy: b.vy, vz: b.vz, g: b.g, ey: b.ey, eh: b.eh, roll: false }, out = [];
+  let bn = b.bn | 0;
+  for (let t = DT * 2; t <= T; t += DT * 2){
+    stepBall(s, DT); stepBall(s, DT);
+    if (s.y <= BR && s.vy < 0){ bounceBall(s); bn++; }
+    out.push({ t, x: s.x, y: s.y, z: s.z, bn });
+    if (bn >= 2 || s.roll) break;
+  }
+  return out;
+}
+// 칠 자리 고르기: 내 쪽에서 규칙상 칠 수 있고(한 번 튄 뒤, 또는 발리) 편한 높이인 첫 지점
+function chooseContact(p, sm, spd, serveBall, volley){
+  let any = null, fb = null, fbv = 1e9;
+  for (const k of sm){
+    if (k.z * p.sgn < 0.4) continue;
+    if (!(k.bn === 1 || (k.bn === 0 && volley && !serveBall))) continue;
+    if (k.y < 0.25 || k.y > 2.0) continue;
+    const fx = k.x - p.sgn * 0.72, bx = k.x + p.sgn * 0.72;          // 포핸드 자리 / 백핸드 자리
+    const sx = Math.abs(fx - p.x) <= Math.abs(bx - p.x) ? fx : bx, sz = k.z + p.sgn * 0.3;
+    const need = Math.hypot(sx - p.x, sz - p.z) / spd;
+    const c = { sx, sz, t: k.t, y: k.y };
+    if (need <= k.t){ if (k.y >= 0.45 && k.y <= 1.35) return c; if (!any) any = c; }
+    else if (need - k.t < fbv){ fbv = need - k.t; fb = c; }
+  }
+  return any || fb;
+}
+
+// ---------- 선수 ----------
+const SWINGS = { fh: 0.34, bh: 0.34, lf: 0.4, lb: 0.4, srv: 0.42, wh: 0.45, whb: 0.45 };
+const swinging = p => SWINGS[p.anim] !== undefined && p.at < 0.3;
+function mkP(s){ return { s, sgn: sgnOf(s), x: 0, z: sgnOf(s) * (HL + 0.5), vx: 0, vz: 0, tx: 0, tz: 0, armed: null, cT0: 0, cT1: -1, anim: '', at: 9, missed: false, auto: null, autoAt: -9 }; }
+const NOC = () => ({ mx: 0, mz: 0, ax: 0, az: 0, press: [], release: [] });
+// 이동: 레버는 늘 같은 속도(원작식). 준비 자세(버튼 누름) 뒤엔 레버가 조준이 되고, 몸은 자동으로 칠 자리로 간다.
+function movePlayer(p, c, dt, ph, isServer, tossed, deuce){
+  let dx = 0, dz = 0, spd = RUN;
+  if (ph === 'play' || ph === 'serve'){
+    if (swinging(p)){ /* 스윙 중엔 멈춤 */ }
+    else if (p.armed){ if (p.auto){ dx = p.auto.x - p.x; dz = p.auto.z - p.z; const d = Math.hypot(dx, dz); if (d < 0.04) dx = dz = 0; else { const m = Math.min(1, d / 0.25) / d; dx *= m; dz *= m; } spd = AUTO; } }
+    else { dx = c.mx; dz = c.mz; const m = Math.hypot(dx, dz); if (m > 1){ dx /= m; dz /= m; } }
+    if (ph === 'serve' && isServer){ dz = 0; if (tossed) dx = 0; }
+  }
+  const k = Math.min(1, dt * 16);
+  p.vx += (dx * spd - p.vx) * k; p.vz += (dz * spd - p.vz) * k;
+  p.x = clamp(p.x + p.vx * dt, -WALL_X + 0.6, WALL_X - 0.6);
+  p.z = clamp((p.z + p.vz * dt) * p.sgn, 0.7, WALL_Z - 0.8) * p.sgn;
+  if (ph === 'serve' && isServer){ const side = deuce ? 1 : -1, u = clamp(p.x * p.sgn * side, 0.15, 3.9); p.x = u * side * p.sgn; }
+}
+// 공이 치는 범위에 들어왔을 때 타점의 질(0~1): 옆 거리·높이·늦음
+function quality(ad, y, f, run, pace){
+  const ql = 1 - Math.pow(clamp(Math.abs(ad - 0.72) / 0.9, 0, 1), 1.6);
+  const qh = y < 0.4 ? 0.35 + 0.65 * (y - 0.08) / 0.32 : y > 1.4 ? 1 - 0.6 * (y - 1.4) : 1;
+  const qf = f >= 0 ? 1 : 1 + f / 0.45 * 0.6;
+  const qr = 1 - 0.45 * clamp(run / RUN, 0, 1);              // 뛰면서 치면 흔들린다
+  const qp = 1 - 0.35 * clamp((pace - 14) / 16, 0, 1);       // 빠른 공은 받기 어렵다
+  return clamp(ql * qh * qf * qr * qp, 0.12, 1);
+}
+
+// ---------- 경기(규칙 엔진) — 그림과 무관, 방장·컴퓨터 모드에서만 돈다 ----------
+class Match {
+  constructor(first){
+    Object.assign(this, { server: first, sc: new Score(), t: 0, pt: 0, phase: 'pre', faults: 0, over: -1, hitstop: 0, kmh: 0, ev: [], deadDur: 0, keepF: false, C: [NOC(), NOC()] });
+    this.ball = { x: 0, y: -5, z: 0, vx: 0, vy: 0, vz: 0, g: GRAV, eh: 0.72, ey: 0.68, vis: false, toss: false, auto: false, serve: false, net: false, blocked: false, roll: false, hitter: -1, bn: 0, nh: 0 };
+    this.P = [mkP(0), mkP(1)];
+    this.setup(true);
+  }
+  deuce(){ return (this.sc.p[0] + this.sc.p[1]) % 2 === 0; }      // 합계 짝수 = 듀스 코트(오른쪽)
+  spot(s){
+    const sg = sgnOf(s), d = this.deuce() ? 1 : -1;
+    return s === this.server ? { x: sg * d * 0.9, z: sg * (HL + 0.35) } : { x: sg * d * 2.9, z: sg * (HL + 0.7) };
+  }
+  setup(snap){
+    const b = this.ball; Object.assign(b, { vis: false, toss: false, serve: false, roll: false, y: -5, vx: 0, vy: 0, vz: 0 });
+    for (const p of this.P){ const sp = this.spot(p.s); p.tx = sp.x; p.tz = sp.z; if (snap){ p.x = sp.x; p.z = sp.z; } p.armed = null; p.missed = false; p.auto = null; }
+    if (!this.keepF) this.faults = 0;
+    this.keepF = false; this.phase = 'pre'; this.pt = 0;
+  }
+  push(...e){ this.ev.push(e); }
+  canHit(p){ const b = this.ball; return this.phase === 'play' && b.vis && !b.toss && b.hitter !== p.s && !b.serve && b.bn <= 1 && b.z * p.sgn > 0; }
+  incoming(p){ const b = this.ball; return this.phase === 'play' && b.vis && b.hitter !== p.s; }
+  applyCtrl(p, c){
+    const b = this.ball;
+    for (const k of c.press){
+      if (this.phase === 'serve' && this.server === p.s){ if (!b.toss) this.toss(p, false); else this.serveHit(p, c, false); continue; }
+      if (this.incoming(p) && !p.missed && !swinging(p) && !p.armed){ p.armed = k; p.cT0 = this.t; p.cT1 = -1; p.autoAt = -9; }
+      else if (p.armed && p.armed !== k && this.incoming(p)) p.armed = k;   // 샷↔로브 바꾸기
+    }
+    for (const k of c.release) if (p.armed === k && p.cT1 < 0) p.cT1 = this.t;
+  }
+  step(dt, C){
+    this.t += dt; this.C = C;
+    if (this.hitstop > 0){ this.hitstop -= dt; return; }     // 치는 순간 멈칫
+    this.pt += dt;
+    const b = this.ball, ph = this.phase;
+    for (const p of this.P) p.at += dt;
+    if (ph === 'serve' || ph === 'play') for (const p of this.P) this.applyCtrl(p, C[p.s]);
+    for (const p of this.P){
+      if (this.phase === 'pre'){
+        const k = Math.min(1, dt * 7), nx = lerp(p.x, p.tx, k), nz = lerp(p.z, p.tz, k);
+        p.vx = (nx - p.x) / dt; p.vz = (nz - p.z) / dt; p.x = nx; p.z = nz;
+      } else if (this.phase === 'serve' || this.phase === 'play'){
+        if (p.armed && this.incoming(p) && this.t - p.autoAt > 0.08){
+          p.autoAt = this.t; const c = chooseContact(p, predict(b), AUTO, b.serve, Math.abs(p.z) < 8);
+          p.auto = c ? { x: c.sx, z: c.sz } : null;
+        }
+        movePlayer(p, C[p.s], dt, this.phase, p.s === this.server, b.toss, this.deuce());
+      } else { p.vx *= 0.8; p.vz *= 0.8; p.x += p.vx * dt; p.z += p.vz * dt; }
+    }
+    if (b.vis) this.ballStep(dt);
+    if (this.phase === 'play') for (const p of this.P) this.contact(p);
+    // 흐름
+    if (this.phase === 'pre' && this.pt > 0.95){ this.phase = 'serve'; this.pt = 0; for (const p of this.P) if (p.anim === 'joy' || p.anim === 'sad') p.anim = ''; }
+    else if (this.phase === 'serve' && !b.toss && this.pt > 5) this.toss(this.P[this.server], true);   // 5초 가만있으면 자동 토스
+    else if (this.phase === 'dead' && this.pt > this.deadDur){ if (this.over >= 0) this.phase = 'end'; else this.setup(false); }
+  }
+  ballStep(dt){
+    const b = this.ball;
+    if (b.roll){
+      const f = Math.max(0, 1 - 2.5 * dt); b.vx *= f; b.vz *= f; b.x += b.vx * dt; b.z += b.vz * dt; this.walls();
+      // 낮게 깔려 굴러가는 공은 두 번째 바운드와 같다
+      if (this.phase === 'play' && (b.rollT = (b.rollT || 0) + dt) > 0.25){ const side = b.z > 0 ? 0 : 1, h = b.hitter; if (b.serve) this.fault(); else if (side === h) this.point(1 - h, 'net'); else this.point(h, 'two'); }
+      return;
+    }
+    const x0 = b.x, y0 = b.y, z0 = b.z;
+    stepBall(b, dt);
+    if (b.toss){
+      if (b.vy < 0){
+        if (b.auto && b.y < 2.8) this.serveHit(this.P[this.server], NOC(), true);
+        else if (b.y < 1.05){ b.toss = false; b.vis = false; this.P[this.server].anim = ''; this.pt = 0; }   // 안 치면 받아서 다시
+      }
+      return;
+    }
+    // 네트: 띠(윗부분)에 스치면 힘이 줄며 넘어가고, 그보다 낮으면 막혀 떨어진다
+    if (z0 * b.z <= 0 && z0 !== b.z){
+      const f = z0 / (z0 - b.z), yc = y0 + (b.y - y0) * f, xc = x0 + (b.x - x0) * f, nh = netH(xc);
+      if (Math.abs(xc) <= POST + 0.05 && yc < nh + BR && !b.blocked){
+        if (yc > nh - 0.07){ b.net = true; b.vz *= 0.3; b.vx *= 0.5; b.vy = Math.abs(b.vy) * 0.15 + 0.7; b.y = Math.max(b.y, nh + BR); this.push('net', 0); }   // 띠에 스치면 힘이 크게 죽어 네트 가까이 떨어진다
+        else { b.blocked = true; b.z = Math.sign(z0) * 0.07; b.vz = -b.vz * 0.12; b.vx *= 0.3; b.vy = Math.min(b.vy, 0) * 0.3; this.push('net', 1); }
+      }
+    }
+    if (b.y <= BR && b.vy < 0){ bounceBall(b); this.push('bnc', +b.x.toFixed(2), +b.z.toFixed(2), +Math.min(1, Math.abs(b.vy) / 8).toFixed(2)); if (this.phase === 'play') this.onBounce(); }
+    this.walls();
+  }
+  walls(){
+    const b = this.ball;
+    let hit = false;
+    if (Math.abs(b.z) > WALL_Z - 0.1 && b.y < 1.05){ b.z = Math.sign(b.z) * (WALL_Z - 0.1); b.vz *= -0.3; hit = true; }
+    if (Math.abs(b.x) > WALL_X - 0.1 && b.y < 1.05){ b.x = Math.sign(b.x) * (WALL_X - 0.1); b.vx *= -0.3; hit = true; }
+    if (hit && this.phase === 'play'){
+      const side = b.z > 0 ? 0 : 1, h = b.hitter;
+      if (b.serve) this.fault(); else if (side === h) this.point(1 - h, 'net'); else if (b.bn === 0) this.point(side, 'out'); else this.point(h, 'two');
+    }
+  }
+  onBounce(){
+    const b = this.ball, side = b.z > 0 ? 0 : 1, h = b.hitter;
+    if (b.serve){
+      b.serve = false;
+      if (side !== h && inBox(b.x, b.z, h, this.deuce())){ if (b.net) return this.let_(); b.bn = 1; return; }
+      return this.fault();
+    }
+    if (side === h) return this.point(1 - h, 'net');            // 네트를 못 넘은 공
+    if (b.bn === 0){ if (!inCourt(b.x, b.z)) return this.point(side, 'out'); b.bn = 1; return; }
+    return this.point(h, 'two');                                // 두 번 튐
+  }
+  contact(p){
+    if (!p.armed || p.missed || !this.canHit(p)) return;
+    const b = this.ball, dx = b.x - p.x, ad = Math.abs(dx), f = (p.z - b.z) * p.sgn;
+    if (f > 0.45) return;
+    if (f >= -0.45 && ad <= 1.6 && b.y >= 0.08 && b.y <= 2.4) return this.hit(p, quality(ad, b.y, f, Math.hypot(p.vx, p.vz), Math.hypot(b.vx, b.vy, b.vz)));
+    if (f < -0.45 && ad < 2.6){                                 // 늦었다: 헛스윙
+      p.missed = true; p.anim = dx * p.sgn >= 0 ? 'wh' : 'whb'; p.at = 0; p.armed = null; this.push('wh', p.s);
+    }
+  }
+  hit(p, q){
+    const b = this.ball, c = this.C[p.s] || NOC(), kind = p.armed, s = p.sgn;
+    const pw = clamp(((p.cT1 >= 0 ? p.cT1 : this.t) - p.cT0) / 0.75, 0.1, 1);   // 누른 시간 = 힘
+    const ax = clamp(c.ax, -1, 1), az = clamp(c.az, -1, 1);                  // 치는 순간 레버 = 코스
+    let tx, tz, T, g, clr, eh, ey;
+    if (kind === 'lob'){
+      const sig = 0.3 + (1 - q) * 1.3;
+      tx = ax * 2.9 * s + gauss() * sig; tz = -s * (9.9 + az * 0.9 + gauss() * sig * 0.9);
+      T = 1.55 + 0.35 * (1 - pw) + (1 - q) * 0.2; g = GRAV; clr = 1.1 + gauss() * (1 - q) * 0.4; eh = 0.62; ey = 0.66;
+    } else {
+      const sig = 0.28 + (1 - q) * 1.6 + pw * 0.45;
+      const dep = az >= 0 ? 8.7 + az * 2.1 : 8.7 + az * 3.0;
+      tx = ax * 3.4 * s + gauss() * (sig + Math.abs(ax) * 0.25); tz = -s * (dep + gauss() * sig * 0.9);
+      const spd = 19 + 19 * pw * (0.55 + 0.45 * q);
+      T = Math.hypot(tx - b.x, tz - b.z) / spd; g = 14; clr = 0.3 - 0.15 * pw + gauss() * (1 - q) * 0.35; eh = 0.74; ey = 0.7;
+    }
+    const v = solve(b, tx, tz, T, g, clr);
+    Object.assign(b, { vx: v[0], vy: v[1], vz: v[2], g, eh, ey, hitter: p.s, bn: 0, serve: false, net: false, blocked: false, roll: false });
+    b.nh++;
+    const fh = (b.x - p.x) * s >= 0;
+    p.anim = kind === 'lob' ? (fh ? 'lf' : 'lb') : (fh ? 'fh' : 'bh'); p.at = 0; p.armed = null; p.cT1 = -1; p.auto = null;
+    this.hitstop = 0.05;
+    this.push('hit', p.s, kind === 'lob' ? 1 : 0, +pw.toFixed(2), +b.x.toFixed(2), +b.y.toFixed(2), +b.z.toFixed(2));
+  }
+  toss(p, auto){
+    const s = p.sgn;
+    Object.assign(this.ball, { x: p.x + s * 0.12, y: 1.05, z: p.z - s * 0.32, vx: 0, vy: 6.1, vz: 0, g: GRAV, vis: true, toss: true, auto, serve: false, roll: false, blocked: false, net: false });
+    p.anim = 'toss'; p.at = 0; this.push('toss', p.s);
+  }
+  serveHit(p, c, auto){
+    const b = this.ball, s = p.sgn, deuce = this.deuce();
+    const q = auto ? 0.55 : clamp(1 - Math.abs(b.y - 2.94) / 0.4, 0.05, 1);    // 꼭대기에 가까울수록 좋다
+    const ax = auto ? 0 : clamp(c.ax, -1, 1), az = auto ? 0 : clamp(c.az, -1, 1), u = (ax + 1) / 2;
+    const sig = 0.14 + (1 - q) * 1.0;
+    const lat = (deuce ? -3.7 + 3.3 * u : 0.4 + 3.3 * u) + gauss() * sig;   // 레버 좌우: 와이드 ↔ 센터
+    const dep = 5.6 + az * 0.5 + gauss() * sig * 0.8;
+    const tx = lat * s, tz = -s * dep, spd = 30 + 24 * q;
+    const v = solve(b, tx, tz, Math.hypot(tx - b.x, tz - b.z) / spd, 10.5, 0.07 + gauss() * (1 - q) * 0.28);
+    Object.assign(b, { vx: v[0], vy: v[1], vz: v[2], g: 10.5, eh: 0.7, ey: 0.7, toss: false, auto: false, serve: true, hitter: p.s, bn: 0, net: false, blocked: false });
+    b.nh++;
+    this.kmh = Math.round(Math.hypot(v[0], v[1], v[2]) * 3.6);
+    p.anim = 'srv'; p.at = 0; this.phase = 'play'; this.pt = 0; this.hitstop = 0.05;
+    this.push('srv', p.s, this.kmh, +b.x.toFixed(2), +b.y.toFixed(2), +b.z.toFixed(2));
+  }
+  dead(dur, keepF){ this.phase = 'dead'; this.pt = 0; this.deadDur = dur; this.keepF = keepF; for (const p of this.P){ p.armed = null; p.auto = null; } }
+  fault(){
+    if (this.faults === 0){ this.faults = 1; this.push('call', 'fault', 0, 0); this.dead(1.4, true); }
+    else this.point(1 - this.server, 'df');
+  }
+  let_(){ this.push('call', 'let', 0, 0); this.dead(1.4, true); }
+  point(w, code){
+    const r = this.sc.add(w), calls = [];
+    if (code === 'out' || code === 'net' || code === 'df') calls.push([code, 0]);
+    if (r.k === 'game') calls.push(['game', w]);
+    else if (r.k === 'deuce') calls.push(['deuce', 0]);
+    else if (r.k === 'adv') calls.push(['adv', r.w]);
+    else if (!calls.length) calls.push(['score', this.sc.text(this.server), code === 'two' ? 2 - w : 0]);   // 두 번 튐이면 잃은 자리+1
+    calls.forEach((c, i) => this.push('call', c[0], c[1], i, c[2] || 0));
+    this.P[w].anim = 'joy'; this.P[w].at = 0; this.P[1 - w].anim = 'sad'; this.P[1 - w].at = 0;
+    this.push('pt', w, r.k === 'game' ? 1 : 0);
+    if (r.k === 'game') this.over = w;
+    this.dead(r.k === 'game' ? 2.8 : 2.2 + (calls.length - 1) * 0.6, false);
+  }
+}
+
+// ---------- 컴퓨터 ----------
+// 사람과 같은 달리기 속도·같은 치기 규칙(버튼 누름 → 범위에 들어오면 스윙). 순간이동 없음.
+const LV = {
+  easy:   { react: 0.36, perr: 0.55, pw: [0.25, 0.5], late: 0.13, wide: 0.1, lob: 0.12, volley: false, srvErr: 0.22, rush: 0, sAim: 0.3 },
+  normal: { react: 0.22, perr: 0.25, pw: [0.35, 0.65], late: 0.05, wide: 0.05, lob: 0.3, volley: false, srvErr: 0.14, rush: 0.06, sAim: 0.7 },
+  hard:   { react: 0.12, perr: 0.08, pw: [0.5, 0.8], late: 0, wide: 0.02, lob: 0.55, volley: true, srvErr: 0.08, rush: 0.3, sAim: 1 },
+  // 시험용 봇(내 선수를 대신 움직일 때만): 세게·구석으로 쳐서 포인트가 빨리 난다
+  bot:    { react: 0.2, perr: 0.2, pw: [0.85, 1.0], late: 0.03, wide: 0.25, lob: 0.1, volley: false, srvErr: 0.12, rush: 0.05, sAim: 1 },
+};
+// W: {t, phase, server, ball, P} — 방장은 경기 엔진을, 손님은 받은 상태를 그대로 넣는다
+function aiCtrl(W, s, lvK, mem){
+  const L = LV[lvK] || LV.normal, p = W.P[s], o = W.P[1 - s], b = W.ball, t = W.t, sg = p.sgn, c = NOC();
+  const goTo = (x, z, tol) => { const dx = x - p.x, dz = z - p.z, d = Math.hypot(dx, dz); if (d > tol){ const m = Math.min(1, d / 0.35) / d; c.mx = dx * m; c.mz = dz * m; } };
+  if (W.phase === 'serve'){
+    mem.rush = false;
+    if (W.server !== s){ mem.tossAt = 0; return c; }
+    if (!b.toss){ if (!mem.tossAt) mem.tossAt = t + 0.5 + Math.random() * 0.7; if (t >= mem.tossAt){ c.press.push('shot'); mem.tossAt = 0; mem.hitAt = 0; } }
+    else {
+      if (!mem.hitAt){
+        mem.hitAt = t + Math.max(0.05, b.vy / GRAV + gauss() * L.srvErr);
+        const r = Math.random(); mem.sax = (r < 0.4 ? -1 : r < 0.8 ? 1 : 0) * L.sAim * (0.7 + Math.random() * 0.3); mem.saz = Math.random() * 0.6 - 0.2;
+      }
+      c.ax = mem.sax; c.az = mem.saz;
+      if (t >= mem.hitAt){ c.press.push('shot'); mem.hitAt = 0; }
+    }
+    return c;
+  }
+  if (W.phase !== 'play'){ mem.tossAt = 0; mem.hitAt = 0; return c; }
+  const incoming = b.hitter !== s;
+  if (incoming){
+    if (mem.nh !== b.nh){
+      mem.nh = b.nh; mem.plan = null; mem.pressed = false;
+      mem.reactAt = t + L.react * (0.8 + Math.random() * 0.4);
+      mem.late = Math.random() < L.late;
+      mem.ex = gauss() * L.perr; mem.ez = gauss() * L.perr * 0.5;
+      mem.pw = L.pw[0] + Math.random() * (L.pw[1] - L.pw[0]);
+      const ou = o.x * sg, open = ou > 0.3 ? -1 : ou < -0.3 ? 1 : (Math.random() < 0.5 ? -1 : 1);
+      const oppNet = Math.abs(o.z) < 6.5;
+      mem.kind = (oppNet && Math.random() < L.lob) || Math.random() < L.lob * 0.12 ? 'lob' : 'shot';
+      if (lvK === 'easy'){ mem.ax = (Math.random() - 0.5) * 0.7; mem.az = Math.random() * 0.5 - 0.2; }
+      else if (lvK === 'bot'){ mem.ax = open * (0.65 + Math.random() * 0.35); mem.az = 0.4 + Math.random() * 0.6; if (Math.random() < 0.15) mem.az = -0.8; }
+      else if (lvK === 'hard'){ mem.ax = open * (0.5 + Math.random() * 0.35); mem.az = 0.15 + Math.random() * 0.45; if (Math.random() < 0.12){ mem.az = -0.75; mem.ax = open * 0.85; } }   // 구석·짧은 각도를 섞되 여유를 둔다
+      else { mem.ax = open * (0.25 + Math.random() * 0.4); mem.az = Math.random() * 0.4; }
+      if (Math.random() < L.wide){ mem.ax = open; mem.pw = 1; }
+      if (mem.kind === 'lob'){ mem.ax *= 0.6; mem.az = 0.5; }
+      mem.rushNext = mem.kind === 'shot' && mem.pw > 0.6 && Math.random() < L.rush;
+    }
+    c.ax = mem.ax; c.az = mem.az;
+    if (t < mem.reactAt) return c;
+    if (!mem.plan || t - mem.planAt > 0.12){
+      const cc = chooseContact(p, predict(b), RUN, b.serve, L.volley && Math.abs(p.z) < 8);
+      mem.planAt = t; mem.plan = cc ? { sx: cc.sx + mem.ex, sz: cc.sz + mem.ez, tt: t + cc.t } : null;
+    }
+    if (mem.plan){
+      if (!p.armed) goTo(mem.plan.sx, mem.plan.sz, 0.06);
+      const want = mem.late ? 0.0 : mem.pw * 0.75 + 0.06;
+      if (!p.armed && !mem.pressed && mem.plan.tt - t <= want){ c.press.push(mem.kind); mem.pressed = true; }
+    }
+  } else {
+    if (mem.nh !== b.nh){ mem.nh = b.nh; mem.rush = !!mem.rushNext; }
+    mem.plan = null;
+    const hx = clamp(b.x * 0.3, -1.6, 1.6);
+    if (mem.rush) goTo(hx, sg * 3.6, 0.2); else goTo(hx, sg * (HL + 0.7), 0.25);
+  }
+  return c;
+}
+
+// ---------- 소리(직접 합성) ----------
+let NZ = null;
+function noiseBuf(a){ if (NZ) return NZ; const n = a.sampleRate * 2, b = a.createBuffer(1, n, a.sampleRate), d = b.getChannelData(0); for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1; return (NZ = b); }
+function snd(k, v = 1){
+  const a = VS.ac && VS.ac(); if (!a || a.state !== 'running') return;
+  const t = a.currentTime, out = a.createGain(); out.gain.value = v; out.connect(a.destination);
+  const nz = (dur, type, f, q, g0, t0 = 0, f2 = 0) => {
+    const s = a.createBufferSource(), fl = a.createBiquadFilter(), g = a.createGain();
+    s.buffer = noiseBuf(a); fl.type = type; fl.frequency.setValueAtTime(f, t + t0); if (f2) fl.frequency.linearRampToValueAtTime(f2, t + t0 + dur); fl.Q.value = q;
+    g.gain.setValueAtTime(0.0001, t + t0); g.gain.exponentialRampToValueAtTime(g0, t + t0 + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t + t0 + dur);
+    s.connect(fl); fl.connect(g); g.connect(out); s.start(t + t0, Math.random() * 1.5); s.stop(t + t0 + dur + 0.03);
+  };
+  const os = (dur, f, f2, g0, type = 'sine', t0 = 0) => {
+    const o = a.createOscillator(), g = a.createGain(); o.type = type; o.frequency.setValueAtTime(f, t + t0); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + t0 + dur);
+    g.gain.setValueAtTime(g0, t + t0); g.gain.exponentialRampToValueAtTime(0.0001, t + t0 + dur); o.connect(g); g.connect(out); o.start(t + t0); o.stop(t + t0 + dur + 0.03);
+  };
+  if (k === 'hit'){ nz(0.05, 'bandpass', 2400, 1.1, 0.9); os(0.07, 300, 120, 0.45, 'triangle'); nz(0.14, 'bandpass', 950, 2.2, 0.22); }         // 팡
+  else if (k === 'bnc'){ os(0.1, 175, 75, 0.5); nz(0.05, 'lowpass', 1000, 0.7, 0.3); }                                                  // 퉁(흙)
+  else if (k === 'net'){ nz(0.24, 'lowpass', 420, 0.8, 0.8); os(0.18, 110, 55, 0.45); }
+  else if (k === 'toss'){ nz(0.2, 'bandpass', 500, 1.1, 0.07, 0, 1300); }
+  else if (k === 'wh'){ nz(0.26, 'bandpass', 450, 1.3, 0.2, 0, 1900); }
+  else if (k === 'crowd'){
+    // 관중 «와아»: 잡음을 모음 «아» 대역(약 750·1150Hz)으로 걸러 부풀었다 가라앉게 + 박수
+    const big = v > 1, dur = big ? 2.8 : 1.9; out.gain.value = 0.9;
+    for (const [f, q, g0] of [[760, 2.6, 0.5], [1180, 3.5, 0.34], [2600, 5, 0.1]]){
+      const s = a.createBufferSource(), fl = a.createBiquadFilter(), g = a.createGain();
+      s.buffer = noiseBuf(a); s.loop = true; fl.type = 'bandpass'; fl.Q.value = q;
+      fl.frequency.setValueAtTime(f * 0.85, t); fl.frequency.linearRampToValueAtTime(f * 1.06, t + 0.5); fl.frequency.linearRampToValueAtTime(f * 0.95, t + dur);
+      g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(g0, t + 0.28); g.gain.linearRampToValueAtTime(g0 * 0.75, t + dur * 0.55); g.gain.linearRampToValueAtTime(0.0001, t + dur);
+      s.connect(fl); fl.connect(g); g.connect(out); s.start(t, Math.random()); s.stop(t + dur + 0.05);
+    }
+    const n = big ? 110 : 60;
+    for (let i = 0; i < n; i++) nz(0.03, 'highpass', 1600 + Math.random() * 1800, 0.8, 0.05 + Math.random() * 0.07, 0.12 + Math.random() * (dur - 0.4));
+  }
+}
+
+// ---------- 3D 무대 ----------
+let renderer = null, scene, cam, sunL, stage, cv, W = 300, H = 300, PR = 1, prMax = 2;
+const MP = [];                  // 말랑이 선수 둘(자리 0 파랑·자리 1 빨강 — 컴퓨터 대결에선 나=0)
+let ballM, ballSh, streak, flash, netMesh, crowdTex = [], camBase = { h: 6, d: 6, tz: -3 }, camX = 0;
+const marks = [];
+const TL = new THREE.TextureLoader();
+// 그림 파일이 있으면 쓰고, 없거나 실패하면 코드로 만든 질감 그대로
+function tryTex(url, cb){ TL.load(url, tx => { tx.colorSpace = THREE.SRGBColorSpace; tx.anisotropy = 4; cb(tx); }, undefined, () => {}); }
+function canvasTex(w, h, draw){ const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; }
+function clayTex(){
+  return canvasTex(256, 256, (x, w, h) => {
+    x.fillStyle = '#C9683E'; x.fillRect(0, 0, w, h);
+    for (let i = 0; i < 2600; i++){ const v = Math.random(); x.fillStyle = v < 0.5 ? `rgba(150,70,35,${0.12 + Math.random() * 0.2})` : `rgba(235,150,105,${0.1 + Math.random() * 0.18})`; x.fillRect(Math.random() * w, Math.random() * h, 1 + Math.random() * 2, 1 + Math.random() * 2); }
+  });
+}
+function crowdTexGen(){
+  return canvasTex(512, 256, (x, w, h) => {
+    x.fillStyle = '#5C6B8A'; x.fillRect(0, 0, w, h);
+    const cols = ['#F2434B', '#2E7CF0', '#F7C22B', '#23B45B', '#FF8FB1', '#FF9A3C', '#7BD3F7', '#FFFFFF'];
+    for (let r = 0; r < 8; r++){
+      x.fillStyle = 'rgba(0,0,0,.25)'; x.fillRect(0, r * 32 + 28, w, 4);
+      for (let i = 0; i < 18; i++){ const cx = i * 28.4 + 14 + (r % 2) * 7, cy = r * 32 + 18; x.fillStyle = cols[(Math.random() * cols.length) | 0]; x.beginPath(); x.ellipse(cx, cy, 11, 12, 0, 0, 7); x.fill(); x.fillStyle = '#1F1A2E'; x.fillRect(cx - 4, cy - 3, 2, 3); x.fillRect(cx + 2, cy - 3, 2, 3); }
+    }
+  });
+}
+// 광고판: 가상 문구만(실제 상표 없음)
+function adTex(){
+  return canvasTex(1024, 96, (x, w, h) => {
+    const segs = [['#1C2340', '#FFFFFF', '1:1 오락실'], ['#E05A1E', '#FFFFFF', 'kimju.zip'], ['#FFFFFF', '#1C2340', 'MALLANG'], ['#1D7A4D', '#FFFFFF', '말랑 테니스']];
+    segs.forEach(([bg, fg, t], i) => {
+      x.fillStyle = bg; x.fillRect(i * 256, 0, 256, h);
+      x.fillStyle = fg; x.font = '900 46px "Pretendard Variable",Pretendard,sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(t, i * 256 + 128, h / 2 + 2);
+    });
+  });
+}
+const GEO = {};
+function makeMallang(color, o = {}){
+  const root = new THREE.Group(), body = new THREE.Group(); root.add(body);
+  const mat = o.plain ? new THREE.MeshStandardMaterial({ color, roughness: 0.4 }) : new THREE.MeshPhysicalMaterial({ color, roughness: 0.28, clearcoat: 1, clearcoatRoughness: 0.12 });
+  const blob = new THREE.Mesh(GEO.blob, mat); blob.position.y = 0.6; blob.scale.set(1, 1.06, 0.94); blob.castShadow = true; body.add(blob);
+  const eyes = [], pupils = [];
+  for (const sx of [-1, 1]){
+    const e = new THREE.Group(); e.position.set(sx * 0.17, 0.74, 0.44); body.add(e);
+    const w = new THREE.Mesh(GEO.eye, MAT.white); w.scale.set(1, 1.28, 0.55); e.add(w);
+    const pu = new THREE.Mesh(GEO.pupil, MAT.black); pu.position.set(0, -0.01, 0.045); pu.scale.set(1, 1.3, 0.6); e.add(pu);
+    const hl = new THREE.Mesh(GEO.hl, MAT.white); hl.position.set(-0.025, 0.035, 0.08); pu.add(hl);
+    eyes.push(e); pupils.push(pu);
+    const ck = new THREE.Mesh(GEO.cheek, MAT.cheek); ck.position.set(sx * 0.31, 0.58, 0.41); ck.scale.set(1, 0.6, 0.35); ck.rotation.y = sx * 0.55; body.add(ck);
+  }
+  const mouth = new THREE.Mesh(GEO.mouth, MAT.black); mouth.position.set(0, 0.6, 0.5); mouth.rotation.z = Math.PI; body.add(mouth);
+  const darker = new THREE.Color(color).multiplyScalar(0.72);
+  const limbMat = o.plain ? mat : new THREE.MeshPhysicalMaterial({ color: darker, roughness: 0.3, clearcoat: 0.8 });
+  // 오른팔(로컬 -x 쪽): 회전 두 단계(수평 θ → 올림 ψ)
+  const armR = new THREE.Group(); armR.position.set(-0.46, 0.6, 0.04); body.add(armR);
+  const rollR = new THREE.Group(); armR.add(rollR);
+  const aR = new THREE.Mesh(GEO.arm, limbMat); aR.rotation.z = Math.PI / 2; aR.position.x = -0.1; aR.castShadow = true; rollR.add(aR);
+  let racket = null;
+  if (o.racket){
+    racket = new THREE.Group(); racket.position.x = -0.2; rollR.add(racket);
+    const hd = new THREE.Mesh(GEO.handle, MAT.grip); hd.rotation.z = Math.PI / 2; hd.position.x = -0.12; racket.add(hd);
+    const th = new THREE.Mesh(GEO.throat, MAT.frame); th.rotation.z = Math.PI / 2; th.position.x = -0.27; racket.add(th);
+    const fr = new THREE.Mesh(GEO.frame, MAT.frame); fr.position.x = -0.5; fr.scale.set(1.28, 1, 1); fr.castShadow = true; racket.add(fr);
+    const st = new THREE.Mesh(GEO.strings, MAT.strings); st.position.x = -0.5; st.scale.set(1.28, 1, 1); racket.add(st);
+  }
+  const armL = new THREE.Group(); armL.position.set(0.46, 0.6, 0.04); body.add(armL);
+  const rollL = new THREE.Group(); armL.add(rollL);
+  const aL = new THREE.Mesh(GEO.arm, limbMat); aL.rotation.z = Math.PI / 2; aL.position.x = 0.1; aL.castShadow = true; rollL.add(aL);
+  const feet = [];
+  for (const sx of [-1, 1]){ const f = new THREE.Mesh(GEO.foot, limbMat); f.position.set(sx * 0.2, 0.06, 0.05); f.scale.set(1, 0.55, 1.3); f.castShadow = true; root.add(f); feet.push(f); }
+  const M = { root, body, eyes, pupils, armR, rollR, armL, rollL, racket, feet, yaw: 0, ph: 0, th: 0.55, ps: 0.55, psL: -0.9, blinkT: 2 + Math.random() * 3 };
+  if (o.scale) root.scale.setScalar(o.scale);
+  return M;
+}
+const MAT = {};
+function buildScene(){
+  scene = new THREE.Scene();
+  scene.background = canvasTex(4, 256, (x, w, h) => { const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#3F8FE6'); g.addColorStop(0.55, '#8CC7F5'); g.addColorStop(1, '#E4F2FC'); x.fillStyle = g; x.fillRect(0, 0, w, h); });
+  scene.fog = new THREE.Fog(0xD6EAF8, 70, 160);
+  scene.add(new THREE.HemisphereLight(0xD7ECFF, 0x9A6446, 1.15));
+  sunL = new THREE.DirectionalLight(0xFFF2DE, 2.6); sunL.position.set(-9, 24, 7);
+  sunL.castShadow = true; sunL.shadow.mapSize.set(1024, 1024);
+  Object.assign(sunL.shadow.camera, { left: -16, right: 16, top: 16, bottom: -16, near: 4, far: 60 });
+  sunL.shadow.bias = -0.0005; sunL.shadow.normalBias = 0.02; sunL.shadow.radius = 3;
+  scene.add(sunL); scene.add(sunL.target);
+  // 공용 모양·재질
+  Object.assign(GEO, {
+    blob: new THREE.SphereGeometry(0.52, 36, 26), eye: new THREE.SphereGeometry(0.1, 16, 12), pupil: new THREE.SphereGeometry(0.058, 12, 10), hl: new THREE.SphereGeometry(0.018, 8, 6),
+    cheek: new THREE.SphereGeometry(0.07, 12, 8), mouth: new THREE.TorusGeometry(0.05, 0.013, 6, 14, Math.PI), arm: new THREE.CapsuleGeometry(0.075, 0.14, 4, 10),
+    handle: new THREE.CylinderGeometry(0.024, 0.026, 0.26, 8), throat: new THREE.CylinderGeometry(0.014, 0.02, 0.1, 6), frame: new THREE.TorusGeometry(0.17, 0.017, 8, 32),
+    strings: new THREE.CircleGeometry(0.165, 24), foot: new THREE.SphereGeometry(0.12, 12, 8),
+  });
+  const strTex = canvasTex(64, 64, (x, w, h) => { x.clearRect(0, 0, w, h); x.strokeStyle = 'rgba(245,245,235,.95)'; x.lineWidth = 1.4; for (let i = 4; i < w; i += 7){ x.beginPath(); x.moveTo(i, 0); x.lineTo(i, h); x.stroke(); x.beginPath(); x.moveTo(0, i); x.lineTo(w, i); x.stroke(); } });
+  Object.assign(MAT, {
+    white: new THREE.MeshStandardMaterial({ color: 0xFFFFFF, roughness: 0.25 }), black: new THREE.MeshStandardMaterial({ color: 0x1F1A2E, roughness: 0.3 }),
+    cheek: new THREE.MeshStandardMaterial({ color: 0xFF8FA8, roughness: 0.6, transparent: true, opacity: 0.85 }),
+    grip: new THREE.MeshStandardMaterial({ color: 0x1C2340, roughness: 0.7 }), frame: new THREE.MeshStandardMaterial({ color: 0xF4F1EA, roughness: 0.35, metalness: 0.1 }),
+    strings: new THREE.MeshBasicMaterial({ map: strTex, transparent: true, side: THREE.DoubleSide, depthWrite: false }),
+  });
+  // 바닥: 클레이 전체 + 흰 라인
+  const clay = clayTex(); clay.wrapS = clay.wrapT = THREE.RepeatWrapping; clay.repeat.set(12, 16);
+  const groundMat = new THREE.MeshLambertMaterial({ map: clay });
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(WALL_X * 2 + 30, WALL_Z * 2 + 30), groundMat); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+  tryTex('/vs/common/tn-clay.jpg', tx => { tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(9, 12); groundMat.map = tx; groundMat.color.set(0xE9D2C4); groundMat.needsUpdate = true; });
+  const lineMat = new THREE.MeshLambertMaterial({ color: 0xF6F2EA, polygonOffset: true, polygonOffsetFactor: -2 });
+  const line = (cx, cz, w, l) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, l), lineMat); m.rotation.x = -Math.PI / 2; m.position.set(cx, 0.004, cz); m.receiveShadow = true; scene.add(m); };
+  for (const s of [-1, 1]){
+    line(0, s * (HL - 0.05), DW * 2, 0.1);                 // 베이스라인(폭 10cm)
+    line(s * (DW - 0.025), 0, 0.05, HL * 2);               // 복식 사이드라인
+    line(s * (HW - 0.025), 0, 0.05, HL * 2);               // 단식 사이드라인
+    line(0, s * (SV - 0.025), HW * 2, 0.05);               // 서비스 라인
+    line(0, s * (HL - 0.15), 0.05, 0.1);                   // 센터 마크
+  }
+  line(0, 0, 0.05, SV * 2);                                // 센터 서비스 라인
+  // 네트: 그물 질감 + 가운데 처짐 + 흰 띠 + 가운데 끈 + 기둥
+  const netTex = canvasTex(64, 64, (x, w, h) => { x.clearRect(0, 0, w, h); x.strokeStyle = 'rgba(20,24,30,.85)'; x.lineWidth = 3; for (let i = 0; i <= w; i += 16){ x.beginPath(); x.moveTo(i, 0); x.lineTo(i, h); x.stroke(); x.beginPath(); x.moveTo(0, i); x.lineTo(w, i); x.stroke(); } });
+  netTex.wrapS = netTex.wrapT = THREE.RepeatWrapping; netTex.repeat.set(POST * 2 / 0.18, 1.07 / 0.18);
+  const ng = new THREE.PlaneGeometry(POST * 2, 1, 40, 1), np = ng.attributes.position;
+  for (let i = 0; i < np.count; i++){ const x = np.getX(i), top = np.getY(i) > 0; np.setY(i, top ? netH(x) - 0.03 : 0.03); }
+  ng.computeVertexNormals();
+  netMesh = new THREE.Group(); scene.add(netMesh);
+  netMesh.add(new THREE.Mesh(ng, new THREE.MeshLambertMaterial({ map: netTex, transparent: true, side: THREE.DoubleSide, depthWrite: false, alphaTest: 0.05 })));
+  const tg = new THREE.PlaneGeometry(POST * 2, 0.07, 40, 1), tp = tg.attributes.position;
+  for (let i = 0; i < tp.count; i++){ const x = tp.getX(i); tp.setY(i, netH(x) - 0.035 + tp.getY(i)); }
+  const tape = new THREE.Mesh(tg, new THREE.MeshLambertMaterial({ color: 0xFAFAF5, side: THREE.DoubleSide })); tape.castShadow = true; netMesh.add(tape);
+  const strap = new THREE.Mesh(new THREE.PlaneGeometry(0.05, NET_C), new THREE.MeshLambertMaterial({ color: 0xFAFAF5, side: THREE.DoubleSide })); strap.position.set(0, NET_C / 2, 0.002); netMesh.add(strap);
+  const postMat = new THREE.MeshStandardMaterial({ color: 0x1E4D3A, roughness: 0.5 });
+  for (const s of [-1, 1]){ const pm = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.12, 12), postMat); pm.position.set(s * POST, 0.56, 0); pm.castShadow = true; scene.add(pm); }
+  // 광고판(가상 문구) 네 벽
+  const ad = adTex(); ad.wrapS = THREE.RepeatWrapping;
+  const wallMat = new THREE.MeshStandardMaterial({ color: 0x2A7456, roughness: 0.8 });
+  const board = (len, x, z, ry) => {
+    const t = ad.clone(); t.needsUpdate = true; t.repeat.set(len / 11, 1);
+    const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry; scene.add(g);
+    const face = new THREE.Mesh(new THREE.PlaneGeometry(len, 0.95), new THREE.MeshLambertMaterial({ map: t })); face.position.y = 0.5; g.add(face);
+    const back = new THREE.Mesh(new THREE.BoxGeometry(len, 1.05, 0.12), wallMat); back.position.set(0, 0.52, -0.08); g.add(back);
+  };
+  board(WALL_X * 2, 0, -WALL_Z, 0); board(WALL_X * 2, 0, WALL_Z, Math.PI);
+  board(WALL_Z * 2, -WALL_X, 0, Math.PI / 2); board(WALL_Z * 2, WALL_X, 0, -Math.PI / 2);
+  // 관중석: 기울어진 판 + 관중 질감(그림 파일이 오면 바꿔 낌)
+  const ct = crowdTexGen(); ct.wrapS = ct.wrapT = THREE.RepeatWrapping;
+  const standMat = new THREE.MeshLambertMaterial({ map: ct });
+  const endStands = [];
+  const stand = (len, x, z, ry, isEnd) => {
+    const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry; scene.add(g);
+    const t = ct.clone(); t.needsUpdate = true; t.repeat.set(len / 7, 2.4); crowdTex.push(t);
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(len, 16), new THREE.MeshLambertMaterial({ map: t, color: 0xC9CCD6 })); m.rotation.x = -0.95; m.position.set(0, 1.6 + 8 * Math.cos(0.95), -1.3 - 8 * Math.sin(0.95)); g.add(m);
+    const base = new THREE.Mesh(new THREE.PlaneGeometry(len, 1.6), wallMat); base.position.set(0, 0.8, -1.2); g.add(base);
+    if (isEnd) endStands.push(g);
+  };
+  stand(44, 0, -WALL_Z - 1.5, 0, true); stand(44, 0, WALL_Z + 1.5, Math.PI, true);
+  stand(WALL_Z * 2 + 10, -WALL_X - 3, 0, Math.PI / 2, false); stand(WALL_Z * 2 + 10, WALL_X + 3, 0, -Math.PI / 2, false);
+  tryTex('/vs/common/tn-crowd.jpg', tx => { tx.wrapS = tx.wrapT = THREE.RepeatWrapping; for (const t of crowdTex){ t.image = tx.image; t.repeat.y = 1.6; t.needsUpdate = true; } });
+  // 먼 끝 배경 그림: 있으면 양쪽 끝 관중석 대신 세운다(아래 초록 벽 부분이 광고판 뒤에 오게)
+  tryTex('/vs/common/tn-stadium.jpg', tx => {
+    const w = 64, h = w * 941 / 1672;
+    for (const s of [-1, 1]){ const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tx, fog: false })); m.position.set(0, h / 2 - h * 0.2, s * (WALL_Z + 1.4)); m.rotation.y = s > 0 ? Math.PI : 0; scene.add(m); }
+    for (const g of endStands) g.visible = false;
+  });
+  // 주심 높은 의자, 선심, 볼보이(말랑이)
+  const chairMat = new THREE.MeshStandardMaterial({ color: 0x2B5E4A, roughness: 0.6 });
+  const box = (w, h, d, x, y, z, m = chairMat) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); b.position.set(x, y, z); b.castShadow = true; scene.add(b); return b; };
+  const ux = -(POST + 1.1);
+  for (const [dx, dz] of [[-0.3, -0.3], [0.3, -0.3], [-0.3, 0.3], [0.3, 0.3]]) box(0.06, 2.0, 0.06, ux + dx, 1.0, dz);
+  box(0.8, 0.08, 0.8, ux, 2.0, 0); box(0.08, 0.6, 0.8, ux - 0.38, 2.3, 0); box(0.9, 0.06, 0.9, ux, 0.9, 0);
+  const ump = makeMallang(0xEDEDED, { plain: true, scale: 0.62 }); ump.root.position.set(ux, 2.04, 0); ump.root.rotation.y = Math.PI / 2; scene.add(ump.root);
+  const judges = [];
+  for (const [x, z, ry] of [[-(DW + 2.4), -(HL - 1.5), Math.PI / 2], [DW + 2.4, HL - 1.5, -Math.PI / 2], [DW + 2.6, -(HL + 3.6), 0], [-(DW + 2.6), HL + 3.6, Math.PI]]){
+    box(0.5, 0.45, 0.5, x, 0.22, z); const j = makeMallang(0x2B3A67, { plain: true, scale: 0.5 }); j.root.position.set(x, 0.45, z); j.root.rotation.y = ry; scene.add(j.root); judges.push(j);
+  }
+  for (const [x, z, ry] of [[POST + 0.9, 0.4, -Math.PI / 2], [-(HW + 1.2), -(HL + 4.6), 0], [HW + 1.2, HL + 4.6, Math.PI]]){
+    const k = makeMallang(0x3DAA66, { plain: true, scale: 0.42 }); k.root.position.set(x, 0, z); k.root.rotation.y = ry; scene.add(k.root); judges.push(k);
+  }
+  scene.userData.extras = [ump, ...judges];
+  // 선수 둘
+  MP[0] = makeMallang(0x2F7BE5, { racket: true }); MP[1] = makeMallang(0xE8493A, { racket: true });
+  MP[0].seat = 0; MP[1].seat = 1;
+  for (const m of MP) scene.add(m.root);
+  // 공, 공 그림자(바로 아래 — 높이 읽기용), 빠를 때 꼬리, 칠 때 번쩍, 흙 자국
+  ballM = new THREE.Mesh(new THREE.SphereGeometry(BALL_R, 18, 12), new THREE.MeshStandardMaterial({ color: 0xDDF33C, roughness: 0.55, emissive: 0x3A4600, emissiveIntensity: 0.6 }));
+  ballM.castShadow = true; scene.add(ballM);
+  if (VS.isTouch) ballM.scale.setScalar(1.45);   // 폰은 카메라가 높고 멀어 공을 조금 크게(판정과 무관)
+  const shTex = canvasTex(64, 64, (x, w, h) => { const g = x.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, 'rgba(0,0,0,.9)'); g.addColorStop(0.55, 'rgba(0,0,0,.55)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, w, h); });
+  ballSh = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.34), new THREE.MeshBasicMaterial({ map: shTex, transparent: true, depthWrite: false, opacity: 0.5 }));
+  ballSh.rotation.x = -Math.PI / 2; scene.add(ballSh);
+  streak = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.005, 1, 8, 1, true), new THREE.MeshBasicMaterial({ color: 0xF4FF9A, transparent: true, opacity: 0.35, depthWrite: false }));
+  scene.add(streak);
+  const flTex = canvasTex(64, 64, (x) => { x.strokeStyle = '#fff'; x.lineWidth = 6; x.beginPath(); x.arc(32, 32, 26, 0, 7); x.stroke(); });
+  flash = new THREE.Sprite(new THREE.SpriteMaterial({ map: flTex, transparent: true, depthWrite: false, opacity: 0 })); scene.add(flash); flash.userData.t = 9;
+  const mkTex = canvasTex(64, 32, (x) => { const g = x.createRadialGradient(32, 16, 0, 32, 16, 30); g.addColorStop(0, 'rgba(120,48,20,.8)'); g.addColorStop(1, 'rgba(120,48,20,0)'); x.fillStyle = g; x.save(); x.scale(1, 0.5); x.beginPath(); x.arc(32, 32, 30, 0, 7); x.fill(); x.restore(); });
+  for (let i = 0; i < 6; i++){ const m = new THREE.Mesh(new THREE.PlaneGeometry(0.36, 0.18), new THREE.MeshBasicMaterial({ map: mkTex, transparent: true, depthWrite: false, opacity: 0 })); m.rotation.x = -Math.PI / 2; m.position.y = 0.006; m.userData.t = 99; scene.add(m); marks.push(m); }
+  cam = new THREE.PerspectiveCamera(45, 1, 0.3, 220);
+}
+
+// ---------- 말랑이 동작 ----------
+function poseM(M, P, dt, now, V, crowdT){
+  const sg = sgnOf(M.seat), base = sg > 0 ? Math.PI : 0, b = V.ball;
+  M.root.position.set(P.x, 0, P.z);
+  let look = 0;
+  if (b.vis){ look = clamp(Math.atan2((b.x - P.x) * sg, Math.abs(b.z - P.z) + 1.5), -0.6, 0.6); }
+  const sp = Math.hypot(P.vx, P.vz), an = P.anim || '', at = P.at || 0;
+  let spin = 0;
+  if (an === 'joy' && at < 0.9) spin = easeOut(at / 0.9) * Math.PI * 2;
+  const yawT = base - look * 0.6;
+  M.yaw += (yawT - M.yaw) * Math.min(1, dt * 10);
+  M.root.rotation.y = M.yaw + spin;
+  // 몸: 달리면 앞으로 기울며 찌그러지고, 서 있으면 통통
+  M.ph += dt * (sp > 0.5 ? sp * 2.3 : 0);
+  const hop = sp > 0.5 ? Math.abs(Math.sin(M.ph)) * 0.09 : Math.abs(Math.sin(now * 0.0036 + M.seat)) * 0.035;
+  let sy = 1 + (hop - 0.04) * 0.9, lean = 0.22 * Math.min(1, sp / RUN), tiltX = 0, extraY = hop, twist = 0;
+  const cy = Math.cos(M.yaw), syw = Math.sin(M.yaw);
+  const lx = P.vx * cy - P.vz * syw, lz = P.vx * syw + P.vz * cy;
+  let rx = sp > 0.1 ? lz / sp * lean : 0, rz = sp > 0.1 ? -lx / sp * lean : 0;
+  for (let i = 0; i < 2; i++){ const f = M.feet[i]; f.position.z = 0.05 + (sp > 0.5 ? Math.sin(M.ph + i * Math.PI) * 0.14 : 0); f.position.y = 0.06 + (sp > 0.5 ? Math.max(0, Math.sin(M.ph + i * Math.PI)) * 0.06 : 0); }
+  // 팔·라켓 목표 자세
+  let th = 0.55, ps = 0.55, psL = -0.9, direct = false, roll = 0, eyeY = 1;
+  const fhSide = b.vis ? (b.x - P.x) * sg >= 0 : true;
+  const sw = (a0, a1, p0, p1, dur) => { const u = easeOut(at / dur); th = lerp(a0, a1, u); ps = lerp(p0, p1, u); direct = true; return u; };
+  if (an === 'fh' && at < 0.34){ sw(-0.8, 2.3, 0.35, -0.5, 0.34); twist = lerp(-0.35, 0.45, easeOut(at / 0.34)); }
+  else if (an === 'bh' && at < 0.34){ sw(3.9, 0.9, 0.35, -0.6, 0.34); twist = lerp(0.4, -0.4, easeOut(at / 0.34)); psL = -0.2; }
+  else if (an === 'lf' && at < 0.4){ sw(-0.5, 1.8, 0.85, -1.4, 0.4); twist = lerp(-0.25, 0.3, easeOut(at / 0.4)); }
+  else if (an === 'lb' && at < 0.4){ sw(3.7, 1.3, 0.85, -1.4, 0.4); twist = lerp(0.3, -0.3, easeOut(at / 0.4)); }
+  else if (an === 'wh' && at < 0.45){ sw(-1.0, 2.0, 0.3, -0.2, 0.45); }
+  else if (an === 'whb' && at < 0.45){ sw(3.9, 1.2, 0.3, -0.2, 0.45); }
+  else if (an === 'toss'){ th = Math.PI / 2 - 0.25; ps = lerp(0.6, -2.5, easeOut(at / 0.5)); psL = lerp(-0.9, 1.5, easeOut(at / 0.25)); direct = true; roll = Math.PI / 2; sy *= lerp(1, 0.93, easeOut(at / 0.5)); }
+  else if (an === 'srv' && at < 0.42){ th = Math.PI / 2 - 0.25; const u = easeOut(at / 0.42); ps = lerp(-2.4, 1.1, u); psL = lerp(1.2, -0.8, u); roll = Math.PI / 2; direct = true; sy *= at < 0.12 ? 1.12 : lerp(1.12, 1, (at - 0.12) / 0.3); }
+  else if (an === 'joy' && at < 1.7){ const k = 1 - at / 1.7; extraY = Math.abs(Math.sin(at * 8)) * 0.34 * k; th = 0.9; ps = -1.9; psL = 1.6; sy = 1 + Math.sin(at * 16) * 0.06 * k; }
+  else if (an === 'sad' && at < 1.9){ const k = Math.min(1, at / 0.25); sy = lerp(1, 0.82, k); tiltX = 0.35 * k; th = 0.3; ps = 1.25; psL = -1.25; eyeY = 0.35; extraY = 0; rx *= 0.3; rz *= 0.3; }
+  else if (P.armed){ if (fhSide){ th = -1.35; ps = 0.25; } else { th = 3.95; ps = 0.25; psL = -0.3; } sy *= 0.93; }
+  if (direct){ M.th = th; M.ps = ps; M.psL = psL; }
+  else { const k = Math.min(1, dt * 14); M.th = lerp(M.th, th, k); M.ps = lerp(M.ps, ps, k); M.psL = lerp(M.psL, psL, k); }
+  M.armR.rotation.y = M.th; M.rollR.rotation.z = M.ps; M.rollL.rotation.z = M.psL;
+  if (M.racket) M.racket.rotation.x = roll;
+  M.body.position.y = extraY;
+  M.body.scale.set(1 / Math.sqrt(sy), sy, 1 / Math.sqrt(sy));
+  M.body.rotation.set(rx + tiltX, twist, rz);
+  // 눈: 가끔 깜빡, 공 쪽으로 눈동자
+  M.blinkT -= dt; if (M.blinkT < -0.12) M.blinkT = 2 + Math.random() * 3.5;
+  const ey = (M.blinkT < 0 ? 0.12 : 1) * eyeY;
+  for (const e of M.eyes) e.scale.y = ey;
+  const px = clamp(look * 0.05, -0.03, 0.03);
+  for (const pu of M.pupils) pu.position.x = -px;
+}
+function poseExtra(M, now, i, cheer){
+  const hop = Math.abs(Math.sin(now * 0.004 + i)) * 0.02 + (cheer > 0 ? Math.abs(Math.sin(now * 0.012 + i * 1.7)) * 0.12 * cheer : 0);
+  M.body.position.y = hop; M.rollR.rotation.z = cheer > 0 ? -1.4 : 0.9; M.rollL.rotation.z = cheer > 0 ? 1.4 : -0.9;
+  M.blinkT -= 0.016; if (M.blinkT < -0.12) M.blinkT = 2 + Math.random() * 3.5; for (const e of M.eyes) e.scale.y = M.blinkT < 0 ? 0.12 : 1;
+}
+
+// ---------- 카메라 ----------
+// 버추어 테니스처럼 내 선수 뒤 위쪽에서 코트 길이 방향으로. 화면비에 맞춰 높이·거리를 정하고,
+// 가까운 선수 발끝~먼 선수 머리까지 들어가도록 기울기와 화각을 맞춘다(위 점수판·아래 폰 버튼 자리는 비운다).
+const PAD_H = 136;
+const _v = new THREE.Vector3();
+function fitCamera(){
+  if (!cam) return;
+  const asp = W / H, land = asp >= 1.05;
+  const topR = VS.isTouch ? 62 : 40, botR = VS.isTouch ? PAD_H + 6 : 44;
+  const lo = -1 + 2 * botR / H, hi = 1 - 2 * topR / H;
+  const pts = [[-4.7, 0, HL + 0.7], [4.7, 0, HL + 0.7], [-3.2, 0, HL + 1.0], [3.2, 0, HL + 1.0], [-1.6, 1.4, HL + 1.0], [1.6, 1.4, HL + 1.0], [-5.1, 0, -HL], [5.1, 0, -HL], [-1.6, 1.6, -HL - 1.6], [1.6, 1.6, -HL - 1.6], [0, 1.7, -HL - 1.2]];
+  const k = clamp((asp - 0.5) / (1.6 - 0.5), 0, 1);           // 0 = 폰 세로, 1 = 넓은 가로
+  const h = lerp(10.5, 5.0, k), d = lerp(2.6, 4.4, k);
+  let best = null;
+  for (let tz = -10; tz <= 14; tz += 0.5){
+    cam.position.set(0, h, HL + d); cam.lookAt(0, 0, tz); cam.updateMatrixWorld();
+    let tn = 0;
+    for (const p of pts){
+      _v.set(p[0], p[1], p[2]).applyMatrix4(cam.matrixWorldInverse); const dep = -_v.z; if (dep < 0.3){ tn = 99; break; }
+      tn = Math.max(tn, _v.y >= 0 ? _v.y / (dep * hi) : _v.y / (dep * lo), Math.abs(_v.x) / (dep * asp * 0.97));
+    }
+    if (!best || tn < best.tn) best = { tn, tz };
+  }
+  camBase = { h, d, tz: best.tz };
+  cam.fov = 2 * Math.atan(best.tn) * 180 / Math.PI; cam.aspect = asp; cam.updateProjectionMatrix();
+}
+function placeCamera(dt, V){
+  const sg = sgnOf(st ? st.mySeat : 0), me = V && V.P[st ? st.mySeat : 0];
+  const tx = me ? clamp(me.x * sg * 0.4, -1.5, 1.5) : 0;
+  camX += (tx - camX) * Math.min(1, dt * 3);                 // 좌우만 부드럽게 따라감
+  cam.position.set(camX * sg, camBase.h, sg * (HL + camBase.d));
+  cam.lookAt(camX * 0.6 * sg, 0, sg * camBase.tz);
+}
+
+// ---------- 화면 글자판 ----------
+let hud = null, hudCache = {};
+function makeHud(){
+  const d = document.createElement('div'); d.className = 'tnHud' + (VS.isTouch ? ' tnTouch' : ''); d.id = 'tnHud';
+  d.innerHTML = `<div class="tnBoard"><div class="tnRow"><span class="tnChip" style="background:#2F7BE5"></span><span class="tnNm" id="tnNm0">나</span><span class="tnSv" id="tnSv0"></span><span class="tnGm" id="tnGm0">0</span></div>
+<div class="tnRow"><span class="tnChip" style="background:#E8493A"></span><span class="tnNm" id="tnNm1">상대</span><span class="tnSv" id="tnSv1"></span><span class="tnGm" id="tnGm1">0</span></div></div>
+<div class="tnPts"><b id="tnPtsV">0 - 0</b><small id="tnPtsS">서브: 나</small></div>
+<div class="tnSpd"><b id="tnSpdV">---<i>km/h</i></b><small>SERVE SPEED</small></div>
+<div class="tnCall" id="tnCall"><b id="tnCallB"></b><small id="tnCallS"></small></div>`;
+  stage.appendChild(d); hud = d;
+}
+const setTxt = (id, t) => { if (hudCache[id] !== t){ hudCache[id] = t; $(id).textContent = t; } };
+function updateHud(V){
+  if (!st) return;
+  const me = st.mySeat, S = VS.S;
+  let wins = [0, 0];
+  try { wins = S.mode === 'cpu' ? [S.cpuWins[0], S.cpuWins[1]] : [(S.room.players[0] || {}).wins || 0, (S.room.players[1] || {}).wins || 0]; } catch {}
+  // 위: 나 먼저(파랑/빨강 칩은 자리 색)
+  const rows = [me, 1 - me];
+  rows.forEach((seat, i) => {
+    setTxt('tnNm' + i, st.names[i] || (i ? '상대' : '나'));
+    setTxt('tnGm' + i, String(wins[seat] | 0));
+    const sv = $('tnSv' + i); const on = V.server === seat; if (hudCache['sv' + i] !== on){ hudCache['sv' + i] = on; sv.classList.toggle('tnOn', on); }
+    const chip = sv.parentNode.querySelector('.tnChip'); const col = seat === 0 ? '#2F7BE5' : '#E8493A'; if (hudCache['ch' + i] !== col){ hudCache['ch' + i] = col; chip.style.background = col; }
+  });
+  setTxt('tnPtsV', V.scText);
+  setTxt('tnPtsS', (V.server === me ? '서브: 나' : '서브: 상대') + (V.faults ? ' · 세컨드' : ''));
+  const k = V.kmh ? String(V.kmh) : '---';
+  if (hudCache.kmh !== k){ hudCache.kmh = k; $('tnSpdV').innerHTML = k + '<i>km/h</i>'; }
+}
+// 판정 글자 차례대로(앞 것이 끝나면 다음 것)
+const callQ = []; let callEnd = 0;
+function queueCall(e){ callQ.push(e); }
+function callText(e){
+  const me = st ? st.mySeat : 0, code = e[1];
+  switch (code){
+    case 'fault': return ['FAULT', '폴트 · 세컨드 서브'];
+    case 'df': return ['DOUBLE FAULT', '더블 폴트 · 서버 실점'];
+    case 'let': return ['LET', '렛 · 네트 맞고 들어가 다시 서브'];
+    case 'net': return ['NET', '네트 · 공이 넘어가지 못함'];
+    case 'out': return ['OUT', '아웃 · 라인 밖에 떨어짐'];
+    case 'deuce': return ['DEUCE', '듀스 · 두 점 차가 나야 게임'];
+    case 'adv': return ['ADVANTAGE', e[2] === me ? '어드밴티지 · 나' : '어드밴티지 · 상대', 1];
+    case 'game': return ['GAME', e[2] === me ? '게임 · 나' : '게임 · 상대', 1];
+    case 'score': return [String(e[2]), e[4] ? (e[4] - 1 === me ? '두 번 튐 · 내 실점' : '두 번 튐 · 상대 실점') : ''];
+  }
+  return [String(code).toUpperCase(), ''];
+}
+function tickCall(now){
+  const el = $('tnCall'); if (!el) return;
+  if (now < callEnd) return;
+  if (!callQ.length){ if (el.classList.contains('tnOn')) el.classList.remove('tnOn'); return; }
+  const e = callQ.shift(), [big, small, hot] = callText(e);
+  $('tnCallB').textContent = big; $('tnCallS').textContent = small;
+  el.classList.remove('tnOn'); void el.offsetWidth; el.classList.add('tnOn'); el.classList.toggle('tnHot', !!hot);
+  callEnd = now + (big.length > 8 ? 1250 : 1050);
+}
+
+// ---------- 입력 ----------
+const keys = {};
+const inQ = [];                       // 누름·뗌 차례대로
+let joy = null;                       // 레버를 잡은 손가락 {id, x, y}
+function lever(){
+  let x = 0, y = 0;
+  if (joy){ x = joy.x; y = joy.y; }
+  else { x = (keys.r ? 1 : 0) - (keys.l ? 1 : 0); y = (keys.u ? 1 : 0) - (keys.d ? 1 : 0); }
+  const m = Math.hypot(x, y);
+  if (m < 0.22) return { x: 0, y: 0 };
+  return { x: x / m, y: y / m };      // 늘 같은 속도
+}
+const gameOn = () => st && !$('vsGame').classList.contains('hide');
+function press(kind){ if (!gameOn()) return; VS.ac(); inQ.push(['p', kind]); }
+function release(kind){ if (!st) return; inQ.push(['r', kind]); }
+const KEYMAP = { ArrowLeft: 'l', KeyA: 'l', ArrowRight: 'r', KeyD: 'r', ArrowUp: 'u', KeyW: 'u', ArrowDown: 'd', KeyS: 'd' };
+function onKey(e, down){
+  if (!gameOn()) return;
+  const d = KEYMAP[e.code];
+  if (d){ keys[d] = down; e.preventDefault(); return; }
+  const kind = e.code === 'KeyZ' || e.code === 'Space' ? 'shot' : e.code === 'KeyX' ? 'lob' : null;
+  if (!kind) return;
+  e.preventDefault();
+  if (down){ if (!e.repeat) press(kind); } else release(kind);
+}
+function makePad(){
+  const pad = document.createElement('div'); pad.className = 'tnPad'; pad.id = 'tnPad';
+  pad.innerHTML = '<div class="tnJoy" id="tnJoy" role="slider" aria-label="이동 레버: 원하는 방향으로 끌기"><span class="tnKnob" id="tnKnob"></span></div>'
+    + '<button class="tnB tnLob" id="tnLob" aria-label="로브">로브</button><button class="tnB tnShot" id="tnShot" aria-label="샷">샷</button>';
+  stage.appendChild(pad);
+  const jb = $('tnJoy'), kn = $('tnKnob');
+  const setJ = e => {
+    const r = jb.getBoundingClientRect(), R = r.width / 2 - 14;
+    let x = (e.clientX - (r.left + r.width / 2)) / R, y = -(e.clientY - (r.top + r.height / 2)) / R;
+    const m = Math.hypot(x, y); if (m > 1){ x /= m; y /= m; }
+    joy.x = x; joy.y = y; kn.style.transform = `translate(${(x * R).toFixed(1)}px,${(-y * R).toFixed(1)}px)`;
+  };
+  jb.addEventListener('pointerdown', e => { e.preventDefault(); VS.ac(); if (joy) return; try { jb.setPointerCapture(e.pointerId); } catch {} joy = { id: e.pointerId, x: 0, y: 0 }; jb.classList.add('tnDrag'); setJ(e); });
+  jb.addEventListener('pointermove', e => { if (joy && joy.id === e.pointerId){ e.preventDefault(); setJ(e); } });
+  const end = e => { if (joy && joy.id === e.pointerId) joyReset(); };
+  for (const k of ['pointerup', 'pointercancel', 'lostpointercapture']) jb.addEventListener(k, end);
+  for (const k of ['pointerup', 'pointercancel']) addEventListener(k, end, true);
+  jb.addEventListener('contextmenu', e => e.preventDefault());
+  for (const [id, kind] of [['tnShot', 'shot'], ['tnLob', 'lob']]){
+    const b = $(id); let pid = null;
+    b.addEventListener('pointerdown', e => { e.preventDefault(); if (pid !== null) return; pid = e.pointerId; b.classList.add('tnOn'); press(kind); });
+    const up = e => { if (pid === null || (e && e.pointerId !== pid)) return; pid = null; b.classList.remove('tnOn'); release(kind); };
+    for (const k of ['pointerup', 'pointercancel', 'pointerleave']) b.addEventListener(k, up);
+    b.addEventListener('click', e => e.preventDefault()); b.addEventListener('contextmenu', e => e.preventDefault());
+  }
+}
+function joyReset(){ joy = null; const j = $('tnJoy'), k = $('tnKnob'); if (j) j.classList.remove('tnDrag'); if (k) k.style.transform = ''; }
+// 내 입력 → 조작값(세계 좌표 이동 + 내 시점 조준)
+function humanCtrl(drain){
+  const lv = lever(), s = sgnOf(st.mySeat), c = NOC();
+  c.mx = lv.x * s; c.mz = -lv.y * s; c.ax = lv.x; c.az = lv.y;
+  if (drain) for (const [t, k] of inQ.splice(0)) (t === 'p' ? c.press : c.release).push(k);
+  return c;
+}
+
+// ---------- 경기 상태 ----------
+let st = null;
+function newGuestView(m){
+  return { phase: 'pre', server: m.server, sc: { p: [0, 0] }, scText: '0 - 0', faults: 0, kmh: 0, deuce: true,
+    ball: { x: 0, y: -5, z: 0, vx: 0, vy: 0, vz: 0, g: GRAV, eh: 0.72, ey: 0.68, vis: false, toss: false, serve: false, roll: false, hitter: -1, bn: 0, nh: 0 },
+    P: m.P.map(p => Object.assign({}, p)) };
+}
+// drain: 이번 걸음에 쌓인 누름·뗌을 넘길지(한 프레임에 물리 걸음이 여럿이면 첫 걸음에만)
+function myCtrl(W, drain){
+  if (st.botT && performance.now() - st.botT < 700){ inQ.length = 0; return aiCtrl(W, st.mySeat, 'bot', st.botMem); }
+  return humanCtrl(drain);
+}
+// 방장·컴퓨터: 한 걸음
+function hostStep(dt){
+  const m = st.m, me = st.mySeat, op = 1 - me, C = [null, null];
+  const W = { t: m.t, phase: m.phase, server: m.server, ball: m.ball, P: m.P };
+  C[me] = myCtrl(W, st.firstStep);
+  if (st.mode === 'cpu') C[op] = aiCtrl(W, op, st.level, st.cpuMem);
+  else { const g = st.gIn, c = NOC(); c.mx = g.mx; c.mz = g.mz; c.ax = g.ax; c.az = g.az; if (st.firstStep) for (const [t, k] of g.q.splice(0)) (t === 'p' ? c.press : c.release).push(k); C[op] = c; }
+  st.firstStep = false;
+  m.step(dt, C);
+}
+// 방장 → 손님 상태 보내기(초당 20번)
+const r2 = v => Math.round(v * 100) / 100;
+function sendSnap(now){
+  const m = st.m, b = m.ball;
+  VS.send({ k: 'st', e: st.gIn.echo ? Math.round(st.gIn.echo + (now - st.gIn.at)) : 0, ph: m.phase, sv: m.server, sc: m.sc.p.slice(), f: m.faults, du: m.deuce() ? 1 : 0, kmh: m.kmh,
+    b: [r2(b.x), r2(b.y), r2(b.z), r2(b.vx), r2(b.vy), r2(b.vz), r2(b.g), (b.vis ? 1 : 0) | (b.toss ? 2 : 0) | (b.serve ? 4 : 0) | (b.roll ? 8 : 0), b.bn, b.nh, b.hitter, r2(b.eh), r2(b.ey)],
+    p: m.P.map(p => [r2(p.x), r2(p.z), r2(p.vx), r2(p.vz), p.anim, Math.round(p.at * 1000), p.armed ? (p.armed === 'lob' ? 2 : 1) : 0]) });
+}
+// 손님: 받은 상태 반영
+function unpackBall(a, o){ Object.assign(o, { x: a[0], y: a[1], z: a[2], vx: a[3], vy: a[4], vz: a[5], g: a[6], vis: !!(a[7] & 1), toss: !!(a[7] & 2), serve: !!(a[7] & 4), roll: !!(a[7] & 8), bn: a[8] | 0, nh: a[9] | 0, hitter: a[10] | 0, eh: a[11], ey: a[12] }); return o; }
+function applySnap(d, now){
+  const gv = st.gv;
+  if (d.e){ const rtt = now - d.e; if (rtt >= 0 && rtt < 3000) st.rtt = st.rtt ? st.rtt * 0.8 + rtt * 0.2 : rtt; }
+  const phChanged = gv.phase !== d.ph;
+  gv.phase = d.ph; gv.server = d.sv | 0; gv.sc.p = [d.sc[0] | 0, d.sc[1] | 0]; gv.faults = d.f | 0; gv.deuce = !!d.du; gv.kmh = d.kmh | 0;
+  const sc = new Score(); sc.p = gv.sc.p.slice(); gv.scText = sc.text(gv.server);
+  if (Array.isArray(d.b) && d.b.length >= 13) setGuestBall(unpackBall(d.b, {}), now);
+  if (Array.isArray(d.p)) d.p.forEach((a, i) => {
+    const P = st.hp[i]; Object.assign(P, { x: a[0], z: a[1], vx: a[2], vz: a[3], anim: a[4] || '', at: (a[5] | 0) / 1000, armed: a[6] === 2 ? 'lob' : a[6] === 1 ? 'shot' : null, rt: now });
+  });
+  if (phChanged) onPhase();
+}
+function setGuestBall(nb, now){
+  const gb = st.gb;
+  const prev = gb.base ? guestBallAt(now) : null;
+  gb.base = nb; gb.at = now;
+  const cur = guestBallAt(now);
+  if (prev && prev.vis && cur.vis && gb.nh === nb.nh){ const dx = prev.x - cur.x, dy = prev.y - cur.y, dz = prev.z - cur.z; if (dx * dx + dy * dy + dz * dz < 0.5){ gb.cx = dx; gb.cy = dy; gb.cz = dz; } else gb.cx = gb.cy = gb.cz = 0; }
+  else gb.cx = gb.cy = gb.cz = 0;
+  gb.nh = nb.nh;
+}
+// 받은 공 상태를 지연만큼 앞으로 굴려 지금 자리를 얻는다
+function guestBallAt(now){
+  const gb = st.gb, b = Object.assign({}, gb.base);
+  let age = Math.min(0.35, (now - gb.at) / 1000 + (st.rtt || 80) / 2000);
+  if (!b.vis) return b;
+  if (b.toss){ for (; age > 0; age -= DT) stepBall(b, DT); return b; }
+  for (; age > 0; age -= DT){
+    if (b.roll){ b.x += b.vx * DT; b.z += b.vz * DT; continue; }
+    stepBall(b, DT); if (b.y <= BR && b.vy < 0){ bounceBall(b); b.bn++; }
+  }
+  return b;
+}
+function guestUpdate(dt, now){
+  const gv = st.gv, me = st.mySeat, op = 1 - me;
+  // 공
+  if (st.gb.base){
+    const b = guestBallAt(now), k = Math.exp(-dt * 12), gb = st.gb;
+    gb.cx *= k; gb.cy *= k; gb.cz *= k;
+    Object.assign(gv.ball, b); gv.ball.x += gb.cx; gv.ball.y = Math.max(BR, gv.ball.y + gb.cy); gv.ball.z += gb.cz;
+  }
+  const age = (st.rtt || 80) / 1000;
+  // 상대 선수: 받은 자리 + 속도로 조금 앞으로, 부드럽게
+  const H = st.hp[op], O = gv.P[op], ta = Math.min(0.25, (now - (H.rt || now)) / 1000 + age / 2);
+  const ox = H.x + H.vx * ta, oz = H.z + H.vz * ta;
+  if (Math.hypot(ox - O.x, oz - O.z) > 2.5){ O.x = ox; O.z = oz; } else { const kk = Math.min(1, dt * 14); O.x = lerp(O.x, ox, kk); O.z = lerp(O.z, oz, kk); }
+  O.vx = H.vx; O.vz = H.vz; O.anim = H.anim; O.at = H.at + (now - (H.rt || now)) / 1000; O.armed = H.armed;
+  // 내 선수: 입력을 바로 반영(예측) + 방장 값으로 부드럽게 보정
+  const L = gv.P[me], HM = st.hp[me];
+  const W = { t: now / 1000, phase: gv.phase, server: gv.server, ball: gv.ball, P: gv.P };
+  const c = myCtrl(W, true);
+  for (const k of c.press) guestPress(k, now); for (const k of c.release) guestRelease(k);
+  if (L.armed && (HM.armed === null) && now - st.armT > (st.rtt || 80) + 180) L.armed = null;
+  if (L.armed && gv.phase === 'play' && gv.ball.hitter !== me && now - (L.autoAt || 0) > 80){ L.autoAt = now; const cc = chooseContact(L, predict(gv.ball), AUTO, gv.ball.serve, Math.abs(L.z) < 8); L.auto = cc ? { x: cc.sx, z: cc.sz } : null; }
+  if (!L.armed) L.auto = null;
+  L.anim = HM.anim; L.at = HM.at + (now - (HM.rt || now)) / 1000;
+  if (gv.phase === 'play' || gv.phase === 'serve') movePlayer(L, c, dt, gv.phase, gv.server === me, gv.ball.toss, gv.deuce);
+  const lag = Math.min(0.3, age), hx = HM.x + HM.vx * lag, hz = HM.z + HM.vz * lag, err = Math.hypot(hx - L.x, hz - L.z);
+  if (gv.phase !== 'play' && gv.phase !== 'serve'){ const kk = Math.min(1, dt * 10); L.x = lerp(L.x, HM.x, kk); L.z = lerp(L.z, HM.z, kk); L.vx = HM.vx; L.vz = HM.vz; }
+  else if (err > 1.6){ L.x = hx; L.z = hz; }
+  else { const kk = Math.min(1, dt * 2.5); L.x = lerp(L.x, hx, kk); L.z = lerp(L.z, hz, kk); }
+  // 입력 보내기(초당 약 30번, 바뀐 게 없으면 드물게)
+  const s = st.gs, mx = r2(c.mx), mz = r2(c.mz), ax = r2(c.ax), az = r2(c.az);
+  const changed = mx !== s.mx || mz !== s.mz || ax !== s.ax || az !== s.az;
+  if ((changed && now - s.at > 33) || now - s.at > 200) guestSendIn(now, mx, mz, ax, az);
+}
+function guestSendIn(now, mx, mz, ax, az){
+  const s = st.gs; if (mx !== undefined) Object.assign(s, { mx, mz, ax, az });
+  s.at = now; VS.send({ k: 'in', t: Math.round(now), mx: s.mx, mz: s.mz, ax: s.ax, az: s.az, ps: s.ps, pl: s.pl, rs: s.rs, rl: s.rl });
+}
+function guestPress(kind, now){
+  const s = st.gs, gv = st.gv, L = gv.P[st.mySeat];
+  if (kind === 'shot') s.ps++; else s.pl++;
+  if (gv.phase === 'play' && gv.ball.vis && gv.ball.hitter !== st.mySeat && !L.armed){ L.armed = kind; st.armT = now; L.autoAt = 0; }
+  guestSendIn(now);
+}
+function guestRelease(kind){ const s = st.gs; if (kind === 'shot') s.rs++; else s.rl++; guestSendIn(performance.now()); }
+// 방장: 손님 입력 받기(누름·뗌은 횟수로 받아 하나도 놓치지 않는다)
+function hostIn(d, now){
+  const g = st.gIn, n = v => clamp(+v || 0, -1, 1);
+  g.mx = n(d.mx); g.mz = n(d.mz); g.ax = n(d.ax); g.az = n(d.az);
+  for (const [pk, rk, kind] of [['ps', 'rs', 'shot'], ['pl', 'rl', 'lob']]){
+    const pc = d[pk] | 0, rc = d[rk] | 0;
+    if (pc > g[pk] + 20 || rc > g[rk] + 20){ g[pk] = pc; g[rk] = rc; continue; }   // 이상한 값은 무시하고 맞춘다
+    while (g[rk] < Math.min(rc, g[pk])){ g[rk]++; g.q.push(['r', kind]); }
+    while (g[pk] < pc){ g[pk]++; g.q.push(['p', kind]); }
+    while (g[rk] < rc){ g[rk]++; g.q.push(['r', kind]); }
+  }
+  if (d.t) { g.echo = +d.t; g.at = now; }
+}
+
+// ---------- 효과(방장은 직접, 손님은 받은 사건으로) ----------
+let cheerT = 0;
+window.__tnLog = [];
+function fx(e, now){
+  const me = st ? st.mySeat : 0;
+  if (e[0] !== 'bnc' && e[0] !== 'toss'){ const L = window.__tnLog; L.push(e.join(',')); if (L.length > 300) L.shift(); }   // 시험용 사건 기록
+  switch (e[0]){
+    case 'hit': snd('hit', 0.55 + 0.45 * (e[3] || 0.5)); flashAt(e[4], e[5], e[6]); if (e[1] === me) VS.buzz(14); break;
+    case 'srv': snd('hit', 0.9); flashAt(e[3], e[4], e[5]); if (e[1] === me) VS.buzz(14); break;
+    case 'bnc': snd('bnc', 0.25 + 0.6 * (e[3] || 0.5)); markAt(e[1], e[2]); break;
+    case 'net': snd('net', 0.8); st.netShake = 0.45; break;
+    case 'toss': snd('toss'); break;
+    case 'wh': snd('wh'); break;
+    case 'call': queueCall(e); break;
+    case 'pt': snd('crowd', e[2] ? 1.4 : 1); cheerT = now + (e[2] ? 3000 : 2000); if (e[1] === me) VS.buzz(28); break;
+  }
+}
+function flashAt(x, y, z){ if (x === undefined) return; flash.position.set(x, y, z); flash.userData.t = 0; }
+let markI = 0;
+function markAt(x, z){ if (!(Math.abs(x) < 30)) return; const m = marks[markI++ % marks.length]; m.position.set(x, 0.006, z); const b = st && (st.host ? st.m.ball : st.gv.ball); m.rotation.z = b ? Math.atan2(b.vx, b.vz) : 0; m.userData.t = 0; }
+function onPhase(){
+  if (!st) return;
+  const V = st.host ? st.m : st.gv, me = st.mySeat;
+  let t = '';
+  if (V.phase === 'serve') t = V.server === me ? (V.faults ? '세컨드 서브' : (VS.isTouch ? '서브: 샷 두 번' : '서브: Z 두 번')) : '리시브 준비';
+  else if (V.phase === 'play') t = '랠리 중';
+  else if (V.phase === 'pre') t = V.server === me ? '내 서브' : '상대 서브';
+  else return;
+  if (st.turnTxt !== t){ st.turnTxt = t; VS.setTurn(t); }
+}
+
+// ---------- 프레임 ----------
+let lastT = 0, acc = 0, fpsN = 0, fpsT = 0, lowN = 0;
+window.__tnFps = 0;
+function frame(now){
+  requestAnimationFrame(frame);
+  const dt = Math.min(0.25, (now - (lastT || now)) / 1000); lastT = now;
+  fpsN++; if (now - fpsT >= 1000){ window.__tnFps = Math.round(fpsN * 1000 / (now - fpsT)); fpsN = 0; fpsT = now; adaptQuality(); }
+  try {
+    if (st && !st.stopped && st.running && VS.live()){
+      if (st.host){
+        acc += dt; st.firstStep = true; let n = 0;
+        while (acc >= DT && n < 40){ hostStep(DT); acc -= DT; n++; }
+        const m = st.m;
+        if (m.ev.length){
+          const evs = m.ev.splice(0); for (const e of evs) fx(e, now);
+          // 친 순간은 상태도 바로 보내 손님 화면의 공이 늦게 꺾이지 않게
+          if (st.mode === 'net'){ VS.send({ k: 'ev', l: evs }); if (evs.some(e => e[0] === 'hit' || e[0] === 'srv' || e[0] === 'toss' || e[0] === 'net')){ st.snapAt = now; sendSnap(now); } }
+        }
+        if (m.phase !== st.lastPh){ st.lastPh = m.phase; onPhase(); if (st.mode === 'net') sendSnap(now); }
+        if (st.mode === 'net' && now - st.snapAt >= 50){ st.snapAt = now; sendSnap(now); }
+        if (m.phase === 'end' && !st.sentOver){ st.sentOver = true; VS.over(m.over); }
+      } else guestUpdate(dt, now);
+    } else acc = 0;
+    if (renderer && st && gameOn()) draw(dt, now);
+  } catch (e){ console.error(e); }
+}
+function adaptQuality(){
+  // 폰에서 느리면 픽셀비를 조금씩 낮춘다(한 번 내리면 다시 올리지 않음)
+  if (!renderer || !gameOn() || !st || !st.running) return;
+  if (window.__tnFps < 45 && PR > 1){ lowN++; if (lowN >= 2){ lowN = 0; PR = Math.max(1, PR - 0.25); renderer.setPixelRatio(PR); } } else lowN = 0;
+}
+function draw(dt, now){
+  const V = st.host ? st.m : st.gv;
+  if (st.host) V.scText = V.sc.text(V.server);
+  poseM(MP[0], V.P[0], dt, now, V); poseM(MP[1], V.P[1], dt, now, V);
+  const cheer = now < cheerT ? 1 : 0;
+  scene.userData.extras.forEach((m, i) => poseExtra(m, now, i, i > 0 ? cheer : 0));
+  for (const t of crowdTex) t.offset.y = cheer ? Math.abs(Math.sin(now * 0.02)) * 0.006 : 0;
+  // 공·그림자·꼬리
+  const b = V.ball, vis = b.vis && b.y > -1;
+  ballM.visible = ballSh.visible = vis;
+  if (vis){
+    const y = b.y + (BALL_R - BR);
+    ballM.position.set(b.x, y, b.z); ballM.rotation.x += dt * 20;
+    ballSh.position.set(b.x, 0.007, b.z); const s = 1 + b.y * 0.12; ballSh.scale.set(s, s, 1); ballSh.material.opacity = 0.55 * Math.max(0.3, 1 - b.y / 6);
+    const sp = Math.hypot(b.vx, b.vy, b.vz);
+    streak.visible = sp > 14 && !b.roll;
+    if (streak.visible){ const len = Math.min(1.3, sp * 0.03); _v.set(b.vx, b.vy, b.vz).normalize(); streak.scale.set(1, len, 1); streak.position.set(b.x - _v.x * len / 2, y - _v.y * len / 2, b.z - _v.z * len / 2); streak.quaternion.setFromUnitVectors(UP, _v); }
+  } else streak.visible = false;
+  flash.userData.t += dt; const ft = flash.userData.t; flash.material.opacity = ft < 0.18 ? 1 - ft / 0.18 : 0; const fs = 0.25 + ft * 5; flash.scale.set(fs, fs, 1);
+  for (const m of marks){ m.userData.t += dt; m.material.opacity = m.userData.t < 5 ? 0.55 * (1 - m.userData.t / 5) : 0; }
+  if (st.netShake > 0){ st.netShake -= dt; netMesh.position.z = Math.sin(st.netShake * 60) * 0.04 * st.netShake; } else netMesh.position.z = 0;
+  placeCamera(dt, V);
+  updateHud(V); tickCall(now);
+  renderer.render(scene, cam);
+}
+const UP = new THREE.Vector3(0, 1, 0);
+
+// ---------- 게임 규약 ----------
+const G = {
+  bg: { wide: '/vs/common/bg-tennis-wide.jpg', tall: '/vs/common/bg-tennis-tall.jpg' },
+  id: 'tennis', title: '말랑 테니스', sub: '말랑이 선수들의 3D 테니스 · 한 판에 한 게임',
+  turnBased: false, countdown: true, ft: 3, cpuFt: 3,
+  levels: [{ k: 'easy', name: '쉬움', desc: '느긋하게 받아요' }, { k: 'normal', name: '보통', desc: '코스를 노려요' }, { k: 'hard', name: '어려움', desc: '구석·로브·발리' }],
+  rules: `<ul><li>한 판은 테니스 <b>한 게임</b>입니다. 포인트는 0 → 15 → 30 → 40 → 게임. 40-40은 <b>듀스</b>, 다음 포인트를 딴 쪽이 <b>어드밴티지</b>, 두 점 차가 나야 게임입니다. 게임을 먼저 정한 수만큼 따면 이깁니다.</li>
+<li>서브는 게임마다 바뀝니다. 포인트마다 오른쪽(듀스 코트)·왼쪽(애드 코트)을 번갈아 서서 <b>대각선 서비스 박스</b>에 넣어야 합니다. 빗나가면 폴트, 두 번이면 <b>더블 폴트</b>로 실점. 네트에 맞고 박스에 들어가면 <b>렛</b>(다시 서브).</li>
+<li>공은 한 번 튀기 전(발리)이나 <b>한 번 튄 뒤</b>에 쳐야 합니다. 두 번 튀면 실점. 서브는 꼭 한 번 튄 뒤에 받습니다.</li>
+<li>친 공은 상대 코트 단식 라인 안에 떨어져야 합니다. <b>라인에 걸치면 인</b>. 네트를 못 넘기면 실점, 네트 맞고 넘어가 안에 떨어지면 계속합니다.</li></ul>`,
+  controls: `<ul><li><b>폰</b>: 왼쪽 아래 둥근 <b>레버</b>로 달립니다(넘긴 방향으로 늘 같은 속도). 오른쪽 아래 주황 <b>샷</b>, 작은 <b>로브</b> 버튼. 레버와 버튼을 동시에 눌러도 됩니다.</li>
+<li><b>PC</b>: <kbd>←</kbd><kbd>↑</kbd><kbd>→</kbd><kbd>↓</kbd> 또는 <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 이동, <kbd>Z</kbd>(또는 <kbd>스페이스</kbd>) 샷, <kbd>X</kbd> 로브.</li>
+<li><b>치기</b>: 공이 오기 전에 버튼을 누르면 준비 자세를 잡고 칠 자리로 조금씩 따라가며, 공이 오면 저절로 칩니다. <b>오래 누를수록 셉니다.</b> 치는 순간 레버 방향이 코스입니다: 좌우 = 방향, 앞 = 깊게, 뒤 = 짧게. 너무 늦거나 멀면 헛스윙.</li>
+<li><b>서브</b>: 버튼 한 번에 토스, 공이 떨어지기 전에 한 번 더 누르면 칩니다. 꼭대기에서 칠수록 빠르고 정확합니다. 레버 좌우로 와이드·센터를 고릅니다. 5초 가만있으면 저절로 토스합니다.</li></ul>`,
+  mount(stg){
+    stage = stg;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+      prMax = Math.min(devicePixelRatio || 1, 2); PR = prMax; renderer.setPixelRatio(PR);
+      renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+      cv = renderer.domElement; cv.id = 'tnCv'; stage.appendChild(cv);
+      buildScene();
+    } catch (e){ console.warn(e); renderer = null; }
+    makeHud();
+    if (VS.isTouch) makePad();
+    addEventListener('keydown', e => onKey(e, true));
+    addEventListener('keyup', e => onKey(e, false));
+    addEventListener('blur', () => { for (const k in keys) keys[k] = false; joyReset(); });
+    requestAnimationFrame(frame);
+  },
+  start(ctx){
+    const m = new Match(ctx.first);
+    st = { ctx, mode: ctx.mode, level: ctx.level, mySeat: ctx.mySeat, names: ctx.names || ['나', '상대'], host: ctx.mode === 'cpu' || ctx.mySeat === 0,
+      m, running: false, stopped: false, sentOver: false, lastPh: '', snapAt: 0, firstStep: true, cpuMem: {}, botMem: {}, botT: 0, netShake: 0, turnTxt: '',
+      gIn: { mx: 0, mz: 0, ax: 0, az: 0, ps: 0, pl: 0, rs: 0, rl: 0, q: [], echo: 0, at: 0 },
+      gs: { mx: 0, mz: 0, ax: 0, az: 0, ps: 0, pl: 0, rs: 0, rl: 0, at: 0 }, gb: { base: null, at: 0, cx: 0, cy: 0, cz: 0, nh: 0 }, rtt: 0, armT: 0 };
+    if (!st.host){ st.gv = newGuestView(m); st.hp = m.P.map(p => Object.assign({ rt: 0 }, p)); }
+    inQ.length = 0; callQ.length = 0; callEnd = 0; hudCache = {}; camX = 0;
+    for (const k in keys) keys[k] = false; joyReset();
+    if (!renderer) VS.note('이 브라우저는 3D 그림을 지원하지 않아요. 크롬이나 사파리 최신판으로 열어 주세요.');
+    G.resize();
+    VS.setTurn(ctx.first === ctx.mySeat ? '내 서브로 시작' : '상대 서브로 시작');
+  },
+  go(){ if (!st) return; st.running = true; acc = 0; if (st.host) st.m.pt = 0; },
+  onNet(d){
+    if (!st || !d || typeof d !== 'object') return;
+    const now = performance.now();
+    if (st.host){ if (d.k === 'in') hostIn(d, now); return; }
+    if (d.k === 'st') applySnap(d, now);
+    else if (d.k === 'ev' && Array.isArray(d.l)){
+      for (const e of d.l.slice(0, 40)){
+        if (!Array.isArray(e)) continue;
+        if (e[0] === 'hit' && e[1] === st.mySeat){ st.gv.P[st.mySeat].armed = null; }
+        fx(e, now);
+      }
+    }
+  },
+  stop(){ if (st) st.stopped = true; joyReset(); for (const k in keys) keys[k] = false; },
+  lost(){ return false; },    // 방장 권위라 손님이 결과를 다시 보낼 일이 없다
+  resize(){
+    if (!renderer || !stage) return;
+    W = Math.max(200, stage.clientWidth); H = Math.max(200, stage.clientHeight);
+    renderer.setSize(W, H, false);
+    fitCamera();
+  },
+  drawArt(x, w, h, t){ drawArt(x, w, h, t); },
+};
+
+// ---------- 메뉴 그림: 공이 튀어 라켓에 맞고 돌아가는 반복 ----------
+function drawArt(x, w, h, t){
+  const T = 1700, u = (t % T) / T, gy = h - 10, r = clamp(h * 0.075, 5, 11);
+  x.fillStyle = '#C8683F'; x.fillRect(w * 0.08, gy, w * 0.84, 8);
+  x.fillStyle = '#F4EFE6'; x.fillRect(w * 0.08, gy, w * 0.84, 2);
+  const nh = h * 0.3; x.fillStyle = 'rgba(28,35,64,.8)'; for (let i = 0; i < 5; i++) x.fillRect(w * 0.42 - 1, gy - nh + i * nh / 5, 2, nh / 5 - 1);
+  x.fillStyle = '#F4EFE6'; x.fillRect(w * 0.42 - 5, gy - nh - 2, 10, 3);
+  // 라켓: 오른쪽 손잡이를 축으로 뒤로 뺐다가 휘두름
+  const px = w * 0.84, py = h * 0.78, L = h * 0.34, R = h * 0.16;
+  const ang = u < 0.52 ? 0.95 : u < 0.64 ? lerp(0.95, -0.55, easeOut((u - 0.52) / 0.12)) : u < 0.82 ? lerp(-0.55, -1.2, (u - 0.64) / 0.18) : lerp(-1.2, 0.95, (u - 0.82) / 0.18);
+  const hx0 = px + L * Math.sin(-0.55) * 1, hy0 = py - L * Math.cos(-0.55) - R * 0.2;   // 맞는 순간 라켓 면 가운데
+  const A = [w * 0.12, h * 0.12], B = [w * 0.6, gy - r], Cc = [hx0 - R * 0.3, hy0], D = [w * 0.08, h * 0.06];
+  let bx, by;
+  if (u < 0.4){ const k = u / 0.4; bx = lerp(A[0], B[0], k); by = A[1] + (B[1] - A[1]) * k * k; }
+  else if (u < 0.6){ const k = (u - 0.4) / 0.2; bx = lerp(B[0], Cc[0], k); by = B[1] - (B[1] - Cc[1]) * (1 - (1 - k) * (1 - k)); }
+  else { const k = (u - 0.6) / 0.4; bx = lerp(Cc[0], D[0], k); by = lerp(Cc[1], D[1], k) - Math.sin(k * Math.PI) * h * 0.3; }
+  // 그림자
+  const hgt = clamp((gy - by) / h, 0, 1);
+  x.fillStyle = `rgba(60,25,10,${0.35 - hgt * 0.2})`; x.beginPath(); x.ellipse(bx, gy + 3, r * (1.1 - hgt * 0.4), r * 0.3, 0, 0, 7); x.fill();
+  // 라켓
+  x.save(); x.translate(px, py); x.rotate(ang);
+  x.strokeStyle = '#1C2340'; x.lineWidth = Math.max(4, h * 0.035); x.lineCap = 'round'; x.beginPath(); x.moveTo(0, 0); x.lineTo(0, -L * 0.55); x.stroke();
+  x.save(); x.translate(0, -L - R * 0.2 + R * 0.2); x.beginPath(); x.ellipse(0, 0, R * 0.78, R, 0, 0, 7); x.fillStyle = 'rgba(255,255,255,.14)'; x.fill();
+  x.save(); x.clip(); x.strokeStyle = 'rgba(255,255,255,.7)'; x.lineWidth = 1; for (let i = -R; i <= R; i += R / 4.5){ x.beginPath(); x.moveTo(i, -R); x.lineTo(i, R); x.stroke(); x.beginPath(); x.moveTo(-R, i); x.lineTo(R, i); x.stroke(); } x.restore();
+  x.strokeStyle = '#E05A1E'; x.lineWidth = Math.max(3, h * 0.03); x.beginPath(); x.ellipse(0, 0, R * 0.78, R, 0, 0, 7); x.stroke(); x.restore();
+  x.restore();
+  // 공
+  x.fillStyle = '#DDF33C'; x.beginPath(); x.arc(bx, by, r, 0, 7); x.fill();
+  x.strokeStyle = 'rgba(255,255,255,.9)'; x.lineWidth = Math.max(1.2, r * 0.16);
+  x.beginPath(); x.arc(bx - r * 0.95, by, r * 0.75, -0.9, 0.9); x.stroke(); x.beginPath(); x.arc(bx + r * 0.95, by, r * 0.75, Math.PI - 0.9, Math.PI + 0.9); x.stroke();
+  if (u > 0.58 && u < 0.72){ const k = (u - 0.58) / 0.14; x.strokeStyle = `rgba(255,255,255,${1 - k})`; x.lineWidth = 3; x.beginPath(); x.arc(Cc[0], Cc[1], r * (1.2 + k * 2.4), 0, 7); x.stroke(); }
+}
+
+// ---------- 시험용(기본 동작은 그대로) ----------
+// __tnBot(): 부르면 약 0.7초 동안 내 선수를 컴퓨터 두뇌로 움직인다(시험 스크립트가 0.1초마다 부름)
+window.__tnBot = () => { if (!st) return 'none'; st.botT = performance.now(); return st.host ? st.m.phase : st.gv.phase; };
+window.__tnTest = { Score, Match, inBox, inCourt, netH, solve, simLand, predict, NOC, aiCtrl, HL, HW, SV, BR, DT };
+window.__tnInfo = () => st ? { phase: (st.host ? st.m : st.gv).phase, sc: (st.host ? st.m.sc.p : st.gv.sc.p).slice(), fps: window.__tnFps, pr: PR, W, H, fov: cam && +cam.fov.toFixed(1), cam: camBase, rtt: st.rtt } : null;
+
+VS.init(G);
+</script>
+</body>
+</html>

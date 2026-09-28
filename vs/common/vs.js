@@ -333,7 +333,7 @@ function buildShell(G){
   <div class="vsTitle">${esc(G.title)}</div>
   <div class="vsSub">${esc(G.sub || '')}</div>
   <div class="vsTiles">
-    <div class="vsTile solo"><b>컴퓨터와 대결</b><span>2선승 · 난이도를 고르세요</span>
+    <div class="vsTile solo"><b>컴퓨터와 대결</b><span>${G.cpuFt || 2}선승 · 난이도를 고르세요</span>
       <div class="vsLv">${levels.map(l => `<button data-lv="${l.k}"><b>${esc(l.name)}</b><small>${esc(l.desc)}</small></button>`).join('')}</div></div>
     <button class="vsTile duo" id="vsTileDuo"><b>친구와 대전</b><span>방 번호 4자리 · 서버 없이 바로 연결</span></button>
   </div>

@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>세균전 — 1:1 오락실</title>
+<meta name="description" content="친구와 서버 없이 바로 하는 1:1 세균전(Ataxx). 옆 칸은 복제, 두 칸은 점프, 닿은 상대 세균은 내 편으로. 컴퓨터(쉬움·보통·어려움)와도 대결.">
+<meta property="og:title" content="세균전 — 1:1 오락실">
+<meta property="og:description" content="방 번호 4자리로 친구와 바로 한 판. 컴퓨터와도 대결.">
+<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg?v=2">
+<meta name="theme-color" content="#0E5A63">
+<link rel="stylesheet" href="../common/vs.css">
+<style>
+#gmCv{display:block}
+.gmTimer{position:absolute;top:6px;left:50%;transform:translateX(-50%);font:800 14px/1 "Pretendard Variable",sans-serif;color:#fff;background:rgba(20,28,64,.72);padding:6px 12px;border-radius:999px;white-space:nowrap}
+/* 위쪽 차례 줄의 세균 수(공용 .vsTurn 안에 들어가는 글자만 꾸민다) */
+.vsTurn .gmB{color:#8FD0FF}.vsTurn .gmR{color:#FF9E8C}
+@media (max-width:420px){ .vsTurn .gmCnt{font-size:.86em;letter-spacing:-.02em} }
+</style>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="../common/vs.js"></script>
+<script>
+"use strict";
+// ================= 세균전(Ataxx) =================
+// 7×7 판. 선공 세균(1)은 왼쪽 위·오른쪽 아래, 후공 세균(2)은 오른쪽 위·왼쪽 아래에서 시작.
+// 옆 칸(8칸)으로는 복제, 두 칸 떨어진 칸(16칸)으로는 점프. 도착한 칸 둘레의 상대 세균은 모두 내 편이 된다.
+const N = 7, NN = 49, TURN_SEC = 40;
+const idx = (x, y) => y * N + x;
+// 칸마다 거리 1(복제) 이웃과 거리 2(점프) 이웃을 미리 구해 둔다
+const N1 = [], N2 = [], DIST = new Int8Array(NN * NN);
+for (let i = 0; i < NN; i++){
+  const x = i % N, y = (i / N) | 0; N1.push([]); N2.push([]);
+  for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++){
+    if (!dx && !dy) continue;
+    const px = x + dx, py = y + dy; if (px < 0 || py < 0 || px >= N || py >= N) continue;
+    const j = idx(px, py), d = Math.max(Math.abs(dx), Math.abs(dy));
+    DIST[i * NN + j] = d; (d === 1 ? N1 : N2)[i].push(j);
+  }
+}
+
+// ---------- 규칙(판 배열만 다루는 순수 함수) ----------
+// 수는 숫자 하나로: 출발 칸 * 64 + 도착 칸
+const mvF = m => m >> 6, mvT = m => m & 63;
+function newBoard(){ const b = new Int8Array(NN); b[idx(0, 0)] = 1; b[idx(6, 6)] = 1; b[idx(6, 0)] = 2; b[idx(0, 6)] = 2; return b; }
+function count(b, p){ let n = 0; for (let i = 0; i < NN; i++) if (b[i] === p) n++; return n; }
+function empties(b){ let n = 0; for (let i = 0; i < NN; i++) if (!b[i]) n++; return n; }
+// 둘 수 있는 수 전부(같은 칸으로의 복제는 하나로 친다)
+function genMoves(b, p){
+  const out = [];
+  for (let t = 0; t < NN; t++){
+    if (b[t]) continue;
+    const a = N1[t]; for (let k = 0; k < a.length; k++) if (b[a[k]] === p){ out.push(a[k] * 64 + t); break; }
+    const c = N2[t]; for (let k = 0; k < c.length; k++) if (b[c[k]] === p) out.push(c[k] * 64 + t);
+  }
+  return out;
+}
+function hasMove(b, p){
+  for (let t = 0; t < NN; t++){
+    if (b[t]) continue;
+    const a = N1[t]; for (let k = 0; k < a.length; k++) if (b[a[k]] === p) return true;
+    const c = N2[t]; for (let k = 0; k < c.length; k++) if (b[c[k]] === p) return true;
+  }
+  return false;
+}
+function legalMove(b, p, f, t){ return f >= 0 && t >= 0 && f < NN && t < NN && b[f] === p && !b[t] && DIST[f * NN + t] >= 1; }
+const isJump = (f, t) => DIST[f * NN + t] === 2;
+// 수를 둔다: 바뀐(감염된) 칸 목록을 돌려준다
+function doMove(b, p, f, t){
+  b[t] = p; if (isJump(f, t)) b[f] = 0;
+  const q = 3 - p, fl = [], a = N1[t];
+  for (let k = 0; k < a.length; k++) if (b[a[k]] === q){ b[a[k]] = p; fl.push(a[k]); }
+  return fl;
+}
+function undoMove(b, p, f, t, fl){ b[t] = 0; if (isJump(f, t)) b[f] = p; for (let k = 0; k < fl.length; k++) b[fl[k]] = 3 - p; }
+// 방금 mover가 둔 뒤 판 상태: { end, winner(1|2|0=무승부), next(다음 차례), pass(차례 넘김) }
+function judge(b, mover){
+  const c1 = count(b, 1), c2 = count(b, 2), q = 3 - mover;
+  const fin = () => ({ end: true, winner: c1 > c2 ? 1 : c2 > c1 ? 2 : 0, next: 0, pass: false });
+  if (!c1 || !c2 || !empties(b)) return fin();
+  if (hasMove(b, q)) return { end: false, next: q, pass: false };
+  if (hasMove(b, mover)) return { end: false, next: mover, pass: true };
+  return fin();
+}
+
+// ---------- 컴퓨터 ----------
+// 한 수 뒤 (내 수 - 상대 수)의 변화: 복제 +1+2×감염, 점프 2×감염
+function gainOf(b, p, m){
+  const f = mvF(m), t = mvT(m), q = 3 - p, a = N1[t]; let fl = 0;
+  for (let k = 0; k < a.length; k++) if (b[a[k]] === q) fl++;
+  return (isJump(f, t) ? 0 : 1) + 2 * fl;
+}
+// 점프로 비운 자리 둘레의 내 세균 수(상대가 그 구멍에 들어오면 뒤집힌다)
+function holePen(b, p, f){ let n = 0; const a = N1[f]; for (let k = 0; k < a.length; k++) if (b[a[k]] === p) n++; return n * .45 + .3; }
+function greedy(b, p, noise){
+  const ms = genMoves(b, p); if (!ms.length) return -1;
+  if (noise && Math.random() < .18) return ms[(Math.random() * ms.length) | 0];
+  let best = -1, bv = -1e9;
+  for (const m of ms){ const v = gainOf(b, p, m) + (noise ? Math.random() * 2.2 : Math.random() * .01); if (v > bv){ bv = v; best = m; } }
+  return best;
+}
+const TIMEUP = {};
+function search(b, p, maxD, ms, usePen){
+  const dl = performance.now() + ms; let nodes = 0;
+  function nega(p, d, al, be){
+    if ((++nodes & 511) === 0 && performance.now() > dl) throw TIMEUP;
+    const q = 3 - p, cp = count(b, p), cq = count(b, q);
+    if (!cp || !cq || !empties(b)) return cp === cq ? 0 : (cp > cq ? 1000 : -1000) + cp - cq;
+    if (d <= 0) return cp - cq;
+    const list = genMoves(b, p);
+    if (!list.length){ if (!hasMove(b, q)) return cp === cq ? 0 : (cp > cq ? 1000 : -1000) + cp - cq; return -nega(q, d - 1, -be, -al); }
+    const sc = list.map(m => gainOf(b, p, m));
+    const ord = list.map((m, i) => i).sort((i, j) => sc[j] - sc[i]);
+    let best = -1e9;
+    for (const i of ord){
+      const m = list[i], f = mvF(m), t = mvT(m), fl = doMove(b, p, f, t);
+      const pen = usePen && isJump(f, t) ? holePen(b, p, f) : 0;
+      let v;
+      try { v = -nega(q, d - 1, -(be + pen), -(al + pen)) - pen; } finally { undoMove(b, p, f, t, fl); }
+      if (v > best) best = v;
+      if (v > al) al = v;
+      if (al >= be) break;
+    }
+    return best;
+  }
+  const root = genMoves(b, p); if (!root.length) return -1;
+  // 같은 점수끼리는 무작위로 섞이게 살짝 흔든다
+  let order = root.map(m => ({ m, v: gainOf(b, p, m) + Math.random() * .3 })).sort((a, c) => c.v - a.v).map(o => o.m);
+  let bestM = order[0];
+  for (let d = 1; d <= maxD; d++){
+    try {
+      let al = -1e9, bm = order[0]; const vals = new Map();
+      for (const m of order){
+        const f = mvF(m), t = mvT(m), fl = doMove(b, p, f, t);
+        const pen = usePen && isJump(f, t) ? holePen(b, p, f) : 0;
+        let v; try { v = -nega(3 - p, d - 1, -1e9, -(al + pen)) - pen; } finally { undoMove(b, p, f, t, fl); }
+        vals.set(m, v); if (v > al){ al = v; bm = m; }
+      }
+      bestM = bm; order = order.slice().sort((a, c) => (vals.get(c) ?? -1e9) - (vals.get(a) ?? -1e9));
+    } catch (e){ if (e !== TIMEUP) throw e; break; }
+  }
+  return bestM;
+}
+function cpuMove(b, p, lv){
+  const c = Int8Array.from(b);
+  if (lv === 'easy') return greedy(c, p, true);
+  if (lv === 'normal') return search(c, p, 2, 250, false);
+  return search(c, p, 4, 280, true);
+}
+
+// ---------- 화면 ----------
+let cv, cx, timerEl, box = { W: 300, H: 300, S: 300, bx: 0, by: 0, pad: 12, c: 40, d: 1, gauge: null }, boardCache = null;
+const G = {
+  bg: { wide: '/vs/common/bg-lab-wide.jpg', tall: '/vs/common/bg-lab-tall.jpg' },
+  id: 'germ', title: '세균전', sub: '세균을 퍼뜨려 판을 더 많이 차지하라',
+  turnBased: true, countdown: false, ft: 3, cpuFt: 2,
+  levels: [{ k: 'easy', name: '쉬움', desc: '욕심쟁이' }, { k: 'normal', name: '보통', desc: '두 수 앞을 봐요' }, { k: 'hard', name: '어려움', desc: '멀리 내다봐요' }],
+  rules: `<ul><li>7×7 판에서 <b>파랑(나)</b>과 <b>빨강(상대)</b>이 번갈아 한 번씩 움직입니다. 판마다 먼저 두는 사람이 바뀝니다.</li><li>내 세균 하나를 골라 빈칸으로 옮깁니다. <b>바로 옆 칸</b>(대각선 포함)으로 가면 <b>복제</b>되어 원래 자리에도 남고, <b>두 칸 떨어진 칸</b>으로 가면 <b>점프</b>해서 원래 자리는 빕니다.</li><li>도착한 칸 둘레 8칸에 있는 상대 세균은 <b>모두 내 세균</b>으로 바뀝니다.</li><li>둘 곳이 없으면 차례가 저절로 넘어갑니다.</li><li>판이 다 차거나, 한쪽 세균이 모두 없어지거나, 둘 다 둘 곳이 없으면 끝납니다. <b>세균이 많은 쪽</b>이 이기고, 같으면 무승부입니다.</li><li>한 수에 ${TURN_SEC}초가 넘으면 컴퓨터가 대신 둡니다.</li></ul>`,
+  controls: `<p>내 세균을 누르면 갈 수 있는 칸이 보입니다. <b>초록 테두리</b>는 복제, <b>노란 테두리</b>는 점프 칸입니다. 그 칸을 누르면 움직입니다. 다른 내 세균을 누르면 바꿔 고르고, 빈 곳을 누르면 선택이 풀립니다. PC에서는 마우스로 똑같이 클릭합니다.</p>`,
+  st: null,
+  mount(stage){
+    cv = document.createElement('canvas'); cv.id = 'gmCv'; stage.appendChild(cv); cx = cv.getContext('2d');
+    timerEl = document.createElement('div'); timerEl.className = 'gmTimer hide'; stage.appendChild(timerEl);
+    cv.addEventListener('pointerdown', onTap);
+    requestAnimationFrame(loop);
+  },
+  start(ctx){
+    const me = ctx.first === ctx.mySeat ? 1 : 2;
+    G.st = { b: newBoard(), ctx, turn: 1, me, op: 3 - me, sel: -1, over: false, stopped: false, res: null, endAt: 0, sent: false,
+      t0: performance.now(), cpuT: 0, busyUntil: 0, anim: {}, fly: [], born: performance.now() };
+    timerEl.classList.add('hide');
+    G.resize(); setTurnLabel();
+  },
+  go(){ const s = G.st; s.t0 = performance.now(); timerEl.classList.remove('hide'); setTurnLabel(); },
+  onNet(d){
+    const s = G.st; if (!s || s.over) return;
+    if (d && d.k === 'mv' && Number.isInteger(d.f) && Number.isInteger(d.t) && s.turn === s.op && legalMove(s.b, s.op, d.f, d.t)) play(d.f, d.t, s.op);
+  },
+  stop(){ const s = G.st; if (s){ s.over = true; s.stopped = true; s.sel = -1; } timerEl.classList.add('hide'); },
+  lost(){ const s = G.st; return !!(s && s.res && s.res.end && s.res.winner === s.op); },
+  resize(){
+    if (!cv) return;
+    // 캔버스가 무대 전체를 덮는다. 판 크기를 먼저 정하고, 남는 자리에 세균 수 계기판을 둔다
+    const st = document.getElementById('vsStage'), W = st.clientWidth, H = st.clientHeight, d = Math.min(devicePixelRatio || 1, 2);
+    cv.width = Math.round(W * d); cv.height = Math.round(H * d); cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    cx.setTransform(d, 0, 0, d, 0, 0);
+    const TOP = 38, cl = (v, a, b) => Math.max(a, Math.min(b, v));   // TOP: 위쪽 시간 표시 자리
+    let S, bx, by, gauge;
+    if (H > W * 1.05){
+      // 세로 화면: 판 아래에 가로 계기판
+      const gh = Math.round(cl(W * .17, 58, 84));
+      S = Math.max(200, Math.floor(Math.min(W - 16, H - TOP - gh - 30)));
+      const grp = S + 24 + gh; bx = Math.round((W - S) / 2); by = Math.round(TOP + Math.max(0, (H - TOP - grp) * .45));
+      const gx = bx, gy = by + S + 24, gw = S, my = gy + gh * .5;
+      gauge = { x: gx, y: gy, w: gw, h: gh, r: gh * .3, vert: false, ir: gh * .25, fs: Math.round(gh * .5),
+        i1: [gx + gh * .5, my + gh * .04], n1: [gx + gh * .9, my], a1: 'left', i2: [gx + gw - gh * .5, my + gh * .04], n2: [gx + gw - gh * .9, my], a2: 'right',
+        bar: { x: gx + gh * 1.9, y: my - gh * .12, w: gw - gh * 3.8, h: gh * .24 } };
+    } else {
+      // 가로 화면(PC): 판 오른쪽에 세로 계기판
+      const gw = Math.round(cl(H * .16, 84, 124));
+      S = Math.max(200, Math.floor(Math.min(H - TOP - 18, W - gw - 60)));
+      bx = Math.round((W - (S + 26 + gw)) / 2); by = Math.round(TOP + (H - TOP - 18 - S) / 2);
+      const gx = bx + S + 26, gh = S * .84, gy = by + (S - gh) / 2, mx = gx + gw / 2;
+      gauge = { x: gx, y: gy, w: gw, h: gh, r: gw * .3, vert: true, ir: gw * .24, fs: Math.round(gw * .36),
+        i1: [mx, gy + gw * .46], n1: [mx, gy + gw * 1.02], a1: 'center', i2: [mx, gy + gh - gw * .4], n2: [mx, gy + gh - gw * .98], a2: 'center',
+        bar: { x: mx - gw * .11, y: gy + gw * 1.36, w: gw * .22, h: gh - gw * 2.72 } };
+    }
+    const pad = S * .064;
+    box = { W, H, S, bx, by, pad, c: (S - pad * 2) / N, d, gauge };
+    boardCache = null;
+  },
+  // 메뉴 위쪽 그림: 파랑 세균이 점프해 옆 빨강 세균을 감염시키는 반복 장면
+  drawArt(x, w, h, t){
+    const c = Math.min(h * .78, w / 6.2), r = c * .36, y0 = h / 2 + c * .08, x0 = w / 2 - c * 2;
+    const T = 2600, k = (t % T) / T;
+    // 칸 5개
+    for (let i = 0; i < 5; i++){
+      const px = x0 + i * c;
+      x.fillStyle = 'rgba(80,195,172,.55)'; x.strokeStyle = 'rgba(190,255,245,.6)'; x.lineWidth = 1.5;
+      rr(x, px - c / 2 + 3, y0 - c / 2 + 3, c - 6, c - 6, c * .16); x.fill(); x.stroke();
+    }
+    // 점프 전: 파랑은 0번 칸, 빨강은 3·4번 칸. 파랑이 2번 칸으로 점프 → 3번 빨강이 감염
+    const jumpA = .22, jumpB = .44, flipA = .46, flipB = .6;
+    // 도착 칸 표시(노란 테두리)
+    if (k < jumpA){ x.strokeStyle = `rgba(255,225,77,${.5 + .5 * Math.sin(t / 120)})`; x.lineWidth = 3; rr(x, x0 + 2 * c - c / 2 + 6, y0 - c / 2 + 6, c - 12, c - 12, c * .14); x.stroke(); }
+    // 빨강(3번은 뒤집힘)
+    const fk = Math.min(1, Math.max(0, (k - flipA) / (flipB - flipA)));
+    const col3 = fk > .5 ? 1 : 2, sx3 = Math.max(.08, Math.abs(Math.cos(fk * Math.PI))), up3 = Math.sin(fk * Math.PI) * c * .25;
+    germ(x, x0 + 3 * c, y0 - up3, r, col3, t, sx3 * (1 + (fk > 0 && fk < 1 ? .1 : 0)), 1);
+    germ(x, x0 + 4 * c, y0, r, 2, t + 700, 1, 1);
+    // 파랑: 점프 전엔 0번 칸, 점프 중엔 포물선, 뒤엔 2번 칸
+    if (k < jumpA) germ(x, x0, y0 - Math.abs(Math.sin(t / 200)) * c * .06, r, 1, t, 1, 1);
+    else if (k < jumpB){ const j = (k - jumpA) / (jumpB - jumpA), e = j * j * (3 - 2 * j); germ(x, x0 + 2 * c * e, y0 - Math.sin(j * Math.PI) * c * .75, r * (1 + Math.sin(j * Math.PI) * .12), 1, t, 1, 1); }
+    else { const land = Math.max(0, 1 - (k - jumpB) / .08); germ(x, x0 + 2 * c, y0, r, 1, t, 1 + land * .18, 1 - land * .18); }
+  },
+};
+function rr(x, a, b, w, h, r){ x.beginPath(); if (x.roundRect) x.roundRect(a, b, w, h, r); else x.rect(a, b, w, h); }
+function setTurnLabel(){
+  const s = G.st; if (!s) return;
+  const nb = count(s.b, s.me), nr = count(s.b, s.op);
+  const who = s.over ? '' : s.turn === s.me ? '<span class="me">내 차례</span> · ' : `<span class="op">${s.ctx.mode === 'cpu' ? '컴퓨터' : '상대'} 차례</span> · `;
+  VS.setTurn(`${who}<span class="gmCnt"><span class="gmB">파랑 ${nb}</span> : <span class="gmR">빨강 ${nr}</span></span>`);
+}
+
+// ---------- 두기 ----------
+const JUMP_MS = 380, CLONE_MS = 260, FLIP_MS = 300, FLIP_GAP = 70;
+function play(f, t, p){
+  const s = G.st; if (!s || s.over || s.turn !== p || !legalMove(s.b, p, f, t)) return;
+  const jump = isJump(f, t), now = performance.now(), fl = doMove(s.b, p, f, t);
+  s.sel = -1;
+  // 애니메이션: 날아가는 세균 + 도착 뒤 감염이 시간차로 뒤집힘
+  const travel = jump ? JUMP_MS : CLONE_MS, land = now + travel;
+  s.fly.push({ f, t, p, jump, t0: now, dur: travel });
+  s.anim[t] = { kind: 'hide', until: land };
+  fl.forEach((c, i) => { s.anim[c] = { kind: 'flip', t0: land + i * FLIP_GAP, from: 3 - p }; });
+  s.busyUntil = land + (fl.length ? (fl.length - 1) * FLIP_GAP + FLIP_MS : 120);
+  VS.sfx(jump ? 'whoosh' : 'pop', 0); VS.buzz(8);
+  const st = s;
+  setTimeout(() => { if (G.st !== st) return; VS.sfx('place'); }, travel);
+  fl.forEach((c, i) => setTimeout(() => { if (G.st !== st) return; VS.sfx('pop', i + 2); if (i === 0) VS.buzz(12); }, travel + i * FLIP_GAP + 60));
+  // 판정
+  const r = judge(s.b, p);
+  s.res = r;
+  if (r.end){
+    s.over = true; s.endAt = s.busyUntil + 350; setTurnLabel(); timerEl.classList.add('hide');
+    return;
+  }
+  s.turn = r.next; s.t0 = Math.max(now, s.busyUntil); s.cpuT = 0; setTurnLabel();
+  if (r.pass){
+    const who = r.next === s.me ? (s.ctx.mode === 'cpu' ? '컴퓨터가' : '상대가') : '내가';
+    setTimeout(() => { if (G.st === st && !st.stopped) { VS.note(who + ' 둘 곳이 없어 차례를 넘깁니다', 2000); VS.sfx('hit'); } }, s.busyUntil - now);
+  }
+  if (s.turn === s.me) setTimeout(() => { if (G.st === st && !st.over && st.turn === st.me) VS.sfx('turn'); }, s.busyUntil - now);
+}
+function myPlay(f, t){
+  const s = G.st; if (!s || s.over || !VS.live() || s.turn !== s.me || !legalMove(s.b, s.me, f, t)) return false;
+  VS.send({ k: 'mv', f, t });
+  play(f, t, s.me);
+  return true;
+}
+function onTap(e){
+  const s = G.st; if (!s || s.over || !VS.live() || s.turn !== s.me || performance.now() < s.busyUntil) return;
+  const i = hit(e); VS.ac();
+  if (i < 0){ s.sel = -1; return; }
+  if (s.b[i] === s.me){ if (s.sel !== i){ s.sel = i; VS.sfx('click'); } return; }
+  if (s.sel >= 0 && legalMove(s.b, s.me, s.sel, i)){ myPlay(s.sel, i); return; }
+  s.sel = -1;
+}
+function hit(e){
+  const r = cv.getBoundingClientRect(), x = Math.floor((e.clientX - r.left - box.bx - box.pad) / box.c), y = Math.floor((e.clientY - r.top - box.by - box.pad) / box.c);
+  return x >= 0 && y >= 0 && x < N && y < N ? idx(x, y) : -1;
+}
+// 시험용: 내 차례면 욕심쟁이 수 하나를 둔다
+window.__gmBot = () => {
+  const s = G.st; if (!s || s.over || !VS.live() || s.turn !== s.me || performance.now() < s.busyUntil) return false;
+  const m = greedy(s.b, s.me, false); if (m < 0) return false;
+  return myPlay(mvF(m), mvT(m));
+};
+// 시험용 규칙 함수
+window.__gmRules = { newBoard, genMoves, hasMove, doMove, judge, count, legalMove, cpuMove, idx };
+
+// ---------- 진행 ----------
+function loop(t){
+  const s = G.st, now = performance.now();
+  if (s && cv && !document.getElementById('vsGame').classList.contains('hide')) draw(t);
+  if (s && s.res && s.res.end && !s.sent && !s.stopped && now >= s.endAt){
+    s.sent = true; const w = s.res.winner;
+    VS.over(w === 0 ? -1 : w === 1 ? s.ctx.first : 1 - s.ctx.first);
+  }
+  if (s && !s.over && VS.live()){
+    const left = Math.max(0, TURN_SEC - Math.max(0, now - s.t0) / 1000);
+    timerEl.textContent = (s.turn === s.me ? '내 차례 ' : '상대 차례 ') + Math.ceil(left) + '초';
+    timerEl.style.background = left < 10 ? 'rgba(200,64,44,.85)' : 'rgba(20,28,64,.72)';
+    // 시간이 넘으면 컴퓨터가 대신 둔다
+    if (left <= 0 && s.turn === s.me && now >= s.busyUntil){ const m = greedy(s.b, s.me, false); if (m >= 0) myPlay(mvF(m), mvT(m)); }
+    // 컴퓨터 차례
+    if (s.ctx.mode === 'cpu' && s.turn === s.op && now >= s.busyUntil){
+      if (!s.cpuT) s.cpuT = now + 600 + Math.random() * 600;
+      else if (now >= s.cpuT){ s.cpuT = 0; const m = cpuMove(s.b, s.op, s.ctx.level); if (m >= 0) play(mvF(m), mvT(m), s.op); }
+    }
+  }
+  requestAnimationFrame(loop);
+}
+
+// ---------- 그리기 ----------
+// 세균 색(배경과 확실히 갈리게 채도를 올림). rim = 가장자리 림라이트
+const COL = {
+  1: { hi: '#D6F0FF', mid: '#2A7BFF', lo: '#0B32B8', line: '#0A2A80', rim: 'rgba(150,230,255,.85)', glow: '90,170,255' },
+  2: { hi: '#FFD6CC', mid: '#FF3A26', lo: '#B0100A', line: '#6E0D08', rim: 'rgba(255,190,150,.85)', glow: '255,110,90' },
+};
+// 젤리 세균: 말랑한 몸 + 광택 + 림라이트 + 눈 + 더듬이. sx/sy는 찌그러짐(뒤집기·착지)
+function germ(x, px, py, r, p, t, sx = 1, sy = 1){
+  const c = COL[p], ph = (px * 7 + py * 3) * .01;
+  x.save(); x.translate(px, py);
+  // 밑그림자(두 겹으로 부드럽게)
+  const aw = Math.abs(sx);
+  x.fillStyle = 'rgba(0,25,30,.22)'; x.beginPath(); x.ellipse(0, r * .92, r * .95 * aw, r * .26, 0, 0, 7); x.fill();
+  x.fillStyle = 'rgba(0,20,25,.35)'; x.beginPath(); x.ellipse(0, r * .9, r * .66 * aw, r * .15, 0, 0, 7); x.fill();
+  x.scale(sx, sy);
+  // 더듬이
+  const sw = Math.sin(t / 260 + ph * 40) * r * .08;
+  x.lineCap = 'round';
+  for (const s of [-1, 1]){
+    x.strokeStyle = c.line; x.lineWidth = Math.max(1.2, r * .09);
+    x.beginPath(); x.moveTo(s * r * .3, -r * .72); x.quadraticCurveTo(s * r * .42, -r * 1.05, s * r * .5 + sw, -r * 1.16); x.stroke();
+    x.fillStyle = c.mid; x.beginPath(); x.arc(s * r * .5 + sw, -r * 1.18, r * .12, 0, 7); x.fill();
+    x.lineWidth = Math.max(1, r * .05); x.stroke();
+    x.fillStyle = 'rgba(255,255,255,.8)'; x.beginPath(); x.arc(s * r * .5 + sw - r * .04, -r * 1.22, r * .04, 0, 7); x.fill();
+  }
+  // 몸(살짝 출렁이는 둥근 덩어리)
+  x.beginPath();
+  for (let i = 0; i <= 24; i++){
+    const a = i / 24 * Math.PI * 2, rr2 = r * (1 + .04 * Math.sin(a * 3 + t / 280 + ph * 60) + .022 * Math.sin(a * 5 - t / 190));
+    const X = Math.cos(a) * rr2, Y = Math.sin(a) * rr2 * .94;
+    i ? x.lineTo(X, Y) : x.moveTo(X, Y);
+  }
+  x.closePath();
+  const g = x.createRadialGradient(-r * .32, -r * .42, r * .06, 0, 0, r * 1.08);
+  g.addColorStop(0, c.hi); g.addColorStop(.38, c.mid); g.addColorStop(1, c.lo);
+  x.fillStyle = g; x.fill();
+  x.save(); x.clip();
+  // 림라이트(아래쪽 가장자리가 받침 조명을 받아 빛남)
+  x.strokeStyle = c.rim; x.lineWidth = r * .16;
+  x.beginPath(); x.arc(0, -r * .02, r * 1.0, .12 * Math.PI, .88 * Math.PI); x.stroke();
+  // 몸 안쪽 부드러운 반사
+  const g2 = x.createLinearGradient(0, -r, 0, r * .2); g2.addColorStop(0, 'rgba(255,255,255,.28)'); g2.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = g2; x.beginPath(); x.ellipse(-r * .1, -r * .45, r * .8, r * .5, 0, 0, 7); x.fill();
+  x.restore();
+  x.strokeStyle = c.line; x.globalAlpha = .6; x.lineWidth = Math.max(1, r * .055); x.stroke(); x.globalAlpha = 1;
+  // 광택
+  x.fillStyle = 'rgba(255,255,255,.9)'; x.beginPath(); x.ellipse(-r * .4, -r * .5, r * .3, r * .14, -.6, 0, 7); x.fill();
+  x.fillStyle = 'rgba(255,255,255,.75)'; x.beginPath(); x.arc(-r * .04, -r * .68, r * .065, 0, 7); x.fill();
+  x.fillStyle = 'rgba(255,255,255,.35)'; x.beginPath(); x.ellipse(r * .52, r * .38, r * .1, r * .05, -.8, 0, 7); x.fill();
+  // 눈
+  const blink = ((t / 1000 + ph * 97) % 4.2) < .12 ? .15 : 1;
+  for (const s of [-1, 1]){
+    x.fillStyle = '#fff'; x.beginPath(); x.ellipse(s * r * .28, -r * .05, r * .2, r * .24 * blink, 0, 0, 7); x.fill();
+    if (blink > .5){
+      x.fillStyle = '#16182A'; x.beginPath(); x.arc(s * r * .28 + r * .03, -r * .02, r * .11, 0, 7); x.fill();
+      x.fillStyle = '#fff'; x.beginPath(); x.arc(s * r * .28 + r * .06, -r * .07, r * .04, 0, 7); x.fill();
+    }
+  }
+  // 볼·입
+  x.fillStyle = 'rgba(255,150,170,.35)'; x.beginPath(); x.ellipse(-r * .5, r * .18, r * .1, r * .06, 0, 0, 7); x.ellipse(r * .5, r * .18, r * .1, r * .06, 0, 0, 7); x.fill();
+  x.strokeStyle = c.line; x.lineWidth = Math.max(1, r * .06); x.beginPath(); x.arc(0, r * .26, r * .14, .2 * Math.PI, .8 * Math.PI); x.stroke();
+  x.restore();
+}
+// 고정 씨앗 난수(기포 자리가 매번 같게)
+function seeded(a){ return () => { a = (a * 1664525 + 1013904223) >>> 0; return a / 4294967296; }; }
+// 판·받침대·계기판 틀 — 정적인 부분은 화면 크기가 바뀔 때만 한 번 그려 둔다
+function buildBoard(){
+  const { W, H, bx, by, S, pad, c, d, gauge: gg } = box, oc = document.createElement('canvas');
+  oc.width = Math.round(W * d); oc.height = Math.round(H * d);
+  const x = oc.getContext('2d'); x.setTransform(d, 0, 0, d, 0, 0);
+  // 발광 받침대(배경의 원형 무대와 어울리게 판 아래로 번지는 빛)
+  const pcx = bx + S / 2, pcy = by + S * .985;
+  let g = x.createRadialGradient(pcx, pcy, S * .05, pcx, pcy, S * .62);
+  g.addColorStop(0, 'rgba(120,255,240,.55)'); g.addColorStop(.5, 'rgba(60,210,230,.22)'); g.addColorStop(1, 'rgba(60,210,230,0)');
+  x.save(); x.translate(pcx, pcy); x.scale(1, .16); x.translate(-pcx, -pcy);
+  x.fillStyle = g; x.beginPath(); x.arc(pcx, pcy, S * .62, 0, 7); x.fill(); x.restore();
+  x.strokeStyle = 'rgba(170,255,250,.55)'; x.lineWidth = 2; x.beginPath(); x.ellipse(pcx, pcy + S * .012, S * .5, S * .055, 0, 0, 7); x.stroke();
+  x.strokeStyle = 'rgba(170,255,250,.25)'; x.lineWidth = 1; x.beginPath(); x.ellipse(pcx, pcy + S * .02, S * .56, S * .07, 0, 0, 7); x.stroke();
+  // 금속 받침 링(두께 그림자 포함)
+  const R = S * .075, mw = S * .03, gw = S * .026;
+  x.save(); x.shadowColor = 'rgba(0,30,40,.55)'; x.shadowBlur = S * .04; x.shadowOffsetY = S * .018;
+  rr(x, bx, by, S, S, R); x.fillStyle = '#7F8D98'; x.fill(); x.restore();
+  g = x.createLinearGradient(bx, by, bx + S * .3, by + S);
+  g.addColorStop(0, '#F4F8FB'); g.addColorStop(.25, '#AEBBC5'); g.addColorStop(.5, '#E8EEF2'); g.addColorStop(.78, '#8595A1'); g.addColorStop(1, '#C9D3DA');
+  rr(x, bx, by, S, S, R); x.fillStyle = g; x.fill();
+  x.lineWidth = 1.5; x.strokeStyle = 'rgba(40,55,65,.7)'; x.stroke();
+  rr(x, bx + 1.5, by + 1.5, S - 3, S - 3, R - 1.5); x.lineWidth = 1; x.strokeStyle = 'rgba(255,255,255,.75)'; x.stroke();
+  // 나사
+  const sr = Math.max(2.5, S * .011), sp = mw / 2 + .5;
+  const screws = [[sp + R * .35, sp + R * .35], [S - sp - R * .35, sp + R * .35], [sp + R * .35, S - sp - R * .35], [S - sp - R * .35, S - sp - R * .35], [S / 2, sp], [S / 2, S - sp], [sp, S / 2], [S - sp, S / 2]];
+  for (const [qx, qy] of screws){
+    const X = bx + qx, Y = by + qy, sg = x.createRadialGradient(X - sr * .4, Y - sr * .4, sr * .1, X, Y, sr);
+    sg.addColorStop(0, '#FFFFFF'); sg.addColorStop(.6, '#A9B6C0'); sg.addColorStop(1, '#5D6B76');
+    x.fillStyle = sg; x.beginPath(); x.arc(X, Y, sr, 0, 7); x.fill();
+    x.strokeStyle = 'rgba(40,50,60,.8)'; x.lineWidth = Math.max(1, sr * .3); x.beginPath(); x.moveTo(X - sr * .6, Y + sr * .3); x.lineTo(X + sr * .6, Y - sr * .3); x.stroke();
+  }
+  // 두꺼운 유리 테두리: 밝은 굴절 가장자리 + 안쪽 두께 그림자
+  const gx0 = bx + mw, gy0 = by + mw, gS = S - mw * 2, gR = R - mw * .6;
+  g = x.createLinearGradient(gx0, gy0, gx0 + gS, gy0 + gS);
+  g.addColorStop(0, 'rgba(225,255,255,.95)'); g.addColorStop(.45, 'rgba(120,215,225,.8)'); g.addColorStop(1, 'rgba(40,120,140,.9)');
+  rr(x, gx0, gy0, gS, gS, gR); x.fillStyle = g; x.fill();
+  x.lineWidth = 1.2; x.strokeStyle = 'rgba(20,70,85,.7)'; x.stroke();
+  // 우물(배양판 바닥) — 칸 사이 홈이 되는 어두운 바탕
+  const wx0 = gx0 + gw, wy0 = gy0 + gw, wS = gS - gw * 2, wR = gR - gw * .6;
+  rr(x, wx0, wy0, wS, wS, wR); x.fillStyle = '#0B3A42'; x.fill();
+  // 유리 두께 그림자(우물 위·왼쪽 안쪽)
+  x.save(); rr(x, wx0, wy0, wS, wS, wR); x.clip();
+  x.lineWidth = gw * 1.2; x.strokeStyle = 'rgba(0,20,25,.6)'; rr(x, wx0 + gw * .35, wy0 + gw * .45, wS, wS, wR); x.stroke();
+  x.restore();
+  // 유리 가장자리 하이라이트(왼쪽 위 굴절, 오른쪽 아래 반사)
+  x.lineCap = 'round';
+  x.strokeStyle = 'rgba(255,255,255,.95)'; x.lineWidth = Math.max(1.5, S * .005);
+  x.beginPath(); x.moveTo(gx0 + gR * .5, gy0 + gw * .35); x.lineTo(gx0 + gS * .62, gy0 + gw * .35); x.stroke();
+  x.beginPath(); x.moveTo(gx0 + gw * .35, gy0 + gR * .5); x.lineTo(gx0 + gw * .35, gy0 + gS * .5); x.stroke();
+  x.strokeStyle = 'rgba(200,255,255,.55)';
+  x.beginPath(); x.moveTo(gx0 + gS * .45, gy0 + gS - gw * .4); x.lineTo(gx0 + gS - gR * .6, gy0 + gS - gw * .4); x.stroke();
+  // 칸: 한천 젤 바닥 + 음각 홈
+  const rnd = seeded(20260928);
+  for (let yy = 0; yy < N; yy++) for (let xx = 0; xx < N; xx++){
+    const X = bx + pad + xx * c, Y = by + pad + yy * c, m = c * .045, w = c - m * 2, cr = c * .17;
+    // 홈 아래쪽 반사(음각의 밝은 가장자리)
+    rr(x, X + m, Y + m + 1, w, w, cr); x.fillStyle = 'rgba(160,255,240,.18)'; x.fill();
+    rr(x, X + m, Y + m, w, w, cr);
+    const ag = x.createRadialGradient(X + c * .4, Y + c * .36, c * .05, X + c * .5, Y + c * .5, c * .7);
+    ag.addColorStop(0, '#9CEBC8'); ag.addColorStop(.55, '#4FC2AE'); ag.addColorStop(1, '#23848A');
+    x.fillStyle = ag; x.fill();
+    x.save(); x.clip();
+    // 위쪽 안쪽 그림자(파인 느낌)
+    x.lineWidth = c * .09; x.strokeStyle = 'rgba(0,45,50,.45)'; rr(x, X + m + c * .03, Y + m + c * .045, w, w, cr); x.stroke();
+    // 미세 기포
+    const nb = rnd() < .55 ? 1 + (rnd() * 2 | 0) : 0;
+    for (let k = 0; k < nb; k++){
+      const qx = X + m + w * (.15 + rnd() * .7), qy = Y + m + w * (.15 + rnd() * .7), qr = c * (.018 + rnd() * .03);
+      x.fillStyle = 'rgba(255,255,255,.14)'; x.beginPath(); x.arc(qx, qy, qr, 0, 7); x.fill();
+      x.lineWidth = 1; x.strokeStyle = 'rgba(255,255,255,.45)'; x.stroke();
+      x.fillStyle = 'rgba(255,255,255,.85)'; x.beginPath(); x.arc(qx - qr * .35, qy - qr * .35, qr * .28, 0, 7); x.fill();
+    }
+    // 반짝임
+    if (rnd() < .22){
+      const qx = X + m + w * (.2 + rnd() * .6), qy = Y + m + w * (.2 + rnd() * .6), q = c * .05;
+      x.fillStyle = 'rgba(255,255,255,.8)'; x.beginPath();
+      x.moveTo(qx, qy - q); x.lineTo(qx + q * .22, qy - q * .22); x.lineTo(qx + q, qy); x.lineTo(qx + q * .22, qy + q * .22);
+      x.lineTo(qx, qy + q); x.lineTo(qx - q * .22, qy + q * .22); x.lineTo(qx - q, qy); x.lineTo(qx - q * .22, qy - q * .22); x.closePath(); x.fill();
+    }
+    x.restore();
+    rr(x, X + m, Y + m, w, w, cr); x.lineWidth = 1; x.strokeStyle = 'rgba(10,60,62,.55)'; x.stroke();
+  }
+  // 계기판 틀
+  if (gg){
+    x.save(); x.shadowColor = 'rgba(0,20,30,.45)'; x.shadowBlur = 12; x.shadowOffsetY = 4;
+    rr(x, gg.x, gg.y, gg.w, gg.h, gg.r); x.fillStyle = 'rgba(8,30,42,.86)'; x.fill(); x.restore();
+    const pg = x.createLinearGradient(0, gg.y, 0, gg.y + gg.h); pg.addColorStop(0, 'rgba(255,255,255,.12)'); pg.addColorStop(.5, 'rgba(255,255,255,0)');
+    rr(x, gg.x, gg.y, gg.w, gg.h, gg.r); x.fillStyle = pg; x.fill();
+    x.lineWidth = 1.5; x.strokeStyle = 'rgba(150,240,255,.5)'; x.stroke();
+    // 비율 막대 홈
+    const b = gg.bar; rr(x, b.x - 2, b.y - 2, b.w + 4, b.h + 4, Math.min(b.w, b.h) / 2 + 2); x.fillStyle = 'rgba(0,10,18,.8)'; x.fill();
+    x.lineWidth = 1; x.strokeStyle = 'rgba(150,240,255,.3)'; x.stroke();
+  }
+  return oc;
+}
+const cellC = i => [box.pad + (i % N + .5) * box.c, box.pad + (((i / N) | 0) + .5) * box.c];
+// 세균 수 계기판(원작식): 파랑 아이콘+숫자 — 맞대결 비율 막대 — 빨강 아이콘+숫자
+function drawGauge(x, s, t){
+  const gg = box.gauge; if (!gg) return;
+  const nb = count(s.b, s.me), nr = count(s.b, s.op), tot = Math.max(1, nb + nr);
+  s.gv = s.gv == null ? nb / tot : s.gv + (nb / tot - s.gv) * .12;   // 막대는 부드럽게 따라간다
+  const b = gg.bar, v = gg.vert, k = s.gv;
+  x.save(); rr(x, b.x, b.y, b.w, b.h, Math.min(b.w, b.h) / 2); x.clip();
+  const L = v ? b.h * k : b.w * k;
+  let g = v ? x.createLinearGradient(b.x, 0, b.x + b.w, 0) : x.createLinearGradient(0, b.y, 0, b.y + b.h);
+  g.addColorStop(0, '#8CCBFF'); g.addColorStop(.5, '#2A7BFF'); g.addColorStop(1, '#0B3FC8');
+  x.fillStyle = g; v ? x.fillRect(b.x, b.y, b.w, L) : x.fillRect(b.x, b.y, L, b.h);
+  g = v ? x.createLinearGradient(b.x, 0, b.x + b.w, 0) : x.createLinearGradient(0, b.y, 0, b.y + b.h);
+  g.addColorStop(0, '#FFB3A6'); g.addColorStop(.5, '#FF3A26'); g.addColorStop(1, '#B8140C');
+  x.fillStyle = g; v ? x.fillRect(b.x, b.y + L, b.w, b.h - L) : x.fillRect(b.x + L, b.y, b.w - L, b.h);
+  // 맞닿는 곳의 불꽃
+  const jx = v ? b.x + b.w / 2 : b.x + L, jy = v ? b.y + L : b.y + b.h / 2, jr = (v ? b.w : b.h) * (1.1 + .15 * Math.sin(t / 90));
+  g = x.createRadialGradient(jx, jy, 0, jx, jy, jr); g.addColorStop(0, 'rgba(255,255,255,.95)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+  x.fillStyle = g; x.beginPath(); x.arc(jx, jy, jr, 0, 7); x.fill();
+  // 막대 광택
+  x.fillStyle = 'rgba(255,255,255,.25)'; v ? x.fillRect(b.x + b.w * .15, b.y, b.w * .22, b.h) : x.fillRect(b.x, b.y + b.h * .15, b.w, b.h * .22);
+  x.restore();
+  // 아이콘과 숫자
+  germ(x, gg.i1[0], gg.i1[1], gg.ir, 1, t);
+  germ(x, gg.i2[0], gg.i2[1], gg.ir, 2, t + 900);
+  x.font = `900 ${gg.fs}px "Pretendard Variable",Pretendard,sans-serif`; x.textBaseline = 'middle'; x.lineJoin = 'round';
+  for (const [n, p, al, fill] of [[nb, gg.n1, gg.a1, '#CFE9FF'], [nr, gg.n2, gg.a2, '#FFD9D1']]){
+    x.textAlign = al; x.lineWidth = gg.fs * .16; x.strokeStyle = 'rgba(0,10,20,.9)'; x.strokeText(String(n), p[0], p[1]);
+    x.fillStyle = fill; x.fillText(String(n), p[0], p[1]);
+  }
+}
+function draw(t){
+  const s = G.st, x = cx, { W, H, bx, by, S, c, d } = box, now = performance.now();
+  x.setTransform(d, 0, 0, d, 0, 0); x.clearRect(0, 0, W, H);
+  if (!boardCache) boardCache = buildBoard();
+  x.drawImage(boardCache, 0, 0, W, H);
+  drawGauge(x, s, t);
+  x.translate(bx, by);
+  const r = c * .4;   // 몸 폭이 칸의 약 84%
+  // 고른 세균과 갈 수 있는 칸: 복제는 밝은 초록, 점프는 노랑 테두리
+  if (s.sel >= 0 && !s.over && s.turn === s.me){
+    const pulse = .85 + .15 * Math.sin(t / 150);
+    for (const [list, col] of [[N1[s.sel], '110,255,110'], [N2[s.sel], '255,220,40']]){
+      for (const j of list){ if (s.b[j]) continue;
+        const X = box.pad + (j % N) * c, Y = box.pad + ((j / N) | 0) * c, m = c * .09;
+        rr(x, X + m, Y + m, c - m * 2, c - m * 2, c * .15);
+        x.fillStyle = `rgba(${col},.22)`; x.fill();
+        // 밝은 한천 위에서도 또렷하게: 어두운 밑선 + 색 테두리
+        x.strokeStyle = 'rgba(0,40,40,.55)'; x.lineWidth = Math.max(4, c * .12); x.stroke();
+        x.strokeStyle = `rgba(${col},${pulse})`; x.lineWidth = Math.max(2.5, c * .075); x.stroke();
+      }
+    }
+  }
+  // 칸 위의 세균
+  for (let i = 0; i < NN; i++){
+    const p = s.b[i]; if (!p) continue;
+    const a = s.anim[i]; let col = p, sx = 1, sy = 1, up = 0;
+    if (a && a.kind === 'hide'){ if (now < a.until) continue; }
+    const [X, Y] = cellC(i);
+    if (a && a.kind === 'flip'){
+      const k = (now - a.t0) / FLIP_MS;
+      if (k < 0) col = a.from;
+      else if (k < 1){ col = k < .5 ? a.from : p; sx = Math.max(.06, Math.abs(Math.cos(k * Math.PI))) * (1 + .15 * Math.sin(k * Math.PI)); sy = 1 + .15 * Math.sin(k * Math.PI); up = Math.sin(k * Math.PI) * c * .22; }
+      // 감염 파동: 뒤집히기 시작하면 둘레로 원이 퍼진다
+      const w = (now - a.t0) / 420;
+      if (w >= 0 && w < 1){
+        x.strokeStyle = `rgba(${COL[p].glow},${(1 - w) * .85})`; x.lineWidth = 1 + c * .06 * (1 - w);
+        x.beginPath(); x.ellipse(X, Y + r * .5, c * (.3 + .38 * w), c * (.12 + .16 * w), 0, 0, 7); x.stroke();
+        x.beginPath(); x.arc(X, Y, c * (.25 + .4 * w), 0, 7); x.globalAlpha = .5; x.stroke(); x.globalAlpha = 1;
+      }
+    }
+    // 방금 도착한 세균은 착지하며 찌그러졌다 펴진다
+    const land = a && a.kind === 'hide' ? (now - a.until) / 220 : 1;
+    if (land < 1){ const q = Math.sin(land * Math.PI) * (1 - land); sx *= 1 + q * .35; sy *= 1 - q * .3; }
+    let bob = 0;
+    if (i === s.sel && !s.over){
+      // 고른 세균: 발밑 밝은 링 + 통통 뛰기
+      const pr = .7 + .3 * Math.sin(t / 150);
+      x.fillStyle = `rgba(255,255,255,${.18 * pr})`; x.beginPath(); x.ellipse(X, Y + r * .9, r * 1.05, r * .34, 0, 0, 7); x.fill();
+      x.strokeStyle = `rgba(255,255,255,${.95 * pr})`; x.lineWidth = Math.max(2, c * .05); x.stroke();
+      x.strokeStyle = `rgba(140,240,255,${.6 * pr})`; x.lineWidth = Math.max(1, c * .025); x.beginPath(); x.ellipse(X, Y + r * .9, r * 1.25, r * .44, 0, 0, 7); x.stroke();
+      const hop = Math.abs(Math.sin(t / 170)); bob = hop * c * .13;
+      if (hop < .25){ const q = (.25 - hop) * 1.2; sx *= 1 + q * .5; sy *= 1 - q * .5; }
+    }
+    germ(x, X, Y - up - bob, r, col, t, sx, sy);
+  }
+  // 날아가는 세균: 복제는 원래 자리에서 부풀며 나오고, 점프는 포물선
+  s.fly = s.fly.filter(fy => now < fy.t0 + fy.dur);
+  for (const fy of s.fly){
+    const k = Math.min(1, Math.max(0, (now - fy.t0) / fy.dur)), e = k * k * (3 - 2 * k);
+    const [ax, ay] = cellC(fy.f), [qx, qy] = cellC(fy.t);
+    const X = ax + (qx - ax) * e, Y = ay + (qy - ay) * e;
+    if (fy.jump) germ(x, X, Y - Math.sin(k * Math.PI) * c * .9, r * (1 + Math.sin(k * Math.PI) * .15), fy.p, t, 1, 1);
+    else { const g = .35 + .65 * Math.min(1, k * 1.3) + Math.sin(k * Math.PI) * .12; germ(x, X, Y, r * g, fy.p, t, 1, 1); }
+  }
+  // 위에서 비추는 조명 반사(비스듬한 흰 띠, 약하게)
+  x.save(); rr(x, S * .056, S * .056, S * .888, S * .888, S * .05); x.clip();
+  x.fillStyle = 'rgba(255,255,255,.07)'; x.beginPath(); x.moveTo(S * .1, 0); x.lineTo(S * .42, 0); x.lineTo(0, S * .42); x.lineTo(0, S * .1); x.closePath(); x.fill();
+  x.fillStyle = 'rgba(255,255,255,.05)'; x.beginPath(); x.moveTo(S * .5, 0); x.lineTo(S * .56, 0); x.lineTo(0, S * .56); x.lineTo(0, S * .5); x.closePath(); x.fill();
+  x.restore();
+}
+VS.init(G);
+</script>
+</body>
+</html>
