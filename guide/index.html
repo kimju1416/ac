@@ -263,6 +263,12 @@ button,select,input{font:inherit;color:inherit}
 .fdl .fd a{display:inline-flex;align-items:center;min-height:30px;padding:0 10px;border-left:1px solid var(--pt-line);text-decoration:none;font-weight:700;color:var(--pt)}
 .fdl .fd a:hover{background:var(--pt-soft)}
 .xrow .fwrap{min-width:0}
+#s-forms ul:has(.fli){list-style:none;padding:0;margin:0}
+#s-forms li.fli{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid var(--line2);margin:0}
+#s-forms li.fli:last-child{border-bottom:0}
+#s-forms li.fli>span{min-width:0;font-size:14px}
+.fdl.fdr{flex:none;margin-top:0;justify-content:flex-end;max-width:60%}
+.fdl.fdr .fd a{min-height:32px;padding:0 11px}
 .fall{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line2);font-size:12.5px;color:var(--sub)}
 .tip{position:fixed;z-index:60;max-width:380px;background:#1B2A41;color:#fff;border-radius:10px;padding:12px 14px;font-size:13.5px;line-height:1.55;pointer-events:none;opacity:0;transition:opacity .12s;box-shadow:0 8px 24px rgba(15,23,42,.25);left:-999px;top:0}
 .tip.on{opacity:1}
@@ -786,7 +792,7 @@ function renderCase(id){
   if (c.sources && c.sources.length) main.push(sec('sources', '출처', `<div class="card"><ul class="src">${c.sources.map(s => `<li>${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>` : esc(s.title)} <span class="y">${esc(s.publisher || '')}${s.year ? ' · ' + esc(s.year) : ''}</span></li>`).join('')}</ul></div>`, `확인일 ${esc(c.verified || DATA.updated)}`));
 
   if (c.contacts && c.contacts.length) side.push(`<div class="sec" id="s-contacts"><div class="sech"><h2>연락처</h2></div><div class="card">${c.contacts.map(ctRow).join('')}</div></div>`);
-  if (c.forms && c.forms.length) side.push(`<div class="sec" id="s-forms"><div class="sech"><h2>서식·기록</h2></div><div class="card plain"><ul>${c.forms.map(x => `<li>${esc(x)}${formDl(x)}</li>`).join('')}</ul>${SV_CASES.has(c.id) ? `<div class="fall"><span>2026 학교폭력 사안처리 가이드북 부록 양식 23종</span><a class="btn" href="forms/all.zip" download="2026_학교폭력_사안처리_양식_전체.zip">전체 받기(zip)</a></div>` : ''}</div></div>`);
+  if (c.forms && c.forms.length) side.push(`<div class="sec" id="s-forms"><div class="sech"><h2>서식·기록</h2></div><div class="card plain"><ul>${c.forms.map(x => formIds(x).length ? `<li class="fli"><span>${esc(x)}</span>${formDl(x, true)}</li>` : `<li>${esc(x)}</li>`).join('')}</ul>${SV_CASES.has(c.id) ? `<div class="fall"><span>2026 학교폭력 사안처리 가이드북 부록 양식 23종</span><a class="btn" href="forms/all.zip" download="2026_학교폭력_사안처리_양식_전체.zip">전체 받기(zip)</a></div>` : ''}</div></div>`);
   const rel = (c.related || []).filter(r => BYID[r]);
   if (rel.length) side.push(`<div class="sec"><div class="sech"><h2>함께 볼 사안</h2></div><div class="card plain"><ul>${rel.map(r => `<li><a href="#/c/${r}">${esc(BYID[r].title)}</a></li>`).join('')}</ul></div></div>`);
   const tocItems = [['flow', '업무 흐름도'], ['deep', '깊이 보기'], ['tables', '한눈에 보는 표'], ['deadlines', '기한'], ['dont', '하지 말 것'], ['faq', '자주 묻는 질문'], ['record', '기록·보고'], ['law', '법령 근거'], ['uncertain', '확인할 것'], ['memo', '기록 메모'], ['sources', '출처']];
@@ -1011,12 +1017,13 @@ function formIds(t){
   for (const m of String(t).matchAll(/(?<![\d-])([1-5]-[1-7])(?!\d)/g)) if (SV_FORMS[m[1]] && !ids.includes(m[1])) ids.push(m[1]);
   return ids;
 }
-function formDl(t){
+function formDl(t, side){
   const ids = formIds(t);
   if (!ids.length) return '';
-  return `<div class="fdl">${ids.map(id => {
+  const one = side && ids.length === 1;   // 서식·기록 목록의 한 줄 한 양식은 번호 딱지 없이 단추만 오른쪽에
+  return `<div class="fdl${side ? ' fdr' : ''}">${ids.map(id => {
     const nm = `양식${id}_${SV_FORMS[id]}`;
-    return `<span class="fd"><em>양식 ${id}</em><a href="forms/${id}.pdf" download="${esc(nm)}.pdf" title="${esc(nm)} PDF 내려받기">PDF</a><a href="forms/${id}.hwp" download="${esc(nm)}.hwp" title="${esc(nm)} 한글 파일 내려받기">HWP</a></span>`;
+    return `<span class="fd">${one ? '' : `<em>양식 ${id}</em>`}<a href="forms/${id}.pdf" download="${esc(nm)}.pdf" title="${esc(nm)} PDF 내려받기">PDF</a><a href="forms/${id}.hwp" download="${esc(nm)}.hwp" title="${esc(nm)} 한글 파일 내려받기">HWP</a></span>`;
   }).join('')}</div>`;
 }
 function memoTemplate(){
