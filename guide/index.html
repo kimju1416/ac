@@ -403,6 +403,10 @@ details.faq .a{padding:0 18px 14px 44px;font-size:14.5px;color:var(--tx2)}
   .cols{grid-template-columns:1fr}
   .sticky{position:static}
   .toc{display:none}
+  /* 학교폭력 사안: 화면이 한 줄로 쌓이면 위 «서식 목록과 쓰는 시점» 표와 겹치므로 목록은 숨기고 전체 받기만 */
+  #s-forms.fdup ul{display:none}
+  #s-forms.fdup .fall{margin-top:0;padding-top:0;border-top:0}
+  #s-forms.fdup .fall::before{content:"양식별 PDF·HWP는 위 «서식 목록과 쓰는 시점» 표에서 받을 수 있습니다.";flex-basis:100%;color:var(--sub)}
 }
 @media (max-width:860px){
   .srow{flex-direction:column;align-items:stretch;gap:12px}
@@ -799,7 +803,7 @@ function renderCase(id){
   if (c.sources && c.sources.length) main.push(sec('sources', '출처', `<div class="card"><ul class="src">${c.sources.map(s => `<li>${s.url ? `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title)}</a>` : esc(s.title)} <span class="y">${esc(s.publisher || '')}${s.year ? ' · ' + esc(s.year) : ''}</span></li>`).join('')}</ul></div>`, `확인일 ${esc(c.verified || DATA.updated)}`));
 
   if (c.contacts && c.contacts.length) side.push(`<div class="sec" id="s-contacts"><div class="sech"><h2>연락처</h2></div><div class="card">${c.contacts.map(ctRow).join('')}</div></div>`);
-  if (c.forms && c.forms.length) side.push(`<div class="sec" id="s-forms"><div class="sech"><h2>서식·기록</h2></div><div class="card plain"><ul>${c.forms.map(x => formIds(x).length ? `<li class="fli"><span>${esc(x)}</span>${formDl(x, true)}</li>` : `<li>${esc(x)}</li>`).join('')}</ul>${SV_CASES.has(c.id) ? `<div class="fall"><span>2026 학교폭력 사안처리 가이드북 부록 양식 23종</span><a class="btn" href="forms/all.zip" download="2026_학교폭력_사안처리_양식_전체.zip">전체 받기(zip)</a></div>` : ''}${xformList(c)}</div></div>`);
+  if (c.forms && c.forms.length) side.push(`<div class="sec${c.id === 'school-violence' ? ' fdup' : ''}" id="s-forms"><div class="sech"><h2>서식·기록</h2></div><div class="card plain"><ul>${c.forms.map(x => formIds(x).length ? `<li class="fli"><span>${esc(x)}</span>${formDl(x, true)}</li>` : `<li>${esc(x)}</li>`).join('')}</ul>${SV_CASES.has(c.id) ? `<div class="fall"><span>2026 학교폭력 사안처리 가이드북 부록 양식 23종</span><a class="btn" href="forms/all.zip" download="2026_학교폭력_사안처리_양식_전체.zip">전체 받기(zip)</a></div>` : ''}${xformList(c)}</div></div>`);
   const rel = (c.related || []).filter(r => BYID[r]);
   if (rel.length) side.push(`<div class="sec"><div class="sech"><h2>함께 볼 사안</h2></div><div class="card plain"><ul>${rel.map(r => `<li><a href="#/c/${r}">${esc(BYID[r].title)}</a></li>`).join('')}</ul></div></div>`);
   const tocItems = [['flow', '업무 흐름도'], ['deep', '깊이 보기'], ['tables', '한눈에 보는 표'], ['deadlines', '기한'], ['dont', '하지 말 것'], ['faq', '자주 묻는 질문'], ['record', '기록·보고'], ['law', '법령 근거'], ['uncertain', '확인할 것'], ['memo', '기록 메모'], ['sources', '출처']];
