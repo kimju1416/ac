@@ -257,6 +257,13 @@ button,select,input{font:inherit;color:inherit}
 .xrow.sc{background:var(--head);border:1px solid var(--line2);border-radius:var(--r1);padding:9px 12px}
 .xrow.sc span{color:var(--tx)}
 .xrow.ck span{color:var(--warn)}
+mark.rg{background:#FDEBC8;color:#7A4A00;border-radius:3px;padding:0 2px;font-weight:700}
+mark.rg.ot{background:#E8ECF2;color:#3F4B5E;font-weight:600}
+.rgdot{margin-left:5px;padding:0 5px;border-radius:4px;background:#FDEBC8;color:#7A4A00;font-size:10.5px;font-weight:800}
+.rgtag{display:inline-flex;align-items:center;margin-left:6px;padding:1px 7px;border-radius:999px;background:#FDEBC8;color:#7A4A00;font-size:11.5px;font-weight:800;white-space:nowrap;vertical-align:middle;line-height:1.6}
+.rgnote{margin-top:12px;display:flex;flex-direction:column;gap:3px;padding:10px 14px;border:1px solid #F2D49A;background:#FFF8EA;border-radius:var(--r1);font-size:13.5px;color:var(--tx2);max-width:820px}
+.rgnote b{color:#7A4A00;font-size:14px}
+@media print{mark.rg{background:none;text-decoration:underline}}
 .fdl{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .fdl .fd{display:inline-flex;align-items:center;border:1px solid var(--pt-line);border-radius:var(--r1);background:#fff;overflow:hidden;font-size:12.5px;line-height:1}
 .fdl .fd em{font-style:normal;font-weight:700;color:var(--tx2);padding:0 9px;white-space:nowrap}
@@ -538,6 +545,13 @@ const QUICK = DATA.quick || [];
 const $app = document.getElementById('app');
 
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+// 지역 기준 표시 — 전국 선생님이 보므로 경북(경상북도교육청) 고유 내용과 다른 시·도 자료를 본문에서 구분해 준다
+const RG_GB = /(경상북도교육청|경상북도학교안전공제회|경상북도|경북교육청|경북|구미교육지원청|구미)/g;
+const RG_OT = /(경기도교육청|경기 기준|경기는|전라남도교육청|전남교육청|전남 지침|충청북도교육청|충북교육청|충북특수교육원|충북(?= \[| 2026)|서울특별시교육청|서울시교육청|인천광역시교육청|인천시교육청|광주광역시교육청|경상남도교육청|경남교육청)/g;
+const escR = s => esc(s).replace(RG_GB, '<mark class="rg">$1</mark>').replace(RG_OT, '<mark class="rg ot">$1</mark>');
+const hasGB = t => { RG_GB.lastIndex = 0; return RG_GB.test(String(t || '')); };
+const stepGB = s => hasGB([s.who, s.when, s.what, s.detail, s.basis].join(' ')) ? '<span class="rgtag">경북 기준</span>' : '';
+function gbCount(c){ let n = 0; const walk = v => { if (v == null) return; if (typeof v === 'string'){ if (hasGB(v)) n++; } else if (Array.isArray(v)) v.forEach(walk); else if (typeof v === 'object') Object.entries(v).forEach(([k, x]) => { if (k !== 'sources' && k !== 'uncertain' && k !== 'url') walk(x); }); }; walk(c); return n; }
 const store = {
   get(k, d){ try{ const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
   set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
@@ -717,7 +731,7 @@ function drawList(){
     const sn = state.q ? snippet(c, state.q) : '';
     const d = (c.deadlines || [])[0];
     return `<tr data-href="#/c/${c.id}"><td class="no num">${c.no}</td>
-      <td class="ti"><a href="#/c/${c.id}">${esc(c.title)}</a><p>${esc(c.summary)}</p>${sn ? `<div class="hit">${esc(sn)}</div>` : ''}</td>
+      <td class="ti"><a href="#/c/${c.id}">${esc(c.title)}</a>${gbCount(c) >= 3 ? '<span class="rgtag">경북 기준 포함</span>' : ''}<p>${esc(c.summary)}</p>${sn ? `<div class="hit">${esc(sn)}</div>` : ''}</td>
       <td class="cc"><span class="tag">${esc(c.category)}</span></td>
       <td class="ub"><span class="badge u-${u1(c.urgency)}">${esc(c.urgency)}</span></td>
       <td class="fst">${esc((c.first || [])[0] || '')}</td>
@@ -778,7 +792,7 @@ function renderCase(id){
         <div class="flow" id="flow" style="grid-template-columns:128px repeat(${phasesUsed.length}, minmax(${phasesUsed.length > 5 ? 150 : 180}px, 1fr));min-width:${128 + phasesUsed.length * (phasesUsed.length > 5 ? 150 : 180)}px">
           <div class="corner">누가 \\ 언제</div>
           ${phasesUsed.map(pi => `<div class="ch"><b>${PHASES[pi].name}</b>${PHASES[pi].sub}</div>`).join('')}
-          ${lanesUsed.map(ln => `<div class="lh">${ln.name}</div>${phasesUsed.map((pi, k) => `<div class="cell ${k === phasesUsed.length - 1 ? 'last' : ''}">${L.filter(x => x.lane === ln.k && x.phase === pi).map(x => `<div class="node" role="button" tabindex="0" data-n="${x.i}"><div class="nh"><span>S${String(x.i + 1).padStart(2, '0')}</span><span class="st"></span></div><div class="nt">${esc(x.s.what)}</div>${(x.s.how || []).length ? `<span class="nx">하는 법 ${x.s.how.length}가지</span>` : ''}</div>`).join('')}</div>`).join('')}`).join('')}
+          ${lanesUsed.map(ln => `<div class="lh">${ln.name}</div>${phasesUsed.map((pi, k) => `<div class="cell ${k === phasesUsed.length - 1 ? 'last' : ''}">${L.filter(x => x.lane === ln.k && x.phase === pi).map(x => `<div class="node" role="button" tabindex="0" data-n="${x.i}"><div class="nh"><span>S${String(x.i + 1).padStart(2, '0')}${stepGB(x.s) ? '<b class="rgdot">경북</b>' : ''}</span><span class="st"></span></div><div class="nt">${esc(x.s.what)}</div>${(x.s.how || []).length ? `<span class="nx">하는 법 ${x.s.how.length}가지</span>` : ''}</div>`).join('')}</div>`).join('')}`).join('')}
           <svg class="arrows" id="arrows"></svg>
         </div>
       </div>
@@ -789,12 +803,12 @@ function renderCase(id){
 
   const flowSec = (sec('flow', '업무 흐름도', flowHtml, `${c.steps.length}단계 · 휴대전화에서는 세로 목록으로 한눈에 보고, 각 단계를 눌러 자세한 절차와 근거를 펼칠 수 있습니다.`, flowRight));
 
-  if (c.deep && c.deep.length) main.push(sec('deep', '과정별 깊이 보기', `<div class="card deep">${c.deep.map((d, i) => `<details ${i === 0 ? 'open' : ''}><summary><span class="dn">${String(i + 1).padStart(2, '0')}</span>${esc(d.title)}</summary><div class="db">${(Array.isArray(d.body) ? d.body : [d.body]).map(p => `<p>${esc(p)}</p>`).join('')}${d.basis ? `<p class="bs">근거 ${esc(d.basis)}</p>` : ''}</div></details>`).join('')}</div>`, '조사·심의·결정·불복까지 과정마다 실제로 어떻게 진행되는지'));
-  if (c.tables && c.tables.length) main.push(sec('tables', '한눈에 보는 표', c.tables.map(t => { const fcol = SV_CASES.has(c.id) && (t.head || [])[0] === '양식'; return `<div class="card xt"><div class="xth">${esc(t.title)}</div><div class="xtw"><table class="t"><thead><tr>${(t.head || []).map(h => `<th>${esc(h)}</th>`).join('')}${fcol ? '<th>내려받기</th>' : ''}</tr></thead><tbody>${(t.rows || []).map(r => `<tr>${r.map((v, j) => `<td data-h="${esc((t.head || [])[j] || '')}"${j === 0 ? ' class="k0"' : ''}>${esc(v)}</td>`).join('')}${fcol ? `<td data-h="내려받기" class="tdl">${formDl('양식 ' + r[0], true)}</td>` : ''}</tr>`).join('')}</tbody></table></div>${t.note ? `<div class="xtn">${esc(t.note)}</div>` : ''}</div>`; }).join('')));
-  if (dlN) main.push(sec('deadlines', '기한', `<div class="card"><div class="calc"><b>알게 된 때</b><input type="datetime-local" id="base"><span class="hint">넣으면 실제 날짜로 계산합니다</span></div><table class="t"><thead><tr><th>무엇을</th><th>기한</th><th>날짜</th></tr></thead><tbody>${c.deadlines.map((d, i) => `<tr><td>${esc(d.what)}${d.basis ? `<span class="bs">${esc(d.basis)}</span>` : ''}</td><td class="lim">${esc(d.limit)}</td><td class="due" data-d="${i}"></td></tr>`).join('')}</tbody></table></div>`));
-  if (c.dont && c.dont.length) main.push(sec('dont', '하지 말 것', `<div class="card dont"><ul>${c.dont.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>`, '현장에서 자주 생기는 실수'));
-  if (c.faq && c.faq.length) main.push(sec('faq', '자주 묻는 질문', `<div class="card">${c.faq.map(f => `<details class="faq"><summary>${esc(f.q)}</summary><div class="a">${esc(f.a)}</div></details>`).join('')}</div>`));
-  if (c.record) main.push(sec('record', '기록·보고', `<div class="card plain">${esc(c.record)}</div>`));
+  if (c.deep && c.deep.length) main.push(sec('deep', '과정별 깊이 보기', `<div class="card deep">${c.deep.map((d, i) => `<details ${i === 0 ? 'open' : ''}><summary><span class="dn">${String(i + 1).padStart(2, '0')}</span>${escR(d.title)}</summary><div class="db">${(Array.isArray(d.body) ? d.body : [d.body]).map(p => `<p>${escR(p)}</p>`).join('')}${d.basis ? `<p class="bs">근거 ${escR(d.basis)}</p>` : ''}</div></details>`).join('')}</div>`, '조사·심의·결정·불복까지 과정마다 실제로 어떻게 진행되는지'));
+  if (c.tables && c.tables.length) main.push(sec('tables', '한눈에 보는 표', c.tables.map(t => { const fcol = SV_CASES.has(c.id) && (t.head || [])[0] === '양식'; return `<div class="card xt"><div class="xth">${escR(t.title)}</div><div class="xtw"><table class="t"><thead><tr>${(t.head || []).map(h => `<th>${esc(h)}</th>`).join('')}${fcol ? '<th>내려받기</th>' : ''}</tr></thead><tbody>${(t.rows || []).map(r => `<tr>${r.map((v, j) => `<td data-h="${esc((t.head || [])[j] || '')}"${j === 0 ? ' class="k0"' : ''}>${escR(v)}</td>`).join('')}${fcol ? `<td data-h="내려받기" class="tdl">${formDl('양식 ' + r[0], true)}</td>` : ''}</tr>`).join('')}</tbody></table></div>${t.note ? `<div class="xtn">${escR(t.note)}</div>` : ''}</div>`; }).join('')));
+  if (dlN) main.push(sec('deadlines', '기한', `<div class="card"><div class="calc"><b>알게 된 때</b><input type="datetime-local" id="base"><span class="hint">넣으면 실제 날짜로 계산합니다</span></div><table class="t"><thead><tr><th>무엇을</th><th>기한</th><th>날짜</th></tr></thead><tbody>${c.deadlines.map((d, i) => `<tr><td>${escR(d.what)}${d.basis ? `<span class="bs">${escR(d.basis)}</span>` : ''}</td><td class="lim">${escR(d.limit)}</td><td class="due" data-d="${i}"></td></tr>`).join('')}</tbody></table></div>`));
+  if (c.dont && c.dont.length) main.push(sec('dont', '하지 말 것', `<div class="card dont"><ul>${c.dont.map(x => `<li>${escR(x)}</li>`).join('')}</ul></div>`, '현장에서 자주 생기는 실수'));
+  if (c.faq && c.faq.length) main.push(sec('faq', '자주 묻는 질문', `<div class="card">${c.faq.map(f => `<details class="faq"><summary>${escR(f.q)}</summary><div class="a">${escR(f.a)}</div></details>`).join('')}</div>`));
+  if (c.record) main.push(sec('record', '기록·보고', `<div class="card plain">${escR(c.record)}</div>`));
   if (lawN) main.push(sec('law', '법령 근거', `<div class="card law">${c.law.map(l => `<div><b><a href="${lawLink(l.name)}" target="_blank" rel="noopener">${esc(l.name)}</a> ${esc(l.article || '')}</b>${l.point ? `<p>${esc(l.point)}</p>` : ''}</div>`).join('')}</div>`, '법령 이름을 누르면 국가법령정보센터 현행 조문이 열립니다.'));
   if (c.uncertain && c.uncertain.length) main.push(sec('uncertain', '현장에서 확인할 것', `<div class="note"><ul>${c.uncertain.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>`, '학교·교육청마다 다르거나 원문으로 다시 확인할 부분'));
   main.push(sec('memo', '사안 기록 메모', `<div class="memo"><textarea id="memo" placeholder="${esc(memoTemplate())}"></textarea>
@@ -818,7 +832,7 @@ function renderCase(id){
     <div class="dhead"><div class="l">
       <div class="meta"><span class="no">NO ${c.no}</span><span class="badge u-${u1(c.urgency)}">${esc(c.urgency)}</span><span class="tag">${esc(c.category)}</span></div>
       <h1>${esc(c.title)}</h1>
-      <p class="sum">${esc(c.summary)}</p>
+      <p class="sum">${escR(c.summary)}</p>${gbNote(c)}
     </div><div class="acts"><button class="btn" id="bcopy">링크 복사</button><button class="btn" id="bprint">인쇄</button><button class="btn" id="breset">체크 지우기</button></div></div>
     <div class="kpis">
       <div class="kpi"><b class="num">${(c.steps||[]).length}</b><span>처리 단계</span></div>
@@ -828,7 +842,7 @@ function renderCase(id){
       <div class="kpi"><b class="num" id="kdone">0</b><span>체크한 단계</span></div>
       ${(c.uncertain||[]).length ? `<div class="kpi w"><b class="num">${c.uncertain.length}</b><span>현장 확인 필요</span></div>` : ''}
     </div>
-    ${c.first && c.first.length ? `<div class="nowbox" id="s-now"><div class="h">지금 당장<small>흐름도보다 먼저</small></div><ol>${c.first.map(x => `<li>${esc(x)}</li>`).join('')}</ol></div>` : ''}
+    ${c.first && c.first.length ? `<div class="nowbox" id="s-now"><div class="h">지금 당장<small>흐름도보다 먼저</small></div><ol>${c.first.map(x => `<li>${escR(x)}</li>`).join('')}</ol></div>` : ''}
     ${flowSec}
     <div class="cols">
       <div>${main.join('')}</div>
@@ -866,9 +880,9 @@ function renderCase(id){
     if (i == null){ i = L.findIndex(x => !done[x.i]); if (i < 0) i = 0; }
     const x = L[i]; if (!x) { box.innerHTML = ''; return; }
     const s = x.s;
-    box.innerHTML = `<div class="nd-l"><div class="k">S${String(i + 1).padStart(2, '0')} · ${esc(PHASES[x.phase].name)}${flowState.sel == null ? ' · 지금 할 일' : ''}</div><h3>${esc(s.what)}</h3>${s.detail ? `<p class="det">${esc(s.detail)}</p>` : ''}${stepExtra(s, true)}
+    box.innerHTML = `<div class="nd-l"><div class="k">S${String(i + 1).padStart(2, '0')} · ${esc(PHASES[x.phase].name)}${flowState.sel == null ? ' · 지금 할 일' : ''}</div><h3>${esc(s.what)}${stepGB(s)}</h3>${s.detail ? `<p class="det">${escR(s.detail)}</p>` : ''}${stepExtra(s, true)}
       <label class="chk"><input type="checkbox" id="ndchk" ${done[i] ? 'checked' : ''}> 이 단계를 마쳤습니다</label></div>
-      <div class="nd-r"><dl><dt>언제</dt><dd>${esc(s.when || '-')}</dd><dt>누가</dt><dd>${esc(s.who || '-')}</dd><dt>근거</dt><dd>${esc(s.basis || '매뉴얼 절차')}</dd></dl></div>`;
+      <div class="nd-r"><dl><dt>언제</dt><dd>${esc(s.when || '-')}</dd><dt>누가</dt><dd>${esc(s.who || '-')}</dd><dt>근거</dt><dd>${escR(s.basis || "매뉴얼 절차")}</dd></dl></div>`;
     document.getElementById('ndchk').addEventListener('change', e => setDone(i, e.target.checked));
   }
   function drawSteplist(done){
@@ -878,7 +892,7 @@ function renderCase(id){
     L.forEach(x => {
       if (x.phase !== lastP){ html += `<li class="pgrp">${PHASES[x.phase].name} · ${PHASES[x.phase].sub}</li>`; lastP = x.phase; }
       const s = x.s;
-      html += `<li class="step ${done[x.i] ? 'done' : ''} ${firstOpen === x.i ? 'now' : ''}"><input type="checkbox" data-i="${x.i}" ${done[x.i] ? 'checked' : ''} aria-label="${x.i + 1}단계 완료"><div><div class="stepmeta"><span class="sn">S${String(x.i + 1).padStart(2, '0')}${firstOpen === x.i ? ' · 지금' : ''}</span>${s.who ? `<span class="who">${esc(s.who)}</span>` : ''}<span class="when">${esc(s.when || '')}</span></div><div class="what">${esc(s.what)}</div><details class="step-more"><summary>자세히·근거 보기</summary><div class="morebody">${s.detail ? `<div class="det">${esc(s.detail)}</div>` : ''}${stepExtra(s)}${s.basis ? `<div class="bs">근거 ${esc(s.basis)}</div>` : ''}</div></details></div></li>`;
+      html += `<li class="step ${done[x.i] ? 'done' : ''} ${firstOpen === x.i ? 'now' : ''}"><input type="checkbox" data-i="${x.i}" ${done[x.i] ? 'checked' : ''} aria-label="${x.i + 1}단계 완료"><div><div class="stepmeta"><span class="sn">S${String(x.i + 1).padStart(2, '0')}${firstOpen === x.i ? ' · 지금' : ''}</span>${s.who ? `<span class="who">${esc(s.who)}</span>` : ''}<span class="when">${esc(s.when || '')}</span>${stepGB(s)}</div><div class="what">${esc(s.what)}</div><details class="step-more"><summary>자세히·근거 보기</summary><div class="morebody">${s.detail ? `<div class="det">${escR(s.detail)}</div>` : ''}${stepExtra(s)}${s.basis ? `<div class="bs">근거 ${escR(s.basis)}</div>` : ''}</div></details></div></li>`;
     });
     ol.innerHTML = html;
     ol.querySelectorAll('input').forEach(el => el.addEventListener('change', () => setDone(+el.dataset.i, el.checked)));
@@ -897,7 +911,7 @@ function renderCase(id){
     flowState.sel = i; paint();
     const dr = document.getElementById('drawer'), bg = document.getElementById('drawerbg');
     dr.innerHTML = `<div class="dh"><span class="k">S${String(i + 1).padStart(2, '0')} · ${esc(PHASES[x.phase].name)} · ${i + 1}/${L.length}</span><button class="x" aria-label="닫기">×</button></div>
-      <div class="dbody"><h3>${esc(s.what)}</h3>${s.detail ? `<p class="det">${esc(s.detail)}</p>` : ''}${stepExtra(s, true)}
+      <div class="dbody"><h3>${esc(s.what)}${stepGB(s)}</h3>${s.detail ? `<p class="det">${escR(s.detail)}</p>` : ''}${stepExtra(s, true)}
       <dl><dt>언제</dt><dd>${esc(s.when || '-')}</dd><dt>누가</dt><dd>${esc(s.who || '-')}</dd><dt>근거</dt><dd>${esc(s.basis || '매뉴얼 절차')}</dd></dl></div>
       <div class="df"><label class="chk"><input type="checkbox" id="drchk" ${done[i] ? 'checked' : ''}> 마쳤습니다</label><button class="btn" id="drprev" ${i ? '' : 'disabled'}>← 앞</button><button class="btn dark" id="drnext" ${i < L.length - 1 ? '' : 'disabled'}>다음 →</button></div>`;
     dr.classList.add('on'); bg.classList.add('on');
@@ -1010,6 +1024,10 @@ window.addEventListener('resize', redraw);
 if (document.fonts && document.fonts.ready) document.fonts.ready.then(redraw);
 const flowRO = window.ResizeObserver ? new ResizeObserver(redraw) : null;
 
+function gbNote(c){
+  if (gbCount(c) < 3) return '';
+  return `<div class="rgnote"><b>경북 기준이 들어 있는 사안입니다</b><span>이 길잡이는 경상북도 중학교 교사가 만들었습니다. 본문의 <mark class="rg">경북</mark> 표시와 흐름도의 <span class="rgtag">경북 기준</span> 딱지는 경상북도교육청 자료·연락처·절차입니다. 다른 시·도 선생님은 이 부분을 소속 교육청 지침과 학교 규정으로 확인해 주세요. 회색 <mark class="rg ot">표시</mark>는 경북 자료가 없어 다른 시·도 공식 자료를 참고한 부분입니다.</span></div>`;
+}
 function stepExtra(s, lbl){
   let h = '';
   if (s.how && s.how.length) h += `${lbl ? '<div class="lbl2">하는 법</div>' : ''}<ol class="how">${s.how.map(x => `<li>${esc(x)}</li>`).join('')}</ol>`;
@@ -1028,7 +1046,7 @@ function xformList(c){
   if (!list) return '';
   const groups = [];
   for (const [k, id] of list){ const S = XFORMS.sets[k]; if (!S || !S.items[id]) continue; let g = groups.find(x => x.k === k); if (!g) groups.push(g = { k, S, ids: [] }); g.ids.push(id); }
-  return `<div class="xfm"><div class="xfh">원문 양식 내려받기</div>${groups.map(g => `<div class="xfs">${esc(g.S.src)}</div><ul>${g.ids.map(id => {
+  return `<div class="xfm"><div class="xfh">원문 양식 내려받기</div>${groups.map(g => `<div class="xfs">${escR(g.S.src)}</div><ul>${g.ids.map(id => {
     const [t, hw, lb] = g.S.items[id], nm = lb ? `${g.S.n}_${t}` : `${g.S.n}_${g.S.w}${id}_${t}`.replace(/[\/:*?"<>|]/g, '').replace(/\s+/g, '_');
     return `<li class="fli"><span><b class="xno">${lb ? esc(lb) : `${esc(g.S.w)} ${esc(id)}`}</b> ${esc(t)}</span><div class="fdl fdr"><span class="fd"><a href="forms/${g.k}/${id}.pdf" download="${esc(nm)}.pdf" title="${esc(t)} PDF 내려받기">PDF</a>${hw ? `<a href="forms/${g.k}/${id}.hwp" download="${esc(nm)}.hwp" title="${esc(t)} 한글 파일 내려받기">HWP</a>` : ''}</span></div></li>`;
   }).join('')}</ul>`).join('')}${groups.some(g => g.ids.some(id => !g.S.items[id][1])) ? '<div class="xfn">HWP가 없는 양식은 원본 글자가 그림으로 되어 있어 PDF만 제공합니다.</div>' : ''}</div>`;
@@ -1055,7 +1073,7 @@ function memoTemplate(){
 function ctRow(x){
   const tel = x.tel || '';
   const note = [x.for, x.hours, x.note].filter(Boolean).join(' · ');
-  return `<div class="ct"><div><div class="nm">${esc(x.name)}</div>${note ? `<div class="nt">${esc(note)}</div>` : ''}</div>${isDialable(tel) ? `<a class="tel num" href="${telHref(tel)}">${esc(tel)}</a>` : (tel ? `<span class="nt">${esc(tel)}</span>` : '')}</div>`;
+  return `<div class="ct"><div><div class="nm">${escR(x.name)}</div>${note ? `<div class="nt">${escR(note)}</div>` : ''}</div>${isDialable(tel) ? `<a class="tel num" href="${telHref(tel)}">${esc(tel)}</a>` : (tel ? `<span class="nt">${esc(tel)}</span>` : '')}</div>`;
 }
 function copy(text, msg){
   const done = () => toast(msg);
@@ -1086,6 +1104,7 @@ function renderAbout(){
       <li>법령과 교육부·교육청 매뉴얼 원문을 요약한 참고용입니다. 최종 판단은 원문과 소속 교육청 안내를 따르세요.</li>
       <li>법령과 지침은 자주 바뀝니다. 각 사안의 출처와 확인일을 함께 보세요. 이 판의 기준일은 ${esc(DATA.updated)}입니다.</li>
       <li>전국 공통(법령·교육부 자료) 기준으로 정리했습니다. 시·도마다 담당 기관·번호·세부 절차가 다를 수 있으니 소속 교육청 안내를 함께 확인하세요.</li>
+      <li>만든 사람이 경상북도 중학교 교사라서 일부 사안에는 경상북도교육청 기준이 들어 있습니다. 본문의 <mark class="rg">경북</mark> 표시, 흐름도의 <span class="rgtag">경북 기준</span> 딱지, 사안 목록의 <span class="rgtag">경북 기준 포함</span> 딱지가 그 부분입니다. 다른 시·도 선생님은 이 부분을 소속 교육청 지침으로 바꿔 읽어 주세요. 회색 <mark class="rg ot">표시</mark>는 경북 자료가 없어 다른 시·도 공식 자료를 참고한 부분입니다.</li>
       <li>2021년 이후 발행된 자료만 근거로 썼습니다.</li>
       <li>이 사이트는 아무것도 서버에 보내지 않습니다. 체크 표시는 이 기기 브라우저에만 남고, 기록 메모는 창을 닫으면 지워집니다.</li>
     </ul></div>
