@@ -400,18 +400,10 @@ function buildShell(G){
   <div class="vsInapp hide" id="vsInapp">카카오톡 안에서 열렸어요. 친구 대전은 <b>크롬·사파리</b>에서 더 잘 됩니다.<button class="vsBtn pri full" id="vsExt">크롬·사파리로 열기</button></div>
   <div class="vsMsg hide" id="vsMsg"></div>
   <label class="vsLbl" for="vsNick">닉네임</label><input id="vsNick" class="vsInp" maxlength="10" placeholder="10자 이내" autocomplete="off">
-  <div class="vsTabs"><button id="vsTabJoin" class="on">방 들어가기</button><button id="vsTabMake">방 만들기</button></div>
-  <div id="vsPaneJoin">
-    <p class="vsHelp">친구가 만든 방의 <b>번호 4자리</b>를 넣고 입장하세요.</p>
-    <label class="vsLbl" for="vsCode">방 번호</label>
-    <div class="vsRow"><input id="vsCode" class="vsInp" maxlength="4" inputmode="numeric" placeholder="방 번호 4자리" autocomplete="off"><input id="vsPw" class="vsInp" maxlength="4" inputmode="numeric" placeholder="비번(있으면)" autocomplete="off"><button id="vsJoin" class="vsBtn sec">입장</button></div>
-  </div>
-  <div id="vsPaneMake" class="hide">
-    <label class="vsLbl" for="vsRoomPw">비밀번호 (숫자 4자리, 비우면 누구나)</label><input id="vsRoomPw" class="vsInp" maxlength="4" inputmode="numeric" placeholder="예: 1234" autocomplete="off">
-    <label class="vsLbl">선승 (먼저 이기면 끝)</label><div class="vsSeg" id="vsFtMake"></div>
-    <button id="vsMake" class="vsBtn pri full" style="margin-top:14px">방 열기</button>
-    <p class="vsHelp">방을 만든 사람의 기기가 경기를 진행합니다. 경기가 끝날 때까지 이 화면을 켜 두세요.</p>
-  </div>
+  <button id="vsMake" class="vsBtn pri full vsMakeBig">방 만들기</button>
+  <p class="vsHelp">누르면 바로 방 번호 4자리가 나와요. 그 번호를 친구에게 알려 주세요.</p>
+  <div class="vsOr"><span>또는 친구 방에 들어가기</span></div>
+  <div class="vsRow"><input id="vsCode" class="vsInp vsCodeBig" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="방 번호 4자리" autocomplete="off" aria-label="방 번호 4자리"><button id="vsJoin" class="vsBtn sec vsJoinBtn">입장</button></div>
   <div class="vsStatus" id="vsLobbyStatus"></div>
 </div></section>
 
@@ -443,25 +435,21 @@ function buildShell(G){
   $('vsTileDuo').onclick = () => { ac(); goFs(); show('lobby'); };
   $('vsNick').value = store.get('vs_nick') || store.get('ml_nick') || '';
   $('vsNick').oninput = () => store.set('vs_nick', $('vsNick').value.trim());
-  for (const id of ['vsCode', 'vsPw', 'vsRoomPw']) $(id).addEventListener('input', e => { e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 4); });
-  $('vsTabJoin').onclick = () => { $('vsTabJoin').classList.add('on'); $('vsTabMake').classList.remove('on'); $('vsPaneJoin').classList.remove('hide'); $('vsPaneMake').classList.add('hide'); };
-  $('vsTabMake').onclick = () => { $('vsTabMake').classList.add('on'); $('vsTabJoin').classList.remove('on'); $('vsPaneMake').classList.remove('hide'); $('vsPaneJoin').classList.add('hide'); setTimeout(() => { try { $('vsMake').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch {} }, 60); };
+  $('vsCode').addEventListener('input', e => { e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, 4); });
   let makeFt = G.ft || 3;
   const seg = (el, cur, pick, dis) => { el.innerHTML = ''; for (const v of [1, 2, 3, 4, 5]){ const b = document.createElement('button'); b.textContent = v + '선승'; b.className = v === cur ? 'on' : ''; b.disabled = !!dis; b.onclick = () => pick(v); el.appendChild(b); } };
   VS._seg = seg;
-  seg($('vsFtMake'), makeFt, function pk(v){ makeFt = v; seg($('vsFtMake'), v, pk); });
-  $('vsJoin').onclick = () => { const c = $('vsCode').value.trim(); if (!/^[0-9]{4}$/.test(c)) return status('lobby', '방 번호 4자리를 넣어 주세요.', true); joinRoom(c, $('vsPw').value.trim()); };
-  $('vsPw').addEventListener('keydown', e => { if (e.key === 'Enter') $('vsJoin').click(); });
+  // 선승은 대기실에서 방장이 바꾼다
+  $('vsJoin').onclick = () => { const c = $('vsCode').value.trim(); if (!/^[0-9]{4}$/.test(c)) return status('lobby', '방 번호 4자리를 넣어 주세요.', true); joinRoom(c, ''); };
   $('vsCode').addEventListener('keydown', e => { if (e.key === 'Enter') $('vsJoin').click(); });
   $('vsMake').onclick = async () => {
     const btn = $('vsMake'); if (btn.disabled) return;
-    ac(); const pw = $('vsRoomPw').value.trim();
-    if (pw && !/^[0-9]{4}$/.test(pw)) return status('lobby', '비밀번호는 숫자 4자리로 넣어 주세요.', true);
+    ac(); const pw = '';
     btn.disabled = true; btn.textContent = '방을 여는 중…';
     status('lobby', '방을 여는 중… 잠시만요');
     try { await hostStart({ room: nick() + '의 방', pw, ft: makeFt, gopts: Object.assign({}, G.defaultOpts || {}) }); }
-    catch (e){ btn.disabled = false; btn.textContent = '방 열기'; return status('lobby', netErrMsg(e), true); }
-    btn.disabled = false; btn.textContent = '방 열기';
+    catch (e){ btn.disabled = false; btn.textContent = '방 만들기'; return status('lobby', netErrMsg(e), true); }
+    btn.disabled = false; btn.textContent = '방 만들기';
     status('lobby', '');
     S.roomCode = 'new'; netSend({ t: 'join', name: nick() });
   };
@@ -564,7 +552,7 @@ async function joinRoom2(code, pw){
     try { await guestStart(code); err = null; break; }
     catch (e){ err = e; if (e.message !== 'noroom') break; status('lobby', '방을 찾는 중… (' + (i + 1) + '/3) 방장이 화면을 켜 두었는지 확인해 주세요'); await new Promise(r => setTimeout(r, 1500)); }
   }
-  if (err){ status('lobby', err.message === 'noroom' ? '그 방이 없어요. 방 번호를 확인해 주세요(방장이 화면을 켜 두어야 해요).' : (err.message === 'browser-incompatible' || typeof Peer === 'undefined' ? netErrMsg(err) : '연결하지 못했어요. 다른 와이파이나 데이터로 바꿔 다시 해 보세요.'), true); return; }
+  if (err){ status('lobby', err.message === 'noroom' ? '그 방이 없어요. 방 번호와, 방장과 같은 «' + S.G.title + '»에 들어왔는지 확인해 주세요(방장이 화면을 켜 두어야 해요).' : (err.message === 'browser-incompatible' || typeof Peer === 'undefined' ? netErrMsg(err) : '연결하지 못했어요. 다른 와이파이나 데이터로 바꿔 다시 해 보세요.'), true); return; }
   S.roomCode = code; netSend({ t: 'join', pw: pw || '', name: nick() });
 }
 function onMsg(m){
@@ -572,7 +560,7 @@ function onMsg(m){
     case 'err':
       if (S.roomCode === 'new') S.roomCode = null;
       status(S.screen === 'wait' ? 'wait' : 'lobby', m.msg, true);
-      if (m.need === 'pw'){ $('vsTabJoin').click(); $('vsPw').value = ''; $('vsPw').focus(); }
+
       if (S.screen === 'lobby'){ S.roomCode = null; if (NET.role === 'guest') netClose(); }
       break;
     case 'joined': S.myId = m.id; S.token = m.token; S.mySeat = m.seat; sess.save(); hideNote();
