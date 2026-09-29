@@ -9,7 +9,7 @@
 'use strict';
 const VS = window.VS = {};
 // 직접 연결이 막힌 곳(학교·회사망 등)을 위한 예비 중계 길
-(function(){ if (window.VSRelay) return; const sc = document.createElement('script'); sc.src = '/vs/common/relay.js?v=1'; sc.async = true; document.head.appendChild(sc); })();
+(function(){ if (window.VSRelay) return; const sc = document.createElement('script'); sc.src = '/vs/common/relay.js?v=2'; sc.async = true; document.head.appendChild(sc); })();
 const $ = id => document.getElementById(id);
 const store = { get(k){ try { return localStorage.getItem(k); } catch { return null; } }, set(k, v){ try { localStorage.setItem(k, v); } catch {} } };
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

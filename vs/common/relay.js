@@ -90,7 +90,8 @@ async function host(key, onConn){
 
 // 손님: 방장 창구에 인사하고, 답이 오면 연결 성공
 async function connect(key, ms){
-  const ch = await openChannel(key, ms);
+  // 채널 여는 시간(느린 폰·학교망은 3초를 넘기도 한다)과 방장을 찾는 시간(ms)을 따로 잡는다
+  const ch = await openChannel(key, 10000);
   const cid = rid();
   return new Promise((resolve, reject) => {
     let conn = null, seen = Date.now(), hb = 0, poke = 0;
