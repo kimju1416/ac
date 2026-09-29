@@ -531,14 +531,30 @@ function crowdTexGen(){
     }
   });
 }
-// 광고판: 가상 문구만(실제 상표 없음)
+// 광고판: 나이키(형님 결정 2026-09-30)와 kimju.zip 홍보, 오락실 문구를 6칸으로 번갈아
+function swoosh(x, cx, cy, w, col){
+  // 스우시: 왼쪽 아래 둥근 시작 → 오른쪽 위로 가늘게 뻗는 곡선
+  const k = w / 200;
+  x.save(); x.translate(cx - 100 * k, cy - 30 * k); x.scale(k, k); x.fillStyle = col;
+  x.beginPath();
+  x.moveTo(40, 10);
+  x.bezierCurveTo(8, 42, 0, 70, 22, 78);
+  x.bezierCurveTo(40, 85, 70, 74, 200, 18);
+  x.bezierCurveTo(90, 60, 50, 66, 38, 58);
+  x.bezierCurveTo(26, 50, 30, 30, 40, 10);
+  x.closePath(); x.fill(); x.restore();
+}
 function adTex(){
-  return canvasTex(1024, 96, (x, w, h) => {
-    const segs = [['#1C2340', '#FFFFFF', '1:1 오락실'], ['#E05A1E', '#FFFFFF', 'kimju.zip'], ['#FFFFFF', '#1C2340', 'MALLANG'], ['#1D7A4D', '#FFFFFF', '말랑 테니스']];
-    segs.forEach(([bg, fg, t], i) => {
-      x.fillStyle = bg; x.fillRect(i * 256, 0, 256, h);
-      x.fillStyle = fg; x.font = '900 46px "Pretendard Variable",Pretendard,sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(t, i * 256 + 128, h / 2 + 2);
-    });
+  return canvasTex(1536, 96, (x, w, h) => {
+    const F = '"Pretendard Variable",Pretendard,sans-serif';
+    const cell = (i, bg) => { x.fillStyle = bg; x.fillRect(i * 256, 0, 256, h); return i * 256 + 128; };
+    const text = (cx, t, fg, size, dy = 0, italic = false) => { x.fillStyle = fg; x.font = (italic ? 'italic ' : '') + '900 ' + size + 'px ' + F; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(t, cx, h / 2 + 2 + dy); };
+    let c = cell(0, '#111111'); text(c - 34, 'NIKE', '#FFFFFF', 44, 0, true); swoosh(x, c + 68, h / 2 + 4, 76, '#FFFFFF');
+    c = cell(1, '#E05A1E'); text(c, 'kimju.zip', '#FFFFFF', 46);
+    c = cell(2, '#FFFFFF'); swoosh(x, c, h / 2 + 6, 150, '#111111');
+    c = cell(3, '#1C2340'); text(c, '1:1 오락실', '#FFFFFF', 46);
+    c = cell(4, '#1D7A4D'); text(c, '선생님 앱 모음', '#FFFFFF', 30, -17); text(c, '무료로 kimju.kr', '#FFE45C', 26, 19);
+    c = cell(5, '#FFFFFF'); text(c, '말랑 테니스', '#1C2340', 42);
   });
 }
 const GEO = {};
@@ -633,11 +649,11 @@ function buildScene(){
   const strap = new THREE.Mesh(new THREE.PlaneGeometry(0.05, NET_C), new THREE.MeshLambertMaterial({ color: 0xFAFAF5, side: THREE.DoubleSide })); strap.position.set(0, NET_C / 2, 0.002); netMesh.add(strap);
   const postMat = new THREE.MeshStandardMaterial({ color: 0x1E4D3A, roughness: 0.5 });
   for (const s of [-1, 1]){ const pm = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.12, 12), postMat); pm.position.set(s * POST, 0.56, 0); pm.castShadow = true; scene.add(pm); }
-  // 광고판(가상 문구) 네 벽
+  // 광고판 네 벽
   const ad = adTex(); ad.wrapS = THREE.RepeatWrapping;
   const wallMat = new THREE.MeshStandardMaterial({ color: 0x2A7456, roughness: 0.8 });
   const board = (len, x, z, ry) => {
-    const t = ad.clone(); t.needsUpdate = true; t.repeat.set(len / 11, 1);
+    const t = ad.clone(); t.needsUpdate = true; t.repeat.set(len / 16.5, 1);   // 한 장(6칸)이 16.5m — 글자 비율 유지
     const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry; scene.add(g);
     const face = new THREE.Mesh(new THREE.PlaneGeometry(len, 0.95), new THREE.MeshLambertMaterial({ map: t })); face.position.y = 0.5; g.add(face);
     const back = new THREE.Mesh(new THREE.BoxGeometry(len, 1.05, 0.12), wallMat); back.position.set(0, 0.52, -0.08); g.add(back);
