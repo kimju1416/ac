@@ -338,7 +338,7 @@ body.port .bar .sc b{font-size:12px}
     <h2>친구와 대전</h2>
     <ul>
       <li>«친구와 대전»에서 방을 만들면 <b>방 번호 4자리</b>가 나옵니다. 번호나 «주소 복사»로 친구를 부르세요.</li>
-      <li>비밀번호(숫자 4자리)를 걸면 아는 사람만 들어옵니다.</li>
+      <li>친구는 «친구와 대전»에서 그 번호를 넣고 «입장»을 누르면 됩니다.</li>
       <li>둘 다 «준비»를 누르면 시작. 먼저 정한 판수를 이기면 승리입니다.</li>
       <li>서버 없이 두 기기가 바로 연결됩니다. 방을 만든 사람은 경기가 끝날 때까지 화면을 켜 두세요. 연결이 안 되면 다른 와이파이나 데이터로 바꿔 보세요.</li>
     </ul>
@@ -1844,7 +1844,7 @@ if (/KAKAOTALK/i.test(navigator.userAgent)){
   $('btnExt').onclick = () => { location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href); };
 }
 // 새 버전 확인: 폰에 옛 화면이 남아 있지 않게, 화면으로 돌아올 때·2분마다 확인해서 경기 중이 아니면 새로 고친다
-const APP_VER = '2026-09-30b';
+const APP_VER = '2026-09-30c';
 function checkVer(){
   if (mode === 'game' || mode === 'waitRoom') return;
   fetch(location.pathname + '?v=' + Date.now(), { cache: 'no-store' }).then(r => r.text()).then(tx => {
