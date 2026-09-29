@@ -11,7 +11,9 @@
 <meta name="theme-color" content="#2361C4">
 <link rel="stylesheet" href="../common/vs.css">
 <style>
-#tnCv{position:absolute;left:0;top:0;width:100%;height:100%;display:block;touch-action:none}
+/* 3D 캔버스는 경기 화면 전체(위·아래 공용 막대 뒤까지)에 깐다. #vsGame(fixed) 안에서 z-index:-1이라
+   막대·버튼·글자판이 모두 그 위에 떠서 누르기가 캔버스에 먹히지 않는다. 코트는 카메라 맞춤에서 막대 자리를 비운다. */
+#tnCv{position:fixed;inset:0;width:100%;height:100%;z-index:-1;display:block;touch-action:none}
 /* 경기 화면 위 글자판(누르기 막지 않음) */
 .tnHud{position:absolute;inset:0;pointer-events:none;z-index:2;font-family:"Pretendard Variable",Pretendard,sans-serif;color:#fff}
 .tnBoard{position:absolute;left:8px;top:8px;min-width:150px;max-width:min(240px,48%);background:rgba(14,20,44,.84);border-radius:6px;overflow:hidden;box-shadow:0 2px 0 rgba(0,0,0,.25)}
@@ -500,7 +502,7 @@ function snd(k, v = 1){
 }
 
 // ---------- 3D 무대 ----------
-let renderer = null, scene, cam, sunL, stage, cv, W = 300, H = 300, PR = 1, prMax = 2;
+let renderer = null, scene, cam, sunL, stage, cv, W = 300, H = 300, PR = 1, prMax = 2, offT = 58, offB = 56;
 const MP = [];                  // 말랑이 선수 둘(자리 0 파랑·자리 1 빨강 — 컴퓨터 대결에선 나=0)
 let ballM, ballSh, streak, flash, netMesh, crowdTex = [], camBase = { h: 6, d: 6, tz: -3 }, camX = 0;
 const marks = [];
@@ -508,6 +510,11 @@ const TL = new THREE.TextureLoader();
 // 그림 파일이 있으면 쓰고, 없거나 실패하면 코드로 만든 질감 그대로
 function tryTex(url, cb){ TL.load(url, tx => { tx.colorSpace = THREE.SRGBColorSpace; tx.anisotropy = 4; cb(tx); }, undefined, () => {}); }
 function canvasTex(w, h, draw){ const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; }
+// 위쪽 frac만큼 서서히 투명해지는 알파 질감(판 윗선을 하늘로 녹인다)
+function fadeTex(frac){
+  const t = canvasTex(4, 256, (x, w, h) => { const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#000'); g.addColorStop(frac, '#fff'); g.addColorStop(1, '#fff'); x.fillStyle = g; x.fillRect(0, 0, w, h); });
+  t.colorSpace = THREE.NoColorSpace; return t;
+}
 function clayTex(){
   return canvasTex(256, 256, (x, w, h) => {
     x.fillStyle = '#C9683E'; x.fillRect(0, 0, w, h);
@@ -641,20 +648,29 @@ function buildScene(){
   const ct = crowdTexGen(); ct.wrapS = ct.wrapT = THREE.RepeatWrapping;
   const standMat = new THREE.MeshLambertMaterial({ map: ct });
   const endStands = [];
+  // 관중석 판은 길게(경사 30m) 세우고 윗부분 30%를 투명하게 풀어, 윗선이 화면에 걸려도 하늘로 스며든다
+  const standFade = fadeTex(0.3);
+  const SL = 30;
   const stand = (len, x, z, ry, isEnd) => {
     const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry; scene.add(g);
-    const t = ct.clone(); t.needsUpdate = true; t.repeat.set(len / 7, 2.4); crowdTex.push(t);
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(len, 16), new THREE.MeshLambertMaterial({ map: t, color: 0xC9CCD6 })); m.rotation.x = -0.95; m.position.set(0, 1.6 + 8 * Math.cos(0.95), -1.3 - 8 * Math.sin(0.95)); g.add(m);
+    const t = ct.clone(); t.needsUpdate = true; t.repeat.set(len / 7, 2.4 * SL / 16); crowdTex.push(t);
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(len, SL), new THREE.MeshLambertMaterial({ map: t, color: 0xC9CCD6, alphaMap: standFade, transparent: true, depthWrite: false }));
+    m.rotation.x = -0.95; m.position.set(0, 1.6 + SL / 2 * Math.cos(0.95), -1.3 - SL / 2 * Math.sin(0.95)); m.renderOrder = -1; g.add(m);
     const base = new THREE.Mesh(new THREE.PlaneGeometry(len, 1.6), wallMat); base.position.set(0, 0.8, -1.2); g.add(base);
     if (isEnd) endStands.push(g);
   };
   stand(44, 0, -WALL_Z - 1.5, 0, true); stand(44, 0, WALL_Z + 1.5, Math.PI, true);
-  stand(WALL_Z * 2 + 10, -WALL_X - 3, 0, Math.PI / 2, false); stand(WALL_Z * 2 + 10, WALL_X + 3, 0, -Math.PI / 2, false);
-  tryTex('/vs/common/tn-crowd.jpg', tx => { tx.wrapS = tx.wrapT = THREE.RepeatWrapping; for (const t of crowdTex){ t.image = tx.image; t.repeat.y = 1.6; t.needsUpdate = true; } });
-  // 먼 끝 배경 그림: 있으면 양쪽 끝 관중석 대신 세운다(아래 초록 벽 부분이 광고판 뒤에 오게)
+  stand(STAD_Z * 2, -WALL_X - 3, 0, Math.PI / 2, false); stand(STAD_Z * 2, WALL_X + 3, 0, -Math.PI / 2, false);   // 옆 관중석은 끝 배경판 앞에서 끝난다
+  tryTex('/vs/common/tn-crowd.jpg', tx => { tx.wrapS = tx.wrapT = THREE.RepeatWrapping; for (const t of crowdTex){ t.image = tx.image; t.repeat.y = 1.6 * SL / 16; t.needsUpdate = true; } });
+  // 먼 끝 배경 그림: 있으면 양쪽 끝 관중석 대신 세운다(아래 초록 벽 부분이 광고판 뒤에 오게).
+  // 관중석부터 그림 속 하늘까지 다 담기게 원래 비율대로 작게 세우고, 모자라는 가로는 좌우 거울 반복으로 채운다.
+  // 윗부분은 투명하게 풀어 장면 하늘로 이어지게 한다.
+  // 판 높이는 카메라 맞춤 때마다 fitStadium()이 «화면 위 끝이 닿는 높이»에 맞춰 다시 정한다.
   tryTex('/vs/common/tn-stadium.jpg', tx => {
-    const w = 64, h = w * 941 / 1672;
-    for (const s of [-1, 1]){ const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: tx, fog: false })); m.position.set(0, h / 2 - h * 0.2, s * (WALL_Z + 1.4)); m.rotation.y = s > 0 ? Math.PI : 0; scene.add(m); }
+    tx.wrapS = THREE.MirroredRepeatWrapping; stadTex = tx;
+    const mat = new THREE.MeshBasicMaterial({ map: tx, fog: false, alphaMap: fadeTex(0.22), transparent: true, depthWrite: false });
+    for (const s of [-1, 1]){ const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat); m.position.z = s * STAD_Z; m.rotation.y = s > 0 ? Math.PI : 0; m.renderOrder = -2; scene.add(m); stadMs.push(m); }
+    fitStadium();
     for (const g of endStands) g.visible = false;
   });
   // 주심 높은 의자, 선심, 볼보이(말랑이)
@@ -755,7 +771,8 @@ const _v = new THREE.Vector3();
 function fitCamera(){
   if (!cam) return;
   const asp = W / H, land = asp >= 1.05;
-  const topR = VS.isTouch ? 62 : 40, botR = VS.isTouch ? PAD_H + 6 : 44;
+  // 캔버스는 화면 전체라, 위·아래 공용 막대 높이(offT·offB)에 점수판·폰 버튼 자리를 더해 비운다
+  const topR = offT + (VS.isTouch ? 62 : 40), botR = offB + (VS.isTouch ? PAD_H + 6 : 44);
   const lo = -1 + 2 * botR / H, hi = 1 - 2 * topR / H;
   const pts = [[-4.7, 0, HL + 0.7], [4.7, 0, HL + 0.7], [-3.2, 0, HL + 1.0], [3.2, 0, HL + 1.0], [-1.6, 1.4, HL + 1.0], [1.6, 1.4, HL + 1.0], [-5.1, 0, -HL], [5.1, 0, -HL], [-1.6, 1.6, -HL - 1.6], [1.6, 1.6, -HL - 1.6], [0, 1.7, -HL - 1.2]];
   const k = clamp((asp - 0.5) / (1.6 - 0.5), 0, 1);           // 0 = 폰 세로, 1 = 넓은 가로
@@ -772,6 +789,20 @@ function fitCamera(){
   }
   camBase = { h, d, tz: best.tz };
   cam.fov = 2 * Math.atan(best.tn) * 180 / Math.PI; cam.aspect = asp; cam.updateProjectionMatrix();
+  fitStadium();
+}
+// 먼 끝 배경판: 화면 위 끝(가운데)이 판 위치에서 닿는 높이를 구해, 그림 속 관중과 하늘이 그 안에 다 들어오게 크기를 맞춘다.
+// 아래 25% 초록 벽의 윗선은 늘 광고판 바로 위(1.9m). 가로가 모자라면 거울 반복.
+const STAD_Z = WALL_Z + 1.4, stadMs = []; let stadTex = null;
+function fitStadium(){
+  if (!stadMs.length || !cam) return;
+  cam.position.set(0, camBase.h, HL + camBase.d); cam.lookAt(0, 0, camBase.tz); cam.updateMatrixWorld();
+  const dir = new THREE.Vector3(0, 1, 0.5).unproject(cam).sub(cam.position);
+  let yTop = 40;
+  if (dir.z < 0){ const t = (-STAD_Z - cam.position.z) / dir.z; yTop = cam.position.y + dir.y * t; }
+  const h = clamp((yTop - 1.9) / 0.78, 3, 40), w = 120, wi = h * 1672 / 941;
+  stadTex.repeat.x = w / wi; stadTex.offset.x = 0.5 - w / wi / 2;                 // 가운데가 그림 가운데
+  for (const m of stadMs){ m.scale.set(w, h, 1); m.position.y = 1.9 - 0.25 * h + h / 2; }
 }
 function placeCamera(dt, V){
   const sg = sgnOf(st ? st.mySeat : 0), me = V && V.P[st ? st.mySeat : 0];
@@ -1173,7 +1204,10 @@ const G = {
   lost(){ return false; },    // 방장 권위라 손님이 결과를 다시 보낼 일이 없다
   resize(){
     if (!renderer || !stage) return;
-    W = Math.max(200, stage.clientWidth); H = Math.max(200, stage.clientHeight);
+    const gm = $('vsGame'), gr = gm.getBoundingClientRect(), sr = stage.getBoundingClientRect();
+    W = Math.max(200, gm.clientWidth || innerWidth); H = Math.max(200, gm.clientHeight || innerHeight);
+    offT = Math.max(0, sr.top - gr.top); offB = Math.max(0, gr.bottom - sr.bottom);
+    if (!sr.height){ offT = 58; offB = 56; }                     // 아직 안 보일 때 대강값
     renderer.setSize(W, H, false);
     fitCamera();
   },
