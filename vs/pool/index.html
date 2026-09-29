@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>포켓볼 — 1:1 오락실</title>
+<meta name="description" content="3D 포켓볼 8볼. 단색·줄무늬 내 편 공을 다 넣고 8번까지 넣으면 승리! 친구와 서버 없이 바로, 컴퓨터(쉬움·보통·어려움)와도 대결.">
+<meta property="og:title" content="포켓볼 — 1:1 오락실">
+<meta property="og:description" content="내 편 공을 다 넣고 8번으로 마무리. 방 번호 4자리로 친구와 바로 한 판.">
+<meta property="og:image" content="https://kimju.kr/vs/common/og.jpg?v=2">
+<meta name="theme-color" content="#2361C4">
+<link rel="stylesheet" href="../common/vs.css">
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}</script>
+</head>
+<body>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="../common/vs.js"></script>
+<script type="module">
+// ================= 포켓볼 8볼 (WPA 규칙을 흔한 게임 방식으로) — 규칙만 여기 =================
+import { start } from '../billiards/billiards.js';
+const L = 2.54, W = 1.27, R = 0.028575;       // 9피트 테이블 내부 2.54×1.27m, 공 지름 57.15mm
+const COL = ['#F6F2E6', '#F2B800', '#1F4FB5', '#D2231F', '#5B2C83', '#F07A1A', '#1B7F3B', '#7A1F1F', '#141414'];
+const colOf = i => COL[i > 8 ? i - 8 : i];
+const SOL = [1, 2, 3, 4, 5, 6, 7], STR = [9, 10, 11, 12, 13, 14, 15];
+const grpOf = i => i >= 1 && i <= 7 ? 's' : i >= 9 ? 't' : i === 8 ? '8' : 'c';
+const ids = g => g === 's' ? SOL : STR;
+const GN = { s: '단색', t: '줄무늬' };
+const who = (H, s) => s === H.me ? '나' : (H.cpu ? '컴퓨터' : '상대');
+const FOOT = L / 4, HEAD = -L / 4;
+
+// 삼각 랙: 맨 앞 1번(풋 스팟), 가운데 8번, 뒤 두 귀퉁이는 단색 하나·줄무늬 하나, 나머지는 섞는다(양쪽이 같은 씨앗)
+function rack(B, gs, H){
+  const rng = H.rng((gs.seed | 0) + gs.rack * 7919 + 17), r = R + 0.00008, dx = r * Math.sqrt(3);
+  const slots = []; for (let row = 0; row < 5; row++) for (let k = 0; k <= row; k++) slots.push([FOOT + row * dx, (k - row / 2) * 2 * r]);
+  const pick = a => a.splice(Math.floor(rng() * a.length), 1)[0];
+  const sol = SOL.filter(i => i !== 1), str = STR.slice();
+  const cs = pick(sol), ct = pick(str), left = rng() < 0.5;
+  const rest = sol.concat(str); for (let i = rest.length - 1; i > 0; i--){ const j = Math.floor(rng() * (i + 1)); [rest[i], rest[j]] = [rest[j], rest[i]]; }
+  const at = new Array(15); at[0] = 1; at[4] = 8; at[10] = left ? cs : ct; at[14] = left ? ct : cs;
+  let q = 0; for (let s = 0; s < 15; s++) if (at[s] === undefined) at[s] = rest[q++];
+  for (let s = 0; s < 15; s++) Object.assign(B[at[s]], { x: slots[s][0], z: slots[s][1], st: 0 });
+  Object.assign(B[0], { x: HEAD, z: 0, st: 0 });
+  gs.rack++; gs.brk = true; gs.bih = 'k'; gs.grp = [null, null];
+}
+const onTable = (B, i) => B[i].st === 0;
+
+const RULE = {
+  id: 'pool', title: '포켓볼', sub: '8볼 · 내 편 공을 다 넣고 8번으로 마무리',
+  ft: 3, cpuFt: 2,
+  levels: [{ k: 'easy', name: '쉬움', desc: '자주 놓쳐요' }, { k: 'normal', name: '보통', desc: '곧잘 넣어요' }, { k: 'hard', name: '어려움', desc: '다음 공까지 봐요' }],
+  table: { L, W, R, pockets: true, cloth: '#1E7A4A', feltImg: '/vs/common/bl-felt-green.jpg' },
+  balls: [{ c: COL[0], logo: '#C0282D' }].concat(Array.from({ length: 15 }, (_, k) => ({ num: k + 1, c: colOf(k + 1), stripe: k + 1 > 8 }))),
+  rules: `<ul><li>흰 공(수구)으로 번호 공을 쳐서 구멍(포켓)에 넣어요. <b>1~7번 단색</b>과 <b>9~15번 줄무늬</b> 중 한쪽이 내 편, 남은 게 <b>8번</b>이에요.</li>
+<li><b>브레이크</b>: 먼저 치는 사람이 모인 공을 깨요. 공이 들어가면 계속 쳐요. 공이 하나도 안 들어가고 쿠션에 닿은 공이 넷보다 적으면 상대가 다시 놓고 브레이크해요. 브레이크에 8번이 들어가면 다시 놓고 브레이크해요.</li>
+<li>브레이크 뒤에는 편이 정해지지 않았어요(오픈). <b>처음으로 제대로 넣은 공</b>의 종류가 내 편이 돼요.</li>
+<li>수구가 <b>내 편 공을 먼저</b> 맞히고, 그 뒤 공이 들어가거나 어떤 공이든 쿠션에 닿아야 해요. 오픈일 땐 8번 말고 아무 공이나 먼저 맞혀도 돼요.</li>
+<li>내 편 공을 넣으면 계속 쳐요. 못 넣으면 차례가 넘어가요.</li>
+<li><b>파울</b>: 수구가 들어감(스크래치), 상대 편 공이나 8번을 먼저 맞힘, 아무 공도 못 맞힘, 맞힌 뒤 쿠션에 닿은 공이 없음, 공이 당구대 밖으로 나감, 40초 넘김. 파울이면 상대가 <b>프리볼</b>(수구를 아무 곳에나 놓고 치기)을 얻어요. 브레이크 스크래치는 헤드 라인 뒤에 놓아요.</li>
+<li><b>8번</b>은 내 편 공을 다 넣은 뒤에만 넣을 수 있어요. 제대로 넣으면 <b>승리</b>, 그 전에 넣거나 8번과 함께 수구가 들어가면(또는 파울하면) <b>패배</b>예요.</li></ul>`,
+  controls: `<ul><li><b>조준</b>: 폰은 당구대 아무 곳이나 끌면 큐가 수구 둘레로 돌아요. 오른쪽 아래 <b>◀ ▶</b>로 조금씩 맞춰요. PC는 마우스가 가리키는 쪽을 겨누고 <kbd>←</kbd><kbd>→</kbd>로 조금씩.</li>
+<li><b>힘</b>: 폰은 오른쪽 <b>힘 막대</b>를 아래로 끌었다 놓으면 쳐요. PC는 당구대를 누른 채 <b>뒤로 끌었다 놓거나</b>, <kbd>스페이스</kbd>를 누르고 있다 떼요.</li>
+<li><b>당점</b>: 왼쪽 아래 <b>수구 그림</b>을 누르고 큰 원에서 칠 곳을 골라요. 위: 밀어치기, 아래: 끌어치기, 옆: 회전.</li>
+<li><b>프리볼</b>: 파란 고리가 생긴 수구를 끌어서 원하는 곳에 놓고 쳐요.</li>
+<li><b>흰 선</b>은 수구가 처음 맞을 곳, <b>노란 선</b>은 맞은 공이 갈 방향이에요. 위쪽 판에서 두 사람의 남은 공을 봐요.</li></ul>`,
+  newGame(ctx, B, H){
+    const gs = { turn: ctx.first, n: 0, seed: ctx.seed | 0, rack: 0, brk: true, bih: 'k', grp: [null, null] };
+    for (const b of B) b.st = 0;
+    rack(B, gs, H);
+    return gs;
+  },
+  cueIdx: () => 0,
+  targets(gs, B){
+    if (gs.brk) return SOL.concat(STR, [8]);
+    const g = gs.grp[gs.turn];
+    if (!g) return SOL.concat(STR).filter(i => onTable(B, i));
+    const mine = ids(g).filter(i => onTable(B, i));
+    return mine.length ? mine : [8];
+  },
+  // 판정(양쪽이 같은 기록·같은 최종 위치로 부른다)
+  judge(gs, lg, B, H){
+    const me = gs.turn, op = 1 - me;
+    gs.n++;
+    const pk = lg.pk.filter(i => i !== 0), out = lg.out.filter(i => i !== 0);
+    const scratch = lg.pk.indexOf(0) >= 0 || lg.out.indexOf(0) >= 0;
+    const eight = pk.indexOf(8) >= 0 || out.indexOf(8) >= 0;
+    const objOut = out.filter(i => i !== 8);
+    const spot = () => { for (const i of objOut) H.respot(B, i, FOOT, 0, 1); };
+    const myG = gs.grp[me];
+    // 이번 샷 전에 내 편 공을 다 넣었는가
+    const clearedBefore = !!myG && ids(myG).every(i => B[i].st !== 0 && pk.indexOf(i) < 0 && out.indexOf(i) < 0);
+    if (gs.brk){
+      gs.brk = false;
+      const nCush = lg.cush.filter(i => i >= 1).length;
+      const legal = pk.length > 0 || nCush >= 4;
+      if (eight){ if (scratch) gs.turn = op; rack(B, gs, H); return { reaim: 1, call: { big: '다시 브레이크', small: '브레이크에 8번이 들어감' + (scratch ? ' · 스크래치라 상대가' : '') } }; }
+      if (!legal){ gs.turn = op; rack(B, gs, H); return { foul: true, reaim: 1, call: { big: '다시 브레이크', small: '쿠션에 닿은 공이 넷보다 적음 · 상대가 브레이크' } }; }
+      if (scratch || objOut.length){ spot(); gs.turn = op; gs.bih = 'k'; return { foul: true, call: { big: '파울', small: (scratch ? '브레이크 스크래치' : '공이 밖으로 나감') + ' · ' + who(H, op) + ' 프리볼(헤드 라인 뒤)' } }; }
+      gs.bih = null;
+      if (pk.length) return { call: { big: '브레이크', small: '공이 들어가 계속 쳐요' } };
+      gs.turn = op; return {};
+    }
+    gs.bih = null;
+    let foul = null;
+    const first = lg.first;
+    if (first < 0) foul = '아무 공도 못 맞힘';
+    else if (!myG){ if (first === 8) foul = '8번을 먼저 맞힘'; }
+    else if (clearedBefore){ if (first !== 8) foul = '8번을 먼저 맞혀야 해요'; }
+    else if (grpOf(first) !== myG) foul = first === 8 ? '8번을 먼저 맞힘' : '상대 편 공을 먼저 맞힘';
+    if (!foul && !lg.pk.length && !lg.after) foul = '맞힌 뒤 쿠션에 닿은 공이 없음';
+    if (scratch) foul = '스크래치(수구가 들어감)';
+    if (!foul && objOut.length) foul = '공이 당구대 밖으로 나감';
+    if (eight){
+      if (clearedBefore && !foul) return { over: me, clap: 1, call: { big: '8번 성공!', small: who(H, me) + ' 승리', hot: 1 } };
+      return { over: op, call: { big: '8번 파울', small: (!clearedBefore ? '내 편 공을 다 넣기 전에 8번이 들어감' : foul) + ' · ' + who(H, me) + ' 패배' } };
+    }
+    spot();
+    if (foul){ gs.turn = op; gs.bih = 'a'; return { foul: true, call: { big: '파울', small: foul + ' · ' + who(H, op) + ' 프리볼' } }; }
+    // 오픈 테이블: 처음 넣은 공의 종류가 내 편
+    let call = null;
+    if (!myG){
+      const f = pk.find(i => i !== 8);
+      if (f !== undefined){ const g = grpOf(f); gs.grp[me] = g; gs.grp[op] = g === 's' ? 't' : 's'; call = { big: GN[g] + '!', small: who(H, me) + ' 편은 ' + GN[g] + '(' + (g === 's' ? '1~7번' : '9~15번') + ')' }; }
+    }
+    const g = gs.grp[me];
+    if (g && pk.some(i => grpOf(i) === g)) return call ? { call } : {};
+    gs.turn = op;
+    return call ? { call } : {};
+  },
+  // 시간 초과는 파울(상대 프리볼). 브레이크 차례였으면 상대가 브레이크
+  timeout(gs){
+    gs.n++; gs.turn = 1 - gs.turn;
+    if (gs.brk){ gs.bih = 'k'; return { call: { big: '시간 초과', small: '상대가 브레이크해요' } }; }
+    gs.bih = 'a'; return { call: { big: '시간 초과', small: '파울 · 상대 프리볼' } };
+  },
+  turnText(gs, me, o){
+    const w = gs.turn === me ? '<span class="me">내 차례</span>' : `<span class="op">${o.cpu ? '컴퓨터' : '상대'} 차례</span>`;
+    const g = gs.grp[gs.turn];
+    const tail = gs.brk ? '브레이크' : gs.bih ? '프리볼' : g ? GN[g] : '오픈';
+    return w + ' · ' + tail;
+  },
+  hud(gs, me, names, B){
+    const mini = i => { const c = colOf(i), bg = i > 8 ? `linear-gradient(#F6F2E6 28%,${c} 28%,${c} 72%,#F6F2E6 72%)` : c; const lt = [1, 5].includes(i > 8 ? i - 8 : i); return `<span class="blMb${B[i].st !== 0 ? ' blGone' : ''}" style="background:${bg};color:${lt ? '#111' : '#fff'};text-shadow:${lt ? 'none' : '0 0 2px #000'}">${i}</span>`; };
+    const row = (s, nm) => {
+      const g = gs.grp[s];
+      let right = '<span class="blTag">오픈</span>';
+      if (g){ const left = ids(g).filter(i => B[i].st === 0); right = '<span class="blMini">' + (left.length ? ids(g).map(mini).join('') : mini(8)) + '</span>'; }
+      return `<div class="blRow${gs.turn === s ? ' blNow' : ''}"><span class="blNm">${nm.replace(/[<>&"']/g, '')}</span>${right}</div>`;
+    };
+    return row(me, names[0] || '나') + row(1 - me, names[1] || '상대');
+  },
+  // 메뉴 그림: 공이 굴러가 코너 포켓에 쏙 들어가는 반복
+  drawArt(x, w, h, t){
+    const tw = Math.min(w * 0.92, h * 2.4), th = tw / 2.2, ox = (w - tw) / 2, oy = (h - th) / 2, rb = Math.max(4, th * 0.065), pr = rb * 1.7;
+    x.fillStyle = '#5A2E16'; x.beginPath(); x.roundRect ? x.roundRect(ox - 9, oy - 9, tw + 18, th + 18, 9) : x.rect(ox - 9, oy - 9, tw + 18, th + 18); x.fill();
+    x.fillStyle = '#1E7A4A'; x.fillRect(ox, oy, tw, th);
+    x.fillStyle = '#0B0908';
+    for (const [px, py] of [[ox, oy], [ox + tw / 2, oy - 2], [ox + tw, oy], [ox, oy + th], [ox + tw / 2, oy + th + 2], [ox + tw, oy + th]]){ x.beginPath(); x.arc(px, py, pr, 0, 7); x.fill(); }
+    const P = 2400, u = (t % P) / P, E = [ox + tw - pr * 0.3, oy + pr * 0.3];
+    const S = [ox + tw * 0.35, oy + th * 0.7], hitP = 0.3, T0 = [ox + tw * 0.62, oy + th * 0.45];
+    const ball = (px, py, col, num, sc = 1) => { const r = rb * sc; x.fillStyle = 'rgba(0,0,0,.3)'; x.beginPath(); x.ellipse(px + r * 0.25, py + r * 0.35, r, r * 0.8, 0, 0, 7); x.fill(); x.fillStyle = col; x.beginPath(); x.arc(px, py, r, 0, 7); x.fill(); if (num){ x.fillStyle = '#F8F5EC'; x.beginPath(); x.arc(px, py, r * 0.5, 0, 7); x.fill(); x.fillStyle = '#111'; x.font = `800 ${Math.round(r * 0.75)}px Arial`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(num, px, py + 1); } const g = x.createRadialGradient(px - r * 0.35, py - r * 0.4, r * 0.05, px, py, r); g.addColorStop(0, 'rgba(255,255,255,.75)'); g.addColorStop(0.3, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(0,0,0,.35)'); x.fillStyle = g; x.beginPath(); x.arc(px, py, r, 0, 7); x.fill(); };
+    ball(ox + tw * 0.2, oy + th * 0.3, '#1F4FB5', '2'); ball(ox + tw * 0.75, oy + th * 0.78, COL[5], '5');
+    // 수구 → 목표 공
+    const dx = E[0] - T0[0], dy = E[1] - T0[1], dl = Math.hypot(dx, dy), G0 = [T0[0] - dx / dl * rb * 2, T0[1] - dy / dl * rb * 2];
+    let cx, cy; if (u < hitP){ const k = u / hitP; cx = S[0] + (G0[0] - S[0]) * k; cy = S[1] + (G0[1] - S[1]) * k; } else { const k = Math.min(1, (u - hitP) / 0.3); cx = G0[0] + (G0[0] - S[0]) * 0.08 * k; cy = G0[1] + (G0[1] - S[1]) * 0.08 * k; }
+    let bx = T0[0], by = T0[1], sc = 1, vis = true;
+    if (u >= hitP){ const k = Math.min(1, (u - hitP) / 0.35); bx = T0[0] + dx * k; by = T0[1] + dy * k; if (k >= 1){ const q = (u - hitP - 0.35) / 0.12; sc = Math.max(0, 1 - q); vis = q < 1; } }
+    if (vis && u < 0.9) ball(bx, by, COL[3], '3', sc);
+    ball(cx, cy, '#F6F2E6');
+  },
+};
+start(RULE);
+</script>
+</body>
+</html>
