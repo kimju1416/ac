@@ -424,6 +424,7 @@ body.port .bar .sc b{font-size:12px}
 
 <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script src="room.js"></script>
+<script src="/vs/common/relay.js?v=1"></script>
 <script>
 "use strict";
 // ================= 규칙 상수 (뿌요뿌요 통 기준) =================
@@ -977,7 +978,7 @@ const store = { get(k){ try { return localStorage.getItem(k); } catch { return n
 // 서로 찾는 순간에만 공개 중개(PeerJS)를 쓴다. 피어 이름 = 'mallangbbu-' + 방 번호
 const PEER_PREFIX = 'mallangbbu-';
 const ICE = { iceServers: [{ urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302', 'stun:stun2.l.google.com:19302'] }, { urls: 'stun:global.stun.twilio.com:3478' }] };
-const NET = { role: null, peer: null, conn: null, wss: null, local: null, send: null, code: null };
+const NET = { role: null, peer: null, conn: null, wss: null, local: null, send: null, code: null, relay: null, relayOnly: false };
 let ws = null, wsOk = false, myId = null, token = null, roomCode = null, room = null;
 let game = null, oppSnap = null, oppDead = false, mode = 'home', solo = false, reconnectT = null, lastSnapAt = 0;
 let makeFt = 3;
@@ -1078,40 +1079,71 @@ function netClose(){
   clearTimeout(reconnectT);
   try { NET.conn && NET.conn.close(); } catch {}
   try { NET.peer && NET.peer.destroy(); } catch {}
-  Object.assign(NET, { role: null, peer: null, conn: null, wss: null, local: null, send: null, code: null });
+  try { NET.relay && NET.relay.close(); } catch {}
+  Object.assign(NET, { role: null, peer: null, conn: null, wss: null, local: null, send: null, code: null, relay: null, relayOnly: false });
   wsOk = false;
 }
-// 방장: 중개 서버에 «mallangbbu-번호»를 잡고, 내 기기 안에 방 서버를 띄운다
+// 방장: 내 기기 안에 방 서버를 띄운다(peer가 없으면 = 중개가 막혀 중계만으로 연 방)
+function setupHost(code, peer){
+  window.__ML_CODE = code;
+  const wss = createPuyoServer(FakeWSS);
+  // 방장 자신도 같은 규칙으로 방 서버에 붙는다(기기 안 연결)
+  const mine = new FakeSock(d => queueMicrotask(() => { let m; try { m = JSON.parse(d); } catch { return; } onMsg(m); }));
+  srvAttach(wss, mine, 'host');
+  Object.assign(NET, { role: 'host', peer, wss, local: mine, code, send: d => queueMicrotask(() => mine.emit('message', d)), relay: null, relayOnly: !peer });
+  wsOk = true;
+  if (peer) hostPeerWire(peer);
+  return relayHost(code);
+}
+// 중계 창구: 직접 연결이 막힌 손님(학교·회사망 등)은 이리로 들어온다
+function relayHost(code){
+  if (!window.VSRelay) return Promise.resolve(false);
+  return VSRelay.host(PEER_PREFIX + code, conn => {
+    if (!NET.wss){ conn.close(); return; }
+    const sock = new FakeSock(d => conn.send(d), () => conn.close());
+    srvAttach(NET.wss, sock, 'relay-' + Math.random().toString(36).slice(2, 8));
+    conn.on('data', d => sock.emit('message', typeof d === 'string' ? d : String(d)));
+    conn.on('close', () => { if (sock.readyState === 1){ sock.readyState = 3; sock.emit('close'); } });
+  }).then(h => { if (NET.role === 'host' && NET.code === code){ NET.relay = h; return true; } h.close(); return false; }, () => false);
+}
+// 중개(PeerJS)가 막힌 곳: 중계만으로 방을 연다
+async function relayOnlyHost(){
+  if (!window.VSRelay) throw new Error('timeout');
+  for (let i = 0; i < 5; i++){
+    const code = String(1000 + Math.floor(Math.random() * 9000));
+    if (await VSRelay.taken(PEER_PREFIX + code)) continue;
+    netClose();
+    if (await setupHost(code, null)) return code;
+    netClose(); throw new Error('timeout');
+  }
+  throw new Error('timeout');
+}
+// 방장: 중개 서버에 «mallangbbu-번호»를 잡고, 내 기기 안에 방 서버를 띄운다. 중개가 막히면 중계만으로
 function hostStart(){
   return new Promise((resolve, reject) => {
     netClose();
-    let tries = 0;
+    let tries = 0, over = false;
+    const fallback = e => { if (over) return; over = true; relayOnlyHost().then(resolve, () => reject(e)); };
     const attempt = () => {
       const code = String(1000 + Math.floor(Math.random() * 9000));
-      const peer = new Peer(PEER_PREFIX + code, { config: ICE, debug: 0 });
+      let peer;
+      try { peer = new Peer(PEER_PREFIX + code, { config: ICE, debug: 0 }); } catch (e) { return fallback(e); }
       let opened = false;
-      const to = setTimeout(() => { if (!opened){ try { peer.destroy(); } catch {} reject(new Error('timeout')); } }, 12000);
+      const to = setTimeout(() => { if (!opened){ try { peer.destroy(); } catch {} fallback(new Error('timeout')); } }, 9000);
       peer.on('open', () => {
         // 중개에 다시 연결될 때도 open이 또 온다 — 방 서버는 처음 한 번만 만든다(두 번 만들면 방이 빈 서버로 바뀐다)
-        if (opened) return;
-        opened = true; clearTimeout(to);
-        window.__ML_CODE = code;
-        const wss = createPuyoServer(FakeWSS);
-        // 방장 자신도 같은 규칙으로 방 서버에 붙는다(기기 안 연결)
-        const mine = new FakeSock(d => queueMicrotask(() => { let m; try { m = JSON.parse(d); } catch { return; } onMsg(m); }));
-        srvAttach(wss, mine, 'host');
-        Object.assign(NET, { role: 'host', peer, wss, local: mine, code, send: d => queueMicrotask(() => mine.emit('message', d)) });
-        wsOk = true;
-        hostPeerWire(peer);
+        if (opened || over) return;
+        opened = true; over = true; clearTimeout(to);
+        setupHost(code, peer);
         resolve(code);
       });
       peer.on('error', e => {
         if (opened) return;
         clearTimeout(to); try { peer.destroy(); } catch {}
-        if (e.type === 'unavailable-id' && tries++ < 5) attempt(); else reject(e);
+        if (e.type === 'unavailable-id' && tries++ < 5) attempt(); else fallback(e);
       });
     };
-    attempt();
+    if (typeof Peer === 'undefined') fallback(new Error('timeout')); else attempt();
   });
 }
 // 방장 피어: 손님 연결을 방 서버에 붙이고, 중개와 끊기면 다시 잇는다
@@ -1132,7 +1164,7 @@ function hostPeerWire(peer){
   peer.on('error', e => { if (NET.peer === peer && /network|server-error|socket-error|socket-closed/.test(e.type || '')) setTimeout(hostRevive, 2000); });
 }
 function hostRevive(){
-  if (NET.role !== 'host' || !NET.code || !NET.wss) return;
+  if (NET.role !== 'host' || !NET.code || !NET.wss || NET.relayOnly) return;
   const old = NET.peer;
   if (old && !old.destroyed && old.open) return;
   if (old && !old.destroyed && old.disconnected){ try { old.reconnect(); } catch {} return; }
@@ -1144,14 +1176,29 @@ function hostRevive(){
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && NET.role === 'host') hostRevive(); });
 setInterval(() => { if (NET.role === 'host') hostRevive(); }, 5000);
 
-// 손님: 방 번호로 방장 기기에 바로 붙는다
-function guestStart(code){
+// 손님: 방 번호로 방장 기기에 바로 붙는다. 직접 연결이 막히면 중계로
+async function guestStart(code){
+  let e1;
+  try { return await guestP2P(code); } catch (e) { e1 = e; }
+  if (!window.VSRelay) throw e1;
+  if (mode === 'lobby') status($('lobbyStatus'), '직접 연결이 막혀 있어요. 우회 연결로 잇는 중…');
+  try {
+    const conn = await VSRelay.connect(PEER_PREFIX + code, e1.message === 'noroom' ? 3000 : 8000);
+    netClose();
+    Object.assign(NET, { role: 'guest', peer: null, conn, code, send: d => conn.send(d) });
+    wsOk = true;
+    conn.on('data', d => { let m; try { m = JSON.parse(typeof d === 'string' ? d : String(d)); } catch { return; } onMsg(m); });
+    conn.on('close', () => { if (NET.conn === conn) onNetLost(); });
+  } catch (e2) { throw (e1.message === 'noroom' || e2.message === 'noroom') ? new Error('noroom') : e1; }
+}
+function guestP2P(code){
   return new Promise((resolve, reject) => {
     netClose();
+    if (typeof Peer === 'undefined') return reject(new Error('timeout'));
     const peer = new Peer(undefined, { config: ICE, debug: 0 });
     let done = false;
     const fail = (why) => { if (done) return; done = true; clearTimeout(to); try { peer.destroy(); } catch {} reject(new Error(why)); };
-    const to = setTimeout(() => fail('timeout'), 15000);
+    const to = setTimeout(() => fail('timeout'), 8000);
     peer.on('open', () => {
       if (done) return;   // 중개 재연결 때 또 오는 open — 이미 붙었으면 무시
       const conn = peer.connect(PEER_PREFIX + code, { reliable: true, serialization: 'raw' });
@@ -1244,9 +1291,9 @@ async function joinRoom(code, pw){
 async function joinRoom2(code, pw){
   ac(); status($('lobbyStatus'), '방장 기기에 연결하는 중…');
   let err = null;
-  for (let i = 0; i < 4; i++){
+  for (let i = 0; i < 3; i++){
     try { await guestStart(code); err = null; break; }
-    catch (e){ err = e; if (e.message !== 'noroom') break; status($('lobbyStatus'), '방을 찾는 중… (' + (i + 1) + '/4) 방장이 화면을 켜 두었는지 확인해 주세요'); await new Promise(r => setTimeout(r, 2500)); }
+    catch (e){ err = e; if (e.message !== 'noroom') break; status($('lobbyStatus'), '방을 찾는 중… (' + (i + 1) + '/3) 방장이 화면을 켜 두었는지 확인해 주세요'); await new Promise(r => setTimeout(r, 1500)); }
   }
   if (err){ const e = err;
     status($('lobbyStatus'), e.message === 'noroom' ? '그 방이 없어요. 방 번호를 확인해 주세요(방장이 화면을 켜 두어야 해요).' : e.message === 'browser-incompatible' || typeof Peer === 'undefined' ? netErrMsg(e) : '연결하지 못했어요. 다른 와이파이나 데이터로 바꿔 다시 해 보세요.', true);
@@ -1790,7 +1837,7 @@ if (/KAKAOTALK/i.test(navigator.userAgent)){
   $('btnExt').onclick = () => { location.href = 'kakaotalk://web/openExternal?url=' + encodeURIComponent(location.href); };
 }
 // 새 버전 확인: 폰에 옛 화면이 남아 있지 않게, 화면으로 돌아올 때·2분마다 확인해서 경기 중이 아니면 새로 고친다
-const APP_VER = '2026-09-27c';
+const APP_VER = '2026-09-29a';
 function checkVer(){
   if (mode === 'game' || mode === 'waitRoom') return;
   fetch(location.pathname + '?v=' + Date.now(), { cache: 'no-store' }).then(r => r.text()).then(tx => {

@@ -8,6 +8,8 @@
 (function(){
 'use strict';
 const VS = window.VS = {};
+// 직접 연결이 막힌 곳(학교·회사망 등)을 위한 예비 중계 길
+(function(){ if (window.VSRelay) return; const sc = document.createElement('script'); sc.src = '/vs/common/relay.js?v=1'; sc.async = true; document.head.appendChild(sc); })();
 const $ = id => document.getElementById(id);
 const store = { get(k){ try { return localStorage.getItem(k); } catch { return null; } }, set(k, v){ try { localStorage.setItem(k, v); } catch {} } };
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -210,7 +212,8 @@ function netClose(){
   clearTimeout(reconnectT);
   try { NET.conn && NET.conn.close(); } catch {}
   try { NET.peer && NET.peer.destroy(); } catch {}
-  Object.assign(NET, { role: null, peer: null, conn: null, srv: null, local: null, send: null, code: null });
+  try { NET.relay && NET.relay.close(); } catch {}
+  Object.assign(NET, { role: null, peer: null, conn: null, srv: null, local: null, send: null, code: null, relay: null, relayOnly: false });
   S.online = false;
 }
 function netSend(o){ if (NET.send) NET.send(JSON.stringify(o)); }
@@ -231,7 +234,7 @@ function hostWire(peer){
   peer.on('error', e => { if (NET.peer === peer && /network|server-error|socket-error|socket-closed/.test(e.type || '')) setTimeout(hostRevive, 2000); });
 }
 function hostRevive(){
-  if (NET.role !== 'host' || !NET.code || !NET.srv) return;
+  if (NET.role !== 'host' || !NET.code || !NET.srv || NET.relayOnly) return;
   const old = NET.peer;
   if (old && !old.destroyed && old.open) return;
   if (old && !old.destroyed && old.disconnected){ try { old.reconnect(); } catch {} return; }
@@ -241,38 +244,82 @@ function hostRevive(){
 }
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && NET.role === 'host') hostRevive(); });
 setInterval(() => { if (NET.role === 'host') hostRevive(); }, 5000);
+// 방 서버를 내 기기 안에 띄운다(직접 연결 창구 peer는 없을 수도 있다 = 중계만)
+function setupHost(code, peer, opts){
+  const srv = makeRoomServer(code, opts);
+  const mine = new FakeSock(d => queueMicrotask(() => { let m; try { m = JSON.parse(d); } catch { return; } onMsg(m); }));
+  Object.assign(NET, { role: 'host', peer, srv, local: mine, code, send: d => queueMicrotask(() => mine.emit('message', d)), relay: null, relayOnly: !peer });
+  srv.attach(mine, true);
+  S.online = true;
+  if (peer) hostWire(peer);
+  return relayHost(code);
+}
+// 중계 창구: 직접 연결이 안 되는 손님은 이리로 들어온다
+function relayHost(code){
+  if (!window.VSRelay) return Promise.resolve(false);
+  return VSRelay.host(S.prefix + code, conn => {
+    if (!NET.srv){ conn.close(); return; }
+    const sock = new FakeSock(d => conn.send(d), () => conn.close());
+    NET.srv.attach(sock, false);
+    conn.on('data', d => sock.emit('message', typeof d === 'string' ? d : String(d)));
+    conn.on('close', () => { if (sock.open){ sock.open = false; sock.emit('close'); } });
+  }).then(h => { if (NET.role === 'host' && NET.code === code){ NET.relay = h; return true; } h.close(); return false; }, () => false);
+}
+// 중개(PeerJS)가 막힌 곳: 중계만으로 방을 연다
+async function relayOnlyHost(opts){
+  if (!window.VSRelay) throw new Error('timeout');
+  for (let i = 0; i < 5; i++){
+    const code = String(1000 + Math.floor(Math.random() * 9000));
+    if (await VSRelay.taken(S.prefix + code)) continue;
+    netClose();
+    if (await setupHost(code, null, opts)) return code;
+    netClose(); throw new Error('timeout');
+  }
+  throw new Error('timeout');
+}
 function hostStart(opts){
   return new Promise((resolve, reject) => {
     netClose();
-    let tries = 0;
+    let tries = 0, over = false;
+    const fallback = e => { if (over) return; over = true; relayOnlyHost(opts).then(resolve, () => reject(e)); };
     const attempt = () => {
       const code = String(1000 + Math.floor(Math.random() * 9000));
-      const peer = new Peer(S.prefix + code, { config: ICE, debug: 0 });
+      let peer;
+      try { peer = new Peer(S.prefix + code, { config: ICE, debug: 0 }); } catch (e) { return fallback(e); }
       let opened = false;
-      const to = setTimeout(() => { if (!opened){ try { peer.destroy(); } catch {} reject(new Error('timeout')); } }, 12000);
+      const to = setTimeout(() => { if (!opened){ try { peer.destroy(); } catch {} fallback(new Error('timeout')); } }, 9000);
       peer.on('open', () => {
-        if (opened) return;   // 재연결 때 또 오는 open — 방 서버는 한 번만
-        opened = true; clearTimeout(to);
-        const srv = makeRoomServer(code, opts);
-        const mine = new FakeSock(d => queueMicrotask(() => { let m; try { m = JSON.parse(d); } catch { return; } onMsg(m); }));
-        Object.assign(NET, { role: 'host', peer, srv, local: mine, code, send: d => queueMicrotask(() => mine.emit('message', d)) });
-        srv.attach(mine, true);
-        S.online = true;
-        hostWire(peer);
+        if (opened || over) return;   // 재연결 때 또 오는 open — 방 서버는 한 번만
+        opened = true; over = true; clearTimeout(to);
+        setupHost(code, peer, opts);
         resolve(code);
       });
-      peer.on('error', e => { if (opened) return; clearTimeout(to); try { peer.destroy(); } catch {} if (e.type === 'unavailable-id' && tries++ < 5) attempt(); else reject(e); });
+      peer.on('error', e => { if (opened) return; clearTimeout(to); try { peer.destroy(); } catch {} if (e.type === 'unavailable-id' && tries++ < 5) attempt(); else fallback(e); });
     };
-    attempt();
+    if (typeof Peer === 'undefined') fallback(new Error('timeout')); else attempt();
   });
 }
-function guestStart(code){
+async function guestStart(code){
+  let e1;
+  try { return await guestP2P(code); } catch (e) { e1 = e; }
+  if (!window.VSRelay) throw e1;
+  if (S.screen === 'lobby') status('lobby', '직접 연결이 막혀 있어요. 우회 연결로 잇는 중…');
+  try {
+    const conn = await VSRelay.connect(S.prefix + code, e1.message === 'noroom' ? 3000 : 8000);
+    netClose();
+    Object.assign(NET, { role: 'guest', peer: null, conn, code, send: d => conn.send(d) }); S.online = true;
+    conn.on('data', d => { let m; try { m = JSON.parse(typeof d === 'string' ? d : String(d)); } catch { return; } onMsg(m); });
+    conn.on('close', () => { if (NET.conn === conn) onNetLost(); });
+  } catch (e2) { throw (e1.message === 'noroom' || e2.message === 'noroom') ? new Error('noroom') : e1; }
+}
+function guestP2P(code){
   return new Promise((resolve, reject) => {
     netClose();
+    if (typeof Peer === 'undefined') return reject(new Error('timeout'));
     const peer = new Peer(undefined, { config: ICE, debug: 0 });
     let done = false;
     const fail = why => { if (done) return; done = true; clearTimeout(to); try { peer.destroy(); } catch {} reject(new Error(why)); };
-    const to = setTimeout(() => fail('timeout'), 15000);
+    const to = setTimeout(() => fail('timeout'), 8000);
     peer.on('open', () => {
       if (done) return;
       const conn = peer.connect(S.prefix + code, { reliable: true, serialization: 'raw' });
@@ -513,9 +560,9 @@ async function joinRoom(code, pw){
 async function joinRoom2(code, pw){
   ac(); status('lobby', '방장 기기에 연결하는 중…');
   let err = null;
-  for (let i = 0; i < 4; i++){
+  for (let i = 0; i < 3; i++){
     try { await guestStart(code); err = null; break; }
-    catch (e){ err = e; if (e.message !== 'noroom') break; status('lobby', '방을 찾는 중… (' + (i + 1) + '/4) 방장이 화면을 켜 두었는지 확인해 주세요'); await new Promise(r => setTimeout(r, 2500)); }
+    catch (e){ err = e; if (e.message !== 'noroom') break; status('lobby', '방을 찾는 중… (' + (i + 1) + '/3) 방장이 화면을 켜 두었는지 확인해 주세요'); await new Promise(r => setTimeout(r, 1500)); }
   }
   if (err){ status('lobby', err.message === 'noroom' ? '그 방이 없어요. 방 번호를 확인해 주세요(방장이 화면을 켜 두어야 해요).' : (err.message === 'browser-incompatible' || typeof Peer === 'undefined' ? netErrMsg(err) : '연결하지 못했어요. 다른 와이파이나 데이터로 바꿔 다시 해 보세요.'), true); return; }
   S.roomCode = code; netSend({ t: 'join', pw: pw || '', name: nick() });
