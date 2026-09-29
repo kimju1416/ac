@@ -68,7 +68,7 @@
     <h1>개인정보 처리방침</h1>
     <p>TeacherDesk 2가 무엇을 저장하고, 무엇을 밖으로 보내는지 밝힌 문서입니다.
       학교에 설명하셔야 할 때 이 주소를 그대로 보여 주시면 됩니다.</p>
-    <div class="stamp">TeacherDesk 2 · 시행일 2026년 9월 26일(구글 캘린더 연결 추가) · 만든 사람 김주현(광평중학교)</div>
+    <div class="stamp">TeacherDesk 2 · 시행일 2026년 9월 30일(구글 정보 공유 · 보호 장치 명시) · 만든 사람 김주현(광평중학교)</div>
   </header>
 
   <section>
@@ -166,6 +166,24 @@
       제한적 사용(Limited Use) 요건을 따릅니다. 받은 정보는 선생님의 컴퓨터끼리 기록을 동기화하고 선생님의 구글 캘린더를 TeacherDesk 2에서 보고 고치는 데에만 쓰고,
       광고에 쓰거나 다른 사람에게 넘기거나 팔지 않으며, AI 모델 학습에 쓰지 않고, 만든 사람을 포함해 누구도 사람이 직접 읽지 않습니다.</p>
 
+    <h3 id="google-sharing">구글에서 받은 정보를 누구와 나누나요 (공유 · 전달 · 공개)</h3>
+    <ul>
+      <li><b>아무와도 나누지 않습니다.</b> 구글 드라이브 · 구글 캘린더에서 받은 정보는 만든 사람을 포함한 어떤 개인 · 회사 · 기관에도 공유하거나 전달하거나 공개하지 않습니다. 팔지도 않습니다.</li>
+      <li>이 정보는 <b>선생님 본인의 PC · 폰과 구글 사이에서만</b> 오갑니다. 만든 사람의 서버는 이 길에 없습니다.</li>
+      <li>사용 집계 · 오류 기록 · 의견 보내기(4번 항목)에는 구글에서 받은 정보(일정 · 드라이브 자료 · 계정 이메일)를 넣지 않습니다.</li>
+      <li>예외는 두 가지뿐입니다 — ① 선생님이 직접 하시는 일(예: 일정을 다른 사람과 공유된 캘린더에 넣기, 파일로 내보내기) ② 법령에 따라 제출이 요구되는 경우. 이 프로그램은 만든 사람에게 구글 정보를 보내지 않으므로 ②로 내줄 정보도 만든 사람에게는 없습니다.</li>
+    </ul>
+
+    <h3 id="google-protection">구글에서 받은 정보를 어떻게 지키나요 (보호 장치)</h3>
+    <ul>
+      <li><b>주고받을 때</b> — 구글과는 암호화된 연결(HTTPS/TLS)로만 주고받습니다.</li>
+      <li><b>로그인</b> — 구글 공식 로그인 화면에서 선생님이 직접 허락하십니다(PKCE를 쓴 OAuth 2.0). 프로그램은 구글 비밀번호를 보지도, 저장하지도 않습니다.</li>
+      <li><b>PC에 둘 때</b> — 구글 로그인 열쇠(갱신 토큰)와 받은 일정 사본은 <b>윈도우 사용자 계정 키로 암호화</b>(Electron safeStorage · Windows DPAPI)해 저장합니다. 암호화를 쓸 수 없는 PC에서는 저장하지 않고, 켤 때마다 다시 로그인하게 합니다.</li>
+      <li><b>폰에 둘 때</b> — 폰 페이지는 1시간짜리 접근 열쇠만 브라우저에 두고, 캘린더 일정과 학생 자료는 폰에 저장하지 않습니다.</li>
+      <li><b>필요한 만큼만</b> — 기능에 필요한 최소 권한만 요청하고, 캘린더는 선생님이 켜신 캘린더만, 일정은 제목 · 날짜 · 시각 · 반복 규칙만 씁니다.</li>
+      <li><b>지우기</b> — 연결을 끊거나 로그아웃하면 그 기기의 열쇠와 사본을 지웁니다. <a href="https://myaccount.google.com/connections" target="_blank" rel="noopener">구글 계정 → 연결된 앱</a>에서 끊으면 모든 기기의 접근이 한 번에 막힙니다.</li>
+    </ul>
+
     <h3>끄고 지우는 방법</h3>
     <ul>
       <li><b>[로그아웃]</b> — 그 컴퓨터의 기록은 그대로 남고, 그때부터 다시 그 컴퓨터에만 저장됩니다. 로그아웃은 그 컴퓨터에만 해당하니, 쓰시던 컴퓨터마다 눌러 주세요.</li>
@@ -254,6 +272,14 @@
         <code>calendar.calendarlist.readonly</code>: reads the list of the teacher's calendars and their access level so they can choose which ones to show.
         Event descriptions, locations and attendee lists are not stored or used. Events with attendees are read-only in the app.</li>
       <li>Calendar data is cached only on the teacher's own PC (encrypted with the Windows user key) and is kept in memory only on the phone page. It is never sent to the developer or any third party.</li>
+      <li id="en-sharing"><b>Data sharing, transfer and disclosure</b> — We do <b>not share, transfer, disclose or sell</b> Google user data to anyone: not to the developer, and not to any third party, advertiser, data broker or AI provider.
+        Google user data moves only between the teacher's own PC or phone and Google. Anonymous usage statistics, crash reports and feedback messages never contain Google user data (no events, Drive data or email address).
+        The only exceptions are actions the teacher takes themselves (for example, adding an event to a calendar they share with others, or exporting a file) and disclosure required by law — and since the app never sends Google user data to the developer, the developer holds none to disclose.</li>
+      <li id="en-protection"><b>Data protection</b> — All traffic with Google uses HTTPS (TLS). Sign-in uses Google's own consent screen with OAuth 2.0 and PKCE; the app never sees or stores the Google password.
+        On the PC, the OAuth refresh token and the calendar cache are encrypted at rest with the operating-system user key (Electron safeStorage / Windows DPAPI); if encryption is unavailable, nothing is stored and the teacher signs in again each time.
+        The phone page keeps only a one-hour access token in the browser and does not store calendar events or student data.
+        Only the minimum scopes needed are requested, only the calendars the teacher turns on are read, and only event title, date, time and recurrence are used.
+        Disconnecting or signing out deletes the token and cache on that device, and access can be revoked for all devices at Google Account → Third-party connections.</li>
       <li>TeacherDesk 2's use and transfer of information received from Google APIs adheres to the
         <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, including the Limited Use requirements.
         Google user data is not used for advertising, not sold, not transferred to others, not used to train AI models, and not read by humans.</li>
