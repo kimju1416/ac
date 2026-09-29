@@ -198,8 +198,9 @@ const G = {
         bar: { x: gx + gh * 1.9, y: my - gh * .12, w: gw - gh * 3.8, h: gh * .24 } };
     } else {
       // 가로 화면(PC): 판 오른쪽에 세로 계기판
-      const gw = Math.round(cl(H * .16, 84, 124));
-      S = Math.max(200, Math.floor(Math.min(H - TOP - 18, W - gw - 60)));
+      // 폰 가로처럼 낮은 화면은 판이 작아지니 계기판도 판 크기에 맞춰 줄인다
+      S = Math.max(200, Math.floor(Math.min(H - TOP - 18, W - 84 - 60)));
+      const gw = Math.round(cl(Math.min(H * .16, S * .26), 56, 124));
       bx = Math.round((W - (S + 26 + gw)) / 2); by = Math.round(TOP + (H - TOP - 18 - S) / 2);
       const gx = bx + S + 26, gh = S * .84, gy = by + (S - gh) / 2, mx = gx + gw / 2;
       gauge = { x: gx, y: gy, w: gw, h: gh, r: gw * .3, vert: true, ir: gw * .24, fs: Math.round(gw * .36),
@@ -235,7 +236,8 @@ const G = {
     else { const land = Math.max(0, 1 - (k - jumpB) / .08); germ(x, x0 + 2 * c, y0, r, 1, t, 1 + land * .18, 1 - land * .18); }
   },
 };
-function rr(x, a, b, w, h, r){ x.beginPath(); if (x.roundRect) x.roundRect(a, b, w, h, r); else x.rect(a, b, w, h); }
+// 둥근 사각형(크기·반지름이 음수면 0으로 — 낮은 화면에서 계산이 모자라도 그리기가 멈추지 않게)
+function rr(x, a, b, w, h, r){ w = Math.max(0, w); h = Math.max(0, h); r = Math.max(0, Math.min(r, w / 2, h / 2)); x.beginPath(); if (x.roundRect) x.roundRect(a, b, w, h, r); else x.rect(a, b, w, h); }
 function setTurnLabel(){
   const s = G.st; if (!s) return;
   const nb = count(s.b, s.me), nr = count(s.b, s.op);

@@ -103,3 +103,30 @@ button.vsTile:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.28
 .vsCodeBig{height:56px;font-size:24px;font-weight:800;letter-spacing:.3em;text-align:center}
 .vsCodeBig::placeholder{font-size:15px;letter-spacing:0;font-weight:600}
 .vsJoinBtn{height:56px;padding:0 24px;font-size:17px;font-weight:900}
+/* 높이가 낮은 화면(폰 가로 등): 메뉴·로비·대기실이 한 화면에 들어오게 간격·크기를 줄인다 */
+@media (max-height:520px){
+  .vsFull{gap:8px;padding-top:calc(54px + env(safe-area-inset-top));padding-bottom:10px}
+  #vsArt{height:clamp(40px,12vh,64px)}
+  .vsTitle{font-size:clamp(34px,7vh,44px)}
+  .vsSub{font-size:13px;margin-top:-2px}
+  .vsTile{padding:10px 12px 12px;gap:3px;border-radius:18px}
+  .vsTile>b{font-size:20px}.vsTile>span{font-size:12px}
+  .vsLv{margin-top:4px;gap:6px}.vsLv button{padding:6px 4px;border-radius:12px}.vsLv b{font-size:15px}.vsLv small{font-size:11px}
+  .vsPill{height:36px;font-size:13px}
+  .vsScreen{padding:54px 16px 8px}
+  .vsPanel{padding:12px 16px}
+  .vsBack{padding:2px 4px;margin:-2px 0 2px -4px}
+  .vsBrand{margin-bottom:6px}.vsBrand h1{font-size:19px}
+  .vsLbl{margin:8px 0 4px}
+  .vsInp{height:40px}
+  .vsMakeBig{height:46px;font-size:17px;margin-top:10px}
+  #vsLobby .vsHelp{display:none}
+  .vsOr{margin:10px 0 8px}
+  .vsCodeBig,.vsJoinBtn{height:44px}.vsCodeBig{font-size:20px}
+  .vsMsg,.vsInapp{padding:8px 10px;margin-bottom:6px;font-size:13px}
+  .vsBig{font-size:24px}
+  .vsSlots{margin-top:8px;gap:8px}.vsSlot{min-height:0;padding:8px 10px}.vsSlot b{font-size:15px;margin-bottom:2px}
+  .vsSeg button{height:34px}
+  .vsStatus{margin-top:6px;min-height:0}
+  #vsWait .vsBtn{height:42px}
+}
