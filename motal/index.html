@@ -249,15 +249,25 @@ const GFX = ['hit','heavy','block','chi','arc','dust'];
 const IMG = { gfx:{}, stage:{}, sbg:{} }, META = {}, SND = {};
 function loadImg(src){ return new Promise(r => { const im = new Image(); im.onload = () => r(im); im.onerror = () => r(null); im.src = src; }); }
 async function loadAll(){
-  for(const k in CHARS) META[k] = JSON.parse(JSON.stringify(window.META_DATA[k]));
+  for(const k in CHARS){ META[k] = JSON.parse(JSON.stringify(window.META_DATA[k])); META[k].h = META[k].idle.h; }
   const list = [];
   for(const k in CHARS){ IMG[k] = {}; for(const m of MOVES) if(META[k][m]) list.push([k, m, `sprites/${CHARS[k].dir}/${m}.webp`]); }
   for(const s in STAGES) list.push(['stage', s, STAGES[s].src]);
   for(const g of GFX) list.push(['gfx', g, `gfx/${g}.webp`]);
   for(const k in CHARS) list.push(['sbg', k, `gfx/super-${k}.jpg`]);
-  let done = 0; const tick = () => { done++; const p = Math.round(done/list.length*100); $('lbar').style.width = p+'%'; $('lpct').textContent = p+'%'; };
-  await Promise.all(list.map(([k,m,src]) => loadImg(src).then(im => { IMG[k][m] = im; tick(); })));
-  for(const k in CHARS) prepChar(k);
+  // 타이틀에 필요한 것(서 있는 모습·무대)만 먼저 — 나머지는 캐릭터를 고르는 동안 뒤에서 받는다
+  const core = list.filter(([k,m]) => m==='idle' || k==='stage');
+  const rest = list.filter(x => !core.includes(x));
+  let done = 0; const tick = () => { done++; const p = Math.round(done/core.length*100); $('lbar').style.width = p+'%'; $('lpct').textContent = p+'%'; };
+  await Promise.all(core.map(([k,m,src]) => loadImg(src).then(im => { IMG[k][m] = im; tick(); })));
+  let n2 = 0;
+  G.assets = (async () => {
+    // 동시에 6개씩 받아 폰에서도 막히지 않게
+    const q = rest.slice();
+    await Promise.all(Array.from({length:6}, async () => { while(q.length){ const [k,m,src] = q.shift(); IMG[k][m] = await loadImg(src); n2++; G.assetPct = Math.round(n2/rest.length*100); } }));
+    for(const k in CHARS) prepChar(k);
+    G.assetPct = 100;
+  })();
   for(const n of ['round1','round2','round3','fight','ko','perfect','timeover','win_tkd','win_kf','voice_tkd','voice_kf','intro_tkd','intro_kf']){
     const a = new Audio(`sfx/${n}.mp3`); a.preload = 'auto'; SND[n] = a;
   }
@@ -1222,7 +1232,14 @@ function toVs(){
   sfx('super');
   setTimeout(startFight, 2100);
 }
-function startFight(){ show(null); G.scr = 'fight'; setPlayUi(true); newMatch(); }
+async function startFight(){
+  if(G.assetPct !== 100){
+    const nm = $('vsRn'), keep = nm.textContent;
+    const iv = setInterval(() => { nm.textContent = `${keep} · 준비 ${G.assetPct||0}%`; }, 200);
+    await G.assets; clearInterval(iv); nm.textContent = keep;
+  }
+  show(null); G.scr = 'fight'; setPlayUi(true); newMatch();
+}
 function focusMenu(id){ G.menu = [...$(id).querySelectorAll('.menu button')]; G.menuI = 0; G.menu.forEach((b,i) => b.classList.toggle('focus', i===0)); }
 function uiKey(k){
   const go = ['enter','j','z',' ','1','numpad1'].includes(k);
