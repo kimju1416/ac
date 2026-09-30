@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>삼성 정규리그 우승 경우의 수</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --pt:#074CA1; --pt-d:#053878; --pt-soft:#E6EEF8; --bg:#F5F7FB; --card:#fff; --line:#E1E7F0;
+  --tx:#17233A; --sub:#64748B; --kt:#3A3F4A; --tie:#E0A43A; --ok:#1D7A4D; --ok-bg:#E7F3EC;
+  --warn:#B26B0F; --warn-bg:#FBF0DE; --bad:#C0392B; --bad-bg:#F9E8E6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Pretendard,-apple-system,sans-serif;background:var(--bg);color:var(--tx);line-height:1.6;word-break:keep-all;-webkit-text-size-adjust:100%}
+img{display:block;max-width:100%}
+.num{font-variant-numeric:tabular-nums}
+/* 머리 */
+.hero{position:relative;background:#06224A;color:#fff;overflow:hidden}
+.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(4,22,52,.92) 0%,rgba(4,22,52,.7) 45%,rgba(4,22,52,.15) 100%)}
+.hero .in{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:36px 20px 28px;min-height:230px;display:flex;flex-direction:column;justify-content:flex-end}
+.hero .k{font-size:13px;font-weight:600;letter-spacing:.04em;opacity:.85}
+.hero h1{font-size:26px;font-weight:700;line-height:1.3;letter-spacing:-0.01em;margin-top:4px}
+.hero .u{font-size:13px;opacity:.85;margin-top:8px}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px 60px}
+.lab{font-size:13px;font-weight:600;color:var(--sub);letter-spacing:.02em;margin:34px 0 10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.p{font-size:14px;color:var(--sub)}
+.p b{color:var(--tx);font-weight:600}
+/* 판정 */
+.verdict{margin-top:20px;border-radius:14px;padding:18px 16px;border:1px solid var(--line);background:var(--card)}
+.verdict .big{display:block;font-size:20px;font-weight:700;line-height:1.35}
+.verdict p{font-size:14px;margin-top:6px;color:#3D4A60}
+.verdict.ok{background:var(--ok-bg);border-color:#C5E2D1}.verdict.ok .big{color:var(--ok)}
+.verdict.warn{background:var(--warn-bg);border-color:#EFD9B0}.verdict.warn .big{color:var(--warn)}
+.verdict.bad{background:var(--bad-bg);border-color:#EBC6C1}.verdict.bad .big{color:var(--bad)}
+.sim{display:none;margin-top:10px;font-size:13px;font-weight:600;color:var(--warn);background:var(--warn-bg);border-radius:10px;padding:8px 12px}
+.sim.on{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.sim button{font:inherit;font-size:13px;font-weight:600;border:1px solid #EFD9B0;background:#fff;color:var(--warn);border-radius:10px;padding:5px 10px;cursor:pointer;white-space:nowrap}
+/* 순위 */
+.rec{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.team{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
+.team .nm{font-size:13px;font-weight:600;color:var(--sub)}
+.team .pct{font-size:30px;font-weight:700;line-height:1.2}
+.team.ss{border-color:#B9CDE9}.team.ss .pct{color:var(--pt)}
+.team .wl{font-size:14px}
+.team .rng{font-size:12px;color:var(--sub);margin-top:4px}
+.gap{margin-top:10px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.gap div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 10px;text-align:center}
+.gap b{display:block;font-size:24px;font-weight:700;line-height:1.2}
+.gap span{font-size:12px;color:var(--sub)}
+/* 다음 경기 */
+.next .hd{font-size:16px;font-weight:700}
+.next .mt{font-size:14px;color:var(--sub);margin-top:2px}
+.cases{margin-top:12px;display:flex;flex-direction:column;gap:6px}
+.case.two{grid-template-columns:1fr;gap:2px}
+.case.two .w{font-size:14px}
+.case.two .r{font-size:14px;color:var(--sub)}
+.case.two .r b{color:var(--pt);font-weight:700}
+.case.two .r b.no{color:var(--bad)}
+.case{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;font-size:14px;padding:9px 12px;border-radius:10px;background:#F3F6FB}
+.case.best{background:var(--pt-soft)}
+.case .w{font-weight:600}
+.case .g,.case .pr{font-size:13px;color:var(--sub);white-space:nowrap}
+.case.best .pr{color:var(--pt);font-weight:700}
+/* 확률 */
+.bar{display:flex;height:14px;border-radius:7px;overflow:hidden;background:var(--line);margin:4px 0 10px}
+.bar i{display:block;height:100%}
+.bar .a{background:var(--pt)}.bar .b{background:var(--tie)}.bar .c{background:var(--kt)}
+.leg{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px}
+.leg span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:6px}
+.leg .a::before{background:var(--pt)}.leg .b::before{background:var(--tie)}.leg .c::before{background:var(--kt)}
+.pre{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.btn{font:inherit;font-size:13px;font-weight:600;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:#fff;color:var(--tx);cursor:pointer}
+.btn.on{background:var(--pt);border-color:var(--pt);color:#fff}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;margin-top:12px;font-size:13px}
+.sl input{grid-column:1/3;width:100%;accent-color:var(--pt)}
+.sl output{font-weight:600}
+.note{font-size:12px;color:var(--sub);margin-top:10px}
+/* 날짜별 */
+.day{border-top:1px solid var(--line);padding:14px 0}
+.day:first-child{border-top:0;padding-top:0}
+.day:last-child{padding-bottom:0}
+.day .dt{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.day .dt b{font-size:15px;font-weight:700}
+.day .dt span{font-size:12px;color:var(--sub);text-align:right}
+.g{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-top:8px}
+.g .m{font-size:14px;font-weight:500}
+.g .m small{font-size:12px;color:var(--sub);font-weight:400;margin-left:4px}
+.g .m em{font-style:normal;font-size:11px;font-weight:700;color:var(--ok);background:var(--ok-bg);border-radius:6px;padding:2px 6px;margin-left:6px}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:2px 6px;margin-right:6px;background:var(--pt-soft);color:var(--pt)}
+.tag.k{background:#ECEEF2;color:var(--kt)}
+.tag.h{background:var(--warn-bg);color:var(--warn)}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{font:inherit;font-size:13px;font-weight:600;min-width:40px;height:36px;padding:0 8px;border:0;border-left:1px solid var(--line);background:#fff;color:var(--sub);cursor:pointer}
+.seg button:first-child{border-left:0}
+.seg button.on.w{background:var(--pt);color:#fff}
+.seg button.on.l{background:var(--kt);color:#fff}
+.seg button.on.t{background:#8A94A6;color:#fff}
+.seg.lock button{cursor:default}
+.seg.lock button:not(.on){color:#C3CAD6}
+.mode{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:10px}
+.mode button{font:inherit;font-size:14px;font-weight:600;height:42px;border:0;background:#fff;color:var(--sub);cursor:pointer}
+.mode button+button{border-left:1px solid var(--line)}
+.mode button.on{background:var(--pt);color:#fff}
+.g .m em.s{color:var(--warn);background:var(--warn-bg)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.banner{border-radius:14px;overflow:hidden;margin-bottom:12px;aspect-ratio:3/1.25;background:#0B1B33}
+.banner img{width:100%;height:100%;object-fit:cover}
+/* 표 */
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border:1px solid var(--line);padding:7px 4px;text-align:center}
+th{background:#F0F3F8;font-weight:600;color:var(--sub)}
+td.x{background:var(--bad-bg);color:var(--bad)}
+td.any{background:var(--ok-bg);color:var(--ok);font-weight:700}
+td.c{background:var(--pt-soft);color:var(--pt);font-weight:600}
+td.c small{display:block;font-size:11px;font-weight:400;color:var(--warn)}
+td.rowh{background:#F0F3F8;font-weight:600;white-space:nowrap}
+/* 일지·목표 */
+.log li{list-style:none;display:grid;grid-template-columns:52px 1fr;gap:10px;font-size:14px;padding:8px 0;border-top:1px solid var(--line)}
+.log li:first-child{border-top:0;padding-top:0}
+.log li span{color:var(--sub);font-size:13px}
+.goal{display:grid;grid-template-columns:112px 1fr;gap:14px;align-items:center}
+.goal img{border-radius:14px;aspect-ratio:1;object-fit:cover;width:112px}
+.goal b{font-size:16px;font-weight:700;display:block}
+details{border-top:1px solid var(--line);padding:12px 0}
+details:first-of-type{border-top:0;padding-top:0}
+details:last-of-type{padding-bottom:0}
+summary{font-size:14px;font-weight:600;cursor:pointer}
+details p{font-size:14px;color:var(--sub);margin-top:6px}
+.src{font-size:12px;color:var(--sub);margin-top:28px;text-align:center}
+</style>
+</head>
+<body>
+<header class="hero">
+  <img src="img/hero.jpg" alt="">
+  <div class="in">
+    <div class="k">2026 KBO 정규시즌 · 1위 경쟁</div>
+    <h1>삼성 정규리그 우승,<br>남은 길을 매일 계산합니다</h1>
+    <div class="u" id="upd"></div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div id="verdict" class="verdict"></div>
+  <div class="sim" id="sim"><span>연습으로 넣은 가상 결과가 섞여 있습니다.</span><button id="bReset">가상 결과 지우기</button></div>
+
+  <div class="lab">쉽게 말하면</div>
+  <div class="card">
+    <p class="p" id="easyLead"></p>
+    <div class="cases" id="easy"></div>
+    <p class="note">남은 경기에 무승부가 없다고 보고 계산했습니다. 「다른 경기」는 삼성·KT 맞대결을 뺀 나머지 경기입니다.</p>
+  </div>
+
+  <div class="lab">지금 순위</div>
+  <div class="rec">
+    <div class="team ss"><div class="nm" id="ssNm"></div><div class="pct num" id="ssPct"></div><div class="wl num" id="ssWl"></div><div class="rng" id="ssRng"></div></div>
+    <div class="team"><div class="nm" id="ktNm"></div><div class="pct num" id="ktPct"></div><div class="wl num" id="ktWl"></div><div class="rng" id="ktRng"></div></div>
+  </div>
+  <div class="gap">
+    <div><b class="num" id="gb"></b><span>게임차</span></div>
+    <div><b class="num" id="mgS"></b><span>삼성 매직넘버</span></div>
+    <div><b class="num" id="mgK"></b><span>KT 매직넘버</span></div>
+  </div>
+  <p class="note" id="mgNote"></p>
+
+  <div class="lab">다음 경기</div>
+  <div class="card next" id="next"></div>
+
+  <div class="lab">삼성이 1위 할 확률</div>
+  <div class="card">
+    <div class="bar"><i class="a" id="bA"></i><i class="b" id="bB"></i><i class="c" id="bC"></i></div>
+    <div class="leg">
+      <span class="a">삼성 단독 1위 <b class="num" id="pA"></b></span>
+      <span class="b">동률 · 1위 결정전 <b class="num" id="pB"></b></span>
+      <span class="c">KT 1위 <b class="num" id="pC"></b></span>
+    </div>
+    <p class="note" id="cnt"></p>
+    <div class="pre">
+      <button class="btn" id="pre50">모든 경기 반반</button>
+      <button class="btn" id="preSeason">올 시즌 승률대로</button>
+    </div>
+    <div class="sl"><span>삼성이 다른 팀을 이길 확률</span><output class="num" id="o1"></output><input type="range" id="s1" min="0" max="100" value="50"></div>
+    <div class="sl"><span>KT가 다른 팀을 이길 확률</span><output class="num" id="o2"></output><input type="range" id="s2" min="0" max="100" value="50"></div>
+    <div class="sl"><span>맞대결에서 삼성이 이길 확률</span><output class="num" id="o3"></output><input type="range" id="s3" min="0" max="100" value="50"></div>
+    <p class="note">아직 결과가 없는 경기만 계산합니다. 「올 시즌 승률대로」는 삼성 .603, KT .626, 맞대결은 삼성 9승 4패(69%)를 넣습니다. 무승부는 확률 계산에서 뺐습니다.</p>
+  </div>
+
+  <div class="lab">날짜별 경기와 결과</div>
+  <div class="card">
+    <div class="banner"><img src="img/duel.jpg" alt=""></div>
+    <div class="mode" id="mode">
+      <button data-m="real">실제 결과 기록</button>
+      <button data-m="sim">경우의 수 연습</button>
+    </div>
+    <p class="p" id="modeTxt" style="margin-bottom:14px"></p>
+    <div id="days"></div>
+    <div class="tools">
+      <button class="btn" id="bAllW">삼성 남은 경기 전승 넣어 보기</button>
+      <button class="btn" id="bReset2">가상 결과 지우기</button>
+      <button class="btn" id="bRealReset">기록한 실제 결과 지우기</button>
+    </div>
+  </div>
+
+  <div class="lab">한눈에 보는 조건표</div>
+  <div class="card">
+    <p class="p" id="tblLead" style="margin-bottom:12px"></p>
+    <div class="tw"><table id="tbl"></table></div>
+    <p class="note">칸의 「3승↓」는 KT가 삼성전을 뺀 남은 경기에서 3승 이하여야 삼성이 단독 1위라는 뜻입니다. 「무조건」은 KT가 다 이겨도 삼성 1위, 「불가」는 KT가 다 져도 안 된다는 뜻입니다. 남은 경기에 무승부가 없다고 보고 계산했습니다.</p>
+  </div>
+
+  <div class="lab">기록 일지</div>
+  <div class="card"><ul class="log" id="log"></ul></div>
+
+  <div class="lab">목표</div>
+  <div class="card goal">
+    <img src="img/trophy.jpg" alt="">
+    <div><b>삼성 라이온즈 정규리그 우승</b><p class="p" id="goalTxt"></p></div>
+  </div>
+
+  <div class="lab">용어 설명</div>
+  <div class="card">
+    <details><summary>승률은 어떻게 계산하나요</summary><p>승 ÷ (승 + 패)입니다. 무승부는 계산에서 빠집니다. 예를 들어 80승 50패 팀의 승률은 80 ÷ 130 = .615입니다. 최종 순위는 이 승률로 정합니다.</p></details>
+    <details><summary>게임차는 무엇인가요</summary><p>(승수 차이 + 패수 차이) ÷ 2입니다. 삼성이 이기고 KT가 지면 하루에 1경기가 줄고, 맞대결에서 삼성이 이겨도 한 번에 1경기가 줄어듭니다. 최종 순위는 게임차가 아니라 승률로 정합니다.</p></details>
+    <details><summary>매직넘버는 무엇인가요</summary><p>우승 확정까지 남은 숫자입니다. 삼성 매직넘버는 「삼성의 승리 + KT의 패배」가 합쳐서 그만큼 쌓이면 삼성 1위가 확정된다는 뜻입니다. 맞대결에서 삼성이 이기면 삼성 승리와 KT 패배가 동시에 생겨 한 번에 2 이상 줄어듭니다. 0이 되면 확정입니다. KT 매직넘버는 반대로 「KT의 승리 + 삼성의 패배」를 셉니다.</p></details>
+    <details><summary>승률이 똑같이 끝나면요</summary><p>정규시즌 1위 두 팀의 승률이 같으면 1위 결정전을 한 경기 더 치러 우승팀을 정합니다. 이 앱에서는 「동률 · 1위 결정전」으로 따로 셉니다.</p></details>
+    <details><summary>자력 우승이 무슨 뜻인가요</summary><p>KT가 어떻게 하든 상관없이, 삼성이 자기 경기만 다 이기면 1위가 되는 상태입니다. 맞대결이 남아 있어서 삼성이 이길 때 KT는 반드시 지기 때문에 가능합니다.</p></details>
+  </div>
+
+  <p class="src">순위와 남은 16경기의 날짜·상대·구장·시각은 KBO 공식 홈페이지와 대조했습니다(9월 30일 확인). 비로 취소돼 날짜가 바뀌면 일정은 달라질 수 있습니다.</p>
+</div>
+
+<script>
+/* ───────── 파일에 박아 두는 결과(선택) ─────────
+   화면의 「실제 결과 기록」으로 직접 넣으면 이 자리는 안 고쳐도 된다.
+   여기에 적은 경기는 어느 기기에서 열어도 확정으로 잠긴다.
+   r은 삼성·KT 단독 경기면 그 팀 기준 'W'/'L'/'T', 맞대결(h1~h3)은 삼성 기준. s는 점수. */
+const OFFICIAL = {
+  // s1: {r:'W', s:'5:3'},
+};
+const LOG0 = {d:'9/29', t:'출발점. KT 82승 49패 4무(.626), 삼성 79승 52패 3무(.603)로 3경기 차. 맞대결 3경기가 남아 삼성 자력 1위가 살아 있습니다.'};
+/* ─────────────────────────────────── */
+
+// 9월 29일 경기까지의 성적과 상대전적
+const BASE = { ss:{w:79,l:52,d:3}, kt:{w:82,l:49,d:4} };
+const GAMES = [
+  {id:'s1',t:'18:30',who:'ss',d:'9/30',m:'한화',p:'대구'},
+  {id:'k1',t:'18:30',who:'kt',d:'9/30',m:'KIA',p:'광주'},
+  {id:'s2',t:'18:30',who:'ss',d:'10/1',m:'한화',p:'대구'},
+  {id:'k2',t:'18:30',who:'kt',d:'10/1',m:'KIA',p:'광주'},
+  {id:'s3',t:'14:00',who:'ss',d:'10/3',m:'두산',p:'대구'},
+  {id:'k3',t:'14:00',who:'kt',d:'10/3',m:'롯데',p:'수원'},
+  {id:'s4',t:'14:00',who:'ss',d:'10/4',m:'두산',p:'대구'},
+  {id:'k4',t:'17:00',who:'kt',d:'10/4',m:'롯데',p:'수원'},
+  {id:'s5',t:'14:00',who:'ss',d:'10/5',m:'두산',p:'대구'},
+  {id:'k5',t:'14:00',who:'kt',d:'10/5',m:'롯데',p:'수원'},
+  {id:'s6',t:'18:30',who:'ss',d:'10/6',m:'KIA',p:'광주'},
+  {id:'k6',t:'18:30',who:'kt',d:'10/6',m:'키움',p:'고척'},
+  {id:'h1',t:'18:30',who:'h2h',d:'10/7',m:'삼성 vs KT',p:'수원'},
+  {id:'s7',t:'14:00',who:'ss',d:'10/9',m:'SSG',p:'인천'},
+  {id:'h2',t:'14:00',who:'h2h',d:'10/11',m:'삼성 vs KT',p:'대구'},
+  {id:'h3',t:'18:30',who:'h2h',d:'10/12',m:'삼성 vs KT',p:'대구'}
+];
+const DOW = {'9/30':'수','10/1':'목','10/3':'토','10/4':'일','10/5':'월','10/6':'화','10/7':'수','10/9':'금','10/11':'일','10/12':'월'};
+const DATES = [...new Set(GAMES.map(g => g.d))];
+const KEY = 'samsung1st-2026-v2';
+let SIM = {};   // 연습으로 넣어 본 가상 결과 (id -> 'W'|'L'|'T')
+let REAL = {};  // 화면에서 직접 기록한 실제 결과
+let mode = 'real';
+try { SIM = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { SIM = {}; }
+try { REAL = JSON.parse(localStorage.getItem(KEY + '-real') || '{}') || {}; } catch (e) { REAL = {}; }
+try { mode = localStorage.getItem(KEY + '-mode') === 'sim' ? 'sim' : 'real'; } catch (e) {}
+// 확정된 실제 결과: 파일에 박은 것이 먼저, 다음이 화면에서 기록한 것
+function fixed(id) { return OFFICIAL[id] ? OFFICIAL[id].r : REAL[id]; }
+const $ = id => document.getElementById(id);
+
+// 확정 결과가 가상 결과보다 먼저다
+function merged() {
+  const r = {};
+  GAMES.forEach(g => {
+    if (fixed(g.id)) r[g.id] = fixed(g.id);
+    else if (SIM[g.id]) r[g.id] = SIM[g.id];
+  });
+  return r;
+}
+// 그날까지 확정된 경기만으로 본 성적
+function uptoDate(d) {
+  const i = DATES.indexOf(d), r = {};
+  GAMES.forEach(g => { if (DATES.indexOf(g.d) <= i && fixed(g.id)) r[g.id] = fixed(g.id); });
+  return apply(r);
+}
+function resWord(g) {
+  const r = fixed(g.id);
+  if (g.who === 'h2h') return '맞대결 ' + (r === 'W' ? '삼성 승' : r === 'L' ? 'KT 승' : '무승부');
+  return (g.who === 'ss' ? '삼성 ' : 'KT ') + (r === 'W' ? '승' : r === 'L' ? '패' : '무') + '(' + g.m + ')';
+}
+// 승률 비교: 양수면 a가 높다 (무승부는 승률에서 빠진다)
+function cmp(a, b) { return a.w * (b.w + b.l) - b.w * (a.w + a.l); }
+function pct(t) { return (t.w / (t.w + t.l)).toFixed(3).replace(/^0/, ''); }
+function gb(lead, chase) { return ((lead.w - chase.w) + (chase.l - lead.l)) / 2; }
+
+function apply(res, only) {
+  const ss = {...BASE.ss}, kt = {...BASE.kt};
+  GAMES.forEach(g => {
+    if (only && !only(g)) return;
+    const r = res[g.id]; if (!r) return;
+    if (g.who === 'ss') { r === 'W' ? ss.w++ : r === 'L' ? ss.l++ : ss.d++; }
+    else if (g.who === 'kt') { r === 'W' ? kt.w++ : r === 'L' ? kt.l++ : kt.d++; }
+    else {
+      if (r === 'W') { ss.w++; kt.l++; }
+      else if (r === 'L') { ss.l++; kt.w++; }
+      else { ss.d++; kt.d++; }
+    }
+  });
+  return { ss, kt };
+}
+
+// 결과가 없는 경기의 모든 승패 조합을 돌려 센다
+function calc(res) {
+  const open = GAMES.filter(g => !res[g.id]);
+  const p1 = +$('s1').value / 100, p2 = +$('s2').value / 100, p3 = +$('s3').value / 100;
+  const base = apply(res);
+  let nA = 0, nB = 0, nC = 0, pA = 0, pB = 0, pC = 0;
+  const n = open.length, total = 1 << n;
+  for (let mask = 0; mask < total; mask++) {
+    let sw = base.ss.w, sl = base.ss.l, kw = base.kt.w, kl = base.kt.l, pr = 1;
+    for (let i = 0; i < n; i++) {
+      const who = open[i].who, win = (mask >> i) & 1;
+      if (who === 'ss') { win ? sw++ : sl++; pr *= win ? p1 : 1 - p1; }
+      else if (who === 'kt') { win ? kw++ : kl++; pr *= win ? p2 : 1 - p2; }
+      else { if (win) { sw++; kl++; } else { sl++; kw++; } pr *= win ? p3 : 1 - p3; }
+    }
+    const c = sw * (kw + kl) - kw * (sw + sl);
+    if (c > 0) { nA++; pA += pr; } else if (c === 0) { nB++; pB += pr; } else { nC++; pC += pr; }
+  }
+  return { open, total, nA, nB, nC, pA, pB, pC };
+}
+
+// 매직넘버: 「앞 팀 승 + 뒤 팀 패」가 m이 되면 어떤 조합이든 앞 팀이 위
+function magic(a, aLeft, b, bLeft) {
+  for (let m = 0; m <= aLeft + bLeft; m++) {
+    let ok = true;
+    for (let x = Math.max(0, m - bLeft); x <= Math.min(m, aLeft); x++) {
+      const y = m - x;
+      const A = { w: a.w + x, l: a.l + aLeft - x }, B = { w: b.w + bLeft - y, l: b.l + y };
+      if (cmp(A, B) <= 0) { ok = false; break; }
+    }
+    if (ok) return m;
+  }
+  return null;
+}
+
+const fp = v => (v * 100).toFixed(v > 0 && v < 0.001 ? 2 : 1) + '%';
+const fg = v => (v === 0 ? '0' : Math.abs(v).toFixed(1));
+
+function render() {
+  const R = merged();
+  const now = apply(R);
+  const leftOf = who => GAMES.filter(g => !R[g.id] && (g.who === who || g.who === 'h2h')).length;
+  const sLeft = leftOf('ss'), kLeft = leftOf('kt');
+  const hasSim = GAMES.some(g => !fixed(g.id) && SIM[g.id]);
+  // 앞에서부터 빠짐없이 확정된 마지막 날
+  let lastDone = null;
+  for (const d of DATES) { if (GAMES.filter(x => x.d === d).every(x => fixed(x.id))) lastDone = d; else break; }
+  const order = cmp(now.ss, now.kt);
+
+  $('upd').textContent = (lastDone || '9/29') + ' 경기까지 반영 · 맞대결 ' + GAMES.filter(x => x.who === 'h2h' && !fixed(x.id)).length + '경기 남음';
+  $('sim').classList.toggle('on', hasSim);
+  $('ssNm').textContent = '삼성 (' + (order > 0 ? '1위' : order === 0 ? '공동 1위' : '2위') + ')';
+  $('ktNm').textContent = 'KT (' + (order < 0 ? '1위' : order === 0 ? '공동 1위' : '2위') + ')';
+  $('ssPct').textContent = pct(now.ss); $('ktPct').textContent = pct(now.kt);
+  $('ssWl').textContent = now.ss.w + '승 ' + now.ss.l + '패 ' + now.ss.d + '무';
+  $('ktWl').textContent = now.kt.w + '승 ' + now.kt.l + '패 ' + now.kt.d + '무';
+  $('ssRng').textContent = '남은 경기 ' + sLeft; $('ktRng').textContent = '남은 경기 ' + kLeft;
+
+  const g = gb(now.kt, now.ss);
+  $('gb').textContent = fg(g);
+  const mS = magic(now.ss, sLeft, now.kt, kLeft), mK = magic(now.kt, kLeft, now.ss, sLeft);
+  $('mgS').textContent = mS === null ? '–' : mS; $('mgK').textContent = mK === null ? '–' : mK;
+  $('mgNote').textContent = (g > 0 ? 'KT가 ' + fg(g) + '경기 앞서 있습니다. ' : g < 0 ? '삼성이 ' + fg(g) + '경기 앞서 있습니다. ' : '게임차가 없습니다. ')
+    + (mS === null ? '' : mS === 0 ? '삼성 매직넘버가 0입니다. 1위 확정입니다.'
+      : '삼성 매직넘버 ' + mS + '은 삼성이 이기거나 KT가 질 때마다 줄어드는 숫자이고, 0이 되면 1위 확정입니다. 맞대결에서 삼성이 이기면 삼성 승과 KT 패가 함께 생겨 한 번에 2 이상 줄어듭니다.');
+
+  const c = calc(R);
+  $('bA').style.width = c.pA * 100 + '%'; $('bB').style.width = c.pB * 100 + '%'; $('bC').style.width = c.pC * 100 + '%';
+  $('pA').textContent = fp(c.pA); $('pB').textContent = fp(c.pB); $('pC').textContent = fp(c.pC);
+  $('cnt').textContent = c.open.length
+    ? '남은 ' + c.open.length + '경기의 승패 조합 ' + c.total.toLocaleString() + '가지 중 삼성 단독 1위 ' + c.nA.toLocaleString() + '가지, 동률 ' + c.nB.toLocaleString() + '가지, KT 1위 ' + c.nC.toLocaleString() + '가지입니다.'
+    : '모든 경기 결과가 들어갔습니다.';
+  ['1','2','3'].forEach(i => $('o' + i).textContent = $('s' + i).value + '%');
+
+  // 판정: 삼성이 남은 경기를 다 이기고 KT가 나머지를 다 이겨도 삼성이 위인가
+  const best = {...R};
+  GAMES.forEach(x => { if (!best[x.id]) best[x.id] = 'W'; });
+  const fb = apply(best), self = cmp(fb.ss, fb.kt);
+  let cls, big, sub;
+  if (!c.open.length) {
+    cls = order > 0 ? 'ok' : order === 0 ? 'warn' : 'bad';
+    big = order > 0 ? '삼성 정규리그 우승' : order === 0 ? '승률 동률 · 1위 결정전으로 갑니다' : 'KT 정규리그 1위';
+    sub = '최종 승률 삼성 ' + pct(now.ss) + ' · KT ' + pct(now.kt);
+  } else if (c.nA + c.nB === 0) {
+    cls = 'bad'; big = '삼성 1위 가능성이 사라졌습니다'; sub = '남은 경기를 모두 이겨도 KT 승률을 넘지 못합니다.';
+  } else if (c.nC === 0 && c.nB === 0) {
+    cls = 'ok'; big = '삼성 정규리그 우승 확정'; sub = '남은 경기 결과와 상관없이 삼성이 1위입니다.';
+  } else if (self > 0) {
+    cls = 'ok'; big = '가능합니다. 삼성 자력 우승이 살아 있습니다';
+    sub = '삼성이 남은 ' + sLeft + '경기를 모두 이기면, KT가 다른 경기를 전부 이겨도 삼성 ' + pct(fb.ss) + ' · KT ' + pct(fb.kt) + '로 삼성이 1위입니다. 남의 결과를 기다릴 필요가 없는 상태입니다.';
+  } else if (self === 0) {
+    cls = 'warn'; big = '가능합니다. 전승하면 최소 1위 결정전';
+    sub = '삼성이 남은 경기를 모두 이기고 KT도 나머지를 다 이기면 승률이 같아져 1위 결정전을 치릅니다. KT가 한 번만 더 지면 삼성 단독 1위입니다.';
+  } else {
+    cls = 'warn'; big = '가능하지만 KT가 져 줘야 합니다';
+    sub = '자력 우승은 사라졌습니다. 삼성이 전승해도 KT가 나머지를 다 이기면 KT가 1위라서, KT의 패배가 필요합니다. 아래 조건표에서 몇 패가 필요한지 볼 수 있습니다.';
+  }
+  $('verdict').className = 'verdict ' + cls;
+  $('verdict').innerHTML = '<b class="big">' + big + '</b><p>' + sub + '</p>';
+
+  $('goalTxt').textContent = !c.open.length ? (order > 0 ? '목표를 이뤘습니다.' : '시즌이 끝났습니다.')
+    : c.nA + c.nB === 0 ? '이번 시즌 1위는 어려워졌습니다.'
+    : '지금 확률 ' + fp(c.pA) + '. 삼성은 앞으로 ' + sLeft + '경기, 그중 KT전이 ' + GAMES.filter(x => x.who === 'h2h' && !R[x.id]).length + '경기입니다.';
+
+  renderEasy(R, now, g, sLeft, kLeft);
+  renderNext(R, now);
+  renderDays(R);
+  renderTable(R, now);
+  // 일지는 확정된 결과에서 저절로 만들어진다 (최신이 위)
+  const logs = [];
+  DATES.forEach(d => {
+    const gs = GAMES.filter(x => x.d === d && fixed(x.id));
+    if (!gs.length) return;
+    const a = uptoDate(d), gg = gb(a.kt, a.ss);
+    logs.unshift({ d, t: gs.map(resWord).join(' · ') + ' → ' + (gg > 0 ? 'KT가 ' + fg(gg) + '경기 앞' : gg < 0 ? '삼성이 ' + fg(gg) + '경기 앞' : '게임차 0') + ' (삼성 ' + pct(a.ss) + ' · KT ' + pct(a.kt) + ')' });
+  });
+  logs.push(LOG0);
+  $('log').innerHTML = logs.map(l => '<li><span class="num">' + l.d + '</span><div>' + l.t + '</div></li>').join('');
+  try {
+    localStorage.setItem(KEY, JSON.stringify(SIM));
+    localStorage.setItem(KEY + '-real', JSON.stringify(REAL));
+    localStorage.setItem(KEY + '-mode', mode);
+  } catch (e) {}
+}
+
+// 삼성이 맞대결 hw승, 다른 경기 s승일 때 KT가 다른 경기에서 몇 승까지 해도 되는가
+function allow(now, hN, sN, kN, hw, s) {
+  const ss = { w: now.ss.w + s + hw, l: now.ss.l + (sN - s) + (hN - hw) };
+  let max = -1, tie = -1;
+  for (let k = 0; k <= kN; k++) {
+    const kt = { w: now.kt.w + k + (hN - hw), l: now.kt.l + (kN - k) + hw };
+    const c = cmp(ss, kt);
+    if (c > 0) max = k; else if (c === 0) tie = k;
+  }
+  return { max, tie };
+}
+function left3(R) {
+  return {
+    hN: GAMES.filter(g => g.who === 'h2h' && !R[g.id]).length,
+    sN: GAMES.filter(g => g.who === 'ss' && !R[g.id]).length,
+    kN: GAMES.filter(g => g.who === 'kt' && !R[g.id]).length
+  };
+}
+// 쉬운 요약: 삼성이 이렇게 하면 KT는 몇 번 져야 하는가
+function renderEasy(R, now, g, sLeft, kLeft) {
+  const { hN, sN, kN } = left3(R);
+  if (sLeft + kLeft === 0) { $('easyLead').textContent = '모든 경기가 끝났습니다.'; $('easy').innerHTML = ''; return; }
+  $('easyLead').innerHTML = (g > 0 ? 'KT가 <b>' + fg(g) + '경기</b> 앞서 있습니다. ' : g < 0 ? '삼성이 <b>' + fg(g) + '경기</b> 앞서 있습니다. ' : '두 팀의 게임차가 없습니다. ')
+    + '삼성은 <b>' + sLeft + '경기</b>, KT는 <b>' + kLeft + '경기</b> 남았고' + (hN ? ' 그중 <b>' + hN + '경기</b>는 두 팀이 직접 붙습니다.' : ' 두 팀의 맞대결은 끝났습니다.')
+    + ' 아래는 삼성이 우승하려면 무엇이 필요한지입니다.';
+  const say = a => {
+    if (a.max === kN) return '<b>KT가 다 이겨도 삼성 우승</b>';
+    if (a.max >= 0) return 'KT가 다른 ' + kN + '경기에서 <b>' + (kN - a.max) + '패 이상</b> 하면 삼성 우승' + (a.tie >= 0 ? ' (딱 ' + (kN - a.tie) + '패면 1위 결정전)' : '');
+    if (a.tie >= 0) return 'KT가 다른 ' + kN + '경기를 <b>전부 져야</b> 1위 결정전';
+    return '<b class="no">KT가 다 져도 우승 불가</b>';
+  };
+  const rows = [];
+  const lose = j => j === 0 ? '전승' : j + '패';
+  for (let j = 0; j <= Math.min(2, sN); j++)
+    rows.push({ w: (hN ? 'KT전 ' + hN + '경기 전승 + ' : '') + '다른 ' + sN + '경기 ' + lose(j), a: allow(now, hN, sN, kN, hN, sN - j) });
+  if (hN >= 1) rows.push({ w: 'KT전 ' + (hN - 1) + '승 1패 + 다른 ' + sN + '경기 전승', a: allow(now, hN, sN, kN, hN - 1, sN) });
+  if (hN >= 2) rows.push({ w: 'KT전 ' + (hN - 2) + '승 2패 + 다른 ' + sN + '경기 전승', a: allow(now, hN, sN, kN, hN - 2, sN) });
+  $('easy').innerHTML = rows.map((r, i) => '<div class="case two' + (i === 0 ? ' best' : '') + '"><span class="w">삼성이 ' + r.w + '</span><span class="r">→ ' + say(r.a) + '</span></div>').join('');
+}
+
+// 다음 경기일: 그날 나올 수 있는 결과별로 게임차와 확률을 미리 보여 준다
+function renderNext(R, now) {
+  const box = $('next');
+  const d = DATES.find(x => GAMES.some(g => g.d === x && !R[g.id]));
+  if (!d) { box.innerHTML = '<div class="hd">남은 경기가 없습니다</div>'; return; }
+  const gs = GAMES.filter(g => g.d === d && !R[g.id]);
+  const names = gs.map(g => g.who === 'h2h' ? '삼성 vs KT (' + g.p + ')' : (g.who === 'ss' ? '삼성' : 'KT') + ' vs ' + g.m + ' (' + g.p + ')').join(' · ');
+  let combos = [[]];
+  gs.forEach(g => { combos = combos.flatMap(c => [[...c, 'W'], [...c, 'L']]); });
+  const rows = combos.map(cb => {
+    const res = {...R};
+    const txt = gs.map((g, i) => {
+      res[g.id] = cb[i];
+      if (g.who === 'h2h') return cb[i] === 'W' ? '삼성이 KT를 이기면' : 'KT에 지면';
+      return (g.who === 'ss' ? '삼성 ' : 'KT ') + (cb[i] === 'W' ? '승' : '패');
+    }).join(' · ');
+    const a = apply(res), c = calc(res), gg = gb(a.kt, a.ss);
+    return { txt, gg, p: c.pA + c.pB };
+  }).sort((x, y) => y.p - x.p);
+  box.innerHTML = '<div class="hd">' + d + ' (' + DOW[d] + ')</div><div class="mt">' + names + '</div>'
+    + '<div class="cases">' + rows.map((r, i) => '<div class="case' + (i === 0 ? ' best' : '') + '"><span class="w">' + r.txt + '</span><span class="g num">'
+      + (r.gg > 0 ? '삼성 -' + fg(r.gg) : r.gg < 0 ? '삼성 +' + fg(r.gg) : '게임차 0') + '</span><span class="pr num">1위 ' + fp(r.p) + '</span></div>').join('') + '</div>'
+    + '<p class="note">이날 결과별로 게임차와 삼성 1위 확률(결정전 포함)이 어떻게 바뀌는지입니다. 확률은 위 슬라이더 값으로 계산합니다.</p>';
+}
+
+function renderDays(R) {
+  const box = $('days'); box.innerHTML = '';
+  document.querySelectorAll('#mode button').forEach(b => b.classList.toggle('on', b.dataset.m === mode));
+  $('modeTxt').innerHTML = mode === 'real'
+    ? '경기가 끝나면 여기서 승·무·패를 눌러 <b>실제 결과</b>로 기록하세요. 기록한 경기는 <b>확정</b>으로 표시되고 순위·매직넘버·확률·일지가 그 결과로 다시 계산됩니다. 잘못 눌렀으면 같은 버튼을 한 번 더 누르면 지워집니다.'
+    : '아직 안 한 경기에 <b>가상 결과</b>를 넣어 보는 연습 칸입니다. 누르는 즉시 위쪽 판정과 확률이 바뀌고, 실제 기록은 건드리지 않습니다. 확정된 경기는 잠겨 있습니다.';
+  $('bRealReset').style.display = mode === 'real' && Object.keys(REAL).length ? '' : 'none';
+  DATES.forEach(d => {
+    const gs = GAMES.filter(g => g.d === d);
+    const day = document.createElement('div'); day.className = 'day';
+    // 그날까지 결과가 다 들어갔으면 그날 끝난 뒤 순위를 적는다
+    const upto = GAMES.slice(0, GAMES.indexOf(gs[gs.length - 1]) + 1);
+    let after = '';
+    if (upto.every(g => R[g.id])) {
+      const a = apply(R, g => upto.includes(g)), gg = gb(a.kt, a.ss);
+      after = '삼성 ' + pct(a.ss) + ' · KT ' + pct(a.kt) + ' · ' + (gg > 0 ? 'KT ' + fg(gg) + '경기 앞' : gg < 0 ? '삼성 ' + fg(gg) + '경기 앞' : '게임차 0');
+    }
+    day.innerHTML = '<div class="dt"><b>' + d + ' (' + DOW[d] + ')</b><span class="num">' + after + '</span></div>';
+    gs.forEach(g => {
+      const off = OFFICIAL[g.id], fx = fixed(g.id);
+      const lock = mode === 'real' ? !!off : !!fx;
+      const row = document.createElement('div'); row.className = 'g';
+      const tag = g.who === 'h2h' ? '<span class="tag h">맞대결</span>' : g.who === 'ss' ? '<span class="tag">삼성</span>' : '<span class="tag k">KT</span>';
+      row.innerHTML = '<div class="m">' + tag + (g.who === 'h2h' ? g.m : 'vs ' + g.m) + '<small>' + g.p + ' ' + g.t + '</small>' + (fx ? '<em>확정' + (off && off.s ? ' ' + off.s : '') + '</em>' : SIM[g.id] ? '<em class="s">가상</em>' : '') + '</div>';
+      const labs = g.who === 'h2h' ? [['W','삼성','w'],['T','무','t'],['L','KT','l']] : [['W','승','w'],['T','무','t'],['L','패','l']];
+      const seg = document.createElement('div'); seg.className = 'seg' + (lock ? ' lock' : '');
+      labs.forEach(([val, txt, k]) => {
+        const b = document.createElement('button');
+        b.textContent = txt; b.className = k + (R[g.id] === val ? ' on' : '');
+        if (lock) b.disabled = true;
+        else if (mode === 'real') b.onclick = () => { if (REAL[g.id] === val) delete REAL[g.id]; else { REAL[g.id] = val; delete SIM[g.id]; } render(); };
+        else b.onclick = () => { if (SIM[g.id] === val) delete SIM[g.id]; else SIM[g.id] = val; render(); };
+        seg.appendChild(b);
+      });
+      row.appendChild(seg); day.appendChild(row);
+    });
+    box.appendChild(day);
+  });
+}
+
+// 조건표: 행 = 남은 맞대결 결과, 열 = 삼성이 다른 팀과의 남은 경기에서 거둘 승수
+function renderTable(R, now) {
+  const hN = GAMES.filter(g => g.who === 'h2h' && !R[g.id]).length;
+  const sN = GAMES.filter(g => g.who === 'ss' && !R[g.id]).length;
+  const kN = GAMES.filter(g => g.who === 'kt' && !R[g.id]).length;
+  $('tblLead').innerHTML = '지금 성적에서 남은 경기는 <b>맞대결 ' + hN + '</b>, <b>삼성의 다른 경기 ' + sN + '</b>, <b>KT의 다른 경기 ' + kN + '</b>입니다. 삼성이 어떻게 하면 KT가 몇 승까지 해도 괜찮은지 보여 줍니다.';
+  if (hN + sN + kN === 0) { $('tbl').innerHTML = '<tr><td>남은 경기가 없습니다</td></tr>'; return; }
+  $('tbl').style.minWidth = (110 + (sN + 1) * 52) + 'px';
+  let h = '<tr><th rowspan="2">맞대결<br>' + hN + '경기</th><th colspan="' + (sN + 1) + '">삼성이 다른 팀과의 ' + sN + '경기에서 거둘 승수</th></tr><tr>';
+  for (let s = sN; s >= 0; s--) h += '<th>' + s + '승</th>';
+  h += '</tr>';
+  for (let hw = hN; hw >= 0; hw--) {
+    h += '<tr><td class="rowh">' + (hN ? '삼성 ' + hw + '승 ' + (hN - hw) + '패' : '–') + '</td>';
+    for (let s = sN; s >= 0; s--) {
+      const { max, tie } = allow(now, hN, sN, kN, hw, s);
+      if (max === kN) h += '<td class="any">무조건</td>';
+      else if (max < 0 && tie < 0) h += '<td class="x">불가</td>';
+      else h += '<td class="c">' + (max < 0 ? '–' : max + '승↓') + (tie >= 0 ? '<small>' + tie + '승이면 동률</small>' : '') + '</td>';
+    }
+    h += '</tr>';
+  }
+  $('tbl').innerHTML = h;
+}
+
+function preset(a, b, c, id) {
+  $('s1').value = a; $('s2').value = b; $('s3').value = c;
+  $('pre50').classList.toggle('on', id === 'pre50'); $('preSeason').classList.toggle('on', id === 'preSeason');
+  render();
+}
+$('pre50').onclick = () => preset(50, 50, 50, 'pre50');
+$('preSeason').onclick = () => preset(60, 63, 69, 'preSeason');
+['s1','s2','s3'].forEach(id => $(id).oninput = () => { $('pre50').classList.remove('on'); $('preSeason').classList.remove('on'); render(); });
+$('bAllW').onclick = () => { mode = 'sim'; GAMES.forEach(g => { if (g.who !== 'kt' && !fixed(g.id)) SIM[g.id] = 'W'; }); render(); };
+document.querySelectorAll('#mode button').forEach(b => b.onclick = () => { mode = b.dataset.m; render(); });
+$('bRealReset').onclick = () => { if (confirm('직접 기록한 실제 결과를 모두 지울까요?')) { REAL = {}; render(); } };
+$('bReset').onclick = $('bReset2').onclick = () => { SIM = {}; render(); };
+$('pre50').classList.add('on');
+render();
+</script>
+</body>
+</html>
