@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#0b0708">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="실사 대전">
+<link rel="apple-touch-icon" href="icon-512.png">
 <title>실사 대전 — AI로 찍은 격투게임</title>
 <meta name="description" content="태권도 대 쿵푸 — 모든 동작을 AI 영상으로 찍은 실사 2D 격투게임. 컴퓨터 대전과 1:1 대전, PC·폰 브라우저에서 바로.">
 <link rel="canonical" href="https://kimju.kr/motal/">
@@ -113,7 +119,14 @@ button{font-family:inherit;cursor:pointer}
 .tc.small .btns{grid-template-columns:54px 54px;grid-template-rows:54px 54px}
 #topbtns{position:fixed;bottom:calc(6px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:16;display:flex;gap:8px}
 #topbtns button{border:1px solid rgba(255,255,255,.35);background:rgba(0,0,0,.4);color:#fff;font-size:12px;font-weight:700;padding:6px 10px}
+#fsTip{position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translateX(-50%);z-index:70;background:rgba(0,0,0,.78);border:1px solid rgba(255,255,255,.35);color:#fff;font-size:14px;font-weight:700;padding:9px 16px;pointer-events:none;white-space:nowrap}
+#title .fsb{margin-top:10px;border:1px solid rgba(255,255,255,.5);background:rgba(0,0,0,.45);color:#fff;font-size:14px;font-weight:700;padding:8px 16px}
+#title .ios{margin-top:8px;font-size:13px;color:#ffcf3a;text-shadow:0 1px 4px #000}
 @media (hover:hover) and (pointer:fine){.tc{display:none!important}}
+@media (pointer:coarse){#title .keys{display:none}}
+@media (max-height:460px){#title{gap:6px}#title h1{font-size:76px}#title .kick{font-size:12px}#title .sub{font-size:13px;margin-bottom:8px}
+  .menu button{min-width:170px;padding:10px 16px;font-size:17px}#select{gap:8px}#select h2{font-size:22px}.card{width:clamp(150px,22vw,240px)}.card .info{padding:6px 10px 8px}.card .info b{font-size:18px}.card .info p{display:none}
+  #pause .movelist{gap:8px}#pause .movelist li{font-size:12px;line-height:1.6}}
 </style>
 </head>
 <body>
@@ -129,6 +142,8 @@ button{font-family:inherit;cursor:pointer}
     <button id="m1p" class="focus">컴퓨터와 대전<small>혼자 하기</small></button>
     <button id="m2p">1 : 1 대전<small>한 기기에서 둘이</small></button>
   </div>
+  <button class="fsb" id="tFull">전체 화면으로</button>
+  <p class="ios hide" id="iosTip">아이폰은 공유 버튼 → «홈 화면에 추가»로 열면 주소창 없이 전체 화면으로 즐길 수 있어요</p>
   <div class="keys">
     <b>1P</b> W A S D 이동 · J 주먹 · K 발 · L 필살 &nbsp;|&nbsp; <b>2P</b> 방향키 이동 · 1 주먹 · 2 발 · 3 필살 (숫자패드 가능)<br>
     뒤로 누르면 막기 · 아래+발 다리 쓸기 · 위+발 점프 발차기 · ↓↘→+주먹 필살기(게이지 가득 찼을 때)
@@ -175,7 +190,8 @@ button{font-family:inherit;cursor:pointer}
 
 <div id="rotate" class="ov hide"><div class="ph"></div>폰을 가로로 돌려 주세요</div>
 
-<div id="topbtns" class="hide"><button id="bMute">소리 켬</button><button id="bPause">일시정지</button></div>
+<div id="topbtns" class="hide"><button id="bFull">전체화면</button><button id="bMute">소리 켬</button><button id="bPause">일시정지</button></div>
+<div id="fsTip" class="hide">화면을 누르면 전체 화면으로 바뀝니다</div>
 <div class="tc left hide" id="tc1"><div class="dpad"><i></i></div><div class="btns"><button class="bp" data-b="p">주먹</button><button class="bk" data-b="k">발</button><button class="bs" data-b="s">필살</button></div></div>
 <div class="tc right hide" id="tc2"><div class="dpad"><i></i></div><div class="btns"><button class="bp" data-b="p">주먹</button><button class="bk" data-b="k">발</button><button class="bs" data-b="s">필살</button></div></div>
 
@@ -684,6 +700,36 @@ function resize(){
 }
 addEventListener('resize', resize);
 
+// ══════════ 전체 화면 ══════════
+// 브라우저는 사용자가 한 번 눌러야 전체 화면을 허락한다 → 가로일 때 첫 터치에 바로 전환하고 가로로 고정
+const docEl = document.documentElement;
+const isStandalone = matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches || navigator.standalone;
+const canFull = !!(docEl.requestFullscreen || docEl.webkitRequestFullscreen);
+const isFull = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+const isIOS = /iP(hone|od)/.test(navigator.userAgent) || (/Mac/.test(navigator.platform) && navigator.maxTouchPoints > 1 && !canFull);
+function goFull(){
+  if(isFull() || isStandalone) return;
+  const p = docEl.requestFullscreen ? docEl.requestFullscreen({ navigationUI:'hide' }) : (docEl.webkitRequestFullscreen && docEl.webkitRequestFullscreen());
+  Promise.resolve(p).then(() => { try{ screen.orientation && screen.orientation.lock && screen.orientation.lock('landscape').catch(()=>{}); }catch(e){} }).catch(()=>{});
+}
+function toggleFull(){ if(isFull()){ (document.exitFullscreen || document.webkitExitFullscreen).call(document); } else goFull(); }
+function updFullUi(){
+  const land = VW > VH, need = isTouch && canFull && !isFull() && !isStandalone;
+  $('fsTip').classList.toggle('hide', !(need && land && G.scr==='title'));
+  $('tFull').classList.toggle('hide', !canFull || isStandalone || isTouch);
+  $('bFull').classList.toggle('hide', !canFull || isStandalone);
+  $('bFull').textContent = isFull() ? '창 모드' : '전체화면';
+  $('tFull').textContent = isFull() ? '창 모드로' : '전체 화면으로';
+  $('iosTip').classList.toggle('hide', !(isIOS && !isStandalone));
+}
+// 터치 기기: 가로 상태에서 아무 곳이나 처음 누르면 전체 화면
+addEventListener('pointerdown', () => { if(isTouch && VW > VH) goFull(); }, true);
+document.addEventListener('fullscreenchange', () => { resize(); updFullUi(); });
+document.addEventListener('webkitfullscreenchange', () => { resize(); updFullUi(); });
+addEventListener('resize', updFullUi);
+$('tFull').onclick = e => { e.stopPropagation(); toggleFull(); };
+$('bFull').onclick = () => toggleFull();
+
 function drawStage(name, blur){
   const im = IMG.stage[name]; if(!im) return;
   // 화면 전체를 덮게(레터박스 자리까지)
@@ -814,7 +860,7 @@ function render(){
 
 // ══════════ 화면 전환 ══════════
 const SCREENS = ['loading','title','select','vs','pause','result'];
-function show(id){ SCREENS.forEach(s => $(s).classList.toggle('hide', s!==id)); }
+function show(id){ SCREENS.forEach(s => $(s).classList.toggle('hide', s!==id)); if(typeof updFullUi==='function') setTimeout(updFullUi); }
 function setPlayUi(on){
   $('topbtns').classList.toggle('hide', !on);
   $('tc1').classList.toggle('hide', !on || !isTouch);
@@ -834,7 +880,8 @@ function toTitle(){
   G.P[0].x = LW*.3; G.P[1].x = LW*.7; G.titleStage = 'temple'; G.stage = 'temple';
 }
 function toSelect(){
-  G.scr = 'select'; show('select'); setPlayUi(false); stopMusic(); G.pick = [null,null]; G.selTurn = 0; G.selCur = 0; drawSelect();
+  G.scr = 'select'; show('select'); setPlayUi(false); stopMusic();
+  $('selHint').textContent = isTouch ? '카드를 눌러 고르세요' : '← → 로 고르고 J / Enter 로 결정 · 카드를 눌러도 됩니다'; G.pick = [null,null]; G.selTurn = 0; G.selCur = 0; drawSelect();
 }
 function drawSelect(){
   const cards = [...document.querySelectorAll('.card')];
@@ -902,8 +949,8 @@ function togglePause(){
   G.paused = !G.paused;
   if(G.paused){ show('pause'); focusMenu('pause'); } else { show(null); }
 }
-$('m1p').onclick = () => { audioInit(); mode = '1p'; toSelect(); };
-$('m2p').onclick = () => { audioInit(); mode = '2p'; toSelect(); };
+$('m1p').onclick = () => { audioInit(); if(isTouch) goFull(); mode = '1p'; toSelect(); };
+$('m2p').onclick = () => { audioInit(); if(isTouch) goFull(); mode = '2p'; toSelect(); };
 document.querySelectorAll('.card').forEach((c,i) => c.addEventListener('click', () => { audioInit(); G.selCur = i; selPick(i); }));
 $('bResume').onclick = () => togglePause();
 $('bQuit').onclick = () => toTitle();
@@ -935,7 +982,7 @@ window.__G = { G, step, render, pads, CHARS, META };
 (async () => {
   resize();
   await loadAll();
-  toTitle();
+  toTitle(); updFullUi();
   requestAnimationFrame(frame);
 })();
 </script>
