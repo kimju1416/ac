@@ -44,7 +44,7 @@ img{max-width:100%}
 /* 머리 */
 header{position:sticky;top:0;z-index:30;background:rgba(246,246,243,.88);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--line)}
 .nav{display:flex;align-items:center;gap:28px;height:64px}
-.logo{font-weight:800;font-size:19px;letter-spacing:-.03em;flex-shrink:0}.logo b{background:var(--lime);padding:0 5px;border-radius:5px;margin-left:1px}
+.logo{font-weight:800;font-size:19px;letter-spacing:-.03em;flex-shrink:0}.logo{isolation:isolate}.logo b{position:relative;padding:0 5px;margin-left:1px}.logo b::before{content:'';position:absolute;inset:-1px -6px -2px -1px;background:url(brush.webp) center/100% 100% no-repeat;z-index:-1}
 .nav nav{display:flex;gap:22px;font-size:15px;color:var(--sub);font-weight:500}
 .nav nav a,.nav nav button{background:none;border:0;color:var(--sub);font-weight:500;font-size:15px;position:relative}
 .nav nav a:hover,.nav nav button:hover{color:var(--ink)}
@@ -56,7 +56,7 @@ header{position:sticky;top:0;z-index:30;background:rgba(246,246,243,.88);backdro
 .eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:13px;font-weight:600;color:var(--sub);background:#fff;border:1px solid var(--line);padding:6px 12px;border-radius:999px}
 .eyebrow i{width:7px;height:7px;border-radius:50%;background:#3BB273}
 h1{font-size:clamp(34px,5vw,56px);line-height:1.15;letter-spacing:-.045em;font-weight:800;margin:20px 0 18px}
-h1 mark{background:linear-gradient(transparent 58%,var(--lime) 58%);color:inherit;padding:0 2px}
+h1{isolation:isolate}h1 mark{position:relative;background:none;color:inherit;padding:0 2px}h1 mark::before{content:'';position:absolute;left:-7%;top:8%;width:116%;height:92%;background:url(brush.webp) center/100% 100% no-repeat;z-index:-1}
 .lead{font-size:18px;line-height:1.7;color:var(--sub);max-width:30em}
 .hash{font-size:14px;color:var(--mute);margin-top:10px;letter-spacing:.01em}
 .search{margin-top:30px;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px 6px 6px 16px;max-width:500px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
@@ -236,6 +236,14 @@ details.steps li b{color:var(--ink)}
 }
 @media(max-width:600px){.row{grid-template-columns:1fr 1fr}.row .rk:first-child{grid-column:1/-1}}
 @media(max-width:430px){.me,.visits{max-width:270px}h1{font-size:33px}.lead{font-size:16.5px}}
+/* 휴대폰: 캐릭터를 맨 위 가로 배너로 */
+@media(max-width:560px){.hero{display:flex;flex-direction:column;align-items:stretch;gap:0;padding-top:18px}.hero>div:first-child{display:contents}
+.side{order:0;margin-bottom:22px;width:100%}.eyebrow{order:1;align-self:flex-start}.hero h1{order:2}.lead{order:3}.hash{order:4}.search{order:6}.tags{order:7}
+.me,.me:hover{max-width:none;width:100%;transform:none;padding:0;border:0;background:none;position:relative}
+.me .pic{aspect-ratio:16/10;border-radius:20px}.me .pic img{object-position:50% 22%}
+.me .who{position:absolute;left:10px;right:10px;bottom:10px;background:rgba(255,255,255,.94);border-radius:14px;padding:10px 12px}
+.me h3{font-size:15px}.me p{font-size:12px}.me .btn{height:34px;font-size:12.5px}
+.visits{max-width:none;margin-top:8px}}
 </style>
 </head>
 <body>
@@ -280,7 +288,7 @@ details.steps li b{color:var(--ink)}
     </div>
     <div class="side">
       <a class="me" href="about/">
-        <div class="pic"><img src="30020.webp" alt="kimju.zip 캐릭터 — 호루라기를 목에 건 체육교사가 노트북으로 코딩하는 그림" width="400" height="400"></div>
+        <div class="pic"><img src="30020-l.webp" alt="kimju.zip 캐릭터 — 호루라기를 목에 건 체육교사가 노트북으로 코딩하는 그림" width="400" height="400"></div>
         <div class="who"><div><h3>김주현 <span>@kimju.zip</span></h3><p>불편함을 코딩으로 해결하는 15년차 체육교사</p></div><span class="btn">소개 보기</span></div>
       </a>
       <div class="visits"><span>오늘<b id="vToday">—</b></span><span>누적 방문<b id="vTotal">—</b></span></div>

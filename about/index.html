@@ -22,7 +22,7 @@ body{background:var(--bg);color:var(--ink);font-family:'Pretendard Variable',Pre
 a{color:inherit;text-decoration:none}
 header{position:sticky;top:0;z-index:30;background:rgba(246,246,243,.88);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--line)}
 .nav{max-width:1000px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between}
-.logo{font-weight:800;font-size:19px;letter-spacing:-.03em}.logo b{background:var(--lime);padding:0 5px;border-radius:5px;margin-left:1px}
+.logo{font-weight:800;font-size:19px;letter-spacing:-.03em}.logo{isolation:isolate}.logo b{position:relative;padding:0 5px;margin-left:1px}.logo b::before{content:'';position:absolute;inset:-1px -6px -2px -1px;background:url(../brush.webp) center/100% 100% no-repeat;z-index:-1}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 16px;border-radius:999px;font-size:14px;font-weight:600;border:1px solid var(--line);background:#fff;white-space:nowrap}
 .btn:hover{border-color:#cfcfc8}
 .btn.dark{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -32,7 +32,7 @@ main{max-width:1000px;margin:0 auto;padding:56px 24px 72px}
 .pic img{width:100%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:16px;display:block}
 .tag{display:inline-block;font-size:13px;font-weight:600;color:var(--sub);background:#fff;border:1px solid var(--line);padding:6px 12px;border-radius:999px}
 h1{font-size:clamp(34px,5vw,52px);letter-spacing:-.045em;line-height:1.15;font-weight:800;margin:16px 0 10px}
-h1 mark{background:linear-gradient(transparent 58%,var(--lime) 58%);color:inherit;padding:0 2px}
+h1{isolation:isolate}h1 mark{position:relative;background:none;color:inherit;padding:0 2px}h1 mark::before{content:'';position:absolute;left:-7%;top:8%;width:116%;height:92%;background:url(../brush.webp) center/100% 100% no-repeat;z-index:-1}
 .role{font-size:18px;color:var(--sub)}
 .hero .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:22px}
 .sec{background:#fff;border:1px solid var(--line);border-radius:24px;padding:32px 34px;margin-bottom:18px}
