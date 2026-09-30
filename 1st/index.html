@@ -115,10 +115,6 @@ img{display:block;max-width:100%}
 .seg button.on.t{background:#8A94A6;color:#fff}
 .seg.lock button{cursor:default}
 .seg.lock button:not(.on){color:#C3CAD6}
-.mode{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:10px}
-.mode button{font:inherit;font-size:14px;font-weight:600;height:42px;border:0;background:#fff;color:var(--sub);cursor:pointer}
-.mode button+button{border-left:1px solid var(--line)}
-.mode button.on{background:var(--pt);color:#fff}
 .g .m em.s{color:var(--warn);background:var(--warn-bg)}
 .tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
 .banner{border-radius:14px;overflow:hidden;margin-bottom:12px;background:#0B1B33}
@@ -167,7 +163,6 @@ details p{font-size:14px;color:var(--sub);margin-top:6px}
 
 <div class="wrap">
   <div id="verdict" class="verdict"></div>
-  <div class="sim" id="sim"><span>연습으로 넣은 가상 결과가 섞여 있습니다.</span><button id="bReset">가상 결과 지우기</button></div>
 
   <div class="lab">쉽게 말하면</div>
   <div class="card">
@@ -191,16 +186,11 @@ details p{font-size:14px;color:var(--sub);margin-top:6px}
   <div class="lab">날짜별 경기와 결과</div>
   <div class="card">
     <div class="banner"><img src="img/duel.jpg" alt=""></div>
-    <div class="mode" id="mode">
-      <button data-m="real">실제 결과 기록</button>
-      <button data-m="sim">경우의 수 연습</button>
-    </div>
-    <p class="p" id="modeTxt" style="margin-bottom:14px"></p>
+    <p class="p" style="margin-bottom:14px">경기가 끝나면 승·무·패를 눌러 기록하세요. 누르는 즉시 맨 위 띠와 순위·조건표·일지가 그 결과로 다시 계산됩니다. 같은 버튼을 한 번 더 누르면 지워지니, 아직 안 한 경기에 미리 넣어 보며 경우의 수를 따져 봐도 됩니다.</p>
     <div id="days"></div>
     <div class="tools">
       <button class="btn" id="bAllW">삼성 남은 경기 전승 넣어 보기</button>
-      <button class="btn" id="bReset2">가상 결과 지우기</button>
-      <button class="btn" id="bRealReset">기록한 실제 결과 지우기</button>
+      <button class="btn" id="bRealReset">기록 전부 지우기</button>
     </div>
   </div>
 
@@ -285,22 +275,17 @@ const GAMES = [
 const DOW = {'9/30':'수','10/1':'목','10/3':'토','10/4':'일','10/5':'월','10/6':'화','10/7':'수','10/9':'금','10/11':'일','10/12':'월'};
 const DATES = [...new Set(GAMES.map(g => g.d))];
 const KEY = 'samsung1st-2026-v2';
-let SIM = {};   // 연습으로 넣어 본 가상 결과 (id -> 'W'|'L'|'T')
-let REAL = {};  // 화면에서 직접 기록한 실제 결과
-let mode = 'real';
-try { SIM = JSON.parse(localStorage.getItem(KEY) || '{}') || {}; } catch (e) { SIM = {}; }
+let REAL = {};  // 화면에서 직접 기록한 결과 (id -> 'W'|'L'|'T')
 try { REAL = JSON.parse(localStorage.getItem(KEY + '-real') || '{}') || {}; } catch (e) { REAL = {}; }
-try { mode = localStorage.getItem(KEY + '-mode') === 'sim' ? 'sim' : 'real'; } catch (e) {}
 // 확정된 실제 결과: 파일에 박은 것이 먼저, 다음이 화면에서 기록한 것
 function fixed(id) { return OFFICIAL[id] ? OFFICIAL[id].r : REAL[id]; }
 const $ = id => document.getElementById(id);
 
-// 확정 결과가 가상 결과보다 먼저다
+// 기록된 결과만 모은다
 function merged() {
   const r = {};
   GAMES.forEach(g => {
     if (fixed(g.id)) r[g.id] = fixed(g.id);
-    else if (SIM[g.id]) r[g.id] = SIM[g.id];
   });
   return r;
 }
@@ -379,14 +364,12 @@ function render() {
   const now = apply(R);
   const leftOf = who => GAMES.filter(g => !R[g.id] && (g.who === who || g.who === 'h2h')).length;
   const sLeft = leftOf('ss'), kLeft = leftOf('kt');
-  const hasSim = GAMES.some(g => !fixed(g.id) && SIM[g.id]);
   // 앞에서부터 빠짐없이 확정된 마지막 날
   let lastDone = null;
   for (const d of DATES) { if (GAMES.filter(x => x.d === d).every(x => fixed(x.id))) lastDone = d; else break; }
   const order = cmp(now.ss, now.kt);
 
   $('upd').textContent = (lastDone || '9/29') + ' 경기까지 반영 · 맞대결 ' + GAMES.filter(x => x.who === 'h2h' && !fixed(x.id)).length + '경기 남음';
-  $('sim').classList.toggle('on', hasSim);
   $('ssNm').textContent = '삼성 (' + (order > 0 ? '1위' : order === 0 ? '공동 1위' : '2위') + ')';
   $('ktNm').textContent = 'KT (' + (order < 0 ? '1위' : order === 0 ? '공동 1위' : '2위') + ')';
   $('ssPct').textContent = pct(now.ss); $('ktPct').textContent = pct(now.kt);
@@ -437,7 +420,7 @@ function render() {
   // 떠 있는 띠: 누를 때마다 여기서 바로 바뀐다
   const lvTxt = short + '|' + fp(c.pA) + '|' + mS + '|' + g;
   const live = $('live');
-  $('lvV').textContent = short + (hasSim ? ' (가상 포함)' : '');
+  $('lvV').textContent = short;
   $('lvP').textContent = c.open.length ? '단독 1위 확률 ' + fp(c.pA) : '';
   $('lvG').textContent = (mS === null || mS === 0 ? '' : '매직넘버 ' + mS + ' · ')
     + (g > 0 ? 'KT에 ' + fg(g) + '경기 뒤' : g < 0 ? 'KT에 ' + fg(g) + '경기 앞' : 'KT와 게임차 0')
@@ -467,9 +450,7 @@ function render() {
   logs.push(LOG0);
   $('log').innerHTML = logs.map(l => '<li><span class="num">' + l.d + '</span><div>' + l.t + '</div></li>').join('');
   try {
-    localStorage.setItem(KEY, JSON.stringify(SIM));
     localStorage.setItem(KEY + '-real', JSON.stringify(REAL));
-    localStorage.setItem(KEY + '-mode', mode);
   } catch (e) {}
 }
 
@@ -515,11 +496,7 @@ function renderEasy(R, now, g, sLeft, kLeft) {
 
 function renderDays(R) {
   const box = $('days'); box.innerHTML = '';
-  document.querySelectorAll('#mode button').forEach(b => b.classList.toggle('on', b.dataset.m === mode));
-  $('modeTxt').innerHTML = mode === 'real'
-    ? '경기가 끝나면 여기서 승·무·패를 눌러 <b>실제 결과</b>로 기록하세요. 기록한 경기는 <b>확정</b>으로 표시되고 순위·매직넘버·확률·일지가 그 결과로 다시 계산됩니다. 잘못 눌렀으면 같은 버튼을 한 번 더 누르면 지워집니다.'
-    : '아직 안 한 경기에 <b>가상 결과</b>를 넣어 보는 연습 칸입니다. 누르는 즉시 위쪽 판정과 확률이 바뀌고, 실제 기록은 건드리지 않습니다. 확정된 경기는 잠겨 있습니다.';
-  $('bRealReset').style.display = mode === 'real' && Object.keys(REAL).length ? '' : 'none';
+  $('bRealReset').style.display = Object.keys(REAL).length ? '' : 'none';
   DATES.forEach(d => {
     const gs = GAMES.filter(g => g.d === d);
     const day = document.createElement('div'); day.className = 'day';
@@ -533,18 +510,17 @@ function renderDays(R) {
     day.innerHTML = '<div class="dt"><b>' + d + ' (' + DOW[d] + ')</b><span class="num">' + after + '</span></div>';
     gs.forEach(g => {
       const off = OFFICIAL[g.id], fx = fixed(g.id);
-      const lock = mode === 'real' ? !!off : !!fx;
+      const lock = !!off;
       const row = document.createElement('div'); row.className = 'g';
       const tag = g.who === 'h2h' ? '<span class="tag h">맞대결</span>' : g.who === 'ss' ? '<span class="tag">삼성</span>' : '<span class="tag k">KT</span>';
-      row.innerHTML = '<div class="m">' + tag + (g.who === 'h2h' ? g.m : 'vs ' + g.m) + '<small>' + g.p + ' ' + g.t + '</small>' + (fx ? '<em>확정' + (off && off.s ? ' ' + off.s : '') + '</em>' : SIM[g.id] ? '<em class="s">가상</em>' : '') + '</div>';
+      row.innerHTML = '<div class="m">' + tag + (g.who === 'h2h' ? g.m : 'vs ' + g.m) + '<small>' + g.p + ' ' + g.t + '</small>' + (off ? '<em>확정' + (off.s ? ' ' + off.s : '') + '</em>' : '') + '</div>';
       const labs = g.who === 'h2h' ? [['W','삼성','w'],['T','무','t'],['L','KT','l']] : [['W','승','w'],['T','무','t'],['L','패','l']];
       const seg = document.createElement('div'); seg.className = 'seg' + (lock ? ' lock' : '');
       labs.forEach(([val, txt, k]) => {
         const b = document.createElement('button');
         b.textContent = txt; b.className = k + (R[g.id] === val ? ' on' : '');
         if (lock) b.disabled = true;
-        else if (mode === 'real') b.onclick = () => { if (REAL[g.id] === val) delete REAL[g.id]; else { REAL[g.id] = val; delete SIM[g.id]; } render(); };
-        else b.onclick = () => { if (SIM[g.id] === val) delete SIM[g.id]; else SIM[g.id] = val; render(); };
+        else b.onclick = () => { if (REAL[g.id] === val) delete REAL[g.id]; else REAL[g.id] = val; render(); };
         seg.appendChild(b);
       });
       row.appendChild(seg); day.appendChild(row);
@@ -585,10 +561,8 @@ function preset(a, b, c, id) {
 $('pre50').onclick = () => preset(50, 50, 50, 'pre50');
 $('preSeason').onclick = () => preset(60, 63, 69, 'preSeason');
 ['s1','s2','s3'].forEach(id => $(id).oninput = () => { $('pre50').classList.remove('on'); $('preSeason').classList.remove('on'); render(); });
-$('bAllW').onclick = () => { mode = 'sim'; GAMES.forEach(g => { if (g.who !== 'kt' && !fixed(g.id)) SIM[g.id] = 'W'; }); render(); };
-document.querySelectorAll('#mode button').forEach(b => b.onclick = () => { mode = b.dataset.m; render(); });
-$('bRealReset').onclick = () => { if (confirm('직접 기록한 실제 결과를 모두 지울까요?')) { REAL = {}; render(); } };
-$('bReset').onclick = $('bReset2').onclick = () => { SIM = {}; render(); };
+$('bAllW').onclick = () => { GAMES.forEach(g => { if (g.who !== 'kt' && !fixed(g.id)) REAL[g.id] = 'W'; }); render(); };
+$('bRealReset').onclick = () => { if (confirm('기록한 결과를 모두 지울까요?')) { REAL = {}; render(); } };
 $('pre50').classList.add('on');
 render();
 </script>
