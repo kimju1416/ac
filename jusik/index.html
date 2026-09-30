@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>STOCKPULSE</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{--bg:#F6F8FB;--tx:#1B2A41;--tx2:#64748B;--line:#E3E9F2;--accent:#2456A6}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);color:var(--tx);font:15px/1.6 Pretendard,sans-serif}
+.box{padding:24px;max-width:340px;text-align:center}
+h1{font-size:20px;margin:0 0 8px}
+p{color:var(--tx2);margin:0 0 16px}
+button{height:44px;padding:0 20px;border:0;border-radius:10px;background:var(--accent);color:#fff;font:600 15px Pretendard,sans-serif;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="box">
+  <h1>STOCKPULSE</h1>
+  <p id="m">연결 중입니다.</p>
+  <button id="b" hidden onclick="location.reload()">다시 시도</button>
+</div>
+<script>
+(async()=>{
+  const m=document.getElementById('m'), b=document.getElementById('b');
+  try{
+    const t=await (await fetch('target.json?'+Date.now(),{cache:'no-store'})).json();
+    if(!t.url) throw 0;
+    const ctl=new AbortController(); setTimeout(()=>ctl.abort(),6000);
+    const r=await fetch(t.url+'/api/status',{signal:ctl.signal});
+    if(!r.ok) throw 0;
+    location.replace(t.url+'/'+location.hash);
+  }catch(e){
+    m.textContent='서버가 꺼져 있습니다. 집 PC에서 STOCKPULSE 를 실행한 뒤 다시 시도하세요.';
+    b.hidden=false;
+  }
+})();
+</script>
+</body>
+</html>
