@@ -188,28 +188,6 @@ details p{font-size:14px;color:var(--sub);margin-top:6px}
   </div>
   <p class="note" id="mgNote"></p>
 
-  <div class="lab">다음 경기</div>
-  <div class="card next" id="next"></div>
-
-  <div class="lab">삼성이 1위 할 확률</div>
-  <div class="card">
-    <div class="bar"><i class="a" id="bA"></i><i class="b" id="bB"></i><i class="c" id="bC"></i></div>
-    <div class="leg">
-      <span class="a">삼성 단독 1위 <b class="num" id="pA"></b></span>
-      <span class="b">동률 · 1위 결정전 <b class="num" id="pB"></b></span>
-      <span class="c">KT 1위 <b class="num" id="pC"></b></span>
-    </div>
-    <p class="note" id="cnt"></p>
-    <div class="pre">
-      <button class="btn" id="pre50">모든 경기 반반</button>
-      <button class="btn" id="preSeason">올 시즌 승률대로</button>
-    </div>
-    <div class="sl"><span>삼성이 다른 팀을 이길 확률</span><output class="num" id="o1"></output><input type="range" id="s1" min="0" max="100" value="50"></div>
-    <div class="sl"><span>KT가 다른 팀을 이길 확률</span><output class="num" id="o2"></output><input type="range" id="s2" min="0" max="100" value="50"></div>
-    <div class="sl"><span>맞대결에서 삼성이 이길 확률</span><output class="num" id="o3"></output><input type="range" id="s3" min="0" max="100" value="50"></div>
-    <p class="note">아직 결과가 없는 경기만 계산합니다. 「올 시즌 승률대로」는 삼성 .603, KT .626, 맞대결은 삼성 9승 4패(69%)를 넣습니다. 무승부는 확률 계산에서 뺐습니다.</p>
-  </div>
-
   <div class="lab">날짜별 경기와 결과</div>
   <div class="card">
     <div class="banner"><img src="img/duel.jpg" alt=""></div>
@@ -249,6 +227,25 @@ details p{font-size:14px;color:var(--sub);margin-top:6px}
     <details><summary>매직넘버는 무엇인가요</summary><p>우승 확정까지 남은 숫자입니다. 삼성 매직넘버는 「삼성의 승리 + KT의 패배」가 합쳐서 그만큼 쌓이면 삼성 1위가 확정된다는 뜻입니다. 맞대결에서 삼성이 이기면 삼성 승리와 KT 패배가 동시에 생겨 한 번에 2 이상 줄어듭니다. 0이 되면 확정입니다. KT 매직넘버는 반대로 「KT의 승리 + 삼성의 패배」를 셉니다.</p></details>
     <details><summary>승률이 똑같이 끝나면요</summary><p>정규시즌 1위 두 팀의 승률이 같으면 1위 결정전을 한 경기 더 치러 우승팀을 정합니다. 이 앱에서는 「동률 · 1위 결정전」으로 따로 셉니다.</p></details>
     <details><summary>자력 우승이 무슨 뜻인가요</summary><p>KT가 어떻게 하든 상관없이, 삼성이 자기 경기만 다 이기면 1위가 되는 상태입니다. 맞대결이 남아 있어서 삼성이 이길 때 KT는 반드시 지기 때문에 가능합니다.</p></details>
+  </div>
+
+  <div class="lab">삼성이 1위 할 확률</div>
+  <div class="card">
+    <div class="bar"><i class="a" id="bA"></i><i class="b" id="bB"></i><i class="c" id="bC"></i></div>
+    <div class="leg">
+      <span class="a">삼성 단독 1위 <b class="num" id="pA"></b></span>
+      <span class="b">동률 · 1위 결정전 <b class="num" id="pB"></b></span>
+      <span class="c">KT 1위 <b class="num" id="pC"></b></span>
+    </div>
+    <p class="note" id="cnt"></p>
+    <div class="pre">
+      <button class="btn" id="pre50">모든 경기 반반</button>
+      <button class="btn" id="preSeason">올 시즌 승률대로</button>
+    </div>
+    <div class="sl"><span>삼성이 다른 팀을 이길 확률</span><output class="num" id="o1"></output><input type="range" id="s1" min="0" max="100" value="50"></div>
+    <div class="sl"><span>KT가 다른 팀을 이길 확률</span><output class="num" id="o2"></output><input type="range" id="s2" min="0" max="100" value="50"></div>
+    <div class="sl"><span>맞대결에서 삼성이 이길 확률</span><output class="num" id="o3"></output><input type="range" id="s3" min="0" max="100" value="50"></div>
+    <p class="note">아직 결과가 없는 경기만 계산합니다. 「올 시즌 승률대로」는 삼성 .603, KT .626, 맞대결은 삼성 9승 4패(69%)를 넣습니다. 무승부는 확률 계산에서 뺐습니다.</p>
   </div>
 
   <p class="src">순위와 남은 16경기의 날짜·상대·구장·시각은 KBO 공식 홈페이지와 대조했습니다(9월 30일 확인). 비로 취소돼 날짜가 바뀌면 일정은 달라질 수 있습니다.</p>
@@ -457,7 +454,6 @@ function render() {
     : '지금 확률 ' + fp(c.pA) + '. 삼성은 앞으로 ' + sLeft + '경기, 그중 KT전이 ' + GAMES.filter(x => x.who === 'h2h' && !R[x.id]).length + '경기입니다.';
 
   renderEasy(R, now, g, sLeft, kLeft);
-  renderNext(R, now);
   renderDays(R);
   renderTable(R, now);
   // 일지는 확정된 결과에서 저절로 만들어진다 (최신이 위)
@@ -515,31 +511,6 @@ function renderEasy(R, now, g, sLeft, kLeft) {
   if (hN >= 1) rows.push({ w: 'KT전 ' + (hN - 1) + '승 1패 + 다른 ' + sN + '경기 전승', a: allow(now, hN, sN, kN, hN - 1, sN) });
   if (hN >= 2) rows.push({ w: 'KT전 ' + (hN - 2) + '승 2패 + 다른 ' + sN + '경기 전승', a: allow(now, hN, sN, kN, hN - 2, sN) });
   $('easy').innerHTML = rows.map((r, i) => '<div class="case two' + (i === 0 ? ' best' : '') + '"><span class="w">삼성이 ' + r.w + '</span><span class="r">→ ' + say(r.a) + '</span></div>').join('');
-}
-
-// 다음 경기일: 그날 나올 수 있는 결과별로 게임차와 확률을 미리 보여 준다
-function renderNext(R, now) {
-  const box = $('next');
-  const d = DATES.find(x => GAMES.some(g => g.d === x && !R[g.id]));
-  if (!d) { box.innerHTML = '<div class="hd">남은 경기가 없습니다</div>'; return; }
-  const gs = GAMES.filter(g => g.d === d && !R[g.id]);
-  const names = gs.map(g => g.who === 'h2h' ? '삼성 vs KT (' + g.p + ')' : (g.who === 'ss' ? '삼성' : 'KT') + ' vs ' + g.m + ' (' + g.p + ')').join(' · ');
-  let combos = [[]];
-  gs.forEach(g => { combos = combos.flatMap(c => [[...c, 'W'], [...c, 'L']]); });
-  const rows = combos.map(cb => {
-    const res = {...R};
-    const txt = gs.map((g, i) => {
-      res[g.id] = cb[i];
-      if (g.who === 'h2h') return cb[i] === 'W' ? '삼성이 KT를 이기면' : 'KT에 지면';
-      return (g.who === 'ss' ? '삼성 ' : 'KT ') + (cb[i] === 'W' ? '승' : '패');
-    }).join(' · ');
-    const a = apply(res), c = calc(res), gg = gb(a.kt, a.ss);
-    return { txt, gg, p: c.pA + c.pB };
-  }).sort((x, y) => y.p - x.p);
-  box.innerHTML = '<div class="hd">' + d + ' (' + DOW[d] + ')</div><div class="mt">' + names + '</div>'
-    + '<div class="cases">' + rows.map((r, i) => '<div class="case' + (i === 0 ? ' best' : '') + '"><span class="w">' + r.txt + '</span><span class="g num">'
-      + (r.gg > 0 ? '삼성 -' + fg(r.gg) : r.gg < 0 ? '삼성 +' + fg(r.gg) : '게임차 0') + '</span><span class="pr num">1위 ' + fp(r.p) + '</span></div>').join('') + '</div>'
-    + '<p class="note">이날 결과별로 게임차와 삼성 1위 확률(결정전 포함)이 어떻게 바뀌는지입니다. 확률은 위 슬라이더 값으로 계산합니다.</p>';
 }
 
 function renderDays(R) {
