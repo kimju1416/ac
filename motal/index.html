@@ -678,6 +678,11 @@ function animate(F, dt){
   F.fp += dt * m.fps * F.spd * rec; F.t += dt;
   const fr = Math.floor(F.fp);
   if(F.push){ F.x += F.push*dt; F.push *= Math.pow(.0006, dt); if(Math.abs(F.push) < 6) F.push = 0; }
+  // 공중에서 맞거나 K.O 당하면 중력으로 떨어진다(점프 중이 아닐 때도)
+  if(F.st!=='jump' && F.y > 0){
+    F.vy = (F.vy||0) - 5000*dt; F.y += F.vy*dt; F.x += (F.vx||0)*dt;
+    if(F.y <= 0){ F.y = 0; F.vy = 0; F.vx = 0; sfx('land'); dust(F.x, 0, 1); shakeIt(.12); }
+  }
   switch(F.st){
     case 'idle': F.f = fr % m.n; break;
     case 'intro': F.f = Math.min(fr, m.n-1); break;
@@ -801,8 +806,9 @@ function resolveHit(A, D, spec, mv, dmg, last, hx){
   if(D.hp <= 0) return ko(A, D, spec);
   D.dir = -A.dir;
   if(spec.launch && last){ launch(A, D); return; }
+  if(D.y > 4){ D.vy = Math.max(D.vy||0, 0) + 300; D.vx = A.dir*260; D.airAtk = false; D.set('down','knockdown', { spd:SPD.knockdown }); D.thud = false; return; }
   if(spec.cost && !last){ D.set('hit','hitbody', { spd:2.6 }); pushApart(A, D, 25); return; }
-  if(D.y > 4 || (spec.knock && last)){ D.y = 0; D.vy = 0; D.vx = 0; D.set('down','knockdown', { spd:SPD.knockdown }); D.thud = false; pushApart(A, D, 240); return; }
+  if(spec.knock && last){ D.vy = 0; D.vx = 0; D.set('down','knockdown', { spd:SPD.knockdown }); D.thud = false; pushApart(A, D, 240); return; }
   D.set('hit', (spec.lv==='high'||spec.lv==='over') ? 'hithigh' : 'hitbody'); D.vx = 0;
   pushApart(A, D, 190);
 }
@@ -863,7 +869,8 @@ function flashFx(F){ G.fx.push({type:'ring', x:F.x, y:F.y + F.H*.6, t:0, life:.4
 
 // ══════════ K.O · 판 넘김 ══════════
 function ko(A, D, spec){
-  D.dir = -A.dir;
+  D.dir = -A.dir; D.airAtk = false;
+  if(D.y > 4){ D.vy = 420; D.vx = A.dir*300; }   // 공중에서 K.O → 튕겨 올랐다가 떨어진다
   if(spec && (spec.launch || spec.cost)){ D.set('launch','launch', { spd:SPD.launch*.8 }); D.thud = false; D.fromF = 0; }
   else { D.set('ko','ko'); D.thud = false; D.push = A.dir*140; }
   G.phase = 'ko'; G.pt = 0; G.slow = .28; G.hitstop = .3; shakeIt(.45); sfx('hit',1.9);
