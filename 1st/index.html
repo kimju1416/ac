@@ -53,6 +53,30 @@ img{display:block;max-width:100%}
 .sim{display:none;margin-top:10px;font-size:13px;font-weight:600;color:var(--warn);background:var(--warn-bg);border-radius:10px;padding:8px 12px}
 .sim.on{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .sim button{font:inherit;font-size:13px;font-weight:600;border:1px solid #EFD9B0;background:#fff;color:var(--warn);border-radius:10px;padding:5px 10px;cursor:pointer;white-space:nowrap}
+/* 우승까지 가는 길 */
+.path{display:grid;gap:2px;margin:4px 0 12px}
+.path i{display:block;aspect-ratio:1;transform:rotate(45deg) scale(.66);border:2px solid #B9CDE9;border-radius:3px;background:#fff;transition:background .3s,border-color .3s}
+.path i.on{background:var(--pt);border-color:var(--pt)}
+.path i.last{border-color:#D9A520}
+.path i.last.on{background:#D9A520}
+.path.dead i{border-color:#D5DAE3}
+.path.dead i.on{background:#B4BCCA;border-color:#B4BCCA}
+/* 승률 흐름 */
+.chart svg{display:block;width:100%;height:auto}
+.chart .lg{display:flex;gap:16px;font-size:13px;margin-bottom:6px}
+.chart .lg span::before{content:"";display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}
+.chart .lg .a::before{background:var(--pt)}.chart .lg .b::before{background:var(--kt)}
+/* 팀 표시 */
+.mk{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;color:#fff;font-size:10px;font-weight:700;margin-right:5px;vertical-align:-5px;letter-spacing:-0.02em}
+.g .m .vs{font-size:12px;color:var(--sub);margin:0 5px 0 4px}
+/* 우승 축하 */
+.party{position:fixed;inset:0;z-index:50;background:rgba(4,22,52,.9);display:none;align-items:center;justify-content:center;padding:24px;text-align:center;color:#fff}
+.party.on{display:flex}
+.party img{width:min(280px,70vw);border-radius:14px;margin:0 auto 18px}
+.party b{display:block;font-size:26px;font-weight:700;line-height:1.3}
+.party p{font-size:15px;opacity:.85;margin-top:6px}
+.party button{font:inherit;font-size:14px;font-weight:600;margin-top:20px;padding:10px 20px;border-radius:10px;border:0;background:#fff;color:var(--pt);cursor:pointer}
+#confetti{position:fixed;inset:0;z-index:60;pointer-events:none;width:100%;height:100%}
 /* 순위 */
 .rec{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .team{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px}
@@ -164,6 +188,13 @@ details p{font-size:14px;color:var(--sub);margin-top:6px}
 <div class="wrap">
   <div id="verdict" class="verdict"></div>
 
+  <div class="lab">우승까지 가는 길</div>
+  <div class="card">
+    <div class="path" id="path"></div>
+    <p class="p" id="pathTxt"></p>
+    <div class="tools"><button class="btn" id="bShare">오늘 상황 카드 저장·공유</button></div>
+  </div>
+
   <div class="lab">쉽게 말하면</div>
   <div class="card">
     <p class="p" id="easyLead"></p>
@@ -182,6 +213,13 @@ details p{font-size:14px;color:var(--sub);margin-top:6px}
     <div><b class="num" id="mgK"></b><span>KT 매직넘버</span></div>
   </div>
   <p class="note" id="mgNote"></p>
+
+  <div class="lab">승률 흐름</div>
+  <div class="card chart">
+    <div class="lg"><span class="a">삼성 <b class="num" id="cgS"></b></span><span class="b">KT <b class="num" id="cgK"></b></span></div>
+    <div id="chart"></div>
+    <p class="note" id="chartNote"></p>
+  </div>
 
   <div class="lab">날짜별 경기와 결과</div>
   <div class="card">
@@ -241,6 +279,14 @@ details p{font-size:14px;color:var(--sub);margin-top:6px}
   <p class="src">순위와 남은 16경기의 날짜·상대·구장·시각은 KBO 공식 홈페이지와 대조했습니다(9월 30일 확인). 비로 취소돼 날짜가 바뀌면 일정은 달라질 수 있습니다.</p>
 </div>
 
+<div class="party" id="party"><div>
+  <img src="img/trophy.jpg" alt="">
+  <b>삼성 라이온즈<br>정규리그 우승</b>
+  <p id="partyTxt"></p>
+  <button id="partyClose">닫기</button>
+</div></div>
+<canvas id="confetti"></canvas>
+
 <script>
 /* ───────── 파일에 박아 두는 결과(선택) ─────────
    화면의 「실제 결과 기록」으로 직접 넣으면 이 자리는 안 고쳐도 된다.
@@ -272,6 +318,12 @@ const GAMES = [
   {id:'h2',t:'14:00',who:'h2h',d:'10/11',m:'삼성 vs KT',p:'대구'},
   {id:'h3',t:'18:30',who:'h2h',d:'10/12',m:'삼성 vs KT',p:'대구'}
 ];
+// 팀 색과 머리글자 (공식 로고가 아니라 색으로만 구분한다)
+const TEAM = {
+  '삼성':{c:'#074CA1',l:'S'}, 'KT':{c:'#111111',l:'kt'}, '한화':{c:'#F37321',l:'E'}, '두산':{c:'#1A1748',l:'D'},
+  'KIA':{c:'#EA0029',l:'T'}, 'SSG':{c:'#CE0E2D',l:'L'}, '롯데':{c:'#041E42',l:'G'}, '키움':{c:'#820024',l:'H'}
+};
+const mk = n => '<span class="mk" style="background:' + TEAM[n].c + '">' + TEAM[n].l + '</span>' + n;
 const DOW = {'9/30':'수','10/1':'목','10/3':'토','10/4':'일','10/5':'월','10/6':'화','10/7':'수','10/9':'금','10/11':'일','10/12':'월'};
 const DATES = [...new Set(GAMES.map(g => g.d))];
 const KEY = 'samsung1st-2026-v2';
@@ -437,6 +489,10 @@ function render() {
     : '지금 확률 ' + fp(c.pA) + '. 삼성은 앞으로 ' + sLeft + '경기, 그중 KT전이 ' + GAMES.filter(x => x.who === 'h2h' && !R[x.id]).length + '경기입니다.';
 
   renderEasy(R, now, g, sLeft, kLeft);
+  renderPath(mS, c);
+  renderChart();
+  ST = { short, pA: c.pA, mS, g, now, open: c.open.length, date: lastDone || '9/29' };
+  celebrate(short, now);
   renderDays(R);
   renderTable(R, now);
   // 일지는 확정된 결과에서 저절로 만들어진다 (최신이 위)
@@ -494,6 +550,118 @@ function renderEasy(R, now, g, sLeft, kLeft) {
   $('easy').innerHTML = rows.map((r, i) => '<div class="case two' + (i === 0 ? ' best' : '') + '"><span class="w">삼성이 ' + r.w + '</span><span class="r">→ ' + say(r.a) + '</span></div>').join('');
 }
 
+// 우승까지 가는 길: 처음 매직넘버만큼 칸을 놓고, 줄어든 만큼 채운다
+const M0 = magic(BASE.ss, 10, BASE.kt, 9);
+function renderPath(mS, c) {
+  const box = $('path'), dead = c.nA + c.nB === 0;
+  const done = mS === null ? 0 : Math.max(0, Math.min(M0, M0 - mS));
+  box.style.gridTemplateColumns = 'repeat(' + M0 + ',1fr)';
+  let h = '';
+  for (let i = 1; i <= M0; i++) h += '<i class="' + (i <= done ? 'on' : '') + (i === M0 ? ' last' : '') + '"></i>';
+  box.innerHTML = h;
+  box.classList.toggle('dead', dead);
+  $('pathTxt').innerHTML = dead ? '이번 시즌 삼성 1위는 어려워졌습니다.'
+    : mS === 0 ? '<b>' + M0 + '칸을 모두 채웠습니다.</b> 삼성 정규리그 우승 확정입니다.'
+    : mS === null ? '남은 경기만으로는 확정할 수 없고, 승률이 같으면 1위 결정전으로 갑니다.'
+    : '<b>' + M0 + '칸 중 ' + done + '칸</b> 왔습니다. 남은 매직넘버는 <b>' + mS + '</b>입니다. 삼성이 이기거나 KT가 지면 칸이 차고, 마지막 금색 칸까지 채우면 우승 확정입니다.';
+}
+
+// 승률 흐름: 기록된 날까지의 두 팀 승률을 선으로
+function renderChart() {
+  const labels = ['9/29', ...DATES];
+  const pts = [{ i: 0, a: BASE.ss, b: BASE.kt }];
+  DATES.forEach((d, k) => { if (GAMES.some(x => x.d === d && fixed(x.id))) { const u = uptoDate(d); pts.push({ i: k + 1, a: u.ss, b: u.kt }); } });
+  const v = t => t.w / (t.w + t.l);
+  let lo = Math.min(...pts.map(q => Math.min(v(q.a), v(q.b)))), hi = Math.max(...pts.map(q => Math.max(v(q.a), v(q.b))));
+  const mid = (lo + hi) / 2, span = Math.max(hi - lo, 0.03) + 0.012;
+  lo = mid - span / 2; hi = mid + span / 2;
+  const W = 320, H = 170, L = 34, Rr = 10, T = 10, B = 24;
+  const X = i => L + i * (W - L - Rr) / (labels.length - 1), Y = y => T + (hi - y) / (hi - lo) * (H - T - B);
+  let g = '';
+  for (let k = 0; k <= 3; k++) {
+    const yv = lo + (hi - lo) * k / 3, y = Y(yv);
+    g += '<line x1="' + L + '" x2="' + (W - Rr) + '" y1="' + y + '" y2="' + y + '" stroke="#E1E7F0" stroke-width="1"/>'
+      + '<text x="' + (L - 5) + '" y="' + (y + 3) + '" text-anchor="end" font-size="8.5" fill="#64748B">' + yv.toFixed(3).replace(/^0/, '') + '</text>';
+  }
+  labels.forEach((t, i) => { g += '<text x="' + X(i) + '" y="' + (H - 8) + '" text-anchor="middle" font-size="7.5" fill="#64748B">' + t + '</text>'; });
+  const line = (key, col) => {
+    const xy = pts.map(q => X(q.i) + ',' + Y(v(q[key])));
+    return (pts.length > 1 ? '<polyline points="' + xy.join(' ') + '" fill="none" stroke="' + col + '" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>' : '')
+      + pts.map(q => '<circle cx="' + X(q.i) + '" cy="' + Y(v(q[key])) + '" r="3" fill="' + col + '" stroke="#fff" stroke-width="1.2"/>').join('');
+  };
+  $('chart').innerHTML = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="삼성과 KT의 날짜별 승률">' + g + line('b', '#3A3F4A') + line('a', '#074CA1') + '</svg>';
+  const last = pts[pts.length - 1];
+  $('cgS').textContent = pct(last.a); $('cgK').textContent = pct(last.b);
+  $('chartNote').textContent = pts.length > 1 ? '결과가 기록된 날까지의 승률입니다. 파란 선이 검은 선 위로 올라가면 삼성이 1위입니다.' : '출발점(9/29)입니다. 결과를 기록하면 날짜마다 선이 이어집니다.';
+}
+
+// 우승이 확정되는 순간 한 번 축하한다
+let ST = null, wasWin = null;
+function celebrate(short, now) {
+  const win = short === '삼성 우승 확정' || short === '삼성 우승';
+  if (win && wasWin === false) {
+    $('partyTxt').textContent = '삼성 ' + now.ss.w + '승 ' + now.ss.l + '패 ' + now.ss.d + '무 (' + pct(now.ss) + ')';
+    $('party').classList.add('on');
+    confetti();
+  }
+  wasWin = win;
+}
+function confetti() {
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cv = $('confetti'), x = cv.getContext('2d'), dpr = window.devicePixelRatio || 1;
+  const W = innerWidth, H = innerHeight;
+  cv.width = W * dpr; cv.height = H * dpr; x.setTransform(dpr, 0, 0, dpr, 0, 0);
+  const cols = ['#074CA1', '#FFFFFF', '#7FB0F0', '#E0A43A'];
+  const ps = Array.from({ length: 140 }, () => ({ x: Math.random() * W, y: -20 - Math.random() * H * 0.6, vx: (Math.random() - 0.5) * 2, vy: 2 + Math.random() * 3.5, s: 5 + Math.random() * 6, r: Math.random() * 6.28, vr: (Math.random() - 0.5) * 0.3, c: cols[Math.floor(Math.random() * cols.length)] }));
+  const t0 = performance.now();
+  (function tick(t) {
+    x.clearRect(0, 0, W, H);
+    ps.forEach(q => { q.x += q.vx; q.y += q.vy; q.r += q.vr; x.save(); x.translate(q.x, q.y); x.rotate(q.r); x.fillStyle = q.c; x.fillRect(-q.s / 2, -q.s / 4, q.s, q.s / 2); x.restore(); });
+    if (t - t0 < 4500) requestAnimationFrame(tick); else x.clearRect(0, 0, W, H);
+  })(t0);
+}
+
+// 오늘 상황을 그림 한 장으로
+async function shareCard() {
+  if (!ST) return;
+  const W = 1080, H = 1350, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const x = cv.getContext('2d'), F = (w, px) => w + ' ' + px + 'px Pretendard, sans-serif';
+  try { await document.fonts.ready; } catch (e) {}
+  x.fillStyle = '#06224A'; x.fillRect(0, 0, W, H);
+  const img = document.querySelector('.hero img');
+  if (img.complete && img.naturalWidth) x.drawImage(img, 0, 0, W, W * img.naturalHeight / img.naturalWidth);
+  const gr = x.createLinearGradient(0, 360, 0, 730);
+  gr.addColorStop(0, 'rgba(6,34,74,0)'); gr.addColorStop(1, 'rgba(6,34,74,1)');
+  x.fillStyle = gr; x.fillRect(0, 360, W, 372);
+  x.fillStyle = '#fff'; x.textBaseline = 'alphabetic';
+  x.globalAlpha = 0.8; x.font = F(600, 34); x.fillText('2026 KBO 정규시즌 · ' + ST.date + ' 경기까지', 64, 790); x.globalAlpha = 1;
+  x.font = F(700, 68); x.fillText('삼성 정규리그 우승까지', 64, 876);
+  x.fillStyle = '#F2C14E'; x.font = F(700, 54); x.fillText(ST.short, 64, 956);
+  const stats = [
+    [ST.mS === null ? '–' : String(ST.mS), '매직넘버'],
+    [ST.open ? fp(ST.pA) : '–', '단독 1위 확률'],
+    [fg(ST.g), ST.g > 0 ? '경기 뒤' : ST.g < 0 ? '경기 앞' : '게임차']
+  ];
+  stats.forEach((st, i) => {
+    const bx = 64 + i * 324, by = 1000;
+    x.fillStyle = 'rgba(255,255,255,.1)'; x.beginPath(); x.roundRect(bx, by, 304, 190, 24); x.fill();
+    x.fillStyle = '#fff'; x.textAlign = 'center';
+    x.font = F(700, 80); x.fillText(st[0], bx + 152, by + 104);
+    x.globalAlpha = 0.8; x.font = F(500, 30); x.fillText(st[1], bx + 152, by + 156); x.globalAlpha = 1;
+  });
+  x.textAlign = 'left'; x.fillStyle = '#fff'; x.font = F(500, 32);
+  const rec = t => t.w + '승 ' + t.l + '패 ' + t.d + '무 (' + pct(t) + ')';
+  x.fillText('삼성 ' + rec(ST.now.ss) + '  ·  KT ' + rec(ST.now.kt), 64, 1256);
+  x.globalAlpha = 0.65; x.font = F(500, 28); x.fillText('kimju.kr/1st', 64, 1306); x.globalAlpha = 1;
+  cv.toBlob(async b => {
+    const f = new File([b], 'samsung-1st.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [f] })) {
+      try { await navigator.share({ files: [f], title: '삼성 정규리그 우승까지' }); return; } catch (e) { if (e.name === 'AbortError') return; }
+    }
+    const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'samsung-1st.png'; a.click();
+  }, 'image/png');
+}
+
 function renderDays(R) {
   const box = $('days'); box.innerHTML = '';
   $('bRealReset').style.display = Object.keys(REAL).length ? '' : 'none';
@@ -512,8 +680,8 @@ function renderDays(R) {
       const off = OFFICIAL[g.id], fx = fixed(g.id);
       const lock = !!off;
       const row = document.createElement('div'); row.className = 'g';
-      const tag = g.who === 'h2h' ? '<span class="tag h">맞대결</span>' : g.who === 'ss' ? '<span class="tag">삼성</span>' : '<span class="tag k">KT</span>';
-      row.innerHTML = '<div class="m">' + tag + (g.who === 'h2h' ? g.m : 'vs ' + g.m) + '<small>' + g.p + ' ' + g.t + '</small>' + (off ? '<em>확정' + (off.s ? ' ' + off.s : '') + '</em>' : '') + '</div>';
+      const home = g.who === 'h2h' ? '삼성' : g.who === 'ss' ? '삼성' : 'KT', away = g.who === 'h2h' ? 'KT' : g.m;
+      row.innerHTML = '<div class="m">' + mk(home) + '<span class="vs">vs</span>' + mk(away) + (g.who === 'h2h' ? ' <span class="tag h" style="margin-left:6px">맞대결</span>' : '') + '<small>' + g.p + ' ' + g.t + '</small>' + (off ? '<em>확정' + (off.s ? ' ' + off.s : '') + '</em>' : '') + '</div>';
       const labs = g.who === 'h2h' ? [['W','삼성','w'],['T','무','t'],['L','KT','l']] : [['W','승','w'],['T','무','t'],['L','패','l']];
       const seg = document.createElement('div'); seg.className = 'seg' + (lock ? ' lock' : '');
       labs.forEach(([val, txt, k]) => {
@@ -563,6 +731,9 @@ $('preSeason').onclick = () => preset(60, 63, 69, 'preSeason');
 ['s1','s2','s3'].forEach(id => $(id).oninput = () => { $('pre50').classList.remove('on'); $('preSeason').classList.remove('on'); render(); });
 $('bAllW').onclick = () => { GAMES.forEach(g => { if (g.who !== 'kt' && !fixed(g.id)) REAL[g.id] = 'W'; }); render(); };
 $('bRealReset').onclick = () => { if (confirm('기록한 결과를 모두 지울까요?')) { REAL = {}; render(); } };
+$('bShare').onclick = shareCard;
+$('partyClose').onclick = () => $('party').classList.remove('on');
+$('party').onclick = e => { if (e.target === $('party')) $('party').classList.remove('on'); };
 $('pre50').classList.add('on');
 render();
 </script>
