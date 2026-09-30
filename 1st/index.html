@@ -17,13 +17,27 @@ body{font-family:Pretendard,-apple-system,sans-serif;background:var(--bg);color:
 img{display:block;max-width:100%}
 .num{font-variant-numeric:tabular-nums}
 /* 머리 */
-.hero{position:relative;background:#06224A;color:#fff;overflow:hidden}
-.hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center}
-.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(4,22,52,.92) 0%,rgba(4,22,52,.7) 45%,rgba(4,22,52,.15) 100%)}
-.hero .in{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:36px 20px 28px;min-height:230px;display:flex;flex-direction:column;justify-content:flex-end}
+.hero{background:#06224A;color:#fff}
+.hero .box{position:relative;max-width:720px;margin:0 auto}
+.hero img{width:100%;height:auto;aspect-ratio:3/2}
+.hero .box::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,22,52,0) 40%,rgba(4,22,52,.94) 100%)}
+.hero .in{position:absolute;z-index:1;left:0;right:0;bottom:0;padding:0 20px 16px}
 .hero .k{font-size:13px;font-weight:600;letter-spacing:.04em;opacity:.85}
-.hero h1{font-size:26px;font-weight:700;line-height:1.3;letter-spacing:-0.01em;margin-top:4px}
-.hero .u{font-size:13px;opacity:.85;margin-top:8px}
+.hero h1{font-size:22px;font-weight:700;line-height:1.3;letter-spacing:-0.01em;margin-top:4px}
+.hero .u{font-size:13px;opacity:.85;margin-top:4px}
+/* 늘 떠 있는 현황 띠 */
+.live{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid var(--line)}
+.live .box{max-width:720px;margin:0 auto;padding:10px 20px 0}
+.live .l1{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.live .l1 b{font-size:16px;font-weight:700}
+.live .l1 span{font-size:16px;font-weight:700;color:var(--pt);white-space:nowrap}
+.live.ok .l1 b{color:var(--ok)}.live.warn .l1 b{color:var(--warn)}.live.bad .l1 b{color:var(--bad)}
+.live .l2{font-size:12px;color:var(--sub);margin-top:1px}
+.live .lbar{height:4px;background:var(--line);margin:8px -20px 0}
+.live .lbar i{display:block;height:100%;background:var(--pt);transition:width .35s ease}
+.live.hit{animation:hit .7s ease}
+@keyframes hit{0%{background:var(--pt-soft)}100%{background:#fff}}
+@media (prefers-reduced-motion:reduce){.live.hit{animation:none}.live .lbar i{transition:none}}
 .wrap{max-width:720px;margin:0 auto;padding:0 20px 60px}
 .lab{font-size:13px;font-weight:600;color:var(--sub);letter-spacing:.02em;margin:34px 0 10px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
@@ -107,8 +121,8 @@ img{display:block;max-width:100%}
 .mode button.on{background:var(--pt);color:#fff}
 .g .m em.s{color:var(--warn);background:var(--warn-bg)}
 .tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.banner{border-radius:14px;overflow:hidden;margin-bottom:12px;aspect-ratio:3/1.25;background:#0B1B33}
-.banner img{width:100%;height:100%;object-fit:cover}
+.banner{border-radius:14px;overflow:hidden;margin-bottom:12px;background:#0B1B33}
+.banner img{width:100%;height:auto;aspect-ratio:3/2}
 /* 표 */
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{border-collapse:collapse;width:100%;font-size:13px}
@@ -136,13 +150,20 @@ details p{font-size:14px;color:var(--sub);margin-top:6px}
 </head>
 <body>
 <header class="hero">
-  <img src="img/hero.jpg" alt="">
-  <div class="in">
-    <div class="k">2026 KBO 정규시즌 · 1위 경쟁</div>
-    <h1>삼성 정규리그 우승,<br>남은 길을 매일 계산합니다</h1>
-    <div class="u" id="upd"></div>
+  <div class="box">
+    <img src="img/hero.jpg" alt="">
+    <div class="in">
+      <div class="k">2026 KBO 정규시즌 · 1위 경쟁</div>
+      <h1>삼성 정규리그 우승까지</h1>
+      <div class="u" id="upd"></div>
+    </div>
   </div>
 </header>
+<div class="live" id="live"><div class="box">
+  <div class="l1"><b id="lvV"></b><span class="num" id="lvP"></span></div>
+  <div class="l2 num" id="lvG"></div>
+  <div class="lbar"><i id="lvB"></i></div>
+</div></div>
 
 <div class="wrap">
   <div id="verdict" class="verdict"></div>
@@ -396,25 +417,38 @@ function render() {
   const best = {...R};
   GAMES.forEach(x => { if (!best[x.id]) best[x.id] = 'W'; });
   const fb = apply(best), self = cmp(fb.ss, fb.kt);
-  let cls, big, sub;
+  let cls, big, sub, short;
   if (!c.open.length) {
+    short = order > 0 ? '삼성 우승' : order === 0 ? '1위 결정전' : 'KT 1위';
     cls = order > 0 ? 'ok' : order === 0 ? 'warn' : 'bad';
     big = order > 0 ? '삼성 정규리그 우승' : order === 0 ? '승률 동률 · 1위 결정전으로 갑니다' : 'KT 정규리그 1위';
     sub = '최종 승률 삼성 ' + pct(now.ss) + ' · KT ' + pct(now.kt);
   } else if (c.nA + c.nB === 0) {
-    cls = 'bad'; big = '삼성 1위 가능성이 사라졌습니다'; sub = '남은 경기를 모두 이겨도 KT 승률을 넘지 못합니다.';
+    short = '우승 가능성 없음'; cls = 'bad'; big = '삼성 1위 가능성이 사라졌습니다'; sub = '남은 경기를 모두 이겨도 KT 승률을 넘지 못합니다.';
   } else if (c.nC === 0 && c.nB === 0) {
-    cls = 'ok'; big = '삼성 정규리그 우승 확정'; sub = '남은 경기 결과와 상관없이 삼성이 1위입니다.';
+    short = '삼성 우승 확정'; cls = 'ok'; big = '삼성 정규리그 우승 확정'; sub = '남은 경기 결과와 상관없이 삼성이 1위입니다.';
   } else if (self > 0) {
-    cls = 'ok'; big = '가능합니다. 삼성 자력 우승이 살아 있습니다';
+    short = '전승하면 우승'; cls = 'ok'; big = '가능합니다. 삼성 자력 우승이 살아 있습니다';
     sub = '삼성이 남은 ' + sLeft + '경기를 모두 이기면, KT가 다른 경기를 전부 이겨도 삼성 ' + pct(fb.ss) + ' · KT ' + pct(fb.kt) + '로 삼성이 1위입니다. 남의 결과를 기다릴 필요가 없는 상태입니다.';
   } else if (self === 0) {
-    cls = 'warn'; big = '가능합니다. 전승하면 최소 1위 결정전';
+    short = '전승하면 최소 결정전'; cls = 'warn'; big = '가능합니다. 전승하면 최소 1위 결정전';
     sub = '삼성이 남은 경기를 모두 이기고 KT도 나머지를 다 이기면 승률이 같아져 1위 결정전을 치릅니다. KT가 한 번만 더 지면 삼성 단독 1위입니다.';
   } else {
-    cls = 'warn'; big = '가능하지만 KT가 져 줘야 합니다';
+    short = 'KT가 져 줘야 우승'; cls = 'warn'; big = '가능하지만 KT가 져 줘야 합니다';
     sub = '자력 우승은 사라졌습니다. 삼성이 전승해도 KT가 나머지를 다 이기면 KT가 1위라서, KT의 패배가 필요합니다. 아래 조건표에서 몇 패가 필요한지 볼 수 있습니다.';
   }
+  // 떠 있는 띠: 누를 때마다 여기서 바로 바뀐다
+  const lvTxt = short + '|' + fp(c.pA) + '|' + mS + '|' + g;
+  const live = $('live');
+  $('lvV').textContent = short + (hasSim ? ' (가상 포함)' : '');
+  $('lvP').textContent = c.open.length ? '단독 1위 확률 ' + fp(c.pA) : '';
+  $('lvG').textContent = (mS === null || mS === 0 ? '' : '매직넘버 ' + mS + ' · ')
+    + (g > 0 ? 'KT에 ' + fg(g) + '경기 뒤' : g < 0 ? 'KT에 ' + fg(g) + '경기 앞' : 'KT와 게임차 0')
+    + ' · 남은 경기 삼성 ' + sLeft + ' / KT ' + kLeft;
+  $('lvB').style.width = c.pA * 100 + '%';
+  if (live.dataset.t && live.dataset.t !== lvTxt) { live.classList.remove('hit'); void live.offsetWidth; live.classList.add('hit'); }
+  live.dataset.t = lvTxt;
+  live.className = 'live ' + cls + (live.classList.contains('hit') ? ' hit' : '');
   $('verdict').className = 'verdict ' + cls;
   $('verdict').innerHTML = '<b class="big">' + big + '</b><p>' + sub + '</p>';
 
