@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
+<head><meta name="robots" content="noindex">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>선생님을 위한 바이브 코딩 | kimju.zip</title>
@@ -44,7 +44,7 @@ img{max-width:100%}
 /* 머리 */
 header{position:sticky;top:0;z-index:30;background:rgba(246,246,243,.88);backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);border-bottom:1px solid var(--line)}
 .nav{display:flex;align-items:center;gap:28px;height:64px}
-.logo{font-weight:800;font-size:19px;letter-spacing:-.03em;flex-shrink:0}.logo{isolation:isolate}.logo b{position:relative;padding:0 5px;margin-left:1px}.logo b::before{content:'';position:absolute;inset:-1px -6px -2px -1px;background:url(brush.webp) center/100% 100% no-repeat;z-index:-1}
+.logo{font-weight:800;font-size:19px;letter-spacing:-.03em;flex-shrink:0}.logo b{background:var(--lime);padding:0 5px;border-radius:5px;margin-left:1px}
 .nav nav{display:flex;gap:22px;font-size:15px;color:var(--sub);font-weight:500}
 .nav nav a,.nav nav button{background:none;border:0;color:var(--sub);font-weight:500;font-size:15px;position:relative}
 .nav nav a:hover,.nav nav button:hover{color:var(--ink)}
@@ -56,7 +56,7 @@ header{position:sticky;top:0;z-index:30;background:rgba(246,246,243,.88);backdro
 .eyebrow{display:inline-flex;gap:8px;align-items:center;font-size:13px;font-weight:600;color:var(--sub);background:#fff;border:1px solid var(--line);padding:6px 12px;border-radius:999px}
 .eyebrow i{width:7px;height:7px;border-radius:50%;background:#3BB273}
 h1{font-size:clamp(34px,5vw,56px);line-height:1.15;letter-spacing:-.045em;font-weight:800;margin:20px 0 18px}
-h1{isolation:isolate}h1 mark{position:relative;background:none;color:inherit;padding:0 2px}h1 mark::before{content:'';position:absolute;left:-7%;top:8%;width:116%;height:92%;background:url(brush.webp) center/100% 100% no-repeat;z-index:-1}
+h1 mark{background:linear-gradient(transparent 58%,var(--lime) 58%);color:inherit;padding:0 2px}
 .lead{font-size:18px;line-height:1.7;color:var(--sub);max-width:30em}
 .hash{font-size:14px;color:var(--mute);margin-top:10px;letter-spacing:.01em}
 .search{margin-top:30px;display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:6px 6px 6px 16px;max-width:500px;box-shadow:0 1px 2px rgba(0,0,0,.04)}
@@ -106,11 +106,7 @@ h1{isolation:isolate}h1 mark{position:relative;background:none;color:inherit;pad
 .rk .n.top{background:var(--lime);color:var(--limeInk)}
 .rk h4{font-size:15px;letter-spacing:-.02em;line-height:1.35;margin:12px 4px 0}.rk p{font-size:13px;color:var(--sub);margin:3px 4px 0;line-height:1.45}
 /* 분류 탭 */
-.tabsw{position:sticky;top:64px;z-index:20;background:var(--bg);margin-bottom:18px}
-.tabsw:before,.tabsw:after{content:'';position:absolute;top:0;bottom:0;width:48px;pointer-events:none;opacity:0;transition:opacity .2s ease;z-index:1}
-.tabsw:before{left:0;background:linear-gradient(to right,var(--bg) 20%,rgba(246,246,243,0))}.tabsw:after{right:0;background:linear-gradient(to left,var(--bg) 20%,rgba(246,246,243,0))}
-.tabsw.fl:before,.tabsw.fr:after{opacity:1}
-.tabs{padding:12px 0;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none}
+.tabs{position:sticky;top:64px;z-index:20;background:var(--bg);padding:12px 0;display:flex;gap:8px;overflow-x:auto;margin-bottom:18px;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tabs button{flex-shrink:0;height:38px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:14px;font-weight:600;color:var(--sub)}
 .tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -219,31 +215,54 @@ details.steps li b{color:var(--ink)}
   .sheet{grid-template-columns:1fr;border-radius:22px 22px 0 0;max-height:92vh;transform:translateY(40px)}
   .sheet .pv{padding:14px 14px 0;background:#fff}.sheet .bd{padding:14px 18px 22px}
   .sheet h3{font-size:22px}
-  .nav nav a,.nav nav button{display:inline-flex;align-items:center;min-height:44px}.dot{top:3px}
-  .tags button{padding:9px 14px;font-size:14px}
-  .strip a{display:inline-block;padding:10px 2px;margin:-10px 0}
-  .sh .more{padding:12px 0}
 }
-@media(max-width:560px){.hide-s{display:none!important}
-  .grid{grid-template-columns:1fr!important;gap:0!important;margin-bottom:56px}
-  .card{display:grid;grid-template-columns:116px 1fr;grid-template-rows:auto auto auto;column-gap:14px;align-content:center;padding:12px 0;border-bottom:1px solid var(--line);border-radius:0}
-  .card:hover{transform:none}.card:first-child{padding-top:4px}
-  .card .t{grid-column:1;grid-row:1/4;align-self:center;border-radius:10px}
-  .card h4,.card p,.card .d{grid-column:2}
-  .card h4{margin-top:0;font-size:15.5px}.card p{font-size:13px;margin-top:2px}.card .d{font-size:12px;margin-top:3px}
-  .card .k{left:5px;top:5px;font-size:10px;padding:2px 5px;border-radius:5px}.card .nw{right:5px;top:5px;font-size:10px;padding:2px 5px;border-radius:5px}
-  .card .t .none{font-size:12px}
-}
+@media(max-width:560px){.hide-s{display:none!important}}
 @media(max-width:600px){.row{grid-template-columns:1fr 1fr}.row .rk:first-child{grid-column:1/-1}}
-@media(max-width:430px){.me,.visits{max-width:270px}h1{font-size:33px}.lead{font-size:16.5px}}
-/* 휴대폰: 캐릭터를 맨 위 가로 배너로 */
-@media(max-width:560px){.hero{display:flex;flex-direction:column;align-items:stretch;gap:0;padding-top:18px}.hero>div:first-child{display:contents}
-.side{order:0;margin-bottom:22px;width:100%}.eyebrow{order:1;align-self:flex-start}.hero h1{order:2}.lead{order:3}.hash{order:4}.search{order:6}.tags{order:7}
-.me,.me:hover{max-width:none;width:100%;transform:none;padding:0;border:0;background:none;position:relative}
-.me .pic{aspect-ratio:16/10;border-radius:20px}.me .pic img{object-position:50% 22%}
-.me .who{position:absolute;left:10px;right:10px;bottom:10px;background:rgba(255,255,255,.94);border-radius:14px;padding:10px 12px}
-.me h3{font-size:15px}.me p{font-size:12px}.me .btn{height:34px;font-size:12.5px}
-.visits{max-width:none;margin-top:8px}}
+@media(max-width:430px){.me,.visits{max-width:270px}.grid{grid-template-columns:1fr}h1{font-size:33px}.lead{font-size:16.5px}}
+</style>
+
+<style>
+.mk{position:relative;margin:48px 0;outline:2px dashed #C9D7E8;outline-offset:14px;border-radius:6px}
+.mk>.mt{position:absolute;top:-30px;left:-6px;background:#15171B;color:#D4F25A;font-size:12px;font-weight:800;padding:4px 10px;border-radius:999px;letter-spacing:-.01em}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);background:#15171B;color:#fff;border-radius:var(--r);overflow:hidden}
+.stats div{padding:26px 24px;border-right:1px solid rgba(255,255,255,.1)}.stats div:last-child{border:0}
+.stats b{display:block;font-size:34px;font-weight:800;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.stats b em{font-style:normal;color:var(--lime)}.stats span{font-size:13.5px;color:#A9AEB6}
+.news{display:grid;grid-template-columns:1.35fr 1fr 1fr;gap:18px}
+.nw{background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.nw .im{aspect-ratio:16/10;background:var(--soft);overflow:hidden}.nw img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.nw .tx{padding:16px 18px 18px}.nw .d{font-size:12px;font-weight:700;color:#3C6E00;background:#EEF9C8;display:inline-block;padding:3px 8px;border-radius:6px}
+.nw h3{font-size:18px;letter-spacing:-.03em;margin:8px 0 4px}.nw p{font-size:13.5px;color:var(--sub);line-height:1.5}
+.nw:first-child h3{font-size:21px}
+.qs{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.q{background:var(--sky);border-radius:var(--r);padding:26px 24px 20px;display:flex;flex-direction:column;justify-content:space-between;min-height:170px}
+.q p{font-size:17px;line-height:1.55;letter-spacing:-.02em;font-weight:600;color:var(--ink)}
+.q p:before{content:"“";display:block;font-size:44px;line-height:.6;color:#9DB6D3;font-weight:800;margin-bottom:10px}
+.q small{font-size:12.5px;color:var(--mute);margin-top:16px}
+.vids{display:grid;grid-template-columns:1fr auto auto;gap:22px;align-items:center;background:#15171B;border-radius:24px;padding:34px 40px;color:#fff}
+.vids h3{font-size:28px;letter-spacing:-.04em;line-height:1.25}.vids p{color:#A9AEB6;font-size:14.5px;margin-top:10px;line-height:1.6}
+.ph{width:190px;aspect-ratio:9/16;border-radius:22px;overflow:hidden;position:relative;border:5px solid #2A2D33}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}.ph .pl{position:absolute;inset:0;display:grid;place-items:center}
+.ph .pl i{width:54px;height:54px;border-radius:50%;background:rgba(255,255,255,.92);display:grid;place-items:center}
+.ph .pl i:after{content:"";border-left:16px solid #15171B;border-top:10px solid transparent;border-bottom:10px solid transparent;margin-left:4px}
+.ph .cap{position:absolute;left:0;right:0;bottom:0;padding:26px 12px 10px;background:linear-gradient(transparent,rgba(0,0,0,.75));font-size:13px;font-weight:700}
+@media(max-width:820px){.stats{grid-template-columns:1fr 1fr}.stats div:nth-child(2){border-right:0}.stats div{border-bottom:1px solid rgba(255,255,255,.1)}
+.news,.qs{grid-template-columns:1fr}.vids{grid-template-columns:1fr 1fr;padding:26px 22px}.vids>div:first-child{grid-column:1/-1}.ph{width:100%}}
+</style>
+<style>
+.sit{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.si{display:flex;align-items:center;justify-content:space-between;gap:14px;background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.si p{font-size:16px;font-weight:700;letter-spacing:-.02em}.si small{display:block;font-size:13px;color:var(--sub);font-weight:500;margin-top:4px}
+.si i{font-style:normal;font-size:18px;color:var(--mute)}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.how div{padding:26px 26px 24px;border-right:1px solid var(--line)}.how div:last-child{border:0}
+.how b{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--lime);color:var(--limeInk);font-size:14px;margin-bottom:14px}
+.how h4{font-size:18px;letter-spacing:-.03em;margin-bottom:6px}.how p{font-size:14px;color:var(--sub);line-height:1.6}
+.how .tip{grid-column:1/-1;background:#FFF7E6;border-top:1px solid #F2E2BF;padding:14px 26px;font-size:13.5px;color:#7A5A12;border-right:0}
+.cta{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;background:var(--lime);border-radius:24px;padding:32px 40px}
+.cta h3{font-size:26px;letter-spacing:-.04em;color:#1E2600}.cta p{font-size:15px;color:#3E4A10;margin-top:8px;line-height:1.6}
+.cta .bt{display:flex;gap:10px}.cta a{background:#15171B;color:#fff;padding:13px 20px;border-radius:12px;font-weight:700;font-size:15px;text-decoration:none}
+.cta a.w{background:#fff;color:#15171B}
 </style>
 </head>
 <body>
@@ -288,7 +307,7 @@ details.steps li b{color:var(--ink)}
     </div>
     <div class="side">
       <a class="me" href="about/">
-        <div class="pic"><img src="30020-l.webp" alt="kimju.zip 캐릭터 — 호루라기를 목에 건 체육교사가 노트북으로 코딩하는 그림" width="400" height="400"></div>
+        <div class="pic"><img src="../30020.webp" alt="kimju.zip 캐릭터 — 호루라기를 목에 건 체육교사가 노트북으로 코딩하는 그림" width="400" height="400"></div>
         <div class="who"><div><h3>김주현 <span>@kimju.zip</span></h3><p>불편함을 코딩으로 해결하는 15년차 체육교사</p></div><span class="btn">소개 보기</span></div>
       </a>
       <div class="visits"><span>오늘<b id="vToday">—</b></span><span>누적 방문<b id="vTotal">—</b></span></div>
@@ -310,7 +329,7 @@ details.steps li b{color:var(--ink)}
         <a class="btn big" href="https://kimju.kr/td2/" target="_blank" rel="noopener" onclick="trackClick('TeacherDesk 2 가이드')">사용 가이드</a>
       </div>
     </div>
-    <button class="shot" type="button" onclick="zoom('shots/td2-main.jpg')" aria-label="TeacherDesk 2 화면 크게 보기"><img src="shots/td2-main.jpg" alt="TeacherDesk 2 화면 — 시계·날씨·달력·할 일·급식·시간표·D-Day 위젯이 바탕화면에 펼쳐진 모습" width="1440" height="900"></button>
+    <button class="shot" type="button" onclick="zoom('../shots/td2-main.jpg')" aria-label="TeacherDesk 2 화면 크게 보기"><img src="../shots/td2-main.jpg" alt="TeacherDesk 2 화면 — 시계·날씨·달력·할 일·급식·시간표·D-Day 위젯이 바탕화면에 펼쳐진 모습" width="1440" height="900"></button>
   </section>
 
   <div class="strip">
@@ -319,12 +338,63 @@ details.steps li b{color:var(--ink)}
     <div><b>막히면 바로 A/S</b><a href="https://kimju.kr/help" target="_blank" rel="noopener">A/S 챗봇</a>이나 게시판에 물어보세요</div>
   </div>
 
+  
+  <div class="mk"><span class="mt">시안 1 · 숫자 띠</span>
+  <div class="stats">
+    <div><b>6,034</b><span>누적 방문</span></div>
+    <div><b>1,219</b><span>TeacherDesk 2 내려받기</span></div>
+    <div><b>22<em>+</em></b><span>게시판에 남겨 주신 글</span></div>
+    <div><b>09.25</b><span>마지막 업데이트</span></div>
+  </div></div>
+
+  <div class="mk"><span class="mt">시안 2 · 이번 달 새로 나온 앱</span>
+  <div class="sh"><div><h2>9월에 새로 나왔어요</h2><p>최근에 만들거나 크게 고친 앱</p></div></div>
+  <div class="news">
+    <div class="nw"><div class="im"><img src="../shots/kimju-guide.jpg"></div><div class="tx"><span class="d">NEW · 09.24</span><h3>학교 사안 처리 길잡이</h3><p>학교폭력·아동학대·교권·위기·안전사고 21가지 사안, 지금 할 일부터 근거 법령까지</p></div></div>
+    <div class="nw"><div class="im"><img src="../shots/gb-edu-map.jpg"></div><div class="tx"><span class="d">NEW · 09.23</span><h3>경북교육지도</h3><p>우리 지역 학교·통학구역·학생 수를 3D 지도로</p></div></div>
+    <div class="nw"><div class="im"><img src="../shots/seat.jpg"></div><div class="tx"><span class="d">업데이트 · 09.07</span><h3>스마트 자리 교체 v5.0</h3><p>남녀 배치 방식 4가지를 골라 뽑기</p></div></div>
+  </div></div>
+
   <div class="sh"><div><h2>선생님들이 많이 쓰는 앱</h2><p>처음 오셨다면 이 다섯 가지부터</p></div><button class="more" type="button" onclick="setCat('전체');go('apps')">전체 보기 →</button></div>
   <div class="row" id="pop"></div>
 
+  
+  <div class="mk"><span class="mt">새 시안 A · 이럴 때 이 앱</span>
+  <div class="sh"><div><h2>이럴 때 이 앱</h2><p>하고 싶은 일로 찾아보세요</p></div></div>
+  <div class="sit">
+    <div class="si"><div><p>자리를 바꿔야 해요</p><small>스마트 자리 교체</small></div><i>→</i></div>
+    <div class="si"><div><p>수업을 바꿔야 해요</p><small>스마트 수업교체 시간표</small></div><i>→</i></div>
+    <div class="si"><div><p>교실에 있는 학생을 불러야 해요</p><small>유콜</small></div><i>→</i></div>
+    <div class="si"><div><p>학폭·교권 사안이 생겼어요</p><small>학교 사안 처리 길잡이</small></div><i>→</i></div>
+    <div class="si"><div><p>가정통신문 안 낸 학생 찾기</p><small>가정통신문 및 서류제출</small></div><i>→</i></div>
+    <div class="si"><div><p>연수 이수증을 걷어야 해요</p><small>연수 이수증 수거앱</small></div><i>→</i></div>
+  </div></div>
+
+  <div class="mk"><span class="mt">새 시안 B · 처음 쓰는 법 3단계</span>
+  <div class="sh"><div><h2>처음이라면 3단계면 됩니다</h2><p>GAS 앱(시트)은 이렇게 내 것으로 만들어요</p></div></div>
+  <div class="how">
+    <div><b>1</b><h4>사본 만들기</h4><p>앱 소개 창에서 [사본 만들기]를 누르면 내 구글 드라이브에 복사돼요.</p></div>
+    <div><b>2</b><h4>권한 허용</h4><p>처음 한 번 «확인되지 않은 앱» 창이 떠요. [고급] → [이동]을 누르면 됩니다.</p></div>
+    <div><b>3</b><h4>링크 나누기</h4><p>배포 주소를 학생·학부모에게 보내면 끝. 자료는 선생님 드라이브에만 남아요.</p></div>
+    <div class="tip">«열기 전 신뢰하는지 확인하라»는 창이 떠도 괜찮아요 — 내가 만든 사본이라 안전합니다.</div>
+  </div></div>
+
+  <div class="mk"><span class="mt">새 시안 C · 연수·소식 받기</span>
+  <div class="cta">
+    <div><h3>우리 학교에서도 바이브 코딩 연수를 듣고 싶다면</h3><p>교원 연수·학교 강의 문의를 받습니다. 새 앱 소식은 인스타그램과 스레드에서 가장 먼저 올려요.</p></div>
+    <div class="bt"><a href="#">연수 문의하기</a><a class="w" href="#">@kimju.zip 팔로우</a></div>
+  </div></div>
+
+  <div class="mk"><span class="mt">시안 4 · 30초 소개 영상</span>
+  <div class="vids">
+    <div><h3>30초면<br>감이 옵니다</h3><p>새로 나온 앱을 짧은 영상으로 먼저 보세요.<br>누르면 소리와 함께 재생돼요.</p></div>
+    <div class="ph"><img src="casev.jpg"><div class="pl"><i></i></div><div class="cap">사안 처리 길잡이</div></div>
+    <div class="ph"><img src="gbv.jpg"><div class="pl"><i></i></div><div class="cap">경북교육지도</div></div>
+  </div></div>
+
   <section id="apps">
     <div class="sh"><div><h2>전체 앱</h2><p>업무별로 골라 보세요. 누르면 소개가 먼저 열립니다</p></div></div>
-    <div class="tabsw" id="tabsw"><div class="tabs" id="tabs" role="tablist"></div></div>
+    <div class="tabs" id="tabs" role="tablist"></div>
     <div class="qinfo" id="qinfo"></div>
     <div class="grid" id="grid"></div>
   </section>
@@ -371,8 +441,7 @@ const apps = [
   { name:'분실물 센터', shot:'lostfound',                desc:'학교 내 분실물을 사진과 함께 등록하고 학생이 직접 조회·신청할 수 있는 관리 앱',    cat:'학생부 업무', badge:'',       date:'26.05.15', url:'https://docs.google.com/spreadsheets/d/1XjSXO-MI-P3T_Q68FTwC5xjtkFDQf3J2ER70PdoILmg/copy' },
   { name:'학교폭력 사안처리 조회', shot:'hakpok-case',     desc:'학폭 사안의 접수부터 처리 완료까지 9단계 흐름을 한눈에 추적·관리하는 앱',         cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/177BdGTaJXkCHZsVMGcnUfSIOfVNR2i38BiFfX7YJ6g8/copy' },
   { name:'학교폭력 24시간 신고센터', shot:'hakpok-report',   desc:'학생이 익명으로 학폭을 신고하고 담당자가 실시간으로 접수·처리할 수 있는 앱',       cat:'학생부 업무', badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/1Jnwp8xcOpamNZsL6EsoQy9ZxfwIrPCsNOXLRmtvQVTM/copy' },
-  { name:'교원 복무·인사 길잡이', desc:'연가·병가·육아휴직·휴직·출장·겸직·전보·성과급·호봉 등 15가지 복무·인사를 신청 전에 요건·기한·서식까지 확인하는 전국 교사용 길잡이', cat:'공통 업무', badge:'', date:'26.09.29', url:'https://kimju.kr/bokmu/' },
-  { name:'학교 사안 처리 길잡이', desc:'학교폭력·위기·안전사고 등 30가지 사안의 초기 대응부터 절차·기한·불복까지 확인하는 전국 교사용 길잡이', cat:'학생부 업무', badge:'', date:'26.10.02', url:'https://kimju.kr/guide/' },
+  { name:'학교 사안 처리 길잡이', desc:'학교폭력·위기·안전사고 등 21가지 사안의 초기 대응부터 절차·기한·불복까지 확인하는 전국 교사용 길잡이', cat:'학생부 업무', badge:'', date:'26.09.24', url:'https://kimju.kr/guide/' },
   { name:'학교규칙 제·개정 공동체 의견수렴', shot:'schoolrule', desc:'학교규칙 제·개정 시 학생·학부모·교사의 의견을 온라인으로 수렴하고 결과를 한눈에 정리하는 앱', cat:'학생부 업무', badge:'', date:'26.06.26', url:'https://docs.google.com/spreadsheets/d/1Apefsjt75E83Vjc-UnMZztLHgnFv2oUegiVPu4HtJns/copy' },
   // 2. 담임 업무
   { name:'학부모 상담 시간 예약', shot:'consult',      desc:'학부모가 원하는 시간을 직접 선택하고 담임이 일정을 자동으로 관리하는 상담 예약 앱', cat:'담임 업무',  badge:'',       date:'26.04.12', url:'https://docs.google.com/spreadsheets/d/10XYHaRcIQk1o5Ywl_uJokqlBMjG-6S4xDcEhJE9mLHQ/copy' },
@@ -419,14 +488,13 @@ const apps = [
   { name:'AI 도구 가이드',              desc:'2026년 선생님을 위한 AI 도구 39선을 5개 카테고리로 정리한 활용 가이드',                    cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://kimju1416.github.io/codex/' },
   { name:'체육대회 모바일 안내문',      desc:'체육대회 일정·종목·주의사항을 담은 모바일 최적화 안내문을 쉽고 빠르게 만드는 도구',        cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://guide11.netlify.app/' },
   { name:'현장체험학습 모바일 안내문',  desc:'현장체험학습 안내 내용을 모바일 친화적 안내문으로 빠르게 제작하는 도구',                   cat:'기타 자료',  badge:'doc',    date:'26.06.16', url:'https://su333.netlify.app/' },
-  { name:'ClassTube (교실TV)',          sub:'↳ 초·중등 교육 영상 3,392편 아카이브', desc:'공강·자율활동·의무교육 수업에 바로 쓸 수 있는 교육 유튜브 영상 3,392편을 재생시간·학년별로 필터링해 빠르게 찾는 영상 아카이브', cat:'기타 자료', badge:'doc', date:'26.07.04', url:'https://kimju1416.github.io/classtube/' },
+  { name:'ClassTube (교실TV)',          sub:'↳ 초·중등 교육 영상 3,287편 아카이브', desc:'공강·자율활동·의무교육 수업에 바로 쓸 수 있는 교육 유튜브 영상 3,287편을 재생시간·학년별로 필터링해 빠르게 찾는 영상 아카이브', cat:'기타 자료', badge:'doc', date:'26.07.04', url:'https://kimju1416.github.io/classtube/' },
   { name:'경북교육청 서식 꾸러미',        desc:'경북교육청 행정 서식 1,175종을 검색·미리보기·다운로드할 수 있는 서식 아카이브',            cat:'경북',  badge:'doc',    date:'26.07.26', url:'https://kimju1416.github.io/gbe-seosik' },
   { name:'경북에듀잡',                  shot:'gb-edujob', desc:'경북 지역 학교 채용공고를 직종·지역별로 모아 마감임박순으로 보여주는 구인 정보 사이트. 기간제교원·교육공무직·방과후강사 등 매일 자동 수집', cat:'경북', badge:'doc', date:'26.08.10', url:'https://kimju1416.github.io/gb-edujob/' },
   { name:'경북교육지도',                shot:'gb-edu-map', desc:'경북 학교 위치·통학구역·학생 수 흐름을 3D 지도로 보는 교사용 교육 통계 지도. 시군별 둘러보기, 2032년까지 입학생 추정, 학교알리미 공시까지 한 화면에', cat:'경북', badge:'doc', date:'26.09.23', url:'https://kimju1416.github.io/gb-edu-map/' },
   { name:'AI 사용량 위젯', shot:'aiwidget',              desc:'Claude·Codex·Gemini 세 가지 AI 서비스의 사용량을 바탕화면에서 한눈에 확인하는 윈도우 전용 데스크톱 위젯. exe 설치 후 바로 사용 가능', cat:'기타 자료', badge:'exe',    date:'26.07.26', url:'https://github.com/kimju1416/ai-usage-widget/releases/latest/download/AIUsageWidget-Setup.exe' },
   { name:'공무원·교사 연금 비교 시뮬레이터', desc:'공무원연금과 국민연금을 조건별로 비교해 예상 수령액·납입액을 시뮬레이션하는 교사 전용 계산기', cat:'기타 자료', badge:'doc',    date:'26.07.26', url:'https://kimju1416.github.io/pension/' },
   // 8. 오락실 — 수업·쉬는시간에 바로 켜는 게임
-  { name:'1:1 오락실', shot:'vs', one:'방 번호 4자리로 친구와 바로 1:1 대전', sub:'↳ 오목·알까기·블록 대전·방울 대전·말랑 대전', desc:'서버 없이 두 기기를 바로 잇는 1:1 대전 게임 모음. 방 번호 4자리로 친구와 겨루거나 컴퓨터(쉬움·보통·어려움)와 대결한다. 오목(흑 3·3 금지 한국식), 새총처럼 튕기는 알까기, 줄을 지워 방해 줄을 보내는 블록 대전, 방울을 쏘아 터뜨리는 방울 대전까지. 폰·PC 모두 설치·로그인 없이 바로', cat:'오락실', badge:'game', date:'26.09.27', url:'https://kimju.kr/vs' },
   // Class Arcade: 서버 문제 해결 전까지 숨김 (2026-08-19) — 재개 시 아래 주석만 해제
   // { name:'Class Arcade (교실 아케이드)', shot:'arcade', sub:'↳ 실시간 멀티플레이 학급 게임', desc:'TV에 뜬 QR을 학생들이 폰으로 찍고 한 방에 모여 다 같이 즐기는 실시간 학급 게임. 레이싱·설원 러너·블록 배틀·퀴즈쇼·그림 퀴즈·사이먼 가라사대 등 서바이벌·점수 경쟁·퀴즈·기억력·복불복 게임이 계속 늘어나는 중, 한 반 40명까지 동시 참여. 설치·로그인 없이 접속만 하면 시작', cat:'오락실', badge:'game', date:'26.08.13', url:'https://game.kimju.kr/' },
   { name:'AI 모션 트레이닝 센터', sub:'↳ 카메라 자세인식 · 활동 15종', desc:'폰 카메라가 관절을 인식해 스쿼트·팔벌려뛰기를 자동으로 세어 주고, 두더지 잡기·풍선 팡팡·구름 계단 오르기 등 온몸으로 하는 미니게임 12종과 반응속도 훈련·자세 분석 처방까지 담은 체육 수업용 모션 아케이드. 영상은 기기 안에서만 처리', cat:'오락실', badge:'game', date:'26.07.16', url:'https://kimju1416.github.io/squat-coach/' },
@@ -443,7 +511,7 @@ const apps = [
   { name:'kimju.zip A/S 챗봇',          desc:'kimju.zip 앱 사용 중 오류나 궁금한 점을 AI 챗봇에게 바로 물어볼 수 있는 지원 창구',   cat:'A/S',        badge:'as',     date:'26.04.12', url:'https://kimju.kr/help' },
 ];
 
-const SHOTS = new Set(['aiwidget','bbu','vs','arcade','archive','baseball','card','chekim','cho','classassign','classmemo','classtube','cmass','codex','consult','cowork','design','edu1','gb-edu-map','gb-edujob','gbe-seosik','gpt2','guide11','hakpok-case','hakpok-report','kimju-bokmu','kimju-guide','kimjuzip','lostfound','maeumjido-cho','maeumjido-jung','motion-pulse-arcade','notice-cho','notice-jung','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','paps','pe-textbook','pension','saemcall','safe-school-game','safety','school-civildefense-drill','school-earthquake-drill','school-fire-drill','schoolrule','seat','sono','specialroom','sportsmap','squat-coach','ssamzip','td2','su333','teammix','timetable-swap','training','trip-escape','trip-escape-teen','uni1','vibev','youcall','youcall-board']);
+const SHOTS = new Set(['aiwidget','arcade','archive','baseball','card','chekim','cho','classassign','classmemo','classtube','cmass','codex','consult','cowork','design','edu1','gb-edu-map','gb-edujob','gbe-seosik','gpt2','guide11','hakpok-case','hakpok-report','kimju-guide','kimjuzip','lostfound','maeumjido-cho','maeumjido-jung','motion-pulse-arcade','notice-cho','notice-jung','orak11','padlet-dakkang27-ver-02-ynpu74jky3a9mqrm','paps','pe-textbook','pension','saemcall','safe-school-game','safety','school-civildefense-drill','school-earthquake-drill','school-fire-drill','schoolrule','seat','sono','specialroom','sportsmap','squat-coach','ssamzip','td2','su333','teammix','timetable-swap','training','trip-escape','trip-escape-teen','uni1','vibev','youcall','youcall-board']);
 
 /* 카드용 한 줄 소개 — 앱 이름이 바뀌면 여기 열쇠도 같이 바꾼다 */
 const ONE = {
@@ -451,7 +519,7 @@ const ONE = {
   '분실물 센터':'사진으로 올리고 학생이 직접 찾아가기',
   '학교폭력 사안처리 조회':'접수부터 종결까지 9단계를 한눈에',
   '학교폭력 24시간 신고센터':'익명 신고를 24시간 받는 창구',
-  '학교 사안 처리 길잡이':'30가지 사안, 지금 할 일부터 근거까지(전국판)',
+  '학교 사안 처리 길잡이':'21가지 사안, 지금 할 일부터 근거까지',
   '학교규칙 제·개정 공동체 의견수렴':'학생·학부모·교사 의견을 한곳에',
   '학부모 상담 시간 예약':'학부모가 직접 고르는 상담 시간표',
   '가정통신문 및 서류제출 (중등)':'누가 안 냈는지 실시간으로',
@@ -488,7 +556,7 @@ const ONE = {
   'AI 도구 가이드':'선생님을 위한 AI 도구 39선',
   '체육대회 모바일 안내문':'체육대회 안내문을 폰 화면용으로',
   '현장체험학습 모바일 안내문':'체험학습 안내문을 폰 화면용으로',
-  'ClassTube (교실TV)':'수업에 바로 트는 교육 영상 3,392편',
+  'ClassTube (교실TV)':'수업에 바로 트는 교육 영상 3,287편',
   '경북교육청 서식 꾸러미':'경북교육청 서식 1,175종 검색',
   '경북에듀잡':'경북 학교 채용공고를 마감순으로',
   '경북교육지도':'우리 지역 학교·통학구역·학생 수를 3D 지도로',
@@ -522,9 +590,9 @@ function shotSlug(url){
   }catch(e){ return ''; }
 }
 function shotOf(a){
-  if(a.shot) return SHOTS.has(a.shot) ? 'shots/'+a.shot+'.jpg' : '';
+  if(a.shot) return SHOTS.has(a.shot) ? '../shots/'+a.shot+'.jpg' : '';
   const s = shotSlug(a.url);
-  return SHOTS.has(s) ? 'shots/'+s+'.jpg' : '';
+  return SHOTS.has(s) ? '../shots/'+s+'.jpg' : '';
 }
 function isNew(a){
   if(!a.date) return false;
@@ -561,7 +629,7 @@ function thumb(a, cls){
 }
 
 /* «많이 쓰는 앱» 다섯 칸 — 형님이 고른 순서 그대로 (클릭 수와 무관) */
-const PICKS = ['TeacherDesk 2','유콜 (YOUCALL)','쌤콜 (SAEMCALL)','스마트 수업교체 시간표','1:1 오락실'];
+const PICKS = ['TeacherDesk 2','유콜 (YOUCALL)','쌤콜 (SAEMCALL)','스마트 수업교체 시간표','연수 이수증 수거앱'];
 function renderPop(){
   const list = PICKS.map(n=>apps.find(a=>a.name===n)).filter(Boolean);
   document.getElementById('pop').innerHTML = list.map((a,i)=>`
@@ -578,7 +646,6 @@ function renderTabs(){
     const n = c==='전체' ? apps.length : apps.filter(a=>a.cat===c).length;
     return `<button type="button" role="tab" aria-selected="${c===cur}" class="${c===cur?'on':''}" data-c="${esc(c)}">${c==='전체'?'전체':esc(CAT_LABEL[c]||c)}<span>${n}</span></button>`;
   }).join('');
-  requestAnimationFrame(tabFade);
 }
 function matches(a, q){
   const hay = (a.name+' '+a.desc+' '+(a.sub||'')+' '+oneOf(a)+' '+a.cat+' '+(CAT_LABEL[a.cat]||'')).toLowerCase();
@@ -603,21 +670,7 @@ function renderGrid(){
       <div class="d">${esc(CAT_LABEL[a.cat]||a.cat)} · ${fullDate(a)}</div>
     </button>`).join('');
 }
-function setCat(c){
-  const t=document.getElementById('tabs'), x=t.scrollLeft;
-  cur=c; renderTabs(); renderGrid();
-  t.scrollLeft=x;   // 다시 그려도 제자리에서 출발
-  const on=t.querySelector('.on');
-  if(on) t.scrollTo({left:on.offsetLeft-(t.clientWidth-on.offsetWidth)/2, behavior:'smooth'});
-}
-/* 탭 줄이 옆으로 넘치면 가장자리를 흐리게 — 더 있다는 표시 */
-function tabFade(){
-  const t=document.getElementById('tabs'), w=document.getElementById('tabsw');
-  w.classList.toggle('fl', t.scrollLeft>4);
-  w.classList.toggle('fr', t.scrollLeft+t.clientWidth < t.scrollWidth-4);
-}
-document.getElementById('tabs').addEventListener('scroll', tabFade, {passive:true});
-addEventListener('resize', tabFade);
+function setCat(c){ cur=c; renderTabs(); renderGrid(); }
 function go(id){ document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'}); }
 function goSearch(){
   query = document.getElementById('q').value.trim();
