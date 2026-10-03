@@ -1,24 +1,1311 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,follow">
-  <title>야구 수업 DJ 턴테이블</title>
-  <meta name="description" content="KBO 10개 구단 선수 응원가·등장곡, 팀 응원가, 홈런·안타 효과음을 버튼 하나로 트는 야구 수업용 음향 조작판">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="야구 수업 DJ 턴테이블">
-  <meta property="og:description" content="KBO 10개 구단 선수 응원가·등장곡, 팀 응원가, 홈런·안타 효과음을 버튼 하나로 트는 야구 수업용 음향 조작판">
-  <meta property="og:url" content="https://kimju.kr/baseball/">
-  <meta property="og:image" content="https://kimju1416.github.io/baseball/og2.jpg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta http-equiv="refresh" content="0;url=https://kimju1416.github.io/baseball/">
-  <link rel="canonical" href="https://kimju1416.github.io/baseball/">
-  <script>location.replace('https://kimju1416.github.io/baseball/'+location.hash);</script>
+<meta charset="utf-8">
+<base href="https://kimju1416.github.io/baseball/">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="야구 DJ">
+<meta name="theme-color" content="#060a10">
+<link rel="manifest" href="https://kimju.kr/baseball/manifest.webmanifest">
+<link rel="apple-touch-icon" href="https://kimju.kr/baseball/icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="https://kimju.kr/baseball/icon-192.png">
+<title>야구 수업 DJ 턴테이블</title>
+<meta name="description" content="KBO 10개 구단 선수 응원가·등장곡, 팀 응원가, 홈런·안타 효과음을 버튼 하나로 트는 야구 수업용 음향 조작판">
+<meta property="og:type" content="website">
+<meta property="og:title" content="야구 수업 DJ 턴테이블">
+<meta property="og:description" content="KBO 10개 구단 선수 응원가·등장곡, 팀 응원가, 홈런·안타 효과음을 버튼 하나로 트는 야구 수업용 음향 조작판">
+<meta property="og:url" content="https://kimju.kr/baseball/">
+<meta property="og:image" content="https://kimju1416.github.io/baseball/og2.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e14;
+  --surface: #111820;
+  --surface2: #18232f;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text: #e8edf5;
+  --muted: #6b7f96;
+  --dim: #3d5068;
+
+  --green: #22c55e;
+  --green-dim: #14532d;
+  --orange: #f97316;
+  --orange-dim: #7c2d12;
+  --purple: #a78bfa;
+  --purple-dim: #3b1e6e;
+  --red: #f87171;
+  --red-dim: #7f1d1d;
+  --yellow: #fbbf24;
+
+  --bar-h: 128px;
+  --ctrl-h: 50px;
+  --safe: env(safe-area-inset-bottom, 0px);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans KR', system-ui, sans-serif;
+  min-height: 100vh;
+  overscroll-behavior: none;
+}
+
+.now-title-row {
+  display: flex; align-items: center; gap: 8px; padding-bottom: 4px;
+}
+.brand {
+  font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -.01em;
+  color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.8); white-space: nowrap;
+}
+.brand b { font-family: 'Oswald', sans-serif; color: var(--yellow); font-weight: 600; letter-spacing: .04em; }
+.matchup { margin-left: auto; display: flex; align-items: center; gap: 5px; min-width: 0; }
+.mu-team { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: #fff; white-space: nowrap; }
+.mu-team img, .mu-dot { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; border: 1.5px solid rgba(255,255,255,.7); flex-shrink: 0; }
+.mu-dot { display: inline-flex; align-items: center; justify-content: center; font-size: 11px; background: var(--surface2); }
+.mu-team.on { color: var(--yellow); }
+.mu-team.on img, .mu-team.on .mu-dot { border-color: var(--yellow); box-shadow: 0 0 8px rgba(251,191,36,.6); }
+.mu-vs { font-family: 'Oswald', sans-serif; font-size: 11px; color: rgba(255,255,255,.6); }
+/* ── NOW PLAYING BAR ── */
+.now-bar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  height: var(--bar-h);
+  background: linear-gradient(180deg,rgba(6,10,16,.55) 0%,rgba(6,10,16,.82) 45%,#060a10 100%), url('img/stadium.jpg') center 35%/cover #060a10;
+  border-bottom: 1px solid var(--border2);
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 0 14px;
+  gap: 5px;
+}
+.now-top {
+  display: flex; align-items: center; gap: 9px;
+}
+.now-led {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--dim); flex-shrink: 0;
+  transition: background .2s, box-shadow .2s;
+}
+.now-led.on {
+  background: var(--green);
+  box-shadow: 0 0 7px var(--green);
+  animation: blink 1.4s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.5} }
+
+#nowPlaying {
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px; font-weight: 400; letter-spacing: .04em;
+  color: var(--text);
+  flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.now-time {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px; color: var(--muted); flex-shrink: 0;
+}
+.progress-track {
+  height: 2px; background: var(--surface2); border-radius: 2px;
+}
+.progress-fill {
+  height: 100%; border-radius: 2px;
+  background: var(--green);
+  width: 0%; transition: width .3s linear;
+}
+/* 재생 위치 이동: 막대 누르기·끌기 + 30초 건너뛰기 */
+.seek-row { display: flex; align-items: center; gap: 8px; }
+.seek {
+  flex: 1; min-width: 0; height: 32px;
+  display: flex; align-items: center;
+  cursor: pointer; touch-action: none;
+}
+.seek .progress-track { flex: 1; height: 5px; border-radius: 3px; position: relative; }
+.seek-tick {
+  position: absolute; top: -3px; bottom: -3px; width: 2px; margin-left: -1px;
+  background: rgba(255,255,255,.4); border-radius: 1px; pointer-events: none;
+}
+.seek .progress-fill { position: relative; border-radius: 3px; }
+.seek-thumb {
+  position: absolute; right: -8px; top: 50%;
+  width: 16px; height: 16px; margin-top: -8px; border-radius: 50%;
+  background: #fff; box-shadow: 0 0 0 3px rgba(34,197,94,.35);
+  display: none; z-index: 2;
+}
+.seek.on .seek-thumb { display: block; }
+.seek.dragging .progress-fill { transition: none; }
+.seek-btn {
+  border: 1px solid var(--border2); background: var(--surface2); color: var(--text);
+  border-radius: 7px; height: 32px; padding: 0 10px; flex-shrink: 0;
+  font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 500;
+  cursor: pointer; touch-action: manipulation; white-space: nowrap;
+}
+.seek-btn:active { transform: scale(.93); }
+.seek-btn:disabled { opacity: .35; cursor: default; transform: none; }
+.now-sub {
+  font-size: 11px; color: var(--muted); letter-spacing: .02em;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ── CTRL BAR ── */
+.ctrl-bar {
+  position: fixed;
+  top: var(--bar-h); left: 0; right: 0; z-index: 99;
+  height: var(--ctrl-h);
+  background: #0d1520;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 7px; padding: 0 10px;
+}
+.cbtn {
+  border: none; cursor: pointer;
+  border-radius: 7px; padding: 0 12px; height: 34px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px; font-weight: 500;
+  letter-spacing: .02em;
+  color: #fff; flex-shrink: 0;
+  touch-action: manipulation;
+  transition: transform .08s, filter .1s;
+  white-space: nowrap;
+}
+.cbtn:active { transform: scale(.93); }
+.cbtn-stop { background: #b91c1c; }
+.cbtn-fade { background: #6d28d9; }
+.cbtn-reset { background: var(--surface2); color: var(--muted); font-size: 11px; }
+
+.vol-row {
+  flex: 1; display: flex; align-items: center; gap: 6px; min-width: 0;
+}
+.vol-icon { font-size: 13px; color: var(--muted); flex-shrink: 0; }
+input[type=range].vol-slider {
+  -webkit-appearance: none; appearance: none;
+  flex: 1; height: 3px; border-radius: 3px;
+  background: var(--surface2); outline: none; min-width: 0;
+}
+input[type=range].vol-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--yellow);
+}
+.vol-pct { font-size: 11px; color: var(--muted); flex-shrink: 0; min-width: 28px; text-align: right; }
+
+/* ── CONTENT ── */
+.content {
+  padding-top: calc(var(--bar-h) + var(--ctrl-h) + 12px);
+  padding-bottom: calc(72px + var(--safe));
+  padding-left: 10px; padding-right: 10px;
+}
+
+/* ── SECTION HEADER ── */
+.sec-head {
+  display: flex; align-items: center; gap: 8px;
+  margin: 20px 0 9px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--border);
+}
+.sec-tag {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px; font-weight: 600; letter-spacing: .12em;
+  padding: 2px 8px; border-radius: 4px;
+  background: var(--surface2); color: var(--muted);
+}
+.sec-tag.green  { background: var(--green-dim);  color: var(--green); }
+.sec-tag.orange { background: var(--orange-dim); color: var(--orange); }
+.sec-tag.purple { background: var(--purple-dim); color: var(--purple); }
+.sec-tag.red    { background: var(--red-dim);    color: var(--red); }
+.sec-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 15px; font-weight: 400; letter-spacing: .05em; color: var(--text);
+}
+.sec-count { font-size: 11px; color: var(--dim); margin-left: auto; }
+
+/* ── PADS ── */
+.grid { display: grid; gap: 7px; }
+.g3 { grid-template-columns: repeat(3, 1fr); }
+.g2 { grid-template-columns: repeat(2, 1fr); }
+
+.pad {
+  position: relative; overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  cursor: pointer; touch-action: manipulation;
+  padding: 13px 8px 11px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px;
+  min-height: 72px;
+  transition: transform .08s, border-color .15s, background .15s;
+  text-align: center;
+}
+.pad:active { transform: scale(.93); }
+
+.pad-num {
+  position: absolute; top: 5px; left: 7px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px; color: var(--dim);
+}
+.pad-icon { font-size: 20px; line-height: 1; }
+.pad-label {
+  font-size: 12px; font-weight: 500; color: var(--text);
+  letter-spacing: -.01em; line-height: 1.35;
+}
+.pad-badge {
+  display: none; position: absolute; bottom: 5px; right: 6px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px; color: var(--dim);
+  background: rgba(0,0,0,.5); border-radius: 4px; padding: 1px 4px;
+}
+.pad-badge.show { display: block; }
+
+/* 카테고리별 테두리 색 */
+.pad.player  { border-color: rgba(34,197,94,.15); }
+.pad.event   { border-color: rgba(249,115,22,.15); }
+.pad.ops     { border-color: rgba(167,139,250,.15); }
+.pad.team    { border-color: rgba(248,113,113,.15); }
+
+/* 활성 상태 */
+.pad.player.active  { border-color: var(--green);  background: rgba(34,197,94,.12);  box-shadow: inset 0 0 0 1px var(--green); }
+.pad.event.active   { border-color: var(--orange); background: rgba(249,115,22,.12); box-shadow: inset 0 0 0 1px var(--orange); }
+.pad.ops.active     { border-color: var(--purple); background: rgba(167,139,250,.12);box-shadow: inset 0 0 0 1px var(--purple); }
+.pad.team.active    { border-color: var(--red);    background: rgba(248,113,113,.12);box-shadow: inset 0 0 0 1px var(--red); }
+
+/* 리플 */
+.ripple {
+  position: absolute; border-radius: 50%;
+  background: rgba(255,255,255,.12);
+  transform: scale(0); animation: rip .38s linear;
+  pointer-events: none;
+}
+@keyframes rip { to { transform: scale(4); opacity: 0; } }
+
+/* ── 라인업(타자) ── */
+.bat-tools { display: flex; gap: 7px; align-items: center; margin-bottom: 8px; }
+.seg { flex: 1; display: flex; gap: 3px; padding: 3px; background: var(--surface2); border-radius: 9px; min-width: 0; }
+.seg button {
+  flex: 1; min-width: 0; height: 34px; border: none; border-radius: 7px;
+  background: transparent; color: var(--muted); cursor: pointer; touch-action: manipulation;
+  font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 500;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 6px;
+}
+.seg button.on { background: var(--green); color: #04130a; font-weight: 600; }
+.tool-btn {
+  height: 40px; padding: 0 12px; flex-shrink: 0; cursor: pointer; touch-action: manipulation;
+  border: 1px solid var(--border2); background: var(--surface); color: var(--text); border-radius: 9px;
+  font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 500;
+}
+.tool-btn.on { border-color: var(--green); color: var(--green); }
+.edit-wide { width: 100%; margin-top: 8px; }
+.club-sel {
+  display: flex; align-items: center; gap: 8px; text-align: left;
+  flex: 1; min-width: 0; height: 40px; padding: 0 6px; cursor: pointer;
+  border: 1px solid var(--border2); background: var(--surface); color: var(--text); border-radius: 9px;
+  font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 500;
+}
+.bat-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 8px; }
+.now-bat, .next-bat {
+  min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 3px;
+  padding: 11px 13px; border-radius: 12px; cursor: pointer; touch-action: manipulation; text-align: left;
+  font-family: 'Noto Sans KR', sans-serif; color: var(--text); transition: transform .08s;
+}
+.now-bat { border: 1px solid var(--border2); background: var(--surface); }
+.now-bat.live { border-color: var(--yellow); background: rgba(251,191,36,.1); }
+.next-bat { border: 1px solid var(--green); background: rgba(34,197,94,.1); }
+.now-bat:active, .next-bat:active { transform: scale(.97); }
+.nb-k { font-size: 11px; font-weight: 600; color: var(--muted); display: flex; align-items: center; gap: 5px; width: 100%; }
+.next-bat .nb-k { color: var(--green); }
+.now-bat.live .nb-k { color: var(--yellow); }
+.nb-k .nb-go { margin-left: auto; font-size: 13px; }
+.nb-row { display: flex; align-items: baseline; gap: 7px; width: 100%; min-width: 0; }
+.nb-n { font-family: 'Oswald', sans-serif; font-size: 26px; line-height: 1; flex-shrink: 0; color: var(--muted); }
+.next-bat .nb-n { color: var(--green); }
+.now-bat.live .nb-n { color: var(--yellow); }
+.nb-name { font-size: 16px; font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nb-song { font-size: 10px; color: var(--muted); max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pad-song {
+  font-size: 10px; color: var(--muted); max-width: 100%;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pad.player .pad-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pad.player.up { border: 1px dashed var(--green); }
+.lineup-edit {
+  display: none; margin-top: 8px; padding: 12px;
+  background: var(--surface); border: 1px solid var(--border2); border-radius: 12px;
+}
+.lineup-edit.open { display: block; }
+.le-title { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+.le-row { display: grid; grid-template-columns: 24px minmax(0,1fr) minmax(0,1.2fr); gap: 6px; align-items: center; margin-bottom: 6px; }
+.le-row .no { font-family: 'Oswald', sans-serif; font-size: 15px; color: var(--green); text-align: center; }
+.lineup-edit input[type=text], .lineup-edit select {
+  width: 100%; min-width: 0; height: 38px; padding: 0 9px;
+  background: var(--bg); color: var(--text); border: 1px solid var(--border2); border-radius: 8px;
+  font-family: 'Noto Sans KR', sans-serif; font-size: 14px;
+}
+.le-teamname { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 12px; color: var(--muted); }
+.le-teamname input { flex: 1; }
+.le-set { display: grid; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+.le-line { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+.le-line > span { width: 76px; flex-shrink: 0; }
+.le-line select { flex: 1; }
+.le-line input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--green); }
+.le-btns { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 4px; }
+.le-btns .tool-btn { height: 36px; }
+.le-note { font-size: 11px; color: var(--dim); line-height: 1.6; }
+
+/* ── 구단 고르기 창 ── */
+.club-sel img, .club-sel .cs-dot { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.club-sel .cs-dot { display: inline-flex; align-items: center; justify-content: center; background: var(--surface2); font-size: 13px; }
+.club-sel .cs-t { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 600; }
+.club-sel .cs-ch { color: var(--muted); font-size: 11px; flex-shrink: 0; }
+.cm-wrap {
+  position: fixed; inset: 0; z-index: 300; display: flex; align-items: flex-end; justify-content: center;
+  background: rgba(0,0,0,0); visibility: hidden; transition: background .22s, visibility 0s .22s;
+}
+.cm-wrap.open { background: rgba(0,0,0,.6); visibility: visible; transition: background .22s; }
+.cm-sheet {
+  width: 100%; max-width: 520px; max-height: 88vh; overflow-y: auto;
+  background: #0f1620; border: 1px solid var(--border2); border-bottom: none; border-radius: 18px 18px 0 0;
+  padding: 8px 14px calc(16px + var(--safe));
+  transform: translateY(100%); transition: transform .26s cubic-bezier(.2,.8,.2,1);
+}
+.cm-wrap.open .cm-sheet { transform: none; }
+.cm-grab { width: 38px; height: 4px; border-radius: 2px; background: var(--border2); margin: 2px auto 10px; }
+.cm-hd { display: flex; align-items: center; margin-bottom: 6px; font-size: 15px; font-weight: 600; }
+.cm-x { margin-left: auto; width: 34px; height: 34px; border: none; border-radius: 50%; background: var(--surface2); color: var(--text); font-size: 14px; cursor: pointer; }
+.cm-warn { font-size: 11px; color: var(--yellow); margin-bottom: 8px; }
+.cm-warn:empty { display: none; }
+.cm-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px 6px; margin-bottom: 12px; }
+.cm-club {
+  display: flex; flex-direction: column; align-items: center; gap: 5px; padding: 8px 2px 7px; min-width: 0;
+  border: 1px solid var(--border); border-radius: 12px; background: var(--surface); color: var(--text);
+  cursor: pointer; touch-action: manipulation; font-family: 'Noto Sans KR', sans-serif; transition: transform .08s;
+}
+.cm-club:active { transform: scale(.94); }
+.cm-club img { width: 100%; max-width: 64px; aspect-ratio: 1; border-radius: 50%; object-fit: cover; border: 2px solid var(--cc, #fff); }
+.cm-club span { font-size: 12px; font-weight: 600; white-space: nowrap; }
+.cm-club.on { border-color: var(--yellow); background: rgba(251,191,36,.1); }
+.cm-plain { width: 100%; height: 42px; border: 1px solid var(--border2); border-radius: 10px; background: transparent; color: var(--muted); font-family: 'Noto Sans KR', sans-serif; font-size: 13px; cursor: pointer; }
+@media (max-width: 360px) { .cm-grid { grid-template-columns: repeat(4, 1fr); } }
+.pad.team .pad-icon img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; display: block; }
+
+/* ── 라인업 편집: 곡 버튼 · 곡 고르기 창 · 확인 창 ── */
+.le-row { grid-template-columns: 24px minmax(0,.9fr) minmax(0,1.3fr); }
+.le-song {
+  display: flex; align-items: center; gap: 8px; min-width: 0; height: 44px; padding: 0 8px; text-align: left;
+  background: var(--bg); color: var(--text); border: 1px solid var(--border2); border-radius: 10px; cursor: pointer; touch-action: manipulation;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+.le-song:active { transform: scale(.98); }
+.le-song img, .le-song .cs-dot { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; flex-shrink: 0; }
+.le-song .cs-dot { display: inline-flex; align-items: center; justify-content: center; background: var(--surface2); color: var(--muted); font-size: 13px; }
+.le-song-t { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.2; }
+.le-song-t b { font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.le-song-t small { font-size: 10px; color: var(--muted); }
+.le-song-ch { color: var(--muted); font-size: 11px; flex-shrink: 0; }
+.seg-clip { flex: 1; }
+.seg-clip button { height: 32px; font-size: 12px; padding: 0 2px; }
+.sp-sheet { display: flex; flex-direction: column; height: 82vh; overflow: hidden; }
+.sp-groups { display: flex; gap: 6px; overflow-x: auto; padding: 4px 0 10px; scrollbar-width: none; flex-shrink: 0; }
+.sp-groups::-webkit-scrollbar { display: none; }
+.sp-g {
+  display: flex; align-items: center; gap: 6px; flex-shrink: 0; height: 38px; padding: 0 12px 0 5px;
+  border: 1px solid var(--border2); border-radius: 19px; background: var(--surface); color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; touch-action: manipulation;
+}
+.sp-g img, .sp-g .cs-dot { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+.sp-g .cs-dot { display: inline-flex; align-items: center; justify-content: center; background: var(--surface2); color: var(--muted); }
+.sp-g.on { border-color: var(--yellow); background: rgba(251,191,36,.12); color: var(--yellow); }
+.sp-kind { flex: 0 0 auto; margin-bottom: 8px; }
+.sp-kind[hidden] { display: none; }
+.sp-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; padding-bottom: 4px; }
+.sp-item {
+  display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 14px; text-align: left;
+  border: 1px solid var(--border); border-radius: 11px; background: var(--surface); color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif; cursor: pointer; touch-action: manipulation; flex-shrink: 0;
+}
+.sp-item:active { transform: scale(.98); }
+.sp-n { font-family: 'Oswald', sans-serif; font-size: 13px; color: var(--muted); min-width: 34px; }
+.sp-t { flex: 1; min-width: 0; font-size: 15px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sp-item.on { border-color: var(--green); background: rgba(34,197,94,.1); }
+.sp-ck { color: var(--green); font-weight: 700; }
+.ask-wrap { align-items: center; padding: 20px; }
+.ask-box {
+  width: 100%; max-width: 340px; padding: 22px 20px 16px; border-radius: 18px; background: #0f1620; border: 1px solid var(--border2);
+  transform: scale(.94); opacity: 0; transition: transform .2s, opacity .2s;
+}
+.ask-wrap.open .ask-box { transform: none; opacity: 1; }
+.ask-title { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+.ask-msg { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 18px; }
+.ask-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ask-btns button { height: 44px; border-radius: 11px; font-family: 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: 1px solid var(--border2); }
+.ask-no { background: var(--surface2); color: var(--text); }
+.ask-ok { background: #b91c1c; color: #fff; border-color: #b91c1c !important; }
+
+/* ── 안내 ── */
+details { margin-top: 12px; }
+details summary {
+  font-size: 12px; color: var(--muted);
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--border); border-radius: 10px;
+  cursor: pointer; list-style: none;
+}
+details summary::before { content: '▶  '; font-size: 9px; }
+details[open] summary { border-radius: 10px 10px 0 0; border-bottom: none; }
+details[open] summary::before { content: '▼  '; }
+.hint-body {
+  background: var(--surface); border: 1px solid var(--border);
+  border-top: none; border-radius: 0 0 10px 10px;
+  padding: 12px 14px; font-size: 12px; color: var(--muted); line-height: 1.7;
+}
+.hint-body strong { color: var(--text); }
+.hint-body code {
+  font-size: 11px; color: #7dd3fc;
+  background: rgba(125,211,252,.07);
+  border-radius: 4px; padding: 1px 4px;
+}
+.safe-pad { height: calc(16px + var(--safe)); }
+
+/* ══════════ 새 경기 화면 ══════════ */
+body { padding-bottom: calc(146px + var(--safe)); }
+.hero {
+  position: relative; height: 168px; overflow: hidden;
+  background: url('img/hero.jpg') 70% 40%/cover, url('img/stadium.jpg') center 40%/cover, #060a10;
+}
+.hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5,9,15,.92) 0%, rgba(5,9,15,.55) 55%, rgba(5,9,15,.15) 100%), linear-gradient(0deg, rgba(10,14,20,1) 0%, rgba(10,14,20,0) 40%); }
+.hero-in { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 16px 14px; }
+.hero-acts { position: absolute; top: calc(10px + env(safe-area-inset-top, 0px)); right: 10px; z-index: 2; display: flex; gap: 6px; }
+.ha-btn {
+  display: flex; align-items: center; gap: 4px; height: 30px; padding: 0 10px; border-radius: 15px; cursor: pointer; touch-action: manipulation;
+  background: rgba(6,10,16,.55); border: 1px solid rgba(255,255,255,.25); color: #fff; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  font-family: 'Noto Sans KR', sans-serif; font-size: 11px; font-weight: 600;
+}
+.ha-btn svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.ha-main { background: var(--yellow); border-color: var(--yellow); color: #0a0e14; }
+.ha-btn[hidden] { display: none; }
+/* 홈 화면에서 앱처럼 열었을 때: 맨 위 상태 표시줄만큼 띄우기 */
+.standalone .hero { height: calc(168px + env(safe-area-inset-top, 0px)); }
+.now-bar { top: env(safe-area-inset-top, 0px); }
+body::before { content: ''; position: fixed; left: 0; right: 0; top: 0; height: env(safe-area-inset-top, 0px); background: #060a10; z-index: 150; }
+.ins-steps { margin: 4px 0 16px; padding-left: 18px; font-size: 13px; color: var(--text); line-height: 1.9; }
+.ins-steps b { color: var(--yellow); }
+.hero-kicker { align-self: flex-start; font-family: 'Oswald', sans-serif; font-size: 11px; letter-spacing: .2em; color: #0a0e14; background: var(--yellow); padding: 2px 8px; border-radius: 4px; }
+.hero-title { margin-top: 6px; font-size: 26px; font-weight: 600; letter-spacing: -.02em; color: #fff; text-shadow: 0 2px 10px rgba(0,0,0,.6); }
+.hero-title b { font-family: 'Oswald', sans-serif; color: var(--yellow); letter-spacing: .02em; }
+.hero .matchup { margin: 8px 0 0; }
+.mu-team { font-size: 13px; }
+.mu-team img, .mu-dot { width: 28px; height: 28px; }
+
+.now-bar { position: sticky; top: 0; height: auto; padding: 8px 14px 6px; gap: 2px; background: rgba(6,10,16,.96); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.now-top { gap: 8px; }
+#nowPlaying { font-family: 'Noto Sans KR', sans-serif; font-size: 14px; font-weight: 500; }
+.np-btn { height: 30px; padding: 0 11px; border: none; border-radius: 7px; color: #fff; font-family: 'Noto Sans KR', sans-serif; font-size: 12px; font-weight: 600; cursor: pointer; touch-action: manipulation; flex-shrink: 0; }
+.np-btn:active { transform: scale(.93); }
+.np-stop { background: #b91c1c; }
+.np-fade { background: var(--surface2); border: 1px solid var(--border2); }
+.seek-row { gap: 6px; }
+.seek { height: 28px; }
+.seek-btn { height: 28px; padding: 0 8px; font-size: 11px; }
+.now-sub { font-size: 11px; min-height: 0; }
+.now-sub:empty { display: none; }
+
+.content { padding: 12px 12px 8px; }
+.tab-pane { display: none; }
+.tab-pane.on { display: block; }
+.sec-head { margin: 18px 0 9px; }
+.sec-head:first-child { margin-top: 4px; }
+.sec-label { font-family: 'Noto Sans KR', sans-serif; font-size: 15px; font-weight: 600; letter-spacing: -.01em; }
+.sec-note { margin-left: auto; font-size: 11px; color: var(--muted); }
+.sec-note b { color: var(--text); }
+.bt-k { font-size: 12px; color: var(--muted); width: 30px; flex-shrink: 0; }
+.seg-mode { flex: 0 0 132px; }
+.bat-duo { margin-bottom: 10px; }
+.now-bat, .next-bat { padding: 13px 14px; min-height: 86px; }
+.nb-n { font-size: 30px; }
+.nb-name { font-size: 18px; }
+#playerGrid .pad { min-height: 64px; padding: 10px 6px 9px; }
+#playerGrid .pad-label { font-size: 14px; font-weight: 600; }
+
+/* 구단 응원가: 마스코트 + 이름 가로 배치 */
+#teamGrid .pad { flex-direction: row; justify-content: flex-start; gap: 10px; min-height: 60px; padding: 10px 12px; text-align: left; }
+#teamGrid .pad-icon img { width: 40px; height: 40px; }
+#teamGrid .pad-label { font-size: 13px; font-weight: 600; }
+#opsGrid .pad { min-height: 54px; }
+#opsGrid .pad-icon { display: none; }
+#opsGrid .pad-label { font-size: 14px; font-weight: 600; }
+
+.vol-card { display: flex; align-items: center; gap: 10px; padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; }
+.vol-card .vol-slider { height: 4px; }
+#tab-set .lineup-edit { margin-top: 0; }
+#tab-set details { margin-top: 18px; }
+
+/* 아래 고정: 효과음 줄 + 탭 */
+.dock { position: fixed; left: 0; right: 0; bottom: 0; z-index: 120; background: rgba(6,10,16,.97); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-top: 1px solid var(--border2); padding-bottom: var(--safe); }
+.fx { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 8px 10px 6px; }
+body:not(.on-game) .fx { display: none; }
+.fx .pad { min-height: 50px; padding: 6px 2px; border-radius: 10px; gap: 0; border-width: 1px; }
+.fx .pad-icon { display: none; }
+.fx .pad-label { font-size: 14px; font-weight: 700; }
+.fx .pad::before { content: ''; position: absolute; left: 8px; right: 8px; top: 0; height: 3px; border-radius: 0 0 3px 3px; background: var(--fx, var(--orange)); }
+.fx #pad_homerun { --fx: #ef4444; background: rgba(239,68,68,.12); }
+.fx #pad_hit { --fx: #22c55e; }
+.fx #pad_strikeout { --fx: #fbbf24; }
+.fx #pad_out { --fx: #94a3b8; }
+.fx #pad_change { --fx: #a78bfa; }
+.tabbar { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--border); }
+.tb { height: 54px; border: none; background: none; color: var(--muted); font-family: 'Noto Sans KR', sans-serif; font-size: 11px; font-weight: 500; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; touch-action: manipulation; }
+.tb svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tb.on { color: var(--yellow); }
+.content, .fx, .tabbar, .now-bar > * { max-width: 680px; margin-left: auto; margin-right: auto; width: 100%; }
+.hero-in { max-width: 680px; margin: 0 auto; }
+body:not(.on-game) { padding-bottom: calc(66px + var(--safe)); }
+</style>
 </head>
 <body>
-  <p>야구 수업 DJ 턴테이블로 이동합니다. 자동으로 이동하지 않으면 <a href="https://kimju1416.github.io/baseball/">여기를 누르세요</a>.</p>
+
+<!-- 경기 화면: 헤더(사진) → 지금 재생 줄(따라 붙음) → 탭 내용 → 아래 고정 효과음 줄 + 탭 -->
+<header class="hero">
+  <div class="hero-acts" id="heroActs">
+    <button class="ha-btn" id="fsBtn" onclick="goFullscreen()" hidden><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>전체화면</button>
+    <button class="ha-btn ha-main" id="installBtn" onclick="installApp()"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>홈 화면에 추가</button>
+  </div>
+  <div class="hero-in">
+    <div class="hero-kicker">PLAY BALL</div>
+    <h1 class="hero-title">야구 수업 <b>DJ</b> 턴테이블</h1>
+    <div class="matchup" id="matchup"></div>
+  </div>
+</header>
+
+<div class="now-bar">
+  <div class="now-top">
+    <div class="now-led" id="nowLed"></div>
+    <div id="nowPlaying">대기 중</div>
+    <div class="now-time" id="nowTime"></div>
+    <button class="np-btn np-fade" onclick="fadeOut()" aria-label="페이드">페이드</button>
+    <button class="np-btn np-stop" onclick="stopAll()" aria-label="정지">정지</button>
+  </div>
+  <div class="seek-row">
+    <button class="seek-btn" id="skipBack" onclick="skip(-1)" disabled>⏪ 30초</button>
+    <div class="seek" id="seek"><div class="progress-track" id="seekTrack"><div class="progress-fill" id="progFill"><span class="seek-thumb"></span></div></div></div>
+    <button class="seek-btn" id="skipFwd" onclick="skip(1)" disabled>30초 ⏩</button>
+  </div>
+  <div class="now-sub" id="nowSub"></div>
+</div>
+
+<main class="content">
+
+  <section class="tab-pane on" id="tab-game">
+    <div class="bat-tools">
+      <span class="bt-k">공격</span>
+      <div class="seg" id="teamSeg"><button onclick="setActiveTeam(0)"></button><button onclick="setActiveTeam(1)"></button></div>
+    </div>
+    <div class="bat-tools">
+      <button class="club-sel" id="clubSel" onclick="openClubModal()" aria-haspopup="dialog"></button>
+      <div class="seg seg-mode" id="modeSeg"><button data-m="cheer" onclick="setMode('cheer')">응원가</button><button data-m="walk" onclick="setMode('walk')">등장곡</button></div>
+    </div>
+    <div class="bat-duo">
+      <button class="now-bat" id="nowBat" onclick="replayBatter()"></button>
+      <button class="next-bat" id="nextBat" onclick="nextBatter()"></button>
+    </div>
+    <div class="grid g3" id="playerGrid"></div>
+    <button class="tool-btn edit-wide" id="editBtn" onclick="showTab('set')">라인업 편집 · 이름 부르기 설정</button>
+  </section>
+
+  <section class="tab-pane" id="tab-cheer">
+    <div class="sec-head">
+      <span class="sec-label">KBO 구단 응원가</span>
+      <span class="sec-note">구단마다 약 20분 · 다시 누르면 이어서</span>
+    </div>
+    <div class="grid g2" id="teamGrid"></div>
+    <button class="tool-btn edit-wide" onclick="resetTeamPositions()">이어 듣기 위치 모두 처음으로</button>
+    <div class="sec-head">
+      <span class="sec-label">경기 음악</span>
+    </div>
+    <div class="grid g2" id="opsGrid"></div>
+  </section>
+
+  <section class="tab-pane" id="tab-set">
+    <div class="sec-head"><span class="sec-label">전체 음량</span><span class="sec-note" id="masterPct">80%</span></div>
+    <div class="vol-card">
+      <span class="vol-icon">🔈</span>
+      <input class="vol-slider" type="range" min="0" max="1" step="0.01" value="0.8" oninput="setMasterVol(this.value)" aria-label="전체 음량">
+      <span class="vol-icon">🔊</span>
+    </div>
+    <div class="sec-head"><span class="sec-label">라인업 편집</span><span class="sec-note" id="setTeamName" hidden></span></div>
+    <div class="bat-tools"><span class="bt-k">팀</span><div class="seg" id="setSeg"><button onclick="setActiveTeam(0)"></button><button onclick="setActiveTeam(1)"></button></div></div>
+    <div class="lineup-edit open" id="lineupEdit"></div>
+    <details>
+      <summary>사용 방법</summary>
+      <div class="hint-body">
+      <strong>경기 탭</strong><br>
+      <strong>공격</strong>에서 지금 공격하는 팀을 고릅니다. 처음엔 청팀·백팀이고, <strong>구단 고르기</strong>를 누르면 그 팀이 KBO 구단 주전 9명(이름·곡)으로 바뀝니다.<br>
+      <strong>응원가 / 등장곡</strong>으로 구단 선수 곡을 그 선수 응원가로 틀지 등장곡으로 틀지 고릅니다.<br>
+      <strong>다음 타자</strong>를 누르면 「3번 타자, 김민준!」 하고 불러 준 뒤 곡이 나오고, 정한 길이가 지나면 저절로 줄어듭니다. <strong>지금 타자</strong>를 누르면 그 타자 곡을 처음부터 다시 틉니다. 9명 버튼을 눌러 아무 타자나 바로 불러도 됩니다.<br>
+      화면 아래 <strong>홈런·안타·삼진·아웃·공수교대</strong>는 늘 떠 있습니다. 공수교대를 누르면 상대 팀으로 바뀌고, 팀마다 자기 타순을 따로 기억합니다.<br><br>
+      <strong>재생 줄 (맨 위)</strong><br>
+      지금 나오는 곡과 시간이 보입니다. <strong>정지</strong>는 바로 끄고, <strong>페이드</strong>는 소리를 천천히 줄이며 끕니다.<br>
+      막대를 누르거나 끌면 그 위치로 가고, 양옆 버튼으로 건너뜁니다. 타자 곡은 10초, 구단 응원가는 곡 단위(이전 곡/다음 곡), 나머지는 30초씩.<br><br>
+      <strong>구단 응원가 탭</strong><br>
+      구단마다 라인업송과 팀 응원가가 약 20분 들어 있습니다. 다른 곡을 틀었다가 같은 구단을 다시 누르면 멈췄던 곳부터 이어서 나오고, 「이어 듣기 위치 모두 처음으로」로 처음부터 틀 수 있습니다.<br><br>
+      <strong>라인업·설정 탭</strong><br>
+      전체 음량, 팀 이름, 9명의 이름과 곡(기본 9곡·구단 선수 90명·구단 응원가 중에서)을 바꿉니다. 이름 불러 주기, 곡 길이(10초~끝까지), 목소리도 여기서 정합니다.<br><br>
+      이름은 이 기기에만 저장됩니다. 앱을 켜 둔 동안은 화면이 꺼지지 않습니다. 엣지 브라우저로 열면 더 자연스러운 목소리(선히)가 나옵니다.
+    </div>
+  </details>
+  </section>
+
+</main>
+
+<div class="dock">
+  <div class="fx" id="eventGrid"></div>
+  <nav class="tabbar" role="tablist">
+    <button class="tb on" data-tab="game" onclick="showTab('game')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 4.5c1.6 2 2.4 4.5 2.4 7.5S9.6 17.5 8 19.5M16 4.5c-1.6 2-2.4 4.5-2.4 7.5s.8 5.5 2.4 7.5"/></svg>경기</button>
+    <button class="tb" data-tab="cheer" onclick="showTab('cheer')"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>구단 응원가</button>
+    <button class="tb" data-tab="set" onclick="showTab('set')"><svg viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>라인업·설정</button>
+  </nav>
+</div>
+
+<div class="cm-wrap" id="songModal" onclick="if(event.target===this)closeSongPicker()" role="dialog" aria-modal="true" aria-labelledby="spTitle">
+  <div class="cm-sheet sp-sheet">
+    <div class="cm-grab"></div>
+    <div class="cm-hd"><span id="spTitle"></span><button class="cm-x" onclick="closeSongPicker()" aria-label="닫기">✕</button></div>
+    <div class="sp-groups" id="spGroups"></div>
+    <div class="seg sp-kind" id="spKind"></div>
+    <div class="sp-list" id="spList"></div>
+  </div>
+</div>
+
+<div class="cm-wrap ask-wrap" id="askModal" onclick="if(event.target===this)closeAsk(false)" role="alertdialog" aria-modal="true" aria-labelledby="askTitle">
+  <div class="ask-box">
+    <div class="ask-title" id="askTitle"></div>
+    <div class="ask-msg" id="askMsg"></div>
+    <div class="ask-btns"><button class="ask-no" onclick="closeAsk(false)">취소</button><button class="ask-ok" id="askOk" onclick="closeAsk(true)"></button></div>
+  </div>
+</div>
+
+<div class="cm-wrap" id="clubModal" onclick="if(event.target===this)closeClubModal()" role="dialog" aria-modal="true" aria-labelledby="cmTitle">
+  <div class="cm-sheet">
+    <div class="cm-grab"></div>
+    <div class="cm-hd"><span id="cmTitle"></span><button class="cm-x" onclick="closeClubModal()" aria-label="닫기">✕</button></div>
+    <div class="cm-warn" id="cmWarn"></div>
+    <div class="cm-grid" id="cmGrid"></div>
+    <button class="cm-plain" onclick="pickClub('')">구단 없이 기본 등장곡으로</button>
+  </div>
+</div>
+
+<script>
+const PLAYERS=[
+  {key:'player1',label:'1번 타자',icon:'⚾',src:'music/player1.mp3'},
+  {key:'player2',label:'2번 타자',icon:'⚾',src:'music/player2.mp3'},
+  {key:'player3',label:'3번 타자',icon:'⚾',src:'music/player3.mp3'},
+  {key:'player4',label:'4번 타자',icon:'⚾',src:'music/player4.mp3'},
+  {key:'player5',label:'5번 타자',icon:'⚾',src:'music/player5.mp3'},
+  {key:'player6',label:'6번 타자',icon:'⚾',src:'music/player6.mp3'},
+  {key:'player7',label:'7번 타자',icon:'⚾',src:'music/player7.mp3'},
+  {key:'player8',label:'8번 타자',icon:'⚾',src:'music/player8.mp3'},
+  {key:'player9',label:'9번 타자',icon:'⚾',src:'music/player9.mp3'},
+];
+const EVENTS=[
+  {key:'homerun',label:'홈런',icon:'🔥',src:'music/homerun.mp3'},
+  {key:'hit',label:'안타',icon:'👏',src:'music/hit.mp3'},
+  {key:'strikeout',label:'삼진',icon:'⚡',src:'music/strikeout.mp3'},
+  {key:'out',label:'아웃',icon:'✋',src:'music/out.mp3'},
+];
+const OPS=[
+  {key:'change',label:'공수교대',icon:'🔁',src:'music/change.mp3'},
+  {key:'start',label:'경기 시작',icon:'🎺',src:'music/start.mp3'},
+  {key:'end',label:'경기 종료',icon:'🏁',src:'music/end.mp3'},
+];
+const TEAMS=[
+  {key:'team_hanwha',label:'한화 이글스',icon:'🦅',src:'music/team_hanwha.mp3?v=3'},
+  {key:'team_kiwoom',label:'키움 히어로즈',icon:'⚔️',src:'music/team_kiwoom.mp3?v=3'},
+  {key:'team_lg',label:'LG 트윈스',icon:'⚡',src:'music/team_lg.mp3?v=3'},
+  {key:'team_lotte',label:'롯데 자이언츠',icon:'🌊',src:'music/team_lotte.mp3?v=3'},
+  {key:'team_samsung',label:'삼성 라이온즈',icon:'🦁',src:'music/team_samsung.mp3?v=3'},
+  {key:'team_kia',label:'KIA 타이거즈',icon:'🐯',src:'music/team_kia.mp3?v=3'},
+  {key:'team_doosan',label:'두산 베어스',icon:'🐻',src:'music/team_doosan.mp3?v=3'},
+  {key:'team_ssg',label:'SSG 랜더스',icon:'🚀',src:'music/team_ssg.mp3?v=3'},
+  {key:'team_nc',label:'NC 다이노스',icon:'🦖',src:'music/team_nc.mp3?v=3'},
+  {key:'team_kt',label:'KT 위즈',icon:'✨',src:'music/team_kt.mp3?v=3'},
+];
+// 구단 응원가 파일 안의 곡 시작 위치(초)와 제목 — 놀맘댈 「2026.09 ver.」 구단별 플레이리스트에서
+// 경기 개시·라인업송과 팀 응원가만(선수 응원가·안타송 빼고) 영상 챕터대로 이어 붙여, 20분을 넘지 않게 곡 끝에서 잘랐다
+// 파일이 바뀌어 ?v=3으로 캐시·저장 위치를 새로 잡는다
+const TEAM_SONGS={
+  team_samsung:[[0,"라인업 송"],[111,"환희"],[163,"나의 라이온즈"],[254,"다시 한번 힘을 내라"],[354,"영원하라 라이온즈여"],[449,"사랑한다 나의 삼성"],[490,"JUMP UP LIONS"],[525,"외쳐라 삼성"],[554,"하나되는 박수"],[587,"지중해"],[618,"이 파도의 저 끝에서"],[697,"승리의 그 이름"],[768,"언제나"],[911,"푸른 심장아 뛰어라"],[996,"푸른 함성"],[1051,"투게더"],[1118,"승리를 위해"]],
+  team_kia:[[0,"기아 없이는 못살아"],[31,"라인업송"],[133,"영원하리라 기아타이거즈"],[217,"미치도록 사랑해요"],[247,"두다"],[278,"승리를 위해"],[314,"버터플라이"],[341,"열광하라 최강기아"],[414,"언제나 승리하리"],[445,"영원히 사랑한다"],[471,"최강기아를 위해"],[636,"승리를 위해 함께 부르자"],[668,"광주의 함성"],[763,"오!최강기아"],[873,"사랑한다 기아"],[963,"최강기아 승리하리라"],[1067,"열광하라 타이거즈"]],
+  team_lg:[[0,"경기 개시 송"],[58,"라인업송"],[151,"셀리오"],[179,"LG 사랑한다 LG"],[242,"서울 메들리"],[398,"서울의 찬가"],[520,"서울의 모정"],[702,"무적의 LG"],[865,"엘팬의 북소리"],[1078,"LG 없이는 못 살아"],[1110,"강해져라"],[1145,"나의 사랑 서울 LG"]],
+  team_doosan:[[0,"경기 개시 음악"],[68,"라인업 송"],[178,"승리의 두산"],[265,"우리 두산 멋진 두산"],[381,"라랄라 두산 베어스"],[410,"우리의 베어스"],[440,"승리를 위해"],[473,"뱃노래"],[501,"야야야 두산"],[572,"가자! 두산 베어스"],[657,"최강두산 오오오"],[745,"해야 해야"],[846,"챔피언 두산"],[1016,"해야"]],
+  team_hanwha:[[0,"라인업송"],[115,"불타는 태양"],[318,"그대에게"],[342,"이글스 위하여"],[374,"이글스 화이팅"],[406,"텐션 올리고"],[430,"THIS IS OUR SONG"],[548,"외쳐라 이글스"],[647,"우리가 누구"],[751,"승리위해 외쳐라"],[847,"우리들의 열정"],[949,"보아라 기억하라"],[1045,"영원히 최강한화"]],
+  team_lotte:[[0,"경기 개시 음악"],[23,"수비 라인업송"],[118,"리듬 응원 송"],[143,"시그널"],[158,"공격 라인업송"],[240,"Dream of Ground"],[365,"챔피언 롯데"],[543,"롯데자이언츠 오오오오"],[560,"파도타기 응원"],[590,"오 최강롯데"],[693,"화이팅 송"],[783,"오늘도 승리한다"],[889,"힘차게 외쳐보자"],[920,"승리를 외치자"],[1023,"소리높여 외쳐보자"]],
+  team_ssg:[[0,"경기 개시 음악"],[68,"Let's GO"],[89,"라인업 소개 음악"],[115,"라인업송"],[208,"We are the LANDERS"],[310,"우리는 인천 SSG"],[338,"되고송"],[437,"불꽃투혼 랜더스"],[579,"승리를 외쳐라"],[660,"랜더스의 승리 위해"],[745,"외쳐라 랜더스"],[819,"우린 랜더스"],[901,"WE ARE LANDERS GO!"],[952,"Landing High TOGETHER"],[1059,"랜더스여"]],
+  team_nc:[[0,"라인업 송"],[99,"체로키"],[121,"NC를 위하여"],[229,"다이노스 찬가"],[291,"다이노스 다이겨쓰"],[384,"우린 해낼 수 있다"],[558,"Dinos ANTHEM"],[652,"We are NC"],[821,"외쳐라 다이노스"],[888,"챔피언 NC"],[960,"미친듯 놀자"],[1037,"창원의 NC"],[1141,"사랑한다 NC"]],
+  team_kt:[[0,"승리하리라 KT WIZ"],[99,"라인업 소개 곡"],[128,"라인업 송"],[232,"투혼가"],[320,"너와 내가 우리가 되어"],[427,"KT의 승리 위해"],[545,"KT WIZ 승리하라"],[576,"Don't stop KT"],[672,"KT WIZ 영원하리라"],[754,"우리 모두 KT"],[783,"Let's go KT WIZ"],[870,"승리를 위하여"],[932,"KT WIZ CLAP"],[958,"우리는 KT WIZ"],[989,"KT 라랄라"],[1074,"으랏차차"]],
+  team_kiwoom:[[0,"경기 개시 음악"],[95,"라인업송"],[160,"New heroes come here"],[270,"꿈이여 하나가 되자"],[359,"기를 높여라"],[388,"승리가"],[417,"우리가 승리한다"],[519,"히어로즈 만만세"],[621,"오 키움, 키움 히어로즈"],[697,"사랑한다 키움"],[798,"Let's go together hero"],[843,"영웅출정가"],[926,"히어로"],[1016,"외쳐라 히어로즈"],[1097,"승리를 위하여"]],
+};
+const ALL=[...PLAYERS,...EVENTS,...OPS,...TEAMS];
+const TEAM_SRCS=TEAMS.map(t=>t.src);
+
+let cur=null,curSrc=null,curName='',curIsTeam=false,curWalk=false,clipTimer=null;
+let masterVol=.8,fadeTimer=null,progTimer=null;
+
+const teamPos={};
+TEAM_SRCS.forEach(s=>{ teamPos[s]=Number(localStorage.getItem('tp_'+s)||0); });
+
+function loadVols(){
+  const base={}; ALL.forEach(s=>base[s.key]=1);
+  try{ const sv=localStorage.getItem('bbv3'); return sv?{...base,...JSON.parse(sv)}:base; }catch{return base;}
+}
+let svols=loadVols();
+function saveVols(){ localStorage.setItem('bbv3',JSON.stringify(svols)); }
+
+function makePad(item,cls,isTeam){
+  const b=document.createElement('button');
+  b.className='pad '+cls; b.dataset.src=item.src; b.id='pad_'+item.key;
+  const numHtml=cls==='player'?`<span class="pad-num">${item.key.replace('player','')}</span>`:'';
+  const badgeHtml=isTeam?`<span class="pad-badge" id="badge_${item.key}"></span>`:'';
+  const iconHtml=isTeam?`<img src="${MASCOT(item.key)}" alt="" loading="lazy">`:item.icon;
+  b.innerHTML=`${numHtml}<span class="pad-icon">${iconHtml}</span><span class="pad-label">${item.label}</span>${badgeHtml}`;
+  b.addEventListener('click',e=>{
+    ripple(b,e);
+    isTeam?playTeam(item.label,item.src):playNormal(item.label,item.src);
+  });
+  return b;
+}
+function ripple(btn,e){
+  const r=document.createElement('span'); r.className='ripple';
+  const rc=btn.getBoundingClientRect(), sz=Math.max(rc.width,rc.height);
+  r.style.cssText=`width:${sz}px;height:${sz}px;left:${e.clientX-rc.left-sz/2}px;top:${e.clientY-rc.top-sz/2}px`;
+  btn.appendChild(r); setTimeout(()=>r.remove(),500);
+}
+
+function renderPads(){
+  EVENTS.forEach(e=>document.getElementById('eventGrid').appendChild(makePad(e,'event',false)));
+  OPS.forEach(o=>{
+    const b=makePad(o,'ops',false);
+    if(o.key==='change'){ b.addEventListener('click',()=>setActiveTeam(1-LU.active)); document.getElementById('eventGrid').appendChild(b); }  // 공수교대 → 상대 팀 라인업
+    else document.getElementById('opsGrid').appendChild(b);
+  });
+  TEAMS.forEach(t=>document.getElementById('teamGrid').appendChild(makePad(t,'team',true)));
+}
+
+// 음원별 음량 보정은 없앴다 — 예전에 저장된 보정값이 남아 있어도 모두 100%로 튼다
+function setSoundVol(){} function resetSoundVols(){}
+function setMasterVol(v){
+  masterVol=Number(v); document.getElementById('masterPct').textContent=Math.round(masterVol*100)+'%'; applyVol();
+}
+function applyVol(){
+  if(!cur||!curSrc)return;
+  cur.volume=Math.min(1,masterVol);
+}
+
+function setActive(src,padId){
+  document.querySelectorAll('.pad').forEach(b=>b.classList.remove('active'));
+  const b=padId?document.getElementById(padId):src?document.querySelector(`.pad[data-src="${src}"]`):null;
+  if(b)b.classList.add('active');
+  document.getElementById('nowLed').classList.toggle('on',!!src);
+  if(!src) try{ renderBatters(); }catch{}   // 곡이 끝나면 「지금 타자」 재생 중 표시를 끈다
+}
+
+function updateBadges(){
+  TEAMS.forEach(t=>{
+    const el=document.getElementById('badge_'+t.key); if(!el)return;
+    const p=teamPos[t.src]||0;
+    if(p>2){ el.textContent='▶'+fmt(p); el.classList.add('show'); }
+    else el.classList.remove('show');
+  });
+}
+
+function fmt(sec){
+  sec=Math.floor(sec||0);
+  return Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');
+}
+
+function updateSub(){
+  if(cur&&curIsTeam){
+    const L=songList(), t=cur.currentTime;
+    let txt='▶ '+curName+' · '+fmt(t);
+    if(L){ const i=songIdx(L,t); txt='▶ '+(i+1)+'/'+L.length+(L[i][1]?' 「'+L[i][1]+'」':'')+' · '+curName+' · '+fmt(t); }
+    document.getElementById('nowSub').textContent=txt; return;
+  }
+  const parts=TEAMS.map(t=>{ const p=teamPos[t.src]||0; return p>2?t.label.split(' ')[0]+' '+fmt(p):null; }).filter(Boolean);
+  document.getElementById('nowSub').textContent=parts.length?'이어 듣기: '+parts.join(' · '):'';
+}
+
+function startProg(){
+  clearInterval(progTimer);
+  progTimer=setInterval(()=>{
+    setSeekUI();
+    if(!cur){ document.getElementById('progFill').style.width='0%'; return; }
+    if(seekDragging) return;
+    const d=cur.duration,c=cur.currentTime;
+    if(d&&!isNaN(d)) document.getElementById('progFill').style.width=(c/d*100)+'%';
+    document.getElementById('nowTime').textContent=fmt(c)+(d&&!isNaN(d)?' / '+fmt(d):'');
+    updateSub(); updateBadges();
+  },300);
+}
+
+// ── 재생 위치 이동 ──
+let seekDragging=false,seekRatio=0;
+function hasDur(){ return !!cur&&isFinite(cur.duration)&&cur.duration>0; }
+// 타자 등장곡(30초 남짓)은 10초, 나머지는 30초씩 건너뛴다. 구단 응원가는 곡 단위로 넘긴다.
+const PLAYER_SRCS=PLAYERS.map(p=>p.src);
+function skipStep(){ return cur&&(curWalk||PLAYER_SRCS.includes(curSrc))?10:30; }
+function songList(){
+  if(!cur||!curIsTeam)return null;
+  const t=TEAMS.find(x=>x.src===curSrc);
+  return t&&TEAM_SONGS[t.key]||null;
+}
+function songIdx(L,t){ let i=0; for(let k=0;k<L.length;k++) if(t>=L[k][0]-0.3) i=k; return i; }
+let tickFor=null;
+function drawTicks(L){
+  const key=L&&hasDur()?curSrc:null;
+  if(key===tickFor)return; tickFor=key;
+  const track=document.getElementById('seekTrack');
+  track.querySelectorAll('.seek-tick').forEach(el=>el.remove());
+  if(!key)return;
+  L.slice(1).forEach(([t])=>{
+    const el=document.createElement('span'); el.className='seek-tick';
+    el.style.left=(t/cur.duration*100)+'%'; track.appendChild(el);
+  });
+}
+function setSeekUI(){
+  const ok=hasDur(), L=songList();
+  const back=document.getElementById('skipBack'), fwd=document.getElementById('skipFwd');
+  if(L){
+    back.textContent='⏮ 이전 곡'; fwd.textContent='다음 곡 ⏭';
+    back.disabled=!ok; fwd.disabled=!ok||songIdx(L,cur.currentTime)>=L.length-1;
+  }else{
+    const st=skipStep();
+    back.textContent='⏪ '+st+'초'; fwd.textContent=st+'초 ⏩';
+    back.disabled=!ok; fwd.disabled=!ok;
+  }
+  document.getElementById('seek').classList.toggle('on',ok);
+  drawTicks(L);
+}
+function showPos(c){
+  const d=cur.duration;
+  document.getElementById('progFill').style.width=(c/d*100)+'%';
+  document.getElementById('nowTime').textContent=fmt(c)+' / '+fmt(d);
+}
+function moveTo(sec){
+  if(!hasDur())return;
+  cur.currentTime=Math.min(Math.max(0,sec),Math.max(0,cur.duration-0.5));
+  showPos(cur.currentTime); savePos(); updateSub(); updateBadges();
+}
+function skip(dir){
+  if(!hasDur())return;
+  const L=songList();
+  if(!L){ moveTo(cur.currentTime+dir*skipStep()); return; }
+  const t=cur.currentTime, i=songIdx(L,t);
+  if(dir>0){ if(i+1<L.length) moveTo(L[i+1][0]); }
+  else moveTo(t-L[i][0]>3||i===0?L[i][0]:L[i-1][0]);  // 곡 시작 3초 뒤면 그 곡 처음으로, 아니면 앞 곡으로
+  setSeekUI();
+}
+(function initSeek(){
+  const seek=document.getElementById('seek'), track=document.getElementById('seekTrack');
+  const ratioOf=e=>{ const r=track.getBoundingClientRect(); return Math.min(1,Math.max(0,(e.clientX-r.left)/r.width)); };
+  seek.addEventListener('pointerdown',e=>{
+    if(!hasDur())return;
+    seekDragging=true; seek.classList.add('dragging');
+    try{ seek.setPointerCapture(e.pointerId); }catch{}
+    seekRatio=ratioOf(e); showPos(seekRatio*cur.duration);
+  });
+  seek.addEventListener('pointermove',e=>{
+    if(!seekDragging||!hasDur())return;
+    seekRatio=ratioOf(e); showPos(seekRatio*cur.duration);
+  });
+  const end=commit=>{
+    if(!seekDragging)return;
+    seekDragging=false; seek.classList.remove('dragging');
+    if(commit&&hasDur()) moveTo(seekRatio*cur.duration);
+  };
+  seek.addEventListener('pointerup',()=>end(true));
+  seek.addEventListener('pointercancel',()=>end(false));
+})();
+
+function savePos(){
+  if(cur&&curSrc&&curIsTeam&&!isNaN(cur.currentTime)){
+    teamPos[curSrc]=cur.currentTime;
+    localStorage.setItem('tp_'+curSrc,String(cur.currentTime));
+  }
+}
+
+function playNormal(name,src){ playAudio(name,src,false); }
+function playTeam(name,src){ playAudio(name,src,true); }
+
+// opt: start(시작 초) · clip(그 초만큼 틀고 페이드) · padId(불 켤 버튼) · walk(타자 등장) · announce(먼저 읽을 말)
+function playAudio(name,src,isTeam,opt={}){
+  clearInterval(fadeTimer); clearTimeout(clipTimer); savePos(); cancelSpeak();
+  if(cur){ cur.pause(); cur.currentTime=0; }
+  const a=new Audio(src); cur=a; curSrc=src; curName=name; curIsTeam=isTeam; curWalk=!!opt.walk;
+  applyVol();
+  document.getElementById('nowPlaying').textContent=isTeam?'LIVE · '+name:'▶  '+name;
+  document.getElementById('progFill').style.width='0%';
+  document.getElementById('nowTime').textContent='';
+  setActive(src,opt.padId);
+  const start=opt.start||0;
+  let waiting=false, clipped=false;
+  // 등장곡 길이는 시계가 아니라 실제로 나온 재생 시간으로 잰다(불러오는 동안 멈춘 시간은 빼고)
+  if(opt.clip) a.addEventListener('timeupdate',()=>{
+    if(clipped||waiting||cur!==a)return;
+    if(a.currentTime>=start+opt.clip){ clipped=true; fadeOut('등장 끝 · '+name); }
+  });
+  a.addEventListener('loadedmetadata',()=>{
+    if(start>0&&a.currentTime<start-1) a.currentTime=start;
+    if(isTeam){
+      const sv=teamPos[src]||0;
+      if(sv>2&&sv<cur.duration-1){
+        cur.currentTime=sv;
+        document.getElementById('nowPlaying').textContent='↩ '+name+' ('+fmt(sv)+')';
+      }
+    }
+  });
+  a.onended=()=>{
+    if(cur!==a)return;
+    if(isTeam){ teamPos[src]=0; localStorage.setItem('tp_'+src,'0'); }
+    document.getElementById('nowPlaying').textContent='완료 · '+name;
+    document.getElementById('progFill').style.width='0%';
+    document.getElementById('nowTime').textContent='';
+    setActive(null); updateSub(); updateBadges();
+  };
+  const fail=()=>{ if(cur!==a)return; document.getElementById('nowPlaying').textContent='재생 안 됨 · '+name; setActive(null); };
+  if(opt.announce){
+    // 아이폰은 버튼을 누른 그 순간에 재생을 한 번 시작해 둬야 나중에 소리가 난다 → 소리 없이 열었다가 멈춰 둔다
+    a.muted=true; waiting=true;
+    a.play().then(()=>{ if(waiting) a.pause(); }).catch(()=>{});
+    document.getElementById('nowPlaying').textContent='📢 '+opt.announce;
+    speak(opt.announce,()=>{
+      waiting=false; if(cur!==a)return;
+      a.pause(); a.muted=false;
+      try{ if(isFinite(a.duration)) a.currentTime=start; }catch{}
+      document.getElementById('nowPlaying').textContent='▶  '+name;
+      a.play().catch(fail);
+    });
+  }else{
+    a.play().catch(fail);
+  }
+  startProg();
+}
+
+function stopAll(){
+  clearInterval(fadeTimer); clearTimeout(clipTimer); cancelSpeak(); savePos();
+  if(cur){ cur.pause(); cur.currentTime=0; }
+  cur=null; curSrc=null; curName=''; curIsTeam=false; curWalk=false; setSeekUI();
+  document.getElementById('nowPlaying').textContent='정지됨';
+  document.getElementById('progFill').style.width='0%';
+  document.getElementById('nowTime').textContent='';
+  setActive(null); updateSub(); updateBadges();
+}
+
+function fadeOut(msg){
+  if(!cur)return; clearInterval(fadeTimer); clearTimeout(clipTimer); cancelSpeak();
+  if(typeof msg!=='string') msg='페이드 정지됨';
+  fadeTimer=setInterval(()=>{
+    if(!cur){ clearInterval(fadeTimer); return; }
+    if(cur.volume>.035){ cur.volume=Math.max(0,cur.volume-.035); }
+    else{ savePos(); cur.pause(); applyVol(); document.getElementById('nowPlaying').textContent=msg; setActive(null); clearInterval(fadeTimer); }
+  },100);
+}
+
+function resetTeamPositions(){
+  savePos();
+  TEAM_SRCS.forEach(s=>{ teamPos[s]=0; localStorage.setItem('tp_'+s,'0'); });
+  if(cur&&curIsTeam) cur.currentTime=0;
+  document.getElementById('nowPlaying').textContent='위치 초기화됨';
+  updateSub(); updateBadges();
+}
+
+// ── 장내 아나운서 목소리 ──
+// 엣지는 선히(SunHi Online Natural)를 바로 쓸 수 있다. 다른 브라우저는 그 기기의 한국어 목소리.
+function koVoices(){ return ('speechSynthesis' in window)?speechSynthesis.getVoices().filter(v=>/^ko/i.test(v.lang)):[]; }
+function pickVoice(){
+  const vs=koVoices();
+  if(LU.voice){ const v=vs.find(x=>x.name===LU.voice); if(v)return v; }
+  for(const r of [/SunHi.*Natural/i,/InJoon.*Natural/i,/Natural/i,/Google/i,/Yuna|유나/i,/Heami/i]){ const v=vs.find(x=>r.test(x.name)); if(v)return v; }
+  return vs[0]||null;
+}
+let speakFin=null;
+function cancelSpeak(){ if(speakFin){ const f=speakFin; speakFin=null; f(true); try{ speechSynthesis.cancel(); }catch{} } }
+function speak(text,done){
+  if(!('speechSynthesis' in window)||!text){ done(); return; }
+  cancelSpeak();
+  let t=null, over=false;
+  const fin=(canceled)=>{ if(over)return; over=true; clearTimeout(t); if(speakFin===fin) speakFin=null; if(!canceled) done(); };
+  speakFin=fin;
+  try{ speechSynthesis.cancel(); }catch{}
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='ko-KR'; const v=pickVoice(); if(v)u.voice=v;
+  u.rate=.95; u.pitch=1; u.volume=1;
+  u.onend=()=>fin(); u.onerror=()=>fin();
+  // 끝 신호를 안 주는 브라우저 대비: 시작 전 8초, 말이 시작되면 글자 수만큼 기다린다
+  t=setTimeout(()=>fin(),8000);
+  u.onstart=()=>{ clearTimeout(t); t=setTimeout(()=>fin(),1500+text.length*260); };
+  speechSynthesis.speak(u);
+}
+if('speechSynthesis' in window) speechSynthesis.onvoiceschanged=()=>{ if(document.getElementById('lineupEdit').classList.contains('open')) renderEdit(); };
+
+// ── 라인업: 두 팀 × 9명, 이 기기에만 저장 ──
+const LU_KEY='bb_lineup_v1';
+function luDefault(){
+  const mk=n=>({name:n,next:0,slots:Array.from({length:9},(_,i)=>({name:'',song:'player'+(i+1)}))});
+  return {active:0,clip:15,call:true,voice:'',mode:'cheer',teams:[mk('청팀'),mk('백팀')]};
+}
+let LU=(()=>{ try{ const v=JSON.parse(localStorage.getItem(LU_KEY)); if(v&&v.teams&&v.teams.length===2) return {...luDefault(),...v}; }catch{} return luDefault(); })();
+function saveLU(){ try{ localStorage.setItem(LU_KEY,JSON.stringify(LU)); }catch{} }
+function esc(t){ return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+// 구단 주전 9명(타순대로)과 곡 — 놀맘댈 「2026.09 ver.」 구단별 플레이리스트의 「선수 등장곡+응원가」 챕터를
+// 처음 나오는 9명까지 잘랐다(영상이 라인업 순서로 시작한다). 등장곡과 응원가의 경계는 다른 응원가 모음 영상의
+// 응원가 첫머리를 소리로 맞춰 찾았다. 파일: music/walk(등장곡)·music/cheer(응원가)/삼성이면 samsung1~9.mp3, -14 LUFS
+const CLUB_LINEUP={
+  team_samsung:["김지찬","김성윤","구자욱","최형우","디아즈","김영웅","류지혁","강민호","이재현"],
+  team_kia:["박정우","박재현","김도영","카스트로","나성범","김선빈","하주석","김태군","김호령"],
+  team_lg:["신민재","박해민","오스틴","송찬의","문정빈","문보경","오지환","박동원","홍창기"],
+  team_doosan:["박찬호","안재석","박준순","양의지","김민석","세베리노","양석환","조수행","정수빈"],
+  team_hanwha:["최인호","페라자","문현빈","강백호","노시환","허인서","김태연","정은원","심우준"],
+  team_lotte:["황성빈","나승엽","레이예스","한동희","고승민","윤동희","전민재","손성빈","장두성"],
+  team_ssg:["박성한","에레디아","최정","김재환","고명준","전의산","최지훈","조형우","정준재"],
+  team_nc:["김주원","권희동","박민우","블레인","김휘집","박건우","김형준","천재환","최정원"],
+  team_kt:["최원준","김민혁","안현민","힐리어드","김현수","허경민","김상수","한승택","권동진"],
+  team_kiwoom:["서건창","데이비슨","히우라","박찬혁","김웅빈","김건희","여동욱","김태진","이주형"],
+};
+const clubShort=k=>(TEAMS.find(t=>t.key===k)||{label:''}).label.split(' ')[0];
+// 등장곡 id: 'player3' = 기본 등장곡 3 · 'team_kia:6' = KIA 응원가 7번째 곡 · 'w:team_kia:2' = KIA 3번 타자(응원가/등장곡은 LU.mode)
+const modeWord=()=>LU.mode==='walk'?'등장곡':'응원가';
+function songInfo(id){
+  if(typeof id==='string'&&id.startsWith('w:')){
+    const [,k,i]=id.split(':'), L=CLUB_LINEUP[k], dir=LU.mode==='walk'?'walk':'cheer';
+    if(L&&L[+i]) return {src:'music/'+dir+'/'+k.slice(5)+(+i+1)+'.mp3?v=2',start:0,label:clubShort(k)+' '+L[+i],club:true};
+  }
+  if(typeof id==='string'&&id.indexOf(':')>0){
+    const [k,i]=id.split(':'); const t=TEAMS.find(x=>x.key===k), L=TEAM_SONGS[k];
+    if(t&&L&&L[+i]) return {src:t.src,start:L[+i][0],label:L[+i][1]};
+  }
+  const p=PLAYERS.find(x=>x.key===id)||PLAYERS[0];
+  return {src:p.src,start:0,label:'등장곡 '+p.key.slice(6)};
+}
+function renderBatters(){
+  const T=LU.teams[LU.active];
+  // 지금 팀이 어느 구단 라인업 그대로인지 구단 칸에 보여 준다
+  const ck=teamClub(T);
+  document.getElementById('clubSel').innerHTML=ck?`<img src="${MASCOT(ck.key)}" alt=""><span class="cs-t">${esc(ck.label)}</span><span class="cs-ch">바꾸기 ▾</span>`
+    :`<span class="cs-dot">⚾</span><span class="cs-t">구단 고르기</span><span class="cs-ch">10개 구단 ▾</span>`;
+  document.querySelectorAll('#modeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.m===(LU.mode==='walk'?'walk':'cheer')));
+  document.querySelectorAll('#teamSeg button').forEach((b,i)=>{ b.textContent=LU.teams[i].name||(i?'백팀':'청팀'); b.classList.toggle('on',i===LU.active); });
+  const n=T.next||0, nm=T.slots[n].name.trim();
+  const songOf=i=>{ const inf=songInfo(T.slots[i].song); return inf.club?modeWord():inf.label; };
+  document.getElementById('nextBat').innerHTML=`<span class="nb-k">다음 타자<span class="nb-go">▶</span></span><span class="nb-row"><span class="nb-n">${n+1}</span><span class="nb-name">${esc(nm||(n+1)+'번 타자')}</span></span><span class="nb-song">${esc(songOf(n))}</span>`;
+  // 지금 타자 = 이 팀에서 마지막으로 부른 타자. 누르면 그 타자 곡을 처음부터 다시
+  const c=T.cur, nowEl=document.getElementById('nowBat');
+  const live=c!=null&&cur&&curWalk&&playingTeam===LU.active&&document.getElementById('bat_'+c)?.classList.contains('active');
+  nowEl.classList.toggle('live',!!live);
+  nowEl.innerHTML=c==null?`<span class="nb-k">지금 타자</span><span class="nb-row"><span class="nb-n">–</span><span class="nb-name" style="color:var(--muted)">아직 없음</span></span><span class="nb-song">다음 타자를 누르면 시작</span>`
+    :`<span class="nb-k">지금 타자${live?' · 재생 중':''}<span class="nb-go">↻</span></span><span class="nb-row"><span class="nb-n">${c+1}</span><span class="nb-name">${esc(T.slots[c].name.trim()||(c+1)+'번 타자')}</span></span><span class="nb-song">${esc(songOf(c))}</span>`;
+  const playingId=cur&&curWalk?document.querySelector('#playerGrid .pad.active')?.id:null;
+  const g=document.getElementById('playerGrid'); g.innerHTML='';
+  T.slots.forEach((s,i)=>{
+    const b=document.createElement('button');
+    b.className='pad player'+(i===n?' up':''); b.id='bat_'+i;
+    // 선수 이름 그대로면 곡 이름 줄엔 「삼성 등장곡」만 (같은 이름 두 번 안 쓰게)
+    const inf=songInfo(s.song), lab=inf.label, nm=s.name.trim();
+    const songTxt=inf.club?(nm&&lab.endsWith(' '+nm)?lab.split(' ')[0]:lab)+' '+modeWord():lab;
+    b.innerHTML=`<span class="pad-num">${i+1}</span><span class="pad-label">${esc(nm||(i+1)+'번 타자')}</span><span class="pad-song">${esc(songTxt)}</span>`;
+    b.addEventListener('click',e=>{ ripple(b,e); callBatter(i); });
+    g.appendChild(b);
+  });
+  if(playingId&&playingTeam===LU.active){ const b=document.getElementById(playingId); if(b)b.classList.add('active'); }
+  renderMatchup();
+}
+let playingTeam=-1;
+function callBatter(i){
+  const T=LU.teams[LU.active], s=T.slots[i], nm=s.name.trim(), info=songInfo(s.song);
+  T.next=(i+1)%9; T.cur=i; saveLU(); playingTeam=LU.active;
+  const title=(i+1)+'번 '+(nm||'타자');
+  playAudio(title+' · '+info.label+(info.club?' '+modeWord():''),info.src,false,{
+    start:info.start, clip:LU.clip||0, padId:'bat_'+i, walk:true,
+    announce:LU.call?(nm?(i+1)+'번 타자, '+nm+'!':(i+1)+'번 타자!'):''
+  });
+  renderBatters();
+}
+function replayBatter(){ const c=LU.teams[LU.active].cur; if(c!=null) callBatter(c); }
+function nextBatter(){ callBatter(LU.teams[LU.active].next||0); }
+function setMode(m){ LU.mode=m; saveLU(); renderBatters(); }
+function setActiveTeam(i){ LU.active=i; saveLU(); renderBatters(); renderEdit(); }
+// 아래 탭: 경기 / 구단 응원가 / 라인업·설정. 효과음 줄은 경기 탭에서만
+function showTab(t){
+  document.querySelectorAll('.tab-pane').forEach(el=>el.classList.toggle('on',el.id==='tab-'+t));
+  document.querySelectorAll('.tabbar .tb').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
+  document.body.classList.toggle('on-game',t==='game');
+  if(t==='set') renderEdit();
+  try{ sessionStorage.setItem('bb_tab',t); }catch{}
+  window.scrollTo({top:document.querySelector('.hero').offsetHeight,behavior:'instant'});
+}
+function toggleEdit(){ showTab('set'); }
+function songOptions(sel){
+  let h='<optgroup label="기본 등장곡">'+PLAYERS.map(p=>`<option value="${p.key}"${p.key===sel?' selected':''}>등장곡 ${p.key.slice(6)}</option>`).join('')+'</optgroup>';
+  TEAMS.forEach(t=>{
+    const L=CLUB_LINEUP[t.key]||[];
+    h+=`<optgroup label="${esc(t.label)} 선수">`+L.map((n,i)=>{ const v='w:'+t.key+':'+i; return `<option value="${v}"${v===sel?' selected':''}>${esc(clubShort(t.key)+' '+(i+1)+'번 '+n)}</option>`; }).join('')+'</optgroup>';
+  });
+  TEAMS.forEach(t=>{
+    const L=TEAM_SONGS[t.key]||[];
+    h+=`<optgroup label="${esc(t.label)} 응원가">`+L.map((x,i)=>{ const v=t.key+':'+i; return `<option value="${v}"${v===sel?' selected':''}>${esc(t.label.split(' ')[0]+' · '+x[1])}</option>`; }).join('')+'</optgroup>';
+  });
+  return h;
+}
+// 구단 마스코트(코덱스로 만든 그림 — 구단 공식 캐릭터가 아니라 구단 상징 동물) · 구단 색
+const MASCOT=k=>'img/'+k.slice(5)+'.jpg';
+const CLUB_COLOR={team_samsung:'#074CA1',team_kia:'#EA0029',team_lg:'#C30452',team_doosan:'#2B2A72',team_hanwha:'#FF6600',
+  team_lotte:'#D00F31',team_ssg:'#CE0E2D',team_nc:'#C7A079',team_kt:'#E1302E',team_kiwoom:'#820024'};
+// 이 팀이 어느 구단 라인업 그대로인지 (아니면 null)
+function teamClub(T){ return TEAMS.find(t=>CLUB_LINEUP[t.key]&&clubShort(t.key)===T.name&&T.slots.every(s=>String(s.song).startsWith('w:'+t.key+':')))||null; }
+function renderMatchup(){
+  const el=document.getElementById('matchup'); if(!el)return;
+  el.innerHTML=LU.teams.map((T,i)=>{ const c=teamClub(T), nm=esc(T.name||(i?'백팀':'청팀'));
+    return `<span class="mu-team${i===LU.active?' on':''}">${c?`<img src="${MASCOT(c.key)}" alt="">`:`<span class="mu-dot">⚾</span>`}${nm}</span>`; }).join('<span class="mu-vs">VS</span>');
+}
+// 구단 고르기 창 → 지금 팀(청팀/백팀)을 그 구단 주전 9명과 곡으로 통째로 바꾼다
+function openClubModal(){
+  const T=LU.teams[LU.active], c=teamClub(T), tn=T.name||(LU.active?'백팀':'청팀');
+  const custom=!c&&T.slots.some(s=>s.name.trim());
+  document.getElementById('cmTitle').textContent=`${LU.active?'백팀':'청팀'} 구단 고르기`;
+  document.getElementById('cmWarn').textContent=custom?`지금 「${tn}」에 적어 둔 이름과 곡은 구단을 고르면 바뀝니다.`:'';
+  document.getElementById('cmGrid').innerHTML=TEAMS.filter(t=>CLUB_LINEUP[t.key]).map(t=>
+    `<button class="cm-club${c&&c.key===t.key?' on':''}" style="--cc:${CLUB_COLOR[t.key]}" onclick="pickClub('${t.key}')"><img src="${MASCOT(t.key)}" alt="" loading="lazy"><span>${esc(clubShort(t.key))}</span></button>`).join('');
+  document.getElementById('clubModal').classList.add('open');
+}
+function closeClubModal(){ document.getElementById('clubModal').classList.remove('open'); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeClubModal(); });
+function pickClub(k){
+  closeClubModal();
+  const T=LU.teams[LU.active];
+  if(!k){ const d=luDefault().teams[LU.active]; LU.teams[LU.active]=d; }
+  else{ T.name=clubShort(k); T.next=0; T.cur=null; T.slots=CLUB_LINEUP[k].map((n,i)=>({name:n,song:'w:'+k+':'+i})); }
+  saveLU(); renderBatters();
+  if(document.getElementById('lineupEdit').classList.contains('open')) renderEdit();
+}
+const loadClub=pickClub;
+function testVoice(){
+  const T=LU.teams[LU.active], n=T.next||0, nm=T.slots[n].name.trim()||'김민준';
+  speak((n+1)+'번 타자, '+nm+'!',()=>{});
+}
+function clearTeam(){
+  askSheet('이 팀을 비울까요?','9명의 이름과 곡이 모두 지워지고 기본 등장곡 1~9로 돌아갑니다.','비우기',doClearTeam);
+}
+function doClearTeam(){
+  const d=luDefault().teams[LU.active]; d.name=LU.teams[LU.active].name; LU.teams[LU.active]=d;
+  saveLU(); renderBatters(); renderEdit();
+}
+// ── 곡 고르기 창: 위에서 묶음(기본 / 10개 구단) 고르고, 아래 목록에서 한 곡 ──
+function songChip(id){
+  const inf=songInfo(id), k=String(id).startsWith('w:')?id.split(':')[1]:(String(id).indexOf(':')>0?id.split(':')[0]:null);
+  const img=k&&CLUB_LINEUP[k]?`<img src="${MASCOT(k)}" alt="">`:`<span class="cs-dot">♪</span>`;
+  const sub=String(id).startsWith('w:')?'선수 곡':(k?'팀 응원가':'기본 등장곡');
+  return `${img}<span class="le-song-t"><b>${esc(inf.label)}</b><small>${sub}</small></span>`;
+}
+let spSlot=0, spGroup='basic', spKind='player';
+function openSongPicker(i){
+  spSlot=i; const id=String(LU.teams[LU.active].slots[i].song);
+  if(id.startsWith('w:')){ spGroup=id.split(':')[1]; spKind='player'; }
+  else if(id.indexOf(':')>0){ spGroup=id.split(':')[0]; spKind='team'; }
+  else{ spGroup='basic'; spKind='player'; }
+  renderSongPicker(); document.getElementById('songModal').classList.add('open');
+}
+function closeSongPicker(){ document.getElementById('songModal').classList.remove('open'); }
+function renderSongPicker(){
+  const T=LU.teams[LU.active], cur=String(T.slots[spSlot].song);
+  document.getElementById('spTitle').textContent=`${spSlot+1}번 타자 곡 고르기`;
+  const clubs=TEAMS.filter(t=>CLUB_LINEUP[t.key]);
+  document.getElementById('spGroups').innerHTML=`<button class="sp-g${spGroup==='basic'?' on':''}" onclick="spGroup='basic';renderSongPicker()"><span class="cs-dot">♪</span>기본</button>`+
+    clubs.map(t=>`<button class="sp-g${spGroup===t.key?' on':''}" style="--cc:${CLUB_COLOR[t.key]}" onclick="spGroup='${t.key}';renderSongPicker()"><img src="${MASCOT(t.key)}" alt="">${esc(clubShort(t.key))}</button>`).join('');
+  const kindEl=document.getElementById('spKind');
+  kindEl.hidden=spGroup==='basic';
+  kindEl.innerHTML=`<button class="${spKind==='player'?'on':''}" onclick="spKind='player';renderSongPicker()">선수 ${LU.mode==='walk'?'등장곡':'응원가'} 9곡</button><button class="${spKind==='team'?'on':''}" onclick="spKind='team';renderSongPicker()">팀 응원가</button>`;
+  let items=[];
+  if(spGroup==='basic') items=PLAYERS.map(p=>[p.key,'등장곡 '+p.key.slice(6),'기본']);
+  else if(spKind==='player') items=CLUB_LINEUP[spGroup].map((n,i)=>['w:'+spGroup+':'+i,n,(i+1)+'번']);
+  else items=(TEAM_SONGS[spGroup]||[]).map((x,i)=>[spGroup+':'+i,x[1],fmt(x[0])]);
+  document.getElementById('spList').innerHTML=items.map(([v,t,n])=>
+    `<button class="sp-item${v===cur?' on':''}" onclick="pickSong('${v}')"><span class="sp-n">${esc(n)}</span><span class="sp-t">${esc(t)}</span>${v===cur?'<span class="sp-ck">✓</span>':''}</button>`).join('');
+  document.getElementById('spGroups').querySelector('.on')?.scrollIntoView({block:'nearest',inline:'center'});
+}
+function pickSong(v){ LU.teams[LU.active].slots[spSlot].song=v; saveLU(); renderBatters(); renderEdit(); closeSongPicker(); }
+// ── 앱 안 확인 창 (윈도우식 confirm 대신) ──
+let askFn=null;
+function askSheet(title,msg,okText,fn){
+  askFn=fn; document.getElementById('askTitle').textContent=title; document.getElementById('askMsg').textContent=msg;
+  document.querySelector('#askModal .ask-no').hidden=false; document.getElementById('askOk').style.background=''; document.getElementById('askOk').style.color='';
+  document.getElementById('askOk').textContent=okText; document.getElementById('askModal').classList.add('open');
+}
+function closeAsk(ok){ document.getElementById('askModal').classList.remove('open'); const f=askFn; askFn=null; if(ok&&f) f(); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeSongPicker(); closeAsk(false); } });
+function renderEdit(){
+  const T=LU.teams[LU.active], el=document.getElementById('lineupEdit');
+  document.querySelectorAll('#setSeg button').forEach((b,i)=>{ b.textContent=LU.teams[i].name||(i?'백팀':'청팀'); b.classList.toggle('on',i===LU.active); });
+  const vs=koVoices(), best=pickVoice();
+  const vname=v=>v.name.replace(/^Microsoft /,'').replace(/ - Korean.*$/,'');
+  el.innerHTML=`
+    <div class="le-teamname"><span>팀 이름</span><input type="text" maxlength="8" value="${esc(T.name)}" oninput="LU.teams[LU.active].name=this.value; saveLU(); renderBatters()"></div>
+    <div class="le-title">이름을 비워 두면 「N번 타자」라고 부릅니다</div>
+    ${T.slots.map((s,i)=>`<div class="le-row"><span class="no">${i+1}</span>
+      <input type="text" maxlength="10" placeholder="${i+1}번 타자 이름" value="${esc(s.name)}" oninput="LU.teams[LU.active].slots[${i}].name=this.value; saveLU(); renderBatters()">
+      <button class="le-song" onclick="openSongPicker(${i})">${songChip(s.song)}<span class="le-song-ch">▾</span></button></div>`).join('')}
+    <div class="le-set">
+      <label class="le-line"><span>이름 불러 주기</span><input type="checkbox" ${LU.call?'checked':''} onchange="LU.call=this.checked; saveLU()"></label>
+      <div class="le-line"><span>곡 길이</span><div class="seg seg-clip">
+        ${[[10,'10초'],[15,'15초'],[20,'20초'],[30,'30초'],[0,'끝까지']].map(([v,t])=>`<button class="${(LU.clip||0)===v?'on':''}" onclick="LU.clip=${v}; saveLU(); renderEdit()">${t}</button>`).join('')}</div></div>
+      <label class="le-line"><span>목소리</span><select onchange="LU.voice=this.value; saveLU()">
+        <option value="">자동 (${esc(best?vname(best):'한국어 목소리 없음')})</option>
+        ${vs.map(v=>`<option value="${esc(v.name)}"${v.name===LU.voice?' selected':''}>${esc(vname(v))}</option>`).join('')}</select></label>
+      <div class="le-btns">
+        <button class="tool-btn" onclick="testVoice()">목소리 들어 보기</button>
+        <button class="tool-btn" onclick="LU.teams[LU.active].next=0; saveLU(); renderBatters()">1번부터 다시</button>
+        <button class="tool-btn" onclick="clearTeam()">이 팀 비우기</button>
+      </div>
+      <div class="le-note">엣지 브라우저로 열면 「선히」 목소리가 나옵니다. 크롬·휴대폰은 그 기기의 한국어 목소리를 씁니다.<br>이름은 이 기기에만 저장됩니다. 단, 엣지의 선히 목소리는 읽을 말을 마이크로소프트 서버에서 받아 옵니다.</div>
+    </div>`;
+}
+
+// ── 홈 화면에 추가 · 전체화면 ──
+// 홈 화면 아이콘으로 열면 주소창 없이 전체화면(앱 정보 display: fullscreen). 브라우저 안에서는 안드로이드만 전체화면 버튼
+const isStandalone=()=>matchMedia('(display-mode: fullscreen)').matches||matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+let installEvt=null;
+window.addEventListener('beforeinstallprompt',e=>{ e.preventDefault(); installEvt=e; });
+window.addEventListener('appinstalled',()=>{ installEvt=null; refreshAppBtns(); });
+function refreshAppBtns(){
+  const sa=isStandalone();
+  document.documentElement.classList.toggle('standalone',sa);
+  document.getElementById('installBtn').hidden=sa;
+  document.getElementById('fsBtn').hidden=sa||isIOS||!document.documentElement.requestFullscreen||!!document.fullscreenElement;
+}
+async function installApp(){
+  if(installEvt){ installEvt.prompt(); try{ await installEvt.userChoice; }catch{} installEvt=null; refreshAppBtns(); return; }
+  const steps=isIOS
+    ?'<ol class="ins-steps"><li>사파리 아래쪽 <b>공유 버튼</b>(네모에 위 화살표)을 누릅니다</li><li>목록을 올려 <b>홈 화면에 추가</b>를 누릅니다</li><li>오른쪽 위 <b>추가</b>를 누르면 바탕화면에 아이콘이 생깁니다</li></ol>'
+    :'<ol class="ins-steps"><li>브라우저 오른쪽 위 <b>⋮ 메뉴</b>를 누릅니다</li><li><b>홈 화면에 추가</b> 또는 <b>앱 설치</b>를 누릅니다</li><li>바탕화면에 생긴 아이콘으로 열면 주소창 없이 전체화면으로 열립니다</li></ol>';
+  askSheet('바탕화면에 바로가기 만들기','',isIOS?'알겠어요':'확인',()=>{});
+  document.getElementById('askMsg').innerHTML=steps+(isIOS?'카카오톡 안에서 열었다면 먼저 오른쪽 아래 메뉴에서 「사파리로 열기」를 해 주세요.':'카카오톡 안에서 열었다면 먼저 「다른 브라우저로 열기」(크롬)를 해 주세요.');
+  document.querySelector('#askModal .ask-no').hidden=true;
+  document.getElementById('askOk').style.background='var(--yellow)'; document.getElementById('askOk').style.color='#0a0e14';
+}
+function goFullscreen(){ document.documentElement.requestFullscreen?.({navigationUI:'hide'}).then(refreshAppBtns,()=>{}); }
+document.addEventListener('fullscreenchange',refreshAppBtns);
+if('serviceWorker' in navigator) navigator.serviceWorker.register(new URL('sw.js',location.href).href,{scope:new URL('./',location.href).pathname}).catch(()=>{});
+
+// 수업 중 폰 화면이 꺼지지 않게 (지원 안 하는 브라우저는 그냥 넘어감)
+let wakeLock=null;
+async function keepAwake(){
+  if(!('wakeLock' in navigator)||document.visibilityState!=='visible'||(wakeLock&&!wakeLock.released))return;
+  try{ wakeLock=await navigator.wakeLock.request('screen'); }catch{}
+}
+['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,keepAwake,{passive:true}));
+document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') keepAwake(); });
+renderPads(); renderBatters(); renderMatchup(); updateSub(); updateBadges(); refreshAppBtns();
+(()=>{ let t='game'; try{ t=sessionStorage.getItem('bb_tab')||'game'; }catch{} document.body.classList.add('on-game'); if(t!=='game') showTab(t); })();
+</script>
 </body>
 </html>

@@ -1,0 +1,18 @@
+{
+  "name": "야구 수업 DJ 턴테이블",
+  "short_name": "야구 DJ",
+  "description": "KBO 10개 구단 선수 응원가·등장곡, 팀 응원가, 홈런·안타 효과음을 버튼 하나로 트는 야구 수업용 음향 조작판",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "portrait",
+  "background_color": "#060a10",
+  "theme_color": "#060a10",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
