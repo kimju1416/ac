@@ -644,7 +644,7 @@ body:not(.on-game) { padding-bottom: calc(66px + var(--safe)); }
       <strong>공격</strong>에서 지금 공격하는 팀을 고릅니다. 처음엔 청팀·백팀이고, <strong>구단 고르기</strong>를 누르면 그 팀이 KBO 구단 주전 9명(이름·곡)으로 바뀝니다.<br>
       <strong>응원가 / 등장곡</strong>으로 구단 선수 곡을 그 선수 응원가로 틀지 등장곡으로 틀지 고릅니다.<br>
       <strong>다음 타자</strong>를 누르면 「3번 타자, 김민준!」 하고 불러 준 뒤 곡이 나오고, 정한 길이가 지나면 저절로 줄어듭니다. <strong>지금 타자</strong>를 누르면 그 타자 곡을 처음부터 다시 틉니다. 9명 버튼을 눌러 아무 타자나 바로 불러도 됩니다.<br>
-      화면 아래 <strong>홈런·안타·삼진·아웃·공수교대</strong>는 늘 떠 있습니다. 홈런은 공격 팀 구단의 홈런송(삼성·한화·롯데·KT·LG)이 나오고, 그 밖의 팀은 삼성 홈런송입니다. 공수교대를 누르면 상대 팀으로 바뀌고, 팀마다 자기 타순을 따로 기억합니다.<br><br>
+      화면 아래 <strong>홈런·안타·삼진·아웃·공수교대</strong>는 늘 떠 있습니다. 홈런은 공격 팀 구단의 홈런송(삼성·한화·롯데·KT·LG·SSG·두산·키움)이 나오고, 그 밖의 팀은 삼성 홈런송입니다. 공수교대를 누르면 상대 팀으로 바뀌고, 팀마다 자기 타순을 따로 기억합니다.<br><br>
       <strong>재생 줄 (맨 위)</strong><br>
       지금 나오는 곡과 시간이 보입니다. 타자 곡은 설정한 곡 길이 기준으로 보입니다(20초로 정하면 「0:05 / 0:20」). <strong>정지</strong>는 바로 끄고, <strong>페이드</strong>는 소리를 천천히 줄이며 끕니다.<br>
       막대를 누르거나 끌면 그 위치로 가고, 양옆 버튼으로 건너뜁니다. 타자 곡은 10초, 구단 응원가는 곡 단위(이전 곡/다음 곡), 나머지는 30초씩.<br><br>
@@ -747,8 +747,9 @@ const TEAM_SONGS={
   team_kiwoom:[[0,"경기 개시 음악"],[95,"라인업송"],[160,"New heroes come here"],[270,"꿈이여 하나가 되자"],[359,"기를 높여라"],[388,"승리가"],[417,"우리가 승리한다"],[519,"히어로즈 만만세"],[621,"오 키움, 키움 히어로즈"],[697,"사랑한다 키움"],[798,"Let's go together hero"],[843,"영웅출정가"],[926,"히어로"],[1016,"외쳐라 히어로즈"],[1097,"승리를 위하여"]],
 };
 // 구단 홈런송 — 유튜브에 올라온 각 구단 홈런 응원가 원음(무음 자르고 -14 LUFS). 홈런송이 따로 있는 구단만.
+// SSG는 홈런 때 울리는 뱃고동(배경음악판), 두산은 홈런 뒤 트는 「승리를 위하여」, 키움은 「승리를 위한 함성」
 // 공격 팀이 이 구단 라인업이면 그 구단 홈런송, 아니면(청팀·백팀·홈런송 없는 구단) 삼성 홈런송
-const HOMERUN={team_samsung:'samsung',team_hanwha:'hanwha',team_lotte:'lotte',team_kt:'kt',team_lg:'lg'};
+const HOMERUN={team_samsung:'samsung',team_hanwha:'hanwha',team_lotte:'lotte',team_kt:'kt',team_lg:'lg',team_ssg:'ssg',team_doosan:'doosan',team_kiwoom:'kiwoom'};
 function homerunSong(){
   const c=teamClub(LU.teams[LU.active]), k=c&&HOMERUN[c.key]?c.key:'team_samsung';
   return {src:'music/homerun/'+HOMERUN[k]+'.mp3', name:'홈런 · '+clubShort(k)+' 홈런송'};
