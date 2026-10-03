@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>야구 학습지 · 체육 플레이북</title>
+<meta name="description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<div class="progress" id="bar"></div>
+<div class="top">
+  <button id="fs" aria-label="전체화면"><svg class="i" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>전체화면</span></button>
+  <button id="close" aria-label="슬라이드로 돌아가기"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg><span>슬라이드로</span></button>
+</div>
+
+<!-- 1 표지 -->
+<section class="slide cover" id="s1">
+  <img class="bg" src="../assets/img/bb2-cover.jpg" alt="타격하는 학생">
+  <div class="scrim"></div>
+  <div class="txt">
+    <div class="eyebrow"><b>학습지</b>중학교 체육 · 필드형 경쟁</div>
+    <h1>야구, 어떻게 생각하며 뛸까?</h1>
+    <p class="sub">질문에 답하며 배우는 아웃, 판정, 투구 시간, 타구 각도, 수비 위치</p>
+    <p class="note">이 학습지의 사진은 AI로 생성한 이미지입니다. → 키 또는 아래 버튼으로 넘어가요.</p>
+  </div>
+</section>
+
+<!-- 2 아웃 -->
+<section class="slide" id="s2">
+  <div class="eyebrow"><b>1</b>수비 · 아웃의 종류</div>
+  <div class="split">
+    <div><div class="photo"><img src="../assets/img/bb2-catch.jpg" alt="몸을 날려 공을 잡는 수비수"></div><p class="cap">수비수가 공을 잡는 방식에 따라 아웃의 종류가 달라져요.</p></div>
+    <div class="col">
+      <h2 class="title">공을 든 수비수가 달리는 주자의 몸을 직접 터치해서 만드는 아웃은?</h2>
+      <div class="q" data-id="q-out" data-reveal="#r-out">
+        <div class="choices">
+          <button class="choice" data-why="포스 아웃은 주자 몸을 터치하지 않고, 공이 베이스에 먼저 도착해서 만드는 아웃이에요."><i>A</i>포스 아웃</button>
+          <button class="choice" data-ok><i>B</i>태그 아웃</button>
+          <button class="choice" data-why="플라이 아웃은 뜬공을 땅에 닿기 전에 잡는 아웃이에요."><i>C</i>플라이 아웃</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-out">
+        <strong>태그 아웃이에요.</strong>
+        <p>공(또는 공을 쥔 글러브)으로 주자의 몸을 터치하면 태그 아웃이에요. 주자가 다음 베이스로 꼭 가야 할 때는 공이 먼저 베이스에 도착해도 아웃(포스 아웃)이고, 뜬공을 땅에 닿기 전에 잡으면 플라이 아웃이에요.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 판정 -->
+<section class="slide" id="s3">
+  <div class="eyebrow"><b>2</b>규칙 · 판정 연습</div>
+  <h2 class="title">심판이 되어 판정해 보자</h2>
+  <div class="split">
+    <div class="jbox">
+      <div class="dots" id="jdots"><span></span><span></span><span></span><span></span></div>
+      <div id="judge">
+        <div class="jq cur q" data-id="j1" data-reveal="#jr1">
+          <p class="sit">타자가 투구에 방망이를 휘둘렀지만 맞히지 못했다.</p>
+          <div class="row">
+            <button class="choice" data-ok><i>A</i>스트라이크</button>
+            <button class="choice" data-why="헛스윙은 스트라이크예요."><i>B</i>볼</button>
+          </div>
+          <p class="fb"></p>
+          <div class="reveal" id="jr1"><strong>스트라이크예요.</strong><p>타자가 휘둘렀는데 맞히지 못하면(헛스윙) 스트라이크예요.</p><button class="btn nextj" style="margin-top:12px">다음 판정</button></div>
+        </div>
+        <div class="jq q" data-id="j2" data-reveal="#jr2">
+          <p class="sit">스트라이크 존을 벗어난 공을 타자가 치지 않았다.</p>
+          <div class="row">
+            <button class="choice" data-why="존을 벗어나고 치지 않았다면 스트라이크가 아니에요."><i>A</i>스트라이크</button>
+            <button class="choice" data-ok><i>B</i>볼</button>
+          </div>
+          <p class="fb"></p>
+          <div class="reveal" id="jr2"><strong>볼이에요.</strong><p>스트라이크 존을 벗어난 공을 치지 않으면 볼이에요. 볼이 4개 쌓이면 타자는 1루로 나가요(볼넷).</p><button class="btn nextj" style="margin-top:12px">다음 판정</button></div>
+        </div>
+        <div class="jq q" data-id="j3" data-reveal="#jr3">
+          <p class="sit">타자가 친 뜬공을 수비수가 땅에 닿기 전에 잡았다.</p>
+          <div class="row">
+            <button class="choice" data-ok><i>A</i>아웃(플라이 아웃)</button>
+            <button class="choice" data-why="땅에 닿기 전에 잡으면 아웃이에요."><i>B</i>안타</button>
+          </div>
+          <p class="fb"></p>
+          <div class="reveal" id="jr3"><strong>아웃이에요.</strong><p>뜬공을 땅에 닿기 전에 잡으면 플라이 아웃이에요.</p><button class="btn nextj" style="margin-top:12px">다음 판정</button></div>
+        </div>
+        <div class="jq q" data-id="j4" data-reveal="#jr4">
+          <p class="sit">스트라이크가 이미 2개인 타자가 세 번째 투구에 헛스윙했다.</p>
+          <div class="row">
+            <button class="choice" data-why="스트라이크 3개가 되었어요."><i>A</i>볼넷</button>
+            <button class="choice" data-ok><i>B</i>아웃(삼진)</button>
+          </div>
+          <p class="fb"></p>
+          <div class="reveal" id="jr4"><strong>삼진 아웃이에요.</strong><p>스트라이크 3개가 되면 타자는 아웃이에요.</p></div>
+        </div>
+      </div>
+    </div>
+    <ul class="rules">
+      <li><b>스트라이크 3개</b> 타자 아웃(삼진)</li>
+      <li><b>볼 4개</b> 타자는 1루로 나가요(볼넷)</li>
+      <li><b>스트라이크</b> 존 안으로 들어온 공, 헛스윙</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 4 투구 시간 -->
+<section class="slide" id="s4">
+  <div class="eyebrow"><b>3</b>과학 · 투구 시간</div>
+  <div class="split rev">
+    <div class="col">
+      <h2 class="title">시속 150km로 던진 공은 투수 손에서 홈플레이트까지 얼마나 걸릴까?</h2>
+      <div class="q" data-id="q-pitch" data-reveal="#r-pitch">
+        <p class="sub" style="margin-bottom:4px">공을 놓는 지점에서 홈플레이트까지는 약 17m라고 해요.</p>
+        <div class="choices">
+          <button class="choice" data-why="그렇게 빠르진 않아요."><i>A</i>약 0.1초</button>
+          <button class="choice" data-ok><i>B</i>약 0.4초</button>
+          <button class="choice" data-why="그렇게 느리지 않아요."><i>C</i>약 1초</button>
+          <button class="choice" data-why="훨씬 빨라요."><i>D</i>약 1.5초</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-pitch">
+        <strong>약 0.4초예요.</strong>
+        <p>17m ÷ 초속 41.7m(시속 150km) ≈ 0.4초예요. 사람의 단순 반응 시간이 약 0.2초라서, 공이 날아오는 걸 보고 나서 정하기엔 시간이 거의 없어요. 그래서 타자는 투수의 동작을 보고 미리 준비해요.</p>
+      </div>
+      <div class="ctl"><label>구속<b id="p-v">150 km/h</b></label><input type="range" id="in-pv" min="70" max="160" value="150"></div>
+      <div class="stats">
+        <div class="stat hot"><small>홈플레이트까지</small><strong id="p-t">0.41<em>초</em></strong></div>
+        <div class="stat"><small>사람의 반응 시간(약)</small><strong>0.2<em>초</em></strong></div>
+      </div>
+    </div>
+    <div><div class="photo"><img src="../assets/img/bb2-pitch.jpg" alt="투구하는 학생"></div><p class="cap">공을 놓는 순간부터 시간이 흐르기 시작해요.</p></div>
+  </div>
+</section>
+
+<!-- 5 발사각 -->
+<section class="slide" id="s5">
+  <div class="eyebrow"><b>4</b>과학 · 타구의 발사각</div>
+  <h2 class="title">공기저항이 있으면, 공이 가장 멀리 날아가는 각도는 어떻게 달라질까?</h2>
+  <div class="split">
+    <div>
+      <div class="photo" id="ph-launch"><img src="../assets/img/bsl-launch.jpg" alt="타격 직후"><canvas id="cv-launch" width="1536" height="1024"></canvas></div>
+      <p class="cap">주황 선은 공이 배트를 떠나는 방향(발사각)이에요. 사진 속 공은 약 45°로 날아가고 있어요. 슬라이더로 바꿔 보세요.</p>
+    </div>
+    <div class="col">
+      <div class="q" data-id="q-launch" data-reveal="#r-launch">
+        <p class="sub" style="margin-bottom:4px">공기저항이 없다면 45°로 칠 때 가장 멀리 가요. 공기저항이 있으면 가장 멀리 가는 각도는?</p>
+        <div class="choices">
+          <button class="choice" data-why="훨씬 높게 쳐도 멀리 가지 않아요. 높이 뜨기만 해요."><i>A</i>45°보다 크게 높아진다</button>
+          <button class="choice" data-ok><i>B</i>45°보다 조금 낮아진다(40°대 초반)</button>
+          <button class="choice" data-why="20° 정도로 낮게 치면 공이 일찍 떨어져요."><i>C</i>20° 안팎으로 크게 낮아진다</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-launch">
+        <strong>조금 낮아지고, 비거리는 크게 줄어요.</strong>
+        <p>공기저항 때문에 같은 속도로 쳐도 훨씬 짧게 날아가고(시속 130km 기준 약 134m → 86m), 가장 멀리 가는 각도는 45°보다 조금 낮아져요. 실제 경기에서는 공의 회전이 만드는 양력까지 더해져 25~35°의 타구가 장타로 이어지는 경우가 많아요.</p>
+      </div>
+      <div class="ctl"><label>발사각<b id="l-th">45°</b></label><input type="range" id="in-lth" min="5" max="65" value="45"></div>
+      <div class="ctl"><label>타구 속도<b id="l-v">130 km/h</b></label><input type="range" id="in-lv" min="70" max="160" value="130"></div>
+      <div class="stats">
+        <div class="stat"><small>진공이라면</small><strong id="l-vac">-<em>m</em></strong></div>
+        <div class="stat hot"><small>공기저항 포함</small><strong id="l-real">-<em>m</em></strong></div>
+        <div class="stat"><small>가장 멀리 가는 각도</small><strong id="l-best">-<em>°</em></strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 수비 위치 -->
+<section class="slide" id="s6">
+  <div class="eyebrow"><b>5</b>전술 · 수비 위치</div>
+  <h2 class="title">유격수는 어디를 지킬까?</h2>
+  <div class="split">
+    <div><div class="photo"><canvas id="cv-field" width="1500" height="1000"></canvas></div><p class="cap">위에서 본 야구장이에요. 위치 이름을 눌러 보세요.</p></div>
+    <div class="col">
+      <div class="q" data-id="q-ss" data-reveal="#r-ss">
+        <div class="choices">
+          <button class="choice" data-why="1루와 2루 사이는 2루수가 지켜요."><i>A</i>1루와 2루 사이</button>
+          <button class="choice" data-ok><i>B</i>2루와 3루 사이</button>
+          <button class="choice" data-why="외야 깊숙한 곳은 외야수가 지켜요."><i>C</i>외야 깊숙한 곳</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-ss">
+        <strong>2루와 3루 사이를 지켜요.</strong>
+        <p>유격수는 내야에서 가장 넓은 범위를 맡아서 땅볼을 잡아 1루로 던지는 일이 많아요. 그래서 어깨가 강하고 발이 빠른 선수가 맡는 경우가 많아요.</p>
+      </div>
+      <div class="seg" id="pos-seg">
+        <button class="btn ghost" data-p="P">투수</button>
+        <button class="btn ghost" data-p="C">포수</button>
+        <button class="btn ghost" data-p="1B">1루수</button>
+        <button class="btn ghost" data-p="2B">2루수</button>
+        <button class="btn ghost cur" data-p="SS">유격수</button>
+        <button class="btn ghost" data-p="3B">3루수</button>
+        <button class="btn ghost" data-p="LF">좌익수</button>
+        <button class="btn ghost" data-p="CF">중견수</button>
+        <button class="btn ghost" data-p="RF">우익수</button>
+      </div>
+      <p class="sub" id="pos-msg"></p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 활동 -->
+<section class="slide" id="s7">
+  <div class="eyebrow"><b>6</b>직접 해보기 · 캐치볼</div>
+  <h2 class="title">짝과 캐치볼 10개에 도전해 보자</h2>
+  <div class="split rev">
+    <div class="col">
+      <div class="ft">
+        <label class="chk"><input type="checkbox">공을 끝까지 보며 글러브를 공 앞에 둬요<small>시선</small></label>
+        <label class="chk"><input type="checkbox">발을 움직여 몸을 공 앞으로 옮겨요<small>발</small></label>
+        <label class="chk"><input type="checkbox">글러브로 잡고 다른 손으로 감싸요<small>두 손</small></label>
+        <label class="chk"><input type="checkbox">받은 뒤 바로 던질 준비를 해요<small>연결</small></label>
+      </div>
+      <div class="tally">
+        <div class="big" id="ft-n">0<em>/ 0</em></div>
+        <button class="btn" id="ft-ok">성공</button>
+        <button class="btn ghost" id="ft-no">실패</button>
+        <button class="btn ghost" id="ft-reset">다시</button>
+      </div>
+      <p class="sub" id="ft-msg"></p>
+    </div>
+    <div><div class="photo"><img src="../assets/img/bb2-catch.jpg" alt="공을 잡는 자세"></div><p class="cap">공을 끝까지 보고 잡아요.</p></div>
+  </div>
+</section>
+
+<!-- 8 정리 -->
+<section class="slide" id="s8">
+  <div class="eyebrow"><b>정리</b>오늘의 학습</div>
+  <h2 class="title">오늘 맞힌 문제</h2>
+  <div class="score"><span id="sc-n">0</span><em id="sc-t">/ 0</em></div>
+  <div class="keys">
+    <div><b>아웃의 종류</b>태그 아웃, 포스 아웃, 플라이 아웃이 있어요.</div>
+    <div><b>스트라이크와 볼</b>스트라이크 3개면 삼진, 볼 4개면 볼넷이에요.</div>
+    <div><b>투구 시간</b>시속 150km는 홈까지 약 0.4초. 사람의 반응 시간은 약 0.2초예요.</div>
+    <div><b>타구의 각도</b>공기저항이 있으면 비거리가 크게 줄고 최적 각도는 45°보다 조금 낮아져요.</div>
+    <div><b>수비 위치</b>유격수는 2루와 3루 사이를 지켜요.</div>
+    <div><b>캐치볼</b>끝까지 보고, 발을 움직여 공 앞에서 두 손으로 잡아요.</div>
+  </div>
+  <div class="seg"><button class="btn" id="redo">다시 풀기</button><button class="btn ghost" id="back2">슬라이드로 돌아가기</button></div>
+</section>
+
+<div class="nav">
+  <button id="prev" aria-label="이전"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="cnt" id="cnt">1 / 8</div>
+  <button id="next" aria-label="다음"><svg class="i" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+</div>
+
+<script src="../assets/lesson.js"></script>
+<script>
+(function(){
+  'use strict';
+  var $=PE.$, $$=PE.$$, ENTER=PE.ENTER, lbl=PE.lbl, DEG=PE.DEG, G=PE.G;
+
+  /* 4 투구 시간 */
+  (function(){
+    var inp=$('#in-pv');
+    function upd(){ var v=+inp.value, t=17/(v/3.6); $('#p-v').textContent=v+' km/h'; $('#p-t').innerHTML=t.toFixed(2)+'<em>초</em>' }
+    inp.addEventListener('input',upd); upd();
+  })();
+
+  /* 5 발사각: 공기저항(Cd 0.35) 포함 비거리. 회전(양력)은 넣지 않음 */
+  var CL={ cx:1100, cy:455, dir:1 };   /* 사진 실측: 공이 배트를 떠나는 점(px) · 진행 방향(+1=오른쪽) */
+  (function(){
+    var cv=$('#cv-launch'), ctx=cv.getContext('2d'), ith=$('#in-lth'), iv=$('#in-lv');
+    var RHO=1.2, R=0.0366, M=0.145, CD=0.35, K=0.5*RHO*CD*Math.PI*R*R/M;
+    function range(v,th,drag){
+      var t=th*DEG, x=0,y=1.0,vx=v*Math.cos(t),vy=v*Math.sin(t),dt=0.002;
+      for(var i=0;i<30000;i++){ var sp=Math.hypot(vx,vy), ax=drag?-K*sp*vx:0, ay=-G-(drag?K*sp*vy:0); vx+=ax*dt; vy+=ay*dt; x+=vx*dt; y+=vy*dt; if(y<=0) break }
+      return x;
+    }
+    function best(v){ var b=0,bt=0; for(var t=10;t<=60;t+=1){ var r=range(v,t,true); if(r>b){b=r;bt=t} } return bt }
+    function draw(){
+      var th=+ith.value, kmh=+iv.value, v=kmh/3.6, real=range(v,th,true), vac=range(v,th,false);
+      ctx.clearRect(0,0,1536,1024); ctx.lineCap='round'; var d=CL.dir, x=CL.cx, y=CL.cy, L=520;
+      ctx.setLineDash([12,12]); ctx.lineWidth=4; ctx.strokeStyle='rgba(255,255,255,.85)'; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+d*L,y); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle='#ff7a2f'; ctx.lineWidth=10; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+d*Math.cos(th*DEG)*L,y-Math.sin(th*DEG)*L); ctx.stroke();
+      ctx.strokeStyle='#ffd1b0'; ctx.lineWidth=7; ctx.beginPath(); ctx.arc(x,y,170,d>0?-th*DEG:Math.PI,d>0?0:Math.PI+th*DEG,false); ctx.stroke();
+      lbl(ctx,th+'°',x+d*200,y-40,{s:56,a:d>0?'left':'right',c:'#ffd1b0'});
+      $('#l-th').textContent=th+'°'; $('#l-v').textContent=kmh+' km/h';
+      $('#l-vac').innerHTML=Math.round(vac)+'<em>m</em>'; $('#l-real').innerHTML=Math.round(real)+'<em>m</em>'; $('#l-best').innerHTML=best(v)+'<em>°</em>';
+    }
+    ith.addEventListener('input',draw); iv.addEventListener('input',draw); ENTER.s5=draw; draw();
+  })();
+
+  /* 6 수비 위치: 위에서 본 야구장 (홈 (0,0), 1루 (19.4,19.4), 2루 (0,38.8), 3루 (-19.4,19.4)) */
+  (function(){
+    var cv=$('#cv-field'), ctx=cv.getContext('2d'), S=1500/110, X0=-55, Y0=-8;
+    var grass=PE.loadImg('../assets/img/tx-grass.jpg',function(){ if(PE.current()==='s6') draw() });
+    var dirt=PE.loadImg('../assets/img/tx-dirt.jpg',function(){ if(PE.current()==='s6') draw() });
+    function px(x){return (x-X0)*S} function py(y){return 1000-(y-Y0)*S}
+    var POS={ P:['투',0,18.4,'투수: 공을 던져요. 투구판에서 홈플레이트까지 약 18.4m예요.'], C:['포',0,-2.2,'포수: 홈플레이트 뒤에서 공을 받고 경기를 지휘해요.'],
+      '1B':['1',17.5,21,'1루수: 1루 근처에서 송구를 받아 주자를 아웃시켜요.'], '2B':['2',8,33,'2루수: 1루와 2루 사이를 지켜요.'],
+      SS:['유',-8,33,'유격수: 2루와 3루 사이를 지켜요. 내야에서 가장 넓은 범위를 맡아요.'], '3B':['3',-17.5,21,'3루수: 3루 근처에서 강한 타구를 막아요.'],
+      LF:['좌',-36,52,'좌익수: 외야 왼쪽을 지켜요.'], CF:['중',0,60,'중견수: 외야 가운데를 지키며 가장 넓은 범위를 맡아요.'], RF:['우',36,52,'우익수: 외야 오른쪽을 지켜요.'] };
+    var sel='SS';
+    function field(){
+      if(grass.complete&&grass.naturalWidth) ctx.drawImage(grass,0,0,1500,1000); else { ctx.fillStyle='#3d7a3a'; ctx.fillRect(0,0,1500,1000) }
+      ctx.fillStyle='rgba(0,0,0,.08)'; ctx.fillRect(0,0,1500,1000);
+      /* 내야 흙 */
+      ctx.save(); ctx.beginPath();
+      ctx.arc(px(0),py(18.44),28.96*S,0,Math.PI*2); ctx.clip();
+      ctx.beginPath(); ctx.moveTo(px(0),py(-4)); ctx.lineTo(px(60),py(56)); ctx.lineTo(px(-60),py(56)); ctx.closePath(); ctx.clip();
+      if(dirt.complete&&dirt.naturalWidth) ctx.drawImage(dirt,0,0,1500,1000); else { ctx.fillStyle='#a8663d'; ctx.fillRect(0,0,1500,1000) }
+      ctx.restore();
+      ctx.save(); ctx.beginPath(); ctx.arc(px(0),py(0),9.5*S,0,Math.PI*2); ctx.clip(); if(dirt.complete&&dirt.naturalWidth) ctx.drawImage(dirt,0,0,1500,1000); ctx.restore();
+      /* 내야 잔디(다이아몬드 안쪽) */
+      ctx.fillStyle='rgba(52,110,48,.92)'; ctx.beginPath(); ctx.moveTo(px(0),py(4)); ctx.lineTo(px(15.2),py(19.4)); ctx.lineTo(px(0),py(34.8)); ctx.lineTo(px(-15.2),py(19.4)); ctx.closePath(); ctx.fill();
+      if(grass.complete&&grass.naturalWidth){ ctx.save(); ctx.globalAlpha=.55; ctx.beginPath(); ctx.moveTo(px(0),py(4)); ctx.lineTo(px(15.2),py(19.4)); ctx.lineTo(px(0),py(34.8)); ctx.lineTo(px(-15.2),py(19.4)); ctx.closePath(); ctx.clip(); ctx.drawImage(grass,0,0,1500,1000); ctx.restore() }
+      /* 선 */
+      ctx.strokeStyle='rgba(255,255,255,.95)'; ctx.lineWidth=6; ctx.lineCap='round';
+      ctx.beginPath(); ctx.moveTo(px(0),py(0)); ctx.lineTo(px(60),py(60)); ctx.moveTo(px(0),py(0)); ctx.lineTo(px(-60),py(60)); ctx.stroke();
+      /* 베이스 */
+      [[0,0],[19.4,19.4],[0,38.8],[-19.4,19.4]].forEach(function(b){ ctx.save(); ctx.translate(px(b[0]),py(b[1])); ctx.rotate(Math.PI/4); ctx.fillStyle='#fff'; ctx.fillRect(-14,-14,28,28); ctx.restore() });
+      ctx.fillStyle='#d9d4c8'; ctx.beginPath(); ctx.arc(px(0),py(18.44),12,0,7); ctx.fill();
+    }
+    function draw(){ field(); Object.keys(POS).forEach(function(k){ var p=POS[k], on=k===sel; PE.disc(ctx,S,p[1]-X0,py(p[2])/S,p[0],on?PE.OFF:PE.DEF,on?'#190d04':'#18181c',on?2.6:2.1) });
+      var q=POS[sel]; lbl(ctx,{P:'투수',C:'포수','1B':'1루수','2B':'2루수',SS:'유격수','3B':'3루수',LF:'좌익수',CF:'중견수',RF:'우익수'}[sel],px(q[1]),py(q[2])-70,{s:48,a:'center',c:'#ffd1b0'}) }
+    function setPos(k){ sel=k; $$('#pos-seg [data-p]').forEach(function(b){b.classList.toggle('cur',b.dataset.p===k)}); $('#pos-msg').textContent=POS[k][3]; draw() }
+    $$('#pos-seg [data-p]').forEach(function(b){ b.onclick=function(){ setPos(b.dataset.p) } });
+    $('#pos-msg').textContent=POS.SS[3]; ENTER.s6=draw; draw();
+  })();
+
+  PE.tally({n:'#ft-n',msg:'#ft-msg',ok:'#ft-ok',no:'#ft-no',reset:'#ft-reset',total:10,key:'pe-bs-catch',
+    hint:'체크리스트를 확인하고 캐치볼 10개를 기록해 보세요.',
+    done:function(m,t){return '10개 중 '+m+'개 성공, 성공률 '+Math.round(m/t*100)+'%예요. 다음엔 지난번보다 1개 더 성공해 봐요.'}});
+  PE.init({back:'baseball.html'});
+})();
+</script>
+</body>
+</html>

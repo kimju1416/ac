@@ -14,123 +14,7 @@
 <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
-<style>
-:root{
-  --bg:#0b0b0d; --panel:#17171a; --panel2:#1f1f24; --line:#2c2c33;
-  --text:#f5f5f6; --sub:#a6a6af; --accent:#ff7a2f; --accent-d:#e0651f;
-  --ok:#3fb87f; --bad:#e5534b; --r1:10px; --r2:14px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;background:var(--bg);color:var(--text);overflow:hidden}
-body{font-family:Pretendard,-apple-system,"Malgun Gothic",sans-serif;font-size:16px;line-height:1.6;word-break:keep-all;-webkit-font-smoothing:antialiased}
-button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
-.progress{position:fixed;top:0;left:0;height:3px;background:var(--accent);width:0;z-index:30;transition:width .3s}
-
-/* 슬라이드 */
-.slide{position:absolute;inset:0;padding:clamp(18px,4.5vh,48px) clamp(18px,5vw,80px) clamp(76px,11vh,104px);
-  display:flex;flex-direction:column;gap:clamp(12px,2.2vh,22px);overflow-y:auto;overflow-x:hidden;
-  opacity:0;visibility:hidden;transform:translateX(28px);transition:opacity .4s,transform .4s,visibility .4s}
-.slide.on{opacity:1;visibility:visible;transform:none}
-.eyebrow{font-size:14px;font-weight:600;color:var(--sub);letter-spacing:.02em;display:flex;align-items:center;gap:10px}
-.eyebrow b{color:var(--accent);font-size:15px}
-.title{font-size:clamp(24px,3.6vw,44px);font-weight:700;line-height:1.28;letter-spacing:-.02em}
-.sub{color:var(--sub);font-size:clamp(15px,1.5vw,18px)}
-.split{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:clamp(18px,3vw,44px);align-items:center}
-.split.rev{grid-template-columns:minmax(0,1fr) minmax(0,1.3fr)}
-.col{display:flex;flex-direction:column;gap:14px;min-width:0}
-@media(max-width:860px){.split,.split.rev{grid-template-columns:1fr;align-items:start}.slide{padding-bottom:96px}}
-
-/* 사진 */
-.photo{position:relative;border-radius:var(--r2);overflow:hidden;background:#000;aspect-ratio:3/2;width:100%;max-height:calc(100vh - 210px)}
-.photo img,.photo canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.photo img{object-fit:cover}
-.cap{font-size:13px;color:var(--sub);margin-top:8px}
-
-/* 표지 */
-.cover{padding:0;justify-content:flex-end}
-.cover .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.cover .scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 0%,rgba(0,0,0,.45) 45%,rgba(0,0,0,.1) 100%)}
-.cover .txt{position:relative;padding:clamp(24px,6vh,64px) clamp(20px,6vw,88px) clamp(96px,14vh,140px);max-width:980px}
-.cover h1{font-size:clamp(34px,6.4vw,76px);font-weight:800;line-height:1.14;letter-spacing:-.03em;margin:10px 0 14px}
-.cover .note{margin-top:22px;font-size:13px;color:var(--sub)}
-
-/* 문제 */
-.choices{display:flex;flex-direction:column;gap:10px}
-.choice{display:flex;align-items:center;gap:14px;min-height:56px;padding:12px 16px;border:1px solid var(--line);border-radius:var(--r1);background:var(--panel);text-align:left;font-size:clamp(15px,1.5vw,18px);font-weight:500;transition:border-color .15s,background .15s}
-.choice i{font-style:normal;flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:13px;font-weight:700;color:var(--sub)}
-.choice:hover:not([disabled]){border-color:var(--accent)}
-.choice.right{border-color:var(--ok);background:rgba(63,184,127,.12)}
-.choice.right i{background:var(--ok);border-color:var(--ok);color:#06140d}
-.choice.wrong{border-color:var(--bad);background:rgba(229,83,75,.1);opacity:.75}
-.choice[disabled]{cursor:default}
-.fb{min-height:24px;font-size:15px;color:var(--sub)}
-.fb.bad{color:#ff8a82}
-.reveal{display:none;border-left:3px solid var(--accent);padding:4px 0 4px 16px;animation:rise .45s ease}
-.reveal.show{display:block}
-.reveal strong{display:block;font-size:clamp(17px,1.8vw,21px);margin-bottom:6px}
-.reveal p{color:#d4d4da;font-size:clamp(15px,1.5vw,17px)}
-.reveal p+p{margin-top:6px}
-@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
-/* 판정 */
-.jbox{border:1px solid var(--line);border-radius:var(--r2);background:var(--panel);padding:clamp(16px,2.6vw,28px)}
-.jq{display:none}.jq.cur{display:block}
-.jq .sit{font-size:clamp(18px,2.1vw,26px);font-weight:600;line-height:1.5;margin-bottom:18px}
-.jq .row{display:flex;gap:10px;flex-wrap:wrap}
-.jq .row .choice{flex:1 1 140px;justify-content:center}
-.dots{display:flex;gap:6px;margin-bottom:14px}.dots span{width:28px;height:4px;border-radius:2px;background:var(--line)}
-.dots span.on{background:var(--accent)}.dots span.ok{background:var(--ok)}.dots span.no{background:var(--bad)}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 20px;border-radius:var(--r1);background:var(--accent);color:#1a0d04;font-weight:700;font-size:15px}
-.btn:hover{background:var(--accent-d)}
-.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
-.btn.ghost:hover{border-color:var(--accent)}
-.rules{display:flex;flex-direction:column;gap:10px;list-style:none}
-.rules li{border-top:1px solid var(--line);padding-top:10px;color:#d4d4da;font-size:15px}
-.rules li b{color:var(--text)}
-
-/* 측정값 */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px}
-.stat{border:1px solid var(--line);border-radius:var(--r1);background:var(--panel);padding:10px 14px}
-.stat small{display:block;font-size:12px;color:var(--sub);font-weight:600}
-.stat strong{font-size:clamp(20px,2.4vw,28px);font-weight:700}
-.stat strong em{font-style:normal;font-size:13px;color:var(--sub);font-weight:500;margin-left:3px}
-.stat.hot strong{color:var(--accent)}
-.ctl{display:flex;flex-direction:column;gap:6px}
-.ctl label{font-size:13px;font-weight:600;color:var(--sub);display:flex;justify-content:space-between}
-.ctl label b{color:var(--text)}
-input[type=range]{width:100%;accent-color:var(--accent);height:44px}
-.steps{display:flex;gap:8px;flex-wrap:wrap}
-.steps .btn{min-height:40px;padding:0 14px;font-size:14px}
-.steps .btn.cur{background:var(--accent);color:#1a0d04;border-color:var(--accent)}
-.seg{display:flex;flex-wrap:wrap;gap:8px}
-.seg .btn{min-height:40px;padding:0 14px;font-size:14px}
-.seg .btn.cur{background:var(--accent);color:#1a0d04;border-color:var(--accent)}
-.ft{display:flex;flex-direction:column;gap:10px}
-.chk{display:flex;align-items:center;gap:12px;min-height:48px;padding:8px 14px;border:1px solid var(--line);border-radius:var(--r1);background:var(--panel);font-size:16px}
-.chk input{width:20px;height:20px;accent-color:var(--accent)}
-.chk small{color:var(--sub);margin-left:auto;font-size:13px}
-.tally{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.tally .big{font-size:clamp(28px,4vw,44px);font-weight:800}
-.tally .big em{font-style:normal;font-size:16px;color:var(--sub);font-weight:500;margin-left:4px}
-.score{font-size:clamp(44px,8vw,96px);font-weight:800;line-height:1;color:var(--accent)}
-.score em{font-style:normal;font-size:.3em;color:var(--sub);margin-left:6px}
-.keys{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
-.keys div{border-top:1px solid var(--line);padding-top:10px;color:#d4d4da;font-size:15px}
-.keys b{display:block;color:var(--text);margin-bottom:2px}
-
-/* 컨트롤 */
-.nav{position:fixed;right:clamp(12px,2vw,28px);bottom:clamp(12px,2.4vh,26px);z-index:40;display:flex;align-items:center;gap:8px}
-.nav button{width:44px;height:44px;border-radius:50%;background:rgba(36,36,42,.92);display:grid;place-items:center;border:1px solid var(--line)}
-.nav button:hover:not([disabled]){border-color:var(--accent)}
-.nav button[disabled]{opacity:.35;cursor:default}
-.nav .cnt{min-width:72px;height:44px;border-radius:22px;background:rgba(36,36,42,.92);border:1px solid var(--line);display:grid;place-items:center;font-size:14px;font-weight:600}
-.top{position:fixed;top:clamp(10px,2vh,20px);right:clamp(12px,2vw,28px);z-index:40;display:flex;gap:8px}
-.top button{height:40px;padding:0 14px;border-radius:20px;background:rgba(36,36,42,.92);border:1px solid var(--line);font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px}
-.top button:hover{border-color:var(--accent)}
-svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.slide:not(.cover) .eyebrow{padding-right:210px}
-@media(max-width:560px){.top button span{display:none}.slide:not(.cover) .eyebrow{padding-right:100px}}
-</style>
+<link rel="stylesheet" href="../assets/lesson.css">
 </head>
 <body>
 <div class="progress" id="bar"></div>
@@ -543,69 +427,11 @@ svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke
   <button id="next" aria-label="다음"><svg class="i" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
 </div>
 
+<script src="../assets/lesson.js"></script>
 <script>
 (function(){
   'use strict';
-  var $=function(s,r){return (r||document).querySelector(s)};
-  var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
-  var slides=$$('.slide'), N=slides.length, cur=0, ENTER={}, results={};
-
-  /* ---------- 이동 ---------- */
-  function show(i){
-    if(i<0||i>=N) return;
-    slides[cur].classList.remove('on'); cur=i; slides[cur].classList.add('on'); slides[cur].scrollTop=0;
-    $('#bar').style.width=((cur+1)/N*100)+'%'; $('#cnt').textContent=(cur+1)+' / '+N;
-    $('#prev').disabled=cur===0; $('#next').disabled=cur===N-1;
-    try{history.replaceState(null,'','#'+(cur+1))}catch(e){}
-    var f=ENTER[slides[cur].id]; if(f) f();
-  }
-  $('#prev').onclick=function(){show(cur-1)}; $('#next').onclick=function(){show(cur+1)};
-  document.addEventListener('keydown',function(e){
-    var t=e.target&&e.target.tagName; if(t==='INPUT'||t==='TEXTAREA') return;
-    if(e.key==='ArrowRight'||e.key==='PageDown'){show(cur+1);e.preventDefault()}
-    else if(e.key==='ArrowLeft'||e.key==='PageUp'){show(cur-1);e.preventDefault()}
-    else if((e.key==='f'||e.key==='F')&&!e.ctrlKey&&!e.metaKey){toggleFs()}
-  });
-  var x0=null; document.addEventListener('touchstart',function(e){x0=e.touches[0].clientX},{passive:true});
-  document.addEventListener('touchend',function(e){ if(x0===null) return; var d=e.changedTouches[0].clientX-x0;
-    var t=e.target&&e.target.tagName; if(Math.abs(d)>70&&t!=='INPUT'&&t!=='CANVAS'){d<0?show(cur+1):show(cur-1)} x0=null},{passive:true});
-  function toggleFs(){ var d=document, el=d.documentElement;
-    if(d.fullscreenElement||d.webkitFullscreenElement){(d.exitFullscreen||d.webkitExitFullscreen).call(d)}
-    else{var r=(el.requestFullscreen||el.webkitRequestFullscreen); if(r) r.call(el)} }
-  $('#fs').onclick=toggleFs;
-  function leave(){ if(window.parent!==window){window.parent.postMessage('pe-lesson-close','*')} else {location.href='basketball.html'} }
-  $('#close').onclick=leave; $('#back2').onclick=leave;
-  $('#redo').onclick=function(){location.hash='#1';location.reload()};
-
-  /* ---------- 문제 ---------- */
-  $$('.q').forEach(function(q){
-    var first=true, done=false, id=q.dataset.id, fb=$('.fb',q);
-    var rev=q.dataset.reveal?$(q.dataset.reveal):$('.reveal',q);
-    $$('.choice',q).forEach(function(c){
-      c.addEventListener('click',function(){
-        if(done||c.disabled) return;
-        if(c.hasAttribute('data-ok')){
-          done=true; c.classList.add('right'); $$('.choice',q).forEach(function(x){x.disabled=true});
-          if(!(id in results)) results[id]=first;
-          fb.textContent=''; if(rev) rev.classList.add('show');
-          if(q.classList.contains('jq')) markDot(id,first);
-        }else{
-          c.classList.add('wrong'); c.disabled=true; fb.className='fb bad'; fb.textContent=(c.dataset.why||'다시 생각해 보세요.')+' 다시 골라 보세요.';
-          if(first){first=false; results[id]=false;}
-        }
-      });
-    });
-  });
-  var jqs=$$('.jq'), jdots=$$('#jdots span');
-  function markDot(id,ok){ var i=jqs.map(function(q){return q.dataset.id}).indexOf(id); if(i>-1){jdots[i].className=ok?'ok':'no'} }
-  $$('.nextj').forEach(function(b){ b.onclick=function(){ var i=jqs.indexOf(b.closest('.jq')); jqs[i].classList.remove('cur'); if(jqs[i+1]){jqs[i+1].classList.add('cur'); if(jdots[i+1].className==='') jdots[i+1].className='on'} } });
-  jdots[0].className='on';
-
-  /* ---------- 공통: 이미지 불러오기 ---------- */
-  function loadImg(src,cb){ var im=new Image(); im.onload=function(){cb(im)}; im.onerror=function(){cb(null)}; im.src=src; return im }
-  function lbl(ctx,t,x,y,opt){ opt=opt||{}; ctx.font=(opt.w||700)+' '+(opt.s||34)+'px Pretendard,sans-serif'; ctx.textAlign=opt.a||'left';
-    ctx.lineWidth=7; ctx.strokeStyle='rgba(0,0,0,.65)'; ctx.strokeText(t,x,y); ctx.fillStyle=opt.c||'#fff'; ctx.fillText(t,x,y) }
-  var G=9.81, DEG=Math.PI/180;
+  var $=PE.$, $$=PE.$$, ENTER=PE.ENTER, lbl=PE.lbl, loadImg=PE.loadImg, G=PE.G, DEG=PE.DEG;
 
   /* ---------- 5 바운드 패스 ---------- */
   var CB={ xp:425, xr:1275, yf:692, s:283 }; /* 사진 실측: 패서 손 x · 받는 사람 손 x · 바닥 y · 1m당 px(공 지름 68px=24cm) */
@@ -713,7 +539,7 @@ svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke
   })();
 
   /* ---------- 코트(8, 11, 12) ---------- */
-  var floorImg=loadImg('../assets/img/bbl-floor.jpg',function(){ ['s8','s11','s12'].forEach(function(id){ if(slides[cur].id===id&&ENTER[id]) ENTER[id]() }) });
+  var floorImg=loadImg('../assets/img/bbl-floor.jpg',function(){ ['s8','s11','s12'].forEach(function(id){ if(PE.current()===id&&ENTER[id]) ENTER[id]() }) });
   var BX=7.5, BY=1.575;
   function paintCourt(ctx,W,H){
     var S=W/15; ctx.clearRect(0,0,W,H);
@@ -811,24 +637,10 @@ svg.i{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke
     ENTER.s12=function(){ draw() }; draw();
   })();
 
-  /* ---------- 13 자유투 ---------- */
-  (function(){
-    var made=0, tried=0, key='pe-bb-ft';
-    var out=$('#ft-n'), msg=$('#ft-msg');
-    function render(){ out.innerHTML=made+'<em>/ '+tried+'</em>'; if(tried>=10){ var p=Math.round(made/10*100); msg.textContent='10개 중 '+made+'개 성공, 성공률 '+p+'%예요. 다음엔 지난번보다 1개 더 넣어 봐요.'; try{localStorage.setItem(key,String(made))}catch(e){} } else msg.textContent='체크리스트를 확인하고 10개를 던져 기록해 보세요. ('+tried+'/10)' }
-    $('#ft-ok').onclick=function(){ if(tried<10){made++;tried++;render()} };
-    $('#ft-no').onclick=function(){ if(tried<10){tried++;render()} };
-    $('#ft-reset').onclick=function(){ made=0;tried=0;render() };
-    render();
-  })();
-
-  /* ---------- 14 정리 ---------- */
-  ENTER.s14=function(){ var ids=$$('.q').map(function(q){return q.dataset.id}), ok=0; ids.forEach(function(id){ if(results[id]===true) ok++ });
-    $('#sc-n').textContent=ok; $('#sc-t').textContent='/ '+ids.length }
-
-  /* ---------- 시작 ---------- */
-  var h=parseInt((location.hash||'').replace('#',''),10); show(h>=1&&h<=N?h-1:0);
-  window.addEventListener('hashchange',function(){ var n=parseInt((location.hash||'').replace('#',''),10); if(n>=1&&n<=N&&n-1!==cur) show(n-1) });
+  PE.tally({n:'#ft-n',msg:'#ft-msg',ok:'#ft-ok',no:'#ft-no',reset:'#ft-reset',total:10,key:'pe-bb-ft',
+    hint:'체크리스트를 확인하고 10개를 던져 기록해 보세요.',
+    done:function(m,t){return '10개 중 '+m+'개 성공, 성공률 '+Math.round(m/t*100)+'%예요. 다음엔 지난번보다 1개 더 넣어 봐요.'}});
+  PE.init({back:'basketball.html'});
 })();
 </script>
 </body>

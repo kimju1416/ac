@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>배구 학습지 · 체육 플레이북</title>
+<meta name="description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<div class="progress" id="bar"></div>
+<div class="top">
+  <button id="fs" aria-label="전체화면"><svg class="i" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>전체화면</span></button>
+  <button id="close" aria-label="슬라이드로 돌아가기"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg><span>슬라이드로</span></button>
+</div>
+
+<!-- 1 표지 -->
+<section class="slide cover" id="s1">
+  <img class="bg" src="../assets/img/vb-cover.jpg" alt="스파이크를 하는 학생">
+  <div class="scrim"></div>
+  <div class="txt">
+    <div class="eyebrow"><b>학습지</b>중학교 체육 · 네트형 경쟁</div>
+    <h1>배구, 어떻게 생각하며 뛸까?</h1>
+    <p class="sub">질문에 답하며 배우는 네트 높이, 리시브 각도, 스파이크, 로테이션</p>
+    <p class="note">이 학습지의 사진은 AI로 생성한 이미지입니다. → 키 또는 아래 버튼으로 넘어가요.</p>
+  </div>
+</section>
+
+<!-- 2 네트 높이 -->
+<section class="slide" id="s2">
+  <div class="eyebrow"><b>1</b>코트와 규칙 · 네트 높이</div>
+  <div class="split">
+    <div><div class="photo"><img src="../assets/img/vbl-net.jpg" alt="체육관의 배구 네트"></div><p class="cap">네트 윗부분의 흰 띠가 높이의 기준이에요.</p></div>
+    <div class="col">
+      <h2 class="title">남자 경기의 네트 높이는 2.43m예요. 여자 경기는 몇 m일까?</h2>
+      <div class="q" data-id="q-net" data-reveal="#r-net">
+        <div class="choices">
+          <button class="choice" data-why="2.00m는 너무 낮아요."><i>A</i>2.00m</button>
+          <button class="choice" data-ok><i>B</i>2.24m</button>
+          <button class="choice" data-why="남자와 여자의 높이는 달라요. 여자 경기가 더 낮아요."><i>C</i>2.43m</button>
+          <button class="choice" data-why="여자 경기의 네트는 더 낮아요."><i>D</i>2.50m</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-net">
+        <strong>여자 경기는 2.24m예요.</strong>
+        <p>국제 규정은 남자 2.43m, 여자 2.24m예요. 학교 수업에서는 학생들의 키에 맞춰 더 낮게 설치하기도 해요.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 서브 -->
+<section class="slide" id="s3">
+  <div class="eyebrow"><b>1</b>코트와 규칙 · 서브</div>
+  <div class="split rev">
+    <div class="col">
+      <h2 class="title">서브를 넣는 순간, 서버의 발은 어디에 있어야 할까?</h2>
+      <div class="q" data-id="q-serve" data-reveal="#r-serve">
+        <div class="choices">
+          <button class="choice" data-why="코트 안에서 서브하면 폴트예요."><i>A</i>코트 안 어디든</button>
+          <button class="choice" data-ok><i>B</i>엔드라인 뒤(코트 밖)</button>
+          <button class="choice" data-why="센터라인은 코트 가운데 선이에요. 서브 위치와 상관없어요."><i>C</i>센터라인 위</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-serve">
+        <strong>엔드라인 뒤에서 쳐요.</strong>
+        <p>공을 치는 순간 엔드라인을 밟거나 넘으면 폴트예요. 공을 친 뒤에는 코트 안으로 들어와도 괜찮아요.</p>
+      </div>
+    </div>
+    <div><div class="photo"><img src="../assets/img/vbl-serve.jpg" alt="오버핸드 서브 직전"></div><p class="cap">공을 던져 올린 뒤 엔드라인 뒤에서 쳐요.</p></div>
+  </div>
+</section>
+
+<!-- 4 리시브 반사 -->
+<section class="slide" id="s4">
+  <div class="eyebrow"><b>2</b>리시브 · 입사각과 반사각</div>
+  <h2 class="title">팔 면에 맞은 공은 어느 쪽으로 튕겨 나갈까?</h2>
+  <div class="split">
+    <div>
+      <div class="photo" id="ph-bump"><img src="../assets/img/vbl-bump.jpg" alt="언더핸드 리시브"><canvas id="cv-bump" width="1536" height="1024"></canvas></div>
+      <p class="cap">흰 선은 두 팔이 만든 면, 점선은 그 면에 수직인 선(법선)이에요.</p>
+    </div>
+    <div class="col">
+      <div class="q" data-id="q-bump" data-reveal="#r-bump">
+        <div class="choices">
+          <button class="choice" data-ok><i>A</i>팔 면의 각도에 따라 거의 같은 각도로 튕겨 나간다</button>
+          <button class="choice" data-why="팔 면이 기울어 있으면 방향이 달라져요."><i>B</i>항상 수직으로 올라간다</button>
+          <button class="choice" data-why="공은 면에서 방향이 바뀌어요."><i>C</i>들어온 방향 그대로 지나간다</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-bump">
+        <strong>팔 면의 기울기가 공의 방향을 정해요.</strong>
+        <p>입사각과 반사각은 거의 같아요. 그래서 팔 면을 세터 쪽으로 기울이면 공이 세터 쪽으로 가요. 팔을 휘두르지 말고 면의 각도로 방향을 만들어요.</p>
+      </div>
+      <div class="ctl"><label>팔 면을 앞(세터 쪽)으로 기울인 정도<b id="u-beta">26°</b></label><input type="range" id="in-beta" min="-10" max="45" value="26"></div>
+      <div class="stats">
+        <div class="stat"><small>입사각</small><strong id="u-in">0<em>°</em></strong></div>
+        <div class="stat"><small>반사각</small><strong id="u-out">0<em>°</em></strong></div>
+        <div class="stat hot"><small>공의 방향</small><strong id="u-dir" style="font-size:20px">-</strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 스파이크 -->
+<section class="slide" id="s5">
+  <div class="eyebrow"><b>3</b>공격 · 스파이크 각도</div>
+  <h2 class="title">스파이크는 어느 정도 각도로 내리쳐야 코트에 들어갈까?</h2>
+  <div class="split">
+    <div>
+      <div class="photo" id="ph-spike"><img src="../assets/img/vbl-spike.jpg" alt="스파이크 장면"><canvas id="cv-spike" width="1536" height="1024"></canvas></div>
+      <p class="cap">그래프의 두 주황 선 사이 각도로 치면 네트를 넘고 상대 코트 안에 떨어져요. (가로·세로 눈금 간격이 달라요)</p>
+    </div>
+    <div class="col">
+      <div class="q" data-id="q-spike" data-reveal="#r-spike">
+        <p class="sub" style="margin-bottom:4px">공을 치는 높이(타점)가 높아지면, 코트에 넣을 수 있는 각도 범위는 어떻게 될까요?</p>
+        <div class="choices">
+          <button class="choice" data-ok><i>A</i>넓어진다</button>
+          <button class="choice" data-why="높이 때릴수록 네트 위로 넘기기 쉬워져 선택지가 늘어요."><i>B</i>좁아진다</button>
+          <button class="choice" data-why="높이에 따라 범위가 달라져요."><i>C</i>똑같다</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-spike">
+        <strong>타점이 높을수록 범위가 넓어져요.</strong>
+        <p>높은 곳에서 치면 네트에 걸릴 걱정이 줄어서 더 가파르게 내리칠 수 있고, 그만큼 선택지가 늘어요. 그래서 점프해서 가장 높은 곳에서 치는 게 중요해요.</p>
+      </div>
+      <div class="ctl"><label>공을 치는 높이(타점)<b id="s-h">3.0 m</b></label><input type="range" id="in-sh" min="26" max="34" value="30"></div>
+      <div class="ctl"><label>공의 속도<b id="s-v">20 m/s</b></label><input type="range" id="in-sv" min="12" max="30" value="20"></div>
+      <div class="stats">
+        <div class="stat hot"><small>가능한 각도</small><strong id="s-r" style="font-size:22px">-</strong></div>
+        <div class="stat"><small>범위 폭</small><strong id="s-w">-<em>°</em></strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 로테이션 -->
+<section class="slide" id="s6">
+  <div class="eyebrow"><b>4</b>전술 · 로테이션</div>
+  <h2 class="title">서브권을 얻으면 선수들은 어느 방향으로 자리를 바꿀까?</h2>
+  <div class="split">
+    <div><div class="photo"><canvas id="cv-rot" width="1500" height="1000"></canvas></div><p class="cap">위에서 본 우리 편 코트예요. 위쪽이 네트예요.</p></div>
+    <div class="col">
+      <div class="q" data-id="q-rot" data-reveal="#r-rot">
+        <div class="choices">
+          <button class="choice" data-ok><i>A</i>시계 방향</button>
+          <button class="choice" data-why="반대로 돌지 않아요."><i>B</i>시계 반대 방향</button>
+          <button class="choice" data-why="매번 같은 선수가 서브를 넣는 게 아니에요."><i>C</i>돌지 않고 그대로</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-rot">
+        <strong>시계 방향으로 한 칸씩 돌아요.</strong>
+        <p>2번(앞줄 오른쪽) 선수가 1번(서브 자리)으로 이동하고, 나머지도 한 칸씩 이동해요. 그래서 모든 선수가 돌아가며 서브를 넣어요.</p>
+      </div>
+      <div class="seg">
+        <button class="btn" id="rot-go">로테이션</button>
+        <button class="btn ghost" id="rot-reset">처음으로</button>
+      </div>
+      <p class="sub" id="rot-msg"></p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 판정 -->
+<section class="slide" id="s7">
+  <div class="eyebrow"><b>5</b>규칙 · 판정 연습</div>
+  <h2 class="title">심판이 되어 판정해 보자</h2>
+  <div class="split">
+    <div class="jbox">
+      <div class="dots" id="jdots"><span></span><span></span><span></span><span></span></div>
+      <div id="judge">
+        <div class="jq cur q" data-id="j1" data-reveal="#jr1">
+          <p class="sit">세터가 올린 공을 같은 세터가 곧바로 다시 쳤다.</p>
+          <div class="row">
+            <button class="choice" data-why="같은 선수가 연속으로 두 번 칠 수는 없어요."><i>A</i>정상</button>
+            <button class="choice" data-ok><i>B</i>반칙(더블 터치)</button>
+          </div>
+          <p class="fb"></p>
+          <div class="reveal" id="jr1"><strong>더블 터치예요.</strong><p>같은 선수가 연속으로 두 번 공을 치면 반칙이에요.</p><button class="btn nextj" style="margin-top:12px">다음 판정</button></div>
+        </div>
+        <div class="jq q" data-id="j2" data-reveal="#jr2">
+          <p class="sit">우리 팀이 공을 네 번 쳐서 상대 코트로 넘겼다.</p>
+          <div class="row">
+            <button class="choice" data-why="한 팀은 최대 세 번까지만 칠 수 있어요."><i>A</i>정상</button>
+            <button class="choice" data-ok><i>B</i>반칙(포 터치)</button>
+          </div>
+          <p class="fb"></p>
+          <div class="reveal" id="jr2"><strong>포 터치예요.</strong><p>한 팀은 공을 최대 세 번까지만 칠 수 있어요. (블로킹은 횟수에 넣지 않아요.)</p><button class="btn nextj" style="margin-top:12px">다음 판정</button></div>
+        </div>
+        <div class="jq q" data-id="j3" data-reveal="#jr3">
+          <p class="sit">공을 치는 동작 중에 몸이 네트 윗부분의 흰 띠에 닿았다.</p>
+          <div class="row">
+            <button class="choice" data-why="공을 치는 중에 네트 윗부분을 건드리면 반칙이에요."><i>A</i>정상</button>
+            <button class="choice" data-ok><i>B</i>반칙(네트 터치)</button>
+          </div>
+          <p class="fb"></p>
+          <div class="reveal" id="jr3"><strong>네트 터치예요.</strong><p>공을 치는 동작 중에 네트 윗부분에 닿으면 반칙이에요.</p><button class="btn nextj" style="margin-top:12px">다음 판정</button></div>
+        </div>
+        <div class="jq q" data-id="j4" data-reveal="#jr4">
+          <p class="sit">서브한 공이 네트 윗부분을 스치고 상대 코트 안으로 넘어갔다.</p>
+          <div class="row">
+            <button class="choice" data-ok><i>A</i>정상</button>
+            <button class="choice" data-why="서브가 네트를 스치고 넘어가도 인정돼요."><i>B</i>반칙</button>
+          </div>
+          <p class="fb"></p>
+          <div class="reveal" id="jr4"><strong>정상이에요.</strong><p>서브한 공이 네트를 스치고 상대 코트로 넘어가도 계속 경기해요.</p></div>
+        </div>
+      </div>
+    </div>
+    <ul class="rules">
+      <li><b>더블 터치</b> 한 선수가 연속으로 두 번 치는 반칙</li>
+      <li><b>포 터치</b> 한 팀이 네 번 이상 치는 반칙</li>
+      <li><b>네트 터치</b> 공을 치는 동작 중 네트 윗부분에 닿는 반칙</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 8 득점 -->
+<section class="slide" id="s8">
+  <div class="eyebrow"><b>6</b>규칙 · 득점</div>
+  <h2 class="title">한 세트는 몇 점을 먼저 얻으면 이길까?</h2>
+  <div class="split rev">
+    <div class="col">
+      <div class="q" data-id="q-score" data-reveal="#r-score">
+        <div class="choices">
+          <button class="choice" data-why="15점은 마지막 5세트에서 써요."><i>A</i>15점</button>
+          <button class="choice" data-why="21점은 배드민턴의 득점이에요."><i>B</i>21점</button>
+          <button class="choice" data-ok><i>C</i>25점(2점 차)</button>
+          <button class="choice" data-why="30점까지 가지 않아도 끝나요."><i>D</i>30점</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-score">
+        <strong>25점을 먼저 얻되, 2점 차가 나야 해요.</strong>
+        <p>랠리에서 이기면 서브권과 상관없이 1점이에요. 24대 24가 되면 2점 차가 날 때까지 계속해요. 5세트는 15점이에요.</p>
+      </div>
+    </div>
+    <ul class="rules">
+      <li><b>랠리 포인트</b> 랠리에서 이긴 팀이 1점을 얻어요.</li>
+      <li><b>세트</b> 25점을 먼저 얻고 2점 차 이상이면 승리해요.</li>
+      <li><b>경기</b> 보통 5세트 중 3세트를 이기면 승리해요.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 9 활동 -->
+<section class="slide" id="s9">
+  <div class="eyebrow"><b>7</b>직접 해보기 · 언더핸드 패스</div>
+  <h2 class="title">짝과 언더핸드 패스 10개에 도전해 보자</h2>
+  <div class="split rev">
+    <div class="col">
+      <div class="ft">
+        <label class="chk"><input type="checkbox">두 팔을 곧게 모아 평평한 면을 만들어요<small>팔 면</small></label>
+        <label class="chk"><input type="checkbox">무릎을 굽혀 공 아래로 몸을 낮춰요<small>자세</small></label>
+        <label class="chk"><input type="checkbox">팔을 휘두르지 않고 면의 각도로 보내요<small>방향</small></label>
+        <label class="chk"><input type="checkbox">공이 팔 위쪽 평평한 곳에 닿게 해요<small>접촉</small></label>
+      </div>
+      <div class="tally">
+        <div class="big" id="ft-n">0<em>/ 0</em></div>
+        <button class="btn" id="ft-ok">성공</button>
+        <button class="btn ghost" id="ft-no">실패</button>
+        <button class="btn ghost" id="ft-reset">다시</button>
+      </div>
+      <p class="sub" id="ft-msg"></p>
+    </div>
+    <div><div class="photo"><img src="../assets/img/vbl-bump.jpg" alt="언더핸드 패스 자세"></div><p class="cap">팔 면을 목표 방향으로 향해요.</p></div>
+  </div>
+</section>
+
+<!-- 10 정리 -->
+<section class="slide" id="s10">
+  <div class="eyebrow"><b>정리</b>오늘의 학습</div>
+  <h2 class="title">오늘 맞힌 문제</h2>
+  <div class="score"><span id="sc-n">0</span><em id="sc-t">/ 0</em></div>
+  <div class="keys">
+    <div><b>네트 높이</b>남자 2.43m, 여자 2.24m(국제 규정). 수업에서는 낮춰요.</div>
+    <div><b>서브</b>엔드라인 뒤에서 쳐요. 친 뒤에는 코트 안으로 들어와도 돼요.</div>
+    <div><b>입사각과 반사각</b>팔 면에 맞은 공은 법선 기준으로 거의 같은 각도로 튕겨요.</div>
+    <div><b>스파이크</b>타점이 높을수록 코트에 넣을 수 있는 각도 범위가 넓어져요.</div>
+    <div><b>로테이션</b>서브권을 얻으면 시계 방향으로 한 칸씩 돌아요.</div>
+    <div><b>득점</b>랠리 포인트, 25점 먼저 얻고 2점 차. 한 팀은 최대 세 번까지 칠 수 있어요.</div>
+  </div>
+  <div class="seg"><button class="btn" id="redo">다시 풀기</button><button class="btn ghost" id="back2">슬라이드로 돌아가기</button></div>
+</section>
+
+<div class="nav">
+  <button id="prev" aria-label="이전"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="cnt" id="cnt">1 / 10</div>
+  <button id="next" aria-label="다음"><svg class="i" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+</div>
+
+<script src="../assets/lesson.js"></script>
+<script>
+(function(){
+  'use strict';
+  var $=PE.$, $$=PE.$$, ENTER=PE.ENTER, lbl=PE.lbl, DEG=PE.DEG, G=PE.G;
+
+  /* 4 리시브 반사: 사진에서 실측한 접촉점·스케일·방향 */
+  var CBM={ cx:900, cy:345, s:640, dir:1 };   /* 접촉점 px · 1m당 px · 선수가 바라보는 방향(+1=오른쪽) */
+  (function(){
+    var cv=$('#cv-bump'), ctx=cv.getContext('2d'), inp=$('#in-beta'), A_IN=35*DEG;
+    function draw(){
+      var beta=+inp.value*DEG, d=CBM.dir;
+      var vx=-d*Math.cos(A_IN), vy=Math.sin(A_IN);                    /* 들어오는 공: 선수 쪽으로, 아래로 */
+      var nx=d*Math.sin(beta), ny=-Math.cos(beta);                    /* 팔 면의 법선(위쪽, 앞으로 기울임) */
+      var tx=d*Math.cos(beta), ty=Math.sin(beta);                     /* 팔 면의 방향 */
+      var dn=vx*nx+vy*ny, rx=vx-2*dn*nx, ry=vy-2*dn*ny;
+      var thin=Math.acos(Math.min(1,Math.abs(dn)))/DEG, thout=thin;
+      var fwd=rx*d, outDeg=Math.atan2(rx*d,-ry)/DEG;
+      ctx.clearRect(0,0,1536,1024); ctx.lineCap='round';
+      var x=CBM.cx, y=CBM.cy;
+      var LR=300;
+      ctx.setLineDash([12,12]); ctx.lineWidth=4; ctx.strokeStyle='rgba(255,255,255,.85)';
+      ctx.beginPath(); ctx.moveTo(x-nx*LR*0.8,y-ny*LR*0.8); ctx.lineTo(x+nx*LR,y+ny*LR); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle='#ff9a5c'; ctx.lineWidth=9; ctx.beginPath(); ctx.moveTo(x-vx*LR,y-vy*LR); ctx.lineTo(x,y); ctx.stroke();
+      ctx.strokeStyle='#ffe0c8'; ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+rx*LR,y+ry*LR); ctx.stroke();
+      ctx.strokeStyle='#ffffff'; ctx.lineWidth=14; ctx.beginPath(); ctx.moveTo(x-tx*0.28*CBM.s,y-ty*0.28*CBM.s); ctx.lineTo(x+tx*0.28*CBM.s,y+ty*0.28*CBM.s); ctx.stroke();
+      lbl(ctx,'입사각 '+Math.round(thin)+'°',Math.min(1500,x-vx*LR+16),Math.max(70,y-vy*LR-8),{s:52,a:'left',c:'#ffb27f'});
+      lbl(ctx,'반사각 '+Math.round(thout)+'°',Math.max(40,x+rx*LR-(rx<0?16:-16)),Math.max(70,y+ry*LR-8),{s:52,a:rx<0?'right':'left',c:'#fff0e4'});
+      lbl(ctx,'법선',x-nx*LR*0.8-14,y-ny*LR*0.8+14,{s:42,a:'right',w:600});
+      $('#u-beta').textContent=Math.round(beta/DEG)+'°'; $('#u-in').innerHTML=Math.round(thin)+'<em>°</em>'; $('#u-out').innerHTML=Math.round(thout)+'<em>°</em>';
+      $('#u-dir').textContent=fwd>0.25?'세터 쪽(앞)':(fwd<-0.25?'뒤쪽':'거의 수직 위');
+    }
+    inp.addEventListener('input',draw); ENTER.s4=draw; draw();
+  })();
+
+  /* 5 스파이크: 네트를 넘고 상대 코트 안에 떨어지는 각도 범위 (공기저항 없음) */
+  (function(){
+    var cv=$('#cv-spike'), ctx=cv.getContext('2d'), ih=$('#in-sh'), iv=$('#in-sv'), d=0.9;
+    var NET=2.43, R=0.105, COURT=9.0;
+    function ok(H,v,th){
+      var c=Math.cos(th*DEG), s=Math.sin(th*DEG), tn=d/(v*c), yn=H-v*s*tn-0.5*G*tn*tn; if(yn<NET+R) return false;
+      var a=-0.5*G, b=-v*s, tl=(-b-Math.sqrt(b*b-4*a*H))/(2*a); return -d+v*c*tl<=COURT;
+    }
+    function range(H,v){ var lo=null,hi=null; for(var t=0;t<=80;t+=0.2){ if(ok(H,v,t)){ if(lo===null) lo=t; hi=t } } return lo===null?null:[lo,hi] }
+    function path(P,H,v,th,col,w){ var c=Math.cos(th*DEG), s=Math.sin(th*DEG); ctx.strokeStyle=col; ctx.lineWidth=w; ctx.beginPath();
+      var T=(COURT+d)/(v*c)*1.4, first=true; for(var i=0;i<=120;i++){ var t=T*i/120, x=-d+v*c*t, y=H-v*s*t-0.5*G*t*t; if(y<0){ y=0 }
+        first?ctx.moveTo(P.X(x),P.Y(y)):ctx.lineTo(P.X(x),P.Y(y)); first=false; if(y===0) break } ctx.stroke() }
+    function draw(){
+      var H=ih.value/10, v=+iv.value, r=range(H,v); ctx.clearRect(0,0,1536,1024); ctx.lineCap='round'; ctx.lineJoin='round';
+      var P=PE.plot(ctx,{x:520,y:560,w:980,h:440,xmin:-2,xmax:10,ymin:0,ymax:3.5,xt:2,yt:1,title:'흰 세로선 = 네트(2.43m) · 점선 = 엔드라인(9m)',xlabel:'네트에서 떨어진 거리 (m)',ylabel:'높이 (m)'});
+      P.clip();
+      ctx.strokeStyle='#fff'; ctx.lineWidth=8; ctx.beginPath(); ctx.moveTo(P.X(0),P.Y(0)); ctx.lineTo(P.X(0),P.Y(NET)); ctx.stroke();
+      ctx.setLineDash([10,8]); ctx.strokeStyle='rgba(255,255,255,.6)'; ctx.lineWidth=3; ctx.beginPath(); ctx.moveTo(P.X(COURT),P.Y(0)); ctx.lineTo(P.X(COURT),P.Y(3.5)); ctx.stroke(); ctx.setLineDash([]);
+      if(r){ path(P,H,v,r[0],'#ffb27f',7); path(P,H,v,r[1],'#ff7a2f',7) }
+      P.unclip();
+      if(r) PE.dot(ctx,P.X(-d),P.Y(H),11,'#fff');
+      lbl(ctx,r?Math.round(r[0])+'° ~ '+Math.round(r[1])+'° 아래로':'네트·코트 안에 넣을 수 없어요',P.X(5),P.Y(2.9),{s:56,a:'center',c:'#ffd1b0'});
+      $('#s-h').textContent=H.toFixed(1)+' m'; $('#s-v').textContent=v+' m/s';
+      $('#s-r').textContent=r?Math.round(r[0])+'° ~ '+Math.round(r[1])+'°':'넣을 수 없음'; $('#s-w').innerHTML=r?Math.round(r[1]-r[0])+'<em>°</em>':'0<em>°</em>';
+    }
+    ih.addEventListener('input',draw); iv.addEventListener('input',draw); ENTER.s5=draw; draw();
+  })();
+
+  /* 6 로테이션 */
+  (function(){
+    var cv=$('#cv-rot'), ctx=cv.getContext('2d'), S=98, floor=PE.loadImg('../assets/img/bbl-floor.jpg',function(){ if(PE.current()==='s6') draw() });
+    function P(u,v){ return [(u+3.15)*S,(v+0.6)*S] }
+    var SLOT={1:[7.5,6.5],2:[7.5,1.7],3:[4.5,1.7],4:[1.5,1.7],5:[1.5,6.5],6:[4.5,6.5]};
+    var NEXT={2:1,1:6,6:5,5:4,4:3,3:2};
+    var who=['A','B','C','D','E','F'], at=[1,2,3,4,5,6], pos=at.map(function(p){return SLOT[p].slice()}), cancel=null, count=0;
+    function court(){
+      if(floor.complete&&floor.naturalWidth) ctx.drawImage(floor,0,0,1500,1000); else { ctx.fillStyle='#b58a55'; ctx.fillRect(0,0,1500,1000) }
+      ctx.fillStyle='rgba(0,0,0,.18)'; ctx.fillRect(0,0,1500,1000);
+      ctx.strokeStyle='rgba(255,255,255,.95)'; ctx.lineWidth=7; ctx.lineCap='round';
+      function ln(u1,v1,u2,v2){ var a=P(u1,v1),b=P(u2,v2); ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke() }
+      ln(0,0,9,0); ln(0,0,0,9); ln(9,0,9,9); ln(0,9,9,9); ln(0,3,9,3);
+      ctx.lineWidth=12; ctx.strokeStyle='#f4f4f5'; ln(-0.4,0,9.4,0);
+      lbl(ctx,'네트',P(4.5,0)[0],P(4.5,0)[1]-16,{s:40,a:'center',w:600});
+      for(var k=1;k<=6;k++){ var q=P(SLOT[k][0],SLOT[k][1]); lbl(ctx,String(k),q[0]+70,q[1]+70,{s:46,a:'center',w:700,c:'rgba(255,255,255,.55)'}) }
+    }
+    function draw(){ court(); pos.forEach(function(p,i){ var q=P(p[0],p[1]); PE.disc(ctx,1,q[0],q[1],who[i],PE.OFF,'#190d04',46) });
+      /* 서브 선수 표시 */ var si=at.indexOf(1); var q=P(pos[si][0],pos[si][1]); PE.dot(ctx,q[0]+58,q[1]-52,16,'#ffffff'); }
+    function go(){ if(cancel) cancel(); var from=pos.map(function(p){return p.slice()}); at=at.map(function(p){return NEXT[p]}); var to=at.map(function(p){return SLOT[p]}); count++;
+      $('#rot-msg').textContent=count+'번 돌았어요. 지금 1번(서브 자리)은 '+who[at.indexOf(1)]+' 선수예요.';
+      cancel=PE.tween(900,function(u,e){ pos=from.map(function(p,i){return [p[0]+(to[i][0]-p[0])*e,p[1]+(to[i][1]-p[1])*e]}); draw() }) }
+    $('#rot-go').onclick=go;
+    $('#rot-reset').onclick=function(){ if(cancel) cancel(); at=[1,2,3,4,5,6]; pos=at.map(function(p){return SLOT[p].slice()}); count=0; $('#rot-msg').textContent='처음 배치예요. 1번 자리는 A 선수예요.'; draw() };
+    $('#rot-msg').textContent='처음 배치예요. 1번 자리는 A 선수예요.';
+    ENTER.s6=draw; draw();
+  })();
+
+  PE.tally({n:'#ft-n',msg:'#ft-msg',ok:'#ft-ok',no:'#ft-no',reset:'#ft-reset',total:10,key:'pe-vb-bump',
+    hint:'체크리스트를 확인하고 10번 패스해서 기록해 보세요.',
+    done:function(m,t){return '10개 중 '+m+'개 성공, 성공률 '+Math.round(m/t*100)+'%예요. 다음엔 지난번보다 1개 더 성공해 봐요.'}});
+  PE.init({back:'volleyball.html'});
+})();
+</script>
+</body>
+</html>

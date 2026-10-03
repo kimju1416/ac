@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>배드민턴 학습지 · 체육 플레이북</title>
+<meta name="description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon-32.png">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="../assets/lesson.css">
+</head>
+<body>
+<div class="progress" id="bar"></div>
+<div class="top">
+  <button id="fs" aria-label="전체화면"><svg class="i" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span>전체화면</span></button>
+  <button id="close" aria-label="슬라이드로 돌아가기"><svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg><span>슬라이드로</span></button>
+</div>
+
+<!-- 1 표지 -->
+<section class="slide cover" id="s1">
+  <img class="bg" src="../assets/img/bd-cover.jpg" alt="배드민턴 경기 장면">
+  <div class="scrim"></div>
+  <div class="txt">
+    <div class="eyebrow"><b>학습지</b>중학교 체육 · 네트형 경쟁</div>
+    <h1>배드민턴, 어떻게 생각하며 칠까?</h1>
+    <p class="sub">질문에 답하며 배우는 득점, 코트, 서브, 셔틀콕의 비행</p>
+    <p class="note">이 학습지의 사진은 AI로 생성한 이미지입니다. → 키 또는 아래 버튼으로 넘어가요.</p>
+  </div>
+</section>
+
+<!-- 2 득점 -->
+<section class="slide" id="s2">
+  <div class="eyebrow"><b>1</b>규칙 · 득점</div>
+  <h2 class="title">한 게임은 몇 점을 먼저 얻으면 이길까?</h2>
+  <div class="split rev">
+    <div class="col">
+      <div class="q" data-id="q-score" data-reveal="#r-score">
+        <div class="choices">
+          <button class="choice" data-why="11점은 예전 방식이에요."><i>A</i>11점</button>
+          <button class="choice" data-why="15점은 예전 방식이에요."><i>B</i>15점</button>
+          <button class="choice" data-ok><i>C</i>21점</button>
+          <button class="choice" data-why="30점은 상한선이에요. 보통 그전에 끝나요."><i>D</i>30점</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-score">
+        <strong>21점이에요. 랠리 포인트 방식이에요.</strong>
+        <p>랠리에서 이기면 서브권과 상관없이 1점을 얻어요. 20대 20이 되면 2점 차가 날 때까지 계속하고, 29대 29가 되면 30점을 먼저 얻는 쪽이 이겨요.</p>
+      </div>
+    </div>
+    <ul class="rules">
+      <li><b>랠리 포인트</b> 랠리에서 이긴 쪽이 1점</li>
+      <li><b>게임</b> 21점 선취, 20대 20부터는 2점 차</li>
+      <li><b>상한</b> 29대 29에서는 30점 선취</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 3 코트 보드 -->
+<section class="slide" id="s3">
+  <div class="eyebrow"><b>2</b>코트 · 인과 아웃</div>
+  <h2 class="title">셔틀콕이 여기에 떨어지면 인일까, 아웃일까?</h2>
+  <div class="split">
+    <div>
+      <div class="photo"><canvas id="cv-court" width="1500" height="1000" style="cursor:crosshair"></canvas></div>
+      <p class="cap">코트를 눌러 셔틀콕이 떨어진 자리를 정해 보세요. (위에서 본 코트)</p>
+    </div>
+    <div class="col">
+      <div class="q" data-id="q-court" data-reveal="#r-court">
+        <p class="sub" style="margin-bottom:4px">단식과 복식 코트에서 다른 점은 무엇일까요?</p>
+        <div class="choices">
+          <button class="choice" data-ok><i>A</i>옆 폭이 다르다(복식이 더 넓다)</button>
+          <button class="choice" data-why="코트의 길이는 같아요(13.40m)."><i>B</i>코트 길이가 다르다</button>
+          <button class="choice" data-why="네트 높이는 같아요."><i>C</i>네트 높이가 다르다</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-court">
+        <strong>옆 폭이 달라요.</strong>
+        <p>복식은 6.10m, 단식은 5.18m예요. 길이 13.40m는 같아요. 서브할 때는 복식의 뒤쪽 선이 뒤 경계선보다 76cm 안쪽으로 줄어요.</p>
+      </div>
+      <div class="seg" id="mode-seg">
+        <button class="btn ghost cur" data-m="s">단식</button>
+        <button class="btn ghost" data-m="d">복식</button>
+      </div>
+      <div class="stats">
+        <div class="stat hot"><small>판정</small><strong id="c-res">-</strong></div>
+      </div>
+      <p class="sub" id="c-msg">코트를 눌러 보세요. 선 위에 떨어지면 인이에요.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 서브 -->
+<section class="slide" id="s4">
+  <div class="eyebrow"><b>3</b>규칙 · 서브</div>
+  <div class="split rev">
+    <div class="col">
+      <h2 class="title">서브할 때 셔틀콕을 치는 순간의 높이 기준은?</h2>
+      <div class="q" data-id="q-serve" data-reveal="#r-serve">
+        <div class="choices">
+          <button class="choice" data-why="어깨 높이에서 치면 폴트예요."><i>A</i>어깨 높이 이하</button>
+          <button class="choice" data-ok><i>B</i>바닥에서 1.15m 이하</button>
+          <button class="choice" data-why="머리 위에서 치는 서브는 없어요."><i>C</i>머리 위</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-serve">
+        <strong>바닥에서 1.15m 이하에서 쳐요.</strong>
+        <p>서브는 셔틀콕을 치는 순간 바닥에서 1.15m 이하여야 하고, 대각선 방향의 상대 서비스 코트로 보내요. 서브 동작 중에는 두 발이 바닥에서 떨어지면 안 돼요.</p>
+      </div>
+    </div>
+    <div><div class="photo"><img src="../assets/img/bdl-serve.jpg" alt="낮게 서브하는 학생"></div><p class="cap">셔틀콕을 허리 아래 높이에서 쳐요.</p></div>
+  </div>
+</section>
+
+<!-- 5 비행 -->
+<section class="slide" id="s5">
+  <div class="eyebrow"><b>4</b>과학 · 셔틀콕의 비행</div>
+  <h2 class="title">빠르게 날아가던 셔틀콕이 갑자기 느려지는 이유는?</h2>
+  <div class="split">
+    <div>
+      <div class="photo" id="ph-court"><img src="../assets/img/bdl-smash.jpg" alt="셔틀콕을 치는 선수"><canvas id="cv-fly" width="1536" height="1024"></canvas></div>
+      <p class="cap">그래프의 흰 점선은 공기저항이 없을 때, 주황 선은 실제 셔틀콕의 경로예요. (가로·세로 눈금 간격이 달라요)</p>
+    </div>
+    <div class="col">
+      <div class="q" data-id="q-fly" data-reveal="#r-fly">
+        <div class="choices">
+          <button class="choice" data-ok><i>A</i>깃털이 만드는 공기저항이 크기 때문에</button>
+          <button class="choice" data-why="중력은 갑자기 커지지 않아요."><i>B</i>중력이 갑자기 커져서</button>
+          <button class="choice" data-why="셔틀콕은 라켓을 떠난 뒤 힘을 더 받지 않아요."><i>C</i>라켓의 힘이 다 빠져서</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-fly">
+        <strong>깃털의 공기저항 때문이에요.</strong>
+        <p>셔틀콕은 가볍고 깃털이 넓게 펴져 있어서 공기저항이 아주 커요. 그래서 처음엔 빠르게 날다가 금방 느려지고, 내려올 때는 거의 수직에 가깝게 떨어져요.</p>
+      </div>
+      <div class="ctl"><label>치는 각도<b id="f-th">40°</b></label><input type="range" id="in-fth" min="15" max="70" value="40"></div>
+      <div class="ctl"><label>처음 속도<b id="f-v">26 m/s</b></label><input type="range" id="in-fv" min="14" max="45" value="26"></div>
+      <div class="stats">
+        <div class="stat"><small>진공이라면</small><strong id="f-vac">-<em>m</em></strong></div>
+        <div class="stat hot"><small>실제 비행거리</small><strong id="f-real">-<em>m</em></strong></div>
+        <div class="stat"><small>떨어질 때 각도</small><strong id="f-ang">-<em>°</em></strong></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 스매시 -->
+<section class="slide" id="s6">
+  <div class="eyebrow"><b>5</b>핵심 기술 · 스매시</div>
+  <div class="split">
+    <div><div class="photo"><img src="../assets/img/bdl-smash.jpg" alt="점프 스매시"></div><p class="cap">몸을 띄워 가장 높은 곳에서 셔틀콕을 내리쳐요.</p></div>
+    <div class="col">
+      <h2 class="title">스매시가 가장 날카롭게 꽂히는 타점은 어디일까?</h2>
+      <div class="q" data-id="q-smash" data-reveal="#r-smash">
+        <div class="choices">
+          <button class="choice" data-ok><i>A</i>몸 앞쪽의 가장 높은 곳</button>
+          <button class="choice" data-why="허리 높이에서는 내리꽂는 각도가 나오지 않아요."><i>B</i>몸 옆 허리 높이</button>
+          <button class="choice" data-why="몸 뒤에서 치면 힘이 실리지 않고 높이 올라가요."><i>C</i>몸 뒤쪽</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-smash">
+        <strong>앞쪽의 높은 곳이에요.</strong>
+        <p>높은 곳에서 앞으로 칠수록 아래로 가파르게 꽂혀서 받아치기 어려워요. 그래서 점프해서 치는 거예요.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7 판정 -->
+<section class="slide" id="s7">
+  <div class="eyebrow"><b>6</b>규칙 · 판정 연습</div>
+  <h2 class="title">심판이 되어 판정해 보자</h2>
+  <div class="split">
+    <div class="jbox">
+      <div class="dots" id="jdots"><span></span><span></span><span></span><span></span></div>
+      <div id="judge">
+        <div class="jq cur q" data-id="j1" data-reveal="#jr1">
+          <p class="sit">복식 경기에서 셔틀콕이 복식 옆선(바깥 선) 위에 떨어졌다.</p>
+          <div class="row">
+            <button class="choice" data-ok><i>A</i>인</button>
+            <button class="choice" data-why="선 위에 떨어지면 인이에요."><i>B</i>아웃</button>
+          </div>
+          <p class="fb"></p>
+          <div class="reveal" id="jr1"><strong>인이에요.</strong><p>선은 코트 안에 포함돼요. 선에 조금이라도 닿으면 인이에요.</p><button class="btn nextj" style="margin-top:12px">다음 판정</button></div>
+        </div>
+        <div class="jq q" data-id="j2" data-reveal="#jr2">
+          <p class="sit">서브하는 순간 셔틀콕이 바닥에서 1.3m 높이에서 쳐졌다.</p>
+          <div class="row">
+            <button class="choice" data-why="1.15m보다 높은 곳에서 쳤어요."><i>A</i>정상</button>
+            <button class="choice" data-ok><i>B</i>폴트</button>
+          </div>
+          <p class="fb"></p>
+          <div class="reveal" id="jr2"><strong>폴트예요.</strong><p>서브는 바닥에서 1.15m 이하에서 쳐야 해요.</p><button class="btn nextj" style="margin-top:12px">다음 판정</button></div>
+        </div>
+        <div class="jq q" data-id="j3" data-reveal="#jr3">
+          <p class="sit">랠리 중에 선수의 라켓이 네트에 닿았다.</p>
+          <div class="row">
+            <button class="choice" data-why="네트를 건드리면 폴트예요."><i>A</i>정상</button>
+            <button class="choice" data-ok><i>B</i>폴트</button>
+          </div>
+          <p class="fb"></p>
+          <div class="reveal" id="jr3"><strong>폴트예요.</strong><p>랠리 중에 라켓이나 몸이 네트에 닿으면 폴트예요.</p><button class="btn nextj" style="margin-top:12px">다음 판정</button></div>
+        </div>
+        <div class="jq q" data-id="j4" data-reveal="#jr4">
+          <p class="sit">셔틀콕이 네트 윗부분에 걸렸다가 상대 코트로 넘어가 떨어졌다.</p>
+          <div class="row">
+            <button class="choice" data-ok><i>A</i>정상(경기 계속)</button>
+            <button class="choice" data-why="네트를 넘어 상대 코트에 떨어졌으니 인정돼요."><i>B</i>폴트</button>
+          </div>
+          <p class="fb"></p>
+          <div class="reveal" id="jr4"><strong>정상이에요.</strong><p>네트에 걸렸다가 상대 코트로 넘어가면 그대로 경기가 이어져요.</p></div>
+        </div>
+      </div>
+    </div>
+    <ul class="rules">
+      <li><b>인/아웃</b> 선 위는 인, 선을 넘으면 아웃</li>
+      <li><b>서브 폴트</b> 1.15m보다 높게 치거나 발을 떼면 폴트</li>
+      <li><b>네트 터치</b> 랠리 중 라켓·몸이 네트에 닿으면 폴트</li>
+    </ul>
+  </div>
+</section>
+
+<!-- 8 복식 대형 -->
+<section class="slide" id="s8">
+  <div class="eyebrow"><b>7</b>전술 · 복식 대형</div>
+  <h2 class="title">상대가 스매시를 칠 때, 우리 둘은 어떻게 서야 할까?</h2>
+  <div class="split">
+    <div><div class="photo"><canvas id="cv-form" width="1500" height="1000"></canvas></div></div>
+    <div class="col">
+      <div class="q" data-id="q-form" data-reveal="#r-form">
+        <div class="choices">
+          <button class="choice" data-why="앞뒤로 서면 좌우 빈자리를 지키기 어려워요."><i>A</i>앞뒤로 선다</button>
+          <button class="choice" data-ok><i>B</i>좌우로 나란히 선다</button>
+          <button class="choice" data-why="한곳에 모이면 코트 대부분이 비어요."><i>C</i>둘이 같은 자리에 모인다</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+      <div class="reveal" id="r-form">
+        <strong>수비는 좌우로 나란히 서요.</strong>
+        <p>스매시는 아래로 빠르게 오기 때문에 좌우로 나란히 서서 코트 폭을 나눠 막아요. 공격할 때는 앞뒤로 서서 앞쪽은 짧은 공, 뒤쪽은 스매시를 맡아요.</p>
+      </div>
+      <div class="seg" id="form-seg">
+        <button class="btn ghost" data-f="atk">공격 대형(앞뒤)</button>
+        <button class="btn ghost cur" data-f="def">수비 대형(좌우)</button>
+      </div>
+      <p class="sub" id="form-msg"></p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 활동 -->
+<section class="slide" id="s9">
+  <div class="eyebrow"><b>8</b>직접 해보기 · 서브</div>
+  <h2 class="title">서브 10개를 대각선 서비스 코트에 넣어 보자</h2>
+  <div class="split rev">
+    <div class="col">
+      <div class="ft">
+        <label class="chk"><input type="checkbox">셔틀콕을 1.15m 이하에서 쳐요<small>높이</small></label>
+        <label class="chk"><input type="checkbox">대각선 방향의 상대 서비스 코트를 겨냥해요<small>방향</small></label>
+        <label class="chk"><input type="checkbox">서브가 끝날 때까지 두 발을 떼지 않아요<small>발</small></label>
+        <label class="chk"><input type="checkbox">라켓을 앞으로 부드럽게 밀어 줘요<small>스윙</small></label>
+      </div>
+      <div class="tally">
+        <div class="big" id="ft-n">0<em>/ 0</em></div>
+        <button class="btn" id="ft-ok">성공</button>
+        <button class="btn ghost" id="ft-no">실패</button>
+        <button class="btn ghost" id="ft-reset">다시</button>
+      </div>
+      <p class="sub" id="ft-msg"></p>
+    </div>
+    <div><div class="photo"><img src="../assets/img/bdl-serve.jpg" alt="서브 자세"></div><p class="cap">낮고 부드럽게, 상대 코트 앞쪽으로 보내요.</p></div>
+  </div>
+</section>
+
+<!-- 10 정리 -->
+<section class="slide" id="s10">
+  <div class="eyebrow"><b>정리</b>오늘의 학습</div>
+  <h2 class="title">오늘 맞힌 문제</h2>
+  <div class="score"><span id="sc-n">0</span><em id="sc-t">/ 0</em></div>
+  <div class="keys">
+    <div><b>득점</b>랠리 포인트 21점, 20대 20부터 2점 차, 29대 29는 30점 선취.</div>
+    <div><b>코트</b>복식 6.10m, 단식 5.18m, 길이 13.40m. 선 위는 인이에요.</div>
+    <div><b>서브</b>바닥에서 1.15m 이하, 대각선 서비스 코트로. 두 발은 떼지 않아요.</div>
+    <div><b>셔틀콕의 비행</b>공기저항이 커서 빠르게 느려지고 거의 수직으로 떨어져요.</div>
+    <div><b>스매시</b>몸 앞쪽의 가장 높은 곳에서 내리쳐요.</div>
+    <div><b>복식 대형</b>공격은 앞뒤, 수비는 좌우로 서요.</div>
+  </div>
+  <div class="seg"><button class="btn" id="redo">다시 풀기</button><button class="btn ghost" id="back2">슬라이드로 돌아가기</button></div>
+</section>
+
+<div class="nav">
+  <button id="prev" aria-label="이전"><svg class="i" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+  <div class="cnt" id="cnt">1 / 10</div>
+  <button id="next" aria-label="다음"><svg class="i" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+</div>
+
+<script src="../assets/lesson.js"></script>
+<script>
+(function(){
+  'use strict';
+  var $=PE.$, $$=PE.$$, ENTER=PE.ENTER, lbl=PE.lbl, DEG=PE.DEG, G=PE.G;
+
+  /* 코트 그리기: 가로 방향, 길이 13.4m(x), 폭 6.1m(y) */
+  var floor=PE.loadImg('../assets/img/bbl-floor.jpg',function(){ var id=PE.current(); if(ENTER[id]) ENTER[id]() });
+  var S=100, OX=80, OY=195, NETX=7.5;                       /* 1m=100px, 코트 왼쪽 끝 x=0.8m */
+  function X(m){return OX+m*S} function Y(m){return OY+m*S}
+  function paintCourt(ctx,mode){
+    if(floor.complete&&floor.naturalWidth) ctx.drawImage(floor,0,0,1500,1000); else { ctx.fillStyle='#b58a55'; ctx.fillRect(0,0,1500,1000) }
+    ctx.fillStyle='rgba(0,0,0,.22)'; ctx.fillRect(0,0,1500,1000);
+    var w=mode==='s'?5.18:6.10, y0=3.05-w/2;
+    ctx.fillStyle='rgba(255,255,255,.12)'; ctx.fillRect(X(0),Y(y0),13.4*S,w*S);
+    ctx.strokeStyle='rgba(255,255,255,.95)'; ctx.lineWidth=5; ctx.lineCap='round';
+    function ln(a,b,c,d){ctx.beginPath();ctx.moveTo(X(a),Y(b));ctx.lineTo(X(c),Y(d));ctx.stroke()}
+    ln(0,0,13.4,0); ln(0,6.1,13.4,6.1); ln(0,0,0,6.1); ln(13.4,0,13.4,6.1);                    /* 복식 바깥 */
+    ln(0,0.46,13.4,0.46); ln(0,5.64,13.4,5.64);                                               /* 단식 옆선 */
+    ln(6.7-1.98,0.46,6.7-1.98,5.64); ln(6.7+1.98,0.46,6.7+1.98,5.64);                         /* 숏 서비스 라인 */
+    ln(6.7-1.98,3.05,0,3.05); ln(6.7+1.98,3.05,13.4,3.05);                                    /* 센터 라인 */
+    ln(0.76,0,0.76,6.1); ln(13.4-0.76,0,13.4-0.76,6.1);                                       /* 복식 롱 서비스 라인 */
+    ctx.lineWidth=14; ctx.strokeStyle='#f4f4f5'; ln(6.7,-0.2,6.7,6.3);                         /* 네트 */
+    lbl(ctx,'네트',X(6.7),Y(-0.3),{s:40,a:'center',w:600});
+  }
+  /* 3 코트 판정 */
+  (function(){
+    var cv=$('#cv-court'), ctx=cv.getContext('2d'), mode='s', pt=null;
+    function judge(){ if(!pt) return null; var w=mode==='s'?5.18:6.10, y0=3.05-w/2; return pt.x>=0&&pt.x<=13.4&&pt.y>=y0&&pt.y<=y0+w }
+    function draw(){ paintCourt(ctx,mode); if(pt){ var r=judge(); ctx.fillStyle=r?'#3fb87f':'#e5534b'; ctx.beginPath(); ctx.arc(X(pt.x),Y(pt.y),18,0,7); ctx.fill(); ctx.strokeStyle='#000'; ctx.lineWidth=3; ctx.stroke() } }
+    cv.addEventListener('pointerdown',function(e){ var b=cv.getBoundingClientRect(); pt={x:((e.clientX-b.left)/b.width*1500-OX)/S,y:((e.clientY-b.top)/b.height*1000-OY)/S};
+      var r=judge(); var el=$('#c-res'); el.textContent=r?'인':'아웃'; el.style.color=r?'#7be0ad':'#ff8a82';
+      $('#c-msg').textContent=r?'코트 안(선 위 포함)이에요. 이 경기 방식에서는 인이에요.':'코트 밖이에요. '+(mode==='s'?'단식에서는 바깥 줄이 단식 옆선이에요.':'복식에서는 가장 바깥 줄이 경계예요.'); draw() });
+    $$('#mode-seg [data-m]').forEach(function(b){ b.onclick=function(){ mode=b.dataset.m; $$('#mode-seg [data-m]').forEach(function(x){x.classList.toggle('cur',x===b)}); draw();
+      if(pt){ var r=judge(); var el=$('#c-res'); el.textContent=r?'인':'아웃'; el.style.color=r?'#7be0ad':'#ff8a82' } } });
+    ENTER.s3=draw; draw();
+  })();
+
+  /* 5 셔틀콕 비행: 공기저항(종단속도 6.7m/s) */
+  (function(){
+    var cv=$('#cv-fly'), ctx=cv.getContext('2d'), ith=$('#in-fth'), iv=$('#in-fv'), VT=6.7, X0=0, H0=2.5;
+    function sim(v,th,drag){
+      var x=X0,y=H0,vx=v*Math.cos(th*DEG),vy=v*Math.sin(th*DEG),dt=0.002,pts=[[x,y]],k=G/(VT*VT);
+      for(var i=0;i<60000;i++){ var sp=Math.hypot(vx,vy), ax=drag?-k*sp*vx:0, ay=-G-(drag?k*sp*vy:0);
+        vx+=ax*dt; vy+=ay*dt; x+=vx*dt; y+=vy*dt; if(i%12===0) pts.push([x,y]); if(y<=0){ y=0; pts.push([x,y]); break } }
+      return {pts:pts, x:x-X0, ang:Math.atan2(-vy,vx)/DEG};
+    }
+    function stroke(P,r,col,w,dash){ ctx.setLineDash(dash||[]); ctx.strokeStyle=col; ctx.lineWidth=w; ctx.beginPath(); r.pts.forEach(function(p,i){ var qx=P.X(p[0]),qy=P.Y(p[1]); i?ctx.lineTo(qx,qy):ctx.moveTo(qx,qy) }); ctx.stroke(); ctx.setLineDash([]) }
+    function draw(){
+      var th=+ith.value, v=+iv.value, real=sim(v,th,true), vac=sim(v,th,false);
+      ctx.clearRect(0,0,1536,1024); ctx.lineCap='round'; ctx.lineJoin='round';
+      var P=PE.plot(ctx,{x:520,y:560,w:980,h:440,xmin:0,xmax:20,ymin:0,ymax:8,xt:5,yt:2,title:'셔틀콕이 날아간 경로',xlabel:'앞으로 간 거리 (m)',ylabel:'높이 (m)'});
+      P.clip(); stroke(P,vac,'rgba(255,255,255,.8)',4,[12,10]); stroke(P,real,'#ff7a2f',7); P.unclip();
+      var ex=Math.min(P.X(real.x),P.X(20)-10), ey=P.Y(0);
+      ctx.fillStyle='#fff'; ctx.beginPath(); ctx.arc(ex,ey,9,0,7); ctx.fill();
+      lbl(ctx,'실제 '+real.x.toFixed(1)+'m',ex-10,ey-18,{s:50,a:'right',c:'#ffd1b0'});
+      $('#f-th').textContent=th+'°'; $('#f-v').textContent=v+' m/s'; $('#f-vac').innerHTML=vac.x.toFixed(1)+'<em>m</em>'; $('#f-real').innerHTML=real.x.toFixed(1)+'<em>m</em>'; $('#f-ang').innerHTML=Math.round(real.ang)+'<em>°</em>';
+    }
+    ith.addEventListener('input',draw); iv.addEventListener('input',draw); ENTER.s5=draw; draw();
+  })();
+
+  /* 8 복식 대형 */
+  (function(){
+    var cv=$('#cv-form'), ctx=cv.getContext('2d');
+    var F={ atk:[[5.3,3.05],[2.6,3.05]], def:[[4.4,1.75],[4.4,4.35]] };
+    var MSG={ atk:'공격 대형: 한 명은 앞에서 짧은 공을, 한 명은 뒤에서 스매시를 맡아요.', def:'수비 대형: 좌우로 나란히 서서 코트 폭을 나눠 막아요.' };
+    var pos=F.def.map(function(p){return p.slice()}), cancel=null;
+    function draw(){ paintCourt(ctx,'d');
+      var o=[X(11.0),Y(3.05)]; PE.disc(ctx,1,o[0],o[1],'X',PE.DEF,'#18181c',42);
+      ctx.strokeStyle='rgba(255,255,255,.8)'; ctx.lineWidth=5; ctx.setLineDash([14,12]); ctx.beginPath(); ctx.moveTo(o[0]-46,o[1]); ctx.lineTo(X(NETX)+30,o[1]); ctx.stroke(); ctx.setLineDash([]);
+      lbl(ctx,'스매시',X(9.0),o[1]-26,{s:42,a:'center',w:600});
+      pos.forEach(function(p,i){ PE.disc(ctx,1,X(p[0]),Y(p[1]),i?'B':'A',PE.OFF,'#190d04',42) });
+      PE.dot(ctx,X(11.0)+46,Y(3.05)-40,14,'#fff');
+    }
+    function go(k){ if(cancel) cancel(); var from=pos.map(function(p){return p.slice()}), to=F[k];
+      $$('#form-seg [data-f]').forEach(function(b){b.classList.toggle('cur',b.dataset.f===k)}); $('#form-msg').textContent=MSG[k];
+      cancel=PE.tween(800,function(u,e){ pos=from.map(function(p,i){return [p[0]+(to[i][0]-p[0])*e,p[1]+(to[i][1]-p[1])*e]}); draw() }) }
+    $$('#form-seg [data-f]').forEach(function(b){ b.onclick=function(){ go(b.dataset.f) } });
+    $('#form-msg').textContent=MSG.def; ENTER.s8=draw; draw();
+  })();
+
+  PE.tally({n:'#ft-n',msg:'#ft-msg',ok:'#ft-ok',no:'#ft-no',reset:'#ft-reset',total:10,key:'pe-bd-serve',
+    hint:'체크리스트를 확인하고 서브 10개를 기록해 보세요.',
+    done:function(m,t){return '10개 중 '+m+'개 성공, 성공률 '+Math.round(m/t*100)+'%예요. 다음엔 지난번보다 1개 더 성공해 봐요.'}});
+  PE.init({back:'badminton.html'});
+})();
+</script>
+</body>
+</html>
