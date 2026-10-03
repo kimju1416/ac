@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>킨볼 · 체육 플레이북 · 심화</title>
+<meta name="description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body style="--accent:var(--c-new);--accent-ink:#6d28d9">
+
+<div class="topbar">
+  <a class="home" href="../index.html">📖 목차</a>
+  <span class="title">🟣 킨볼</span>
+  <span class="counter"></span>
+</div>
+<div class="progress"></div>
+
+<div class="deck">
+  <!-- 1. 표지 -->
+  <section class="slide cover active">
+    <img class="cover-bg" src="../assets/img/kb-cover.jpg" alt="킨볼 경기 장면">
+    <div class="cover-shade"></div>
+    <div class="kicker">뉴스포츠 · 팀 경기</div>
+    <div class="emoji">🟣</div>
+    <h1>킨볼</h1>
+    <p class="lead">세 팀이 하나의 거대한 공으로, 협동의 극치</p>
+  </section>
+  <!-- 2. 킨볼이란? -->
+  <section class="slide">
+    <div class="content" data-num="02">
+      <span class="tag">종목 소개</span>
+      <h2>킨볼이란?</h2>
+      <p class="desc">지름 1.22m의 거대한 공을 사용하는 3팀 동시 경기 스포츠</p>
+      <ul>
+        <li><span class="n">1</span><div><b>3팀 동시 경기 — 유일무이!</b> — 대부분의 스포츠는 2팀이 겨루지만, 킨볼은 세 팀이 동시에 한 코트에서 경기하는 세계 유일의 팀 스포츠</div></li>
+        <li><span class="n">2</span><div><b>거대한 공</b> — 지름 1.22m(122cm), 무게 약 1kg의 초대형 공 사용. 한 사람이 들기엔 크지만 가벼워서 누구나 칠 수 있음</div></li>
+        <li><span class="n">3</span><div><b>전원 참여 필수</b> — 히트(서브) 시 4명 전원이 반드시 공에 접촉해야 함. 혼자서는 절대 할 수 없는, 진정한 팀 스포츠</div></li>
+      </ul>
+      <div class="note"><b>🇨🇦 캐나다 발상</b> — "모든 학생이 소외 없이 참여하는 체육 수업"을 목표로 캐나다에서 탄생한 스포츠</div>
+    </div>
+  </section>
+  <!-- 3. 역사 -->
+  <section class="slide">
+    <div class="content" data-num="03">
+      <span class="tag">역사 · 발전</span>
+      <h2>킨볼의 역사</h2>
+      <p class="desc">모든 학생이 참여하는 체육을 꿈꾼 한 교사의 도전</p>
+      <ul>
+        <li><span class="n">1</span><div><b>1986년 캐나다에서 탄생</b> — 퀘벡주 체육교사 Mario Demers가 발명. "수업 시간에 구석에 서 있는 학생이 없게 하자"는 철학에서 시작</div></li>
+        <li><span class="n">2</span><div><b>KIN의 의미</b> — KIN은 'Kinesthesia(운동감각)'에서 따온 말. 몸의 움직임과 감각을 통해 함께 성장한다는 뜻을 담고 있음</div></li>
+        <li><span class="n">3</span><div><b>IKBF 설립</b> — 국제킨볼연맹(International Kin-Ball Federation)이 설립되며 국제 스포츠로 공인됨</div></li>
+        <li><span class="n">4</span><div><b>킨볼 월드컵</b> — 정기적으로 킨볼 월드컵이 개최되며, 캐나다·일본·프랑스·벨기에 등이 강호로 활약 중</div></li>
+        <li><span class="n">5</span><div><b>한국 학교스포츠클럽 인기</b> — 국내에서도 학교스포츠클럽 종목으로 빠르게 확산. 협동심과 전원 참여라는 교육적 가치가 높이 평가됨</div></li>
+      </ul>
+    </div>
+  </section>
+  <!-- 4. 장비와 경기장 -->
+  <section class="slide">
+    <div class="content" data-num="04">
+      <span class="tag">규칙 · 장비</span>
+      <h2>장비와 경기장</h2>
+      <p class="desc">킨볼 경기에 필요한 시설과 장비를 알아봅시다</p>
+      <div class="split">
+        <div class="figure">
+          <svg viewBox="0 0 400 400" role="img" aria-label="킨볼 경기장 개략도">
+            <!-- 경기장 외곽 (정사각형) -->
+            <rect x="40" y="40" width="320" height="320" fill="#f3e8ff" stroke="#7c3aed" stroke-width="2.5" rx="4"/>
+            <!-- 중앙선 가로 -->
+            <line x1="40" y1="200" x2="360" y2="200" stroke="#7c3aed" stroke-width="1" stroke-dasharray="6,4"/>
+            <!-- 중앙선 세로 -->
+            <line x1="200" y1="40" x2="200" y2="360" stroke="#7c3aed" stroke-width="1" stroke-dasharray="6,4"/>
+            <!-- 중앙 원 (센터 서클) -->
+            <circle cx="200" cy="200" r="50" fill="rgba(124,58,237,0.08)" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <!-- 중앙에 킨볼 표시 -->
+            <circle cx="200" cy="200" r="20" fill="rgba(168,85,247,0.25)" stroke="#a855f7" stroke-width="2"/>
+            <text x="200" y="204" text-anchor="middle" font-size="9" fill="#7c3aed" font-weight="700">KIN</text>
+            <!-- 팀 위치 표시 (3팀) -->
+            <!-- 검정팀 -->
+            <circle cx="120" cy="120" r="8" fill="#374151"/><circle cx="140" cy="105" r="8" fill="#374151"/>
+            <circle cx="100" cy="140" r="8" fill="#374151"/><circle cx="130" cy="145" r="8" fill="#374151"/>
+            <text x="120" y="168" text-anchor="middle" font-size="9" fill="#374151" font-weight="700">검정팀</text>
+            <!-- 회색팀 -->
+            <circle cx="280" cy="120" r="8" fill="#9ca3af"/><circle cx="260" cy="105" r="8" fill="#9ca3af"/>
+            <circle cx="300" cy="140" r="8" fill="#9ca3af"/><circle cx="270" cy="145" r="8" fill="#9ca3af"/>
+            <text x="280" y="168" text-anchor="middle" font-size="9" fill="#6b7280" font-weight="700">회색팀</text>
+            <!-- 분홍팀 -->
+            <circle cx="200" cy="290" r="8" fill="#f472b6"/><circle cx="175" cy="305" r="8" fill="#f472b6"/>
+            <circle cx="225" cy="305" r="8" fill="#f472b6"/><circle cx="200" cy="320" r="8" fill="#f472b6"/>
+            <text x="200" y="345" text-anchor="middle" font-size="9" fill="#ec4899" font-weight="700">분홍팀</text>
+            <!-- 치수 표시 -->
+            <text x="200" y="30" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="700">최소 20m</text>
+            <text x="25" y="205" text-anchor="middle" font-size="10" fill="#7c3aed" font-weight="600" writing-mode="tb">최소 20m</text>
+            <text x="200" y="385" text-anchor="middle" font-size="8" fill="#666">실내 체육관 · 3팀 각 4명 · 정사각형 코트</text>
+          </svg>
+          <figcaption>킨볼 경기장 배치도 (3팀 × 4명)</figcaption>
+        </div>
+        <ul>
+          <li><span class="n">1</span><div><b>경기장</b> — 실내 체육관, 최소 20m × 20m. 천장 높이도 충분해야 함 (로브히트 대비)</div></li>
+          <li><span class="n">2</span><div><b>킨볼</b> — 지름 122cm, 무게 약 1kg. 라텍스 내피 + 나일론 외피로 구성. 에어펌프로 공기 주입</div></li>
+          <li><span class="n">3</span><div><b>팀 유니폼</b> — 정식 경기: 검정·회색·분홍 3색. 학교 수업에서는 조끼 등으로 대체 가능</div></li>
+          <li><span class="n">4</span><div><b>에어펌프</b> — 킨볼 전용 펌프. 공기압에 따라 공의 바운스와 히트 거리가 달라짐</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <!-- 5. 기본 규칙 -->
+  <section class="slide">
+    <div class="content" data-num="05">
+      <span class="tag">규칙</span>
+      <h2>기본 규칙</h2>
+      <p class="desc">3팀이 동시에 겨루는 킨볼만의 독특한 규칙 체계</p>
+      <ul>
+        <li><span class="n">1</span><div><b>3팀, 각 4명</b> — 검정·회색·분홍 3팀이 동시에 한 코트에서 경기. 총 12명이 뛰어다님</div></li>
+        <li><span class="n">2</span><div><b>히트 & 호명</b> — 공격 팀이 공을 치면서 다른 한 팀의 색깔을 외침. <em>"Omnikin, 분홍(Pink)!"</em></div></li>
+        <li><span class="n">3</span><div><b>캐치 미션</b> — 호명된 팀은 공이 바닥에 닿기 전에 반드시 캐치해야 함</div></li>
+        <li><span class="n">4</span><div><b>실점 규칙</b> — 캐치 실패 시, 나머지 두 팀이 각각 1점씩 획득. 실패한 팀은 0점</div></li>
+        <li><span class="n">5</span><div><b>다음 서브</b> — 캐치에 성공한 팀이 다음 히트 기회를 얻습니다</div></li>
+      </ul>
+      <div class="note"><b>핵심 포인트</b> — 어느 팀을 호명할지가 전략의 시작! 약한 팀을 노릴지, 강한 팀을 견제할지 판단이 중요</div>
+    </div>
+  </section>
+  <!-- 6. 히트(서브) 규칙 -->
+  <section class="slide">
+    <div class="content" data-num="06">
+      <span class="tag">규칙 · 히트</span>
+      <h2>히트(서브) 규칙</h2>
+      <p class="desc">4명이 함께 만드는 킨볼만의 독특한 서브 방식</p>
+      <ul>
+        <li><span class="n">1</span><div><b>4명 중 3명이 공을 받쳐든다</b> — 히터(치는 사람) 1명 + 서포터 3명. 서포터 3명이 무릎을 꿇고 공을 안정적으로 받쳐들어야 함</div></li>
+        <li><span class="n">2</span><div><b>"Omnikin + 팀 색깔!" 구호</b> — 히트 전 반드시 "옴니킨, ○○!" 구호를 크게 외쳐야 함. 구호 없이 치면 반칙</div></li>
+        <li><span class="n">3</span><div><b>위쪽·앞쪽으로만 히트</b> — 공을 아래쪽이나 뒤쪽으로 치면 반칙. 상대가 받을 수 있는 방향이어야 함</div></li>
+        <li><span class="n">4</span><div><b>다양한 방향으로!</b> — 같은 방향으로만 계속 치면 반칙. 다양한 방향과 전술로 상대를 흔들어야 함</div></li>
+      </ul>
+      <div class="note"><b>반칙 시</b> — 히트 반칙 발생 시, 나머지 두 팀이 각각 1점 획득. 정확한 히트가 곧 실력!</div>
+    </div>
+  </section>
+  <!-- 7. 캐치 규칙 -->
+  <section class="slide">
+    <div class="content" data-num="07">
+      <span class="tag">규칙 · 캐치</span>
+      <h2>캐치 규칙</h2>
+      <p class="desc">공이 바닥에 닿기 전, 팀 전원이 힘을 합쳐 받아라!</p>
+      <ul>
+        <li><span class="n">1</span><div><b>바닥에 닿기 전에 받기</b> — 호명된 팀의 4명이 공이 바닥에 닿기 전에 어떤 신체 부위로든 받아야 함</div></li>
+        <li><span class="n">2</span><div><b>공을 확보(컨트롤)해야 성공</b> — 공이 바닥에 닿기 전에 팀원이 공을 확보(컨트롤)해야 성공</div></li>
+        <li><span class="n">3</span><div><b>팀 협력이 핵심</b> — 거대한 공을 혼자 잡기는 어려움. 4명이 동시에 달려가 함께 받는 것이 가장 확실</div></li>
+        <li><span class="n">4</span><div><b>캐치 성공 후</b> — 캐치에 성공한 팀이 다음 히트 기회를 얻음. 빠르게 준비해서 다시 공격!</div></li>
+      </ul>
+      <div class="note"><b>기억하세요!</b> — 캐치 실패 = 우리 팀만 0점, 나머지 두 팀은 각각 +1점. 한 번의 실패가 두 팀에게 이득!</div>
+    </div>
+  </section>
+  <!-- 8. 핵심기술①: 히트 -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/kb-hit.jpg" alt="킨볼 히트 장면">
+        <figcaption>팀원이 받쳐든 공을 히터가 강하게 치는 모습</figcaption>
+      </figure>
+      <div>
+        <span class="tag">기술 ①</span>
+        <h2>히트 기술</h2>
+        <ul>
+          <li><span class="n">1</span><div><b>기본 히트</b> — 한 팔로 공을 강하게 위쪽으로 쳐올리기. 가장 기본이 되는 히트 방식</div></li>
+          <li><span class="n">2</span><div><b>드라이브 히트</b> — 수평으로 빠르고 낮게 치기. 속도가 빨라 캐치하기 어려움</div></li>
+          <li><span class="n">3</span><div><b>로브 히트</b> — 공을 높이 올려서 멀리 보내기. 상대가 이동할 시간을 줘서 쉬워 보이지만, 낙하 지점 예측이 어려움</div></li>
+          <li><span class="n">4</span><div><b>서포터 기술</b> — 3명이 무릎을 꿇고 공을 안정적으로 받쳐드는 기술. 공의 높이와 각도가 히트 품질을 좌우함</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <!-- 9. 핵심기술②: 캐치 -->
+  <section class="slide">
+    <div class="media flip">
+      <div>
+        <span class="tag">기술 ②</span>
+        <h2>캐치 기술</h2>
+        <ul>
+          <li><span class="n">1</span><div><b>양팔 캐치</b> — 가장 기본적인 캐치. 두 팔을 벌려 공을 감싸 안듯이 받기</div></li>
+          <li><span class="n">2</span><div><b>다이빙 캐치</b> — 낮게 날아오는 공을 향해 몸을 날려 받기. 드라이브 히트 대응에 필수</div></li>
+          <li><span class="n">3</span><div><b>팀 협력 캐치</b> — 4명이 공 아래로 동시에 모여 함께 받는 방법. 가장 확실하고 안정적</div></li>
+          <li><span class="n">4</span><div><b>리시빙 포지션</b> — 평소 4명이 체육관 전체에 넓게 퍼져 대기. 어떤 방향의 히트에도 빠르게 반응 가능</div></li>
+        </ul>
+      </div>
+      <figure class="photo">
+        <img src="../assets/img/kb-catch.jpg" alt="킨볼 캐치 장면">
+        <figcaption>팀원들이 협력하여 캐치하는 모습</figcaption>
+      </figure>
+    </div>
+  </section>
+  <!-- 10. 전술 -->
+  <section class="slide">
+    <div class="content" data-num="10">
+      <span class="tag">전술 · 전략</span>
+      <h2>전술</h2>
+      <p class="desc">3팀 동시 경기라서 더 복잡하고 재미있는 전략의 세계</p>
+      <div class="two">
+        <div class="box">
+          <h3>⚔️ 공격 전술</h3>
+          <p>• <b>약한 팀 지목</b> — 현재 캐치 성공률이 낮은 팀을 전략적으로 호명하여 실점 유도<br>• <b>빈 공간 공략</b> — 상대 팀원이 없는 방향으로 히트. 이동 거리를 늘려 캐치 실패를 유도<br>• <b>낮은 드라이브 히트</b> — 낮고 빠른 히트로 반응 시간을 줄여 캐치를 어렵게 만듦</p>
+        </div>
+        <div class="box">
+          <h3>🛡️ 수비 전술</h3>
+          <p>• <b>빠른 히트</b> — 캐치 성공 후 상대가 준비되기 전에 빠르게 히트하여 허를 찌름<br>• <b>넓은 포지셔닝</b> — 4명이 체육관 전체를 커버하도록 넓게 퍼져서 대기<br>• <b>호명 예측</b> — 상대 팀의 히트 패턴을 분석하여 어느 팀이 호명될지 미리 예측</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- 11. 안전 수칙 -->
+  <section class="slide">
+    <div class="content" data-num="11">
+      <span class="tag">안전</span>
+      <h2>안전 수칙</h2>
+      <p class="desc">거대한 공과 함께하는 킨볼, 안전하게 즐기려면?</p>
+      <div class="two">
+        <div class="box warn">
+          <h3>⚠️ 주의할 점</h3>
+          <p>• <b>시야 차단 주의</b> — 거대한 공이 시야를 가릴 수 있음. 공 너머 다른 선수와 충돌 조심<br>• <b>다이빙 시 미끄러짐</b> — 체육관 바닥에서 다이빙 캐치 시 마찰로 인한 화상·타박상 주의<br>• <b>손목 부상</b> — 강하게 히트할 때 손목에 큰 힘이 실림. 올바른 히트 자세 숙지 필수<br>• <b>충분한 공간 확보</b> — 벽·기물과 충분한 거리 유지. 12명이 동시에 뛰므로 주변 확인</p>
+        </div>
+        <div class="box">
+          <h3>🏃 준비운동</h3>
+          <p>• <b>손목·어깨 스트레칭</b> — 히트 동작에서 손목과 어깨를 많이 사용<br>• <b>무릎 관절 풀기</b> — 서포터 역할 시 무릎 꿇는 동작이 반복됨<br>• <b>전신 스트레칭</b> — 다이빙, 달리기, 방향 전환 등 전신 운동이므로 꼼꼼히<br>• <b>가벼운 패스 연습</b> — 킨볼 감각에 익숙해지도록 공 다루기 연습부터</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- 12. 킨볼 서브 동작 -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/kb-serve.jpg" alt="킨볼 서브 동작">
+        <figcaption>서포터 3명이 공을 받치고 히터가 준비하는 장면</figcaption>
+      </figure>
+      <div>
+        <span class="tag">기술 심화</span>
+        <h2>서브 동작 순서</h2>
+        <ul>
+          <li><span class="n">1</span><div><b>서포터 준비</b> — 3명이 무릎을 꿇고 킨볼을 양손으로 안정적으로 받쳐 올림</div></li>
+          <li><span class="n">2</span><div><b>히터 위치 선정</b> — 히터가 치고 싶은 방향의 반대편에 서서 도움닫기 준비</div></li>
+          <li><span class="n">3</span><div><b>구호 외치기</b> — "옴니킨, ○○!" 구호를 크고 명확하게 외침. 모든 선수가 들을 수 있게!</div></li>
+          <li><span class="n">4</span><div><b>히트 실행</b> — 구호와 동시에 한 팔(또는 양팔)로 강하게 히트. 서포터는 공을 놓으며 자연스럽게 빠짐</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+  <!-- 13. 경기 팁 & 에티켓 -->
+  <section class="slide">
+    <div class="content" data-num="13">
+      <span class="tag">실전 · 팁</span>
+      <h2>경기 팁 &amp; 에티켓</h2>
+      <p class="desc">킨볼을 더 재미있게, 더 멋지게 즐기는 방법</p>
+      <ul>
+        <li><span class="n">1</span><div><b>소통이 실력이다</b> — "내가 갈게!", "왼쪽!", "준비!" 등 팀원과 끊임없이 소통하기. 4명이 한 몸처럼 움직여야 함</div></li>
+        <li><span class="n">2</span><div><b>구호는 크게!</b> — "옴니킨" 구호를 자신감 있고 크게 외쳐야 멋있고, 반칙도 방지됨</div></li>
+        <li><span class="n">3</span><div><b>역할 교대</b> — 히터와 서포터 역할을 돌아가면서 하기. 모두가 히트도 서포트도 잘해야 강한 팀</div></li>
+        <li><span class="n">4</span><div><b>세 팀 존중</b> — 3팀 경기이므로 한 팀만 집중 공격하지 말고 페어플레이 정신을 지키기</div></li>
+        <li><span class="n">5</span><div><b>실패해도 OK!</b> — 캐치 실패는 자주 일어남. 서로 격려하며 다음 플레이에 집중하는 것이 진짜 실력</div></li>
+      </ul>
+    </div>
+  </section>
+  <!-- 14. O/X 퀴즈 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">퀴즈</span>
+      <h2>O/X 퀴즈</h2>
+      <p class="desc">배운 내용을 확인해 봅시다!</p>
+      <ul>
+        <li><span class="n">Q1</span><div><b>킨볼은 다른 스포츠처럼 2팀이 겨루는 경기이다</b> — X. 킨볼은 세계 유일의 3팀 동시 경기 스포츠입니다.</div></li>
+        <li><span class="n">Q2</span><div><b>킨볼 히트 시 4명 전원이 반드시 공에 접촉해야 한다</b> — O. 서포터 3명이 공을 받쳐들고, 히터 1명이 공을 칩니다. 히트 순간 4명 모두 공에 접촉해야 하며, 그렇지 않으면 반칙입니다.</div></li>
+        <li><span class="n">Q3</span><div><b>킨볼에서 캐치에 실패하면 나머지 두 팀이 각각 1점씩 얻는다</b> — O. 실패한 팀은 0점이고, 나머지 두 팀이 각각 1점을 획득합니다.</div></li>
+        <li><span class="n">Q4</span><div><b>킨볼 히트 전에는 반드시 "옴니킨 + 팀 색깔" 구호를 외쳐야 한다</b> — O. 구호 없이 히트하면 반칙으로 처리됩니다.</div></li>
+        <li><span class="n">Q5</span><div><b>킨볼 공의 지름은 약 50cm이다</b> — X. 킨볼의 지름은 약 122cm(1.22m)로, 매우 큰 공을 사용합니다.</div></li>
+      </ul>
+    </div>
+  </section>
+  <!-- 15. 핵심 정리 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">핵심 정리</span>
+      <h2>이것만은 꼭!</h2>
+      <p class="desc">오늘 배운 핵심 내용을 정리합니다</p>
+      <div class="two">
+        <div class="box"><h3>📌 핵심 규칙</h3><p>① 3팀 × 4명 동시 경기<br>② "옴니킨 + 팀 색깔" 구호 필수<br>③ 캐치 실패 시 나머지 두 팀 각 +1점<br>④ 위쪽·앞쪽으로만 히트 가능</p></div>
+        <div class="box"><h3>⭐ 핵심 기술</h3><p>① 기본/드라이브/로브 히트<br>② 서포터 3명의 안정적 받침 기술<br>③ 양팔/다이빙/팀 협력 캐치<br>④ 넓은 포지셔닝 (4명 전체 커버)</p></div>
+        <div class="box"><h3>🏆 알아두면 좋은 상식</h3><p>• 캐나다 체육교사 Mario Demers가 "소외 없는 체육"을 위해 발명<br>• KIN은 'Kinesthesia(운동감각)'에서 유래<br>• 정식 경기 팀 색상: 검정·회색·분홍</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 심화 학습 구분 -->
+  <section class="slide cover">
+    <div class="cover-shade" style="background:linear-gradient(135deg,rgba(232,89,12,.9) 0%,rgba(0,0,0,.85) 100%)"></div>
+    <div class="kicker" style="position:relative;z-index:2">ADVANCED LEVEL</div>
+    <div class="emoji" style="position:relative;z-index:2">🎓</div>
+    <h1 style="position:relative;z-index:2">심화 학습</h1>
+    <p class="lead" style="position:relative;z-index:2">스포츠 과학 · 전술 분석 · 스포츠 심리 · 훈련 과학</p>
+  </section>
+  <!-- 2. 스포츠 과학 1 — 운동역학 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">스포츠 과학 ①</span>
+      <h2>운동역학으로 보는 킨볼</h2>
+      <p class="desc">거대한 공의 비행과 타격에 숨겨진 물리학</p>
+      <ul>
+        <li><span class="n">1</span><div><b>항력과 공기저항</b> — 직경 1.22m, 무게 약 1kg의 거대한 공은 표면적 대비 질량이 매우 작아 공기 저항(항력)의 영향이 크다. 항력 계수(Cd)가 높아 비행 거리가 급격히 감소한다.</div></li>
+        <li><span class="n">2</span><div><b>임펄스와 타격 기술</b> — F·Δt = Δp(충격량=운동량 변화). 가벼운 공이므로 짧은 접촉 시간에 강한 힘을 가하면 초기 속도가 크게 높아진다. 팔 전체를 사용한 풀 스윙이 효과적이다.</div></li>
+        <li><span class="n">3</span><div><b>공의 불규칙 비행</b> — 큰 표면적과 공기압 변화로 인해 스핀이 걸리면 마그누스 효과가 극대화된다. 바람(실내 환기)의 영향도 받아 예측 불가한 궤적이 생성될 수 있다.</div></li>
+        <li><span class="n">4</span><div><b>리시빙의 역학</b> — 낙하하는 공의 운동량을 흡수하기 위해 팔과 몸을 공 아래에 넓게 펴고 무릎을 굽혀 충격 시간을 연장한다. 임펄스-모멘텀 정리의 실생활 적용이다.</div></li>
+      </ul>
+      <p class="note"><b>공기압의 중요성</b> — 킨볼 공의 공기압은 경기 성능에 직접 영향을 준다. 공기압이 낮으면 공이 찌그러져 비행 거리가 감소하고, 높으면 반발력이 커져 리시빙이 어려워진다.</p>
+    </div>
+  </section>
+  <!-- 3. 스포츠 과학 2 — 운동생리학 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">스포츠 과학 ②</span>
+      <h2>운동생리학으로 보는 킨볼</h2>
+      <p class="desc">전원 참여 스포츠가 신체에 미치는 효과</p>
+      <ul>
+        <li><span class="n">1</span><div><b>에너지 시스템</b> — 킨볼은 짧은 폭발적 움직임(히트, 다이빙 리시브)과 포지셔닝(유산소)이 반복되는 간헐적 운동이다. 유산소 65% + ATP-PC 25% + 해당과정 10%가 일반적 비율이다.</div></li>
+        <li><span class="n">2</span><div><b>전신 근육 활성</b> — 히트 시 하체(점프)→코어(회전)→상체(스윙)→손목(방향 제어)의 전신 운동 사슬이 활성화된다. 리시빙 시에는 대퇴사두근, 삼각근, 전완근이 주로 동원된다.</div></li>
+        <li><span class="n">3</span><div><b>심박수 변동</b> — 평균 심박수 HRmax의 60~75%(중강도). 히트 직후 85%까지 상승하고, 세트 사이 휴식에서 60%까지 회복되는 패턴이다.</div></li>
+        <li><span class="n">4</span><div><b>부상 위험 요인</b> — 다이빙 리시브 시 어깨·손목 충격, 팀원 충돌(같은 공을 향해 뛰어가므로), 반복 히트에 의한 전완 근막 과부하가 주요 위험이다.</div></li>
+      </ul>
+      <p class="note"><b>포용적 운동 강도</b> — 킨볼의 중강도 특성은 체력 수준이 다양한 학생들이 함께 참여하기에 이상적이다. 과도한 체력 소모 없이 충분한 신체 활동량(MVPA)을 확보할 수 있다.</p>
+    </div>
+  </section>
+  <!-- 4. 전술 심화 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">전술 심화</span>
+      <h2>3팀 동시 경쟁의 전략</h2>
+      <p class="desc">2팀이 아닌 3팀 경쟁이 만드는 독특한 전략적 사고</p>
+      <ul>
+        <li><span class="n">1</span><div><b>표적 팀 선택 전략</b> — 히트 시 "Omnikin + [색상]"으로 수비 팀을 지목한다. 1위 팀을 집중 공격하여 점수 격차를 줄이거나, 약한 팀을 공격하여 확실한 득점을 노리는 선택이 있다.</div></li>
+        <li><span class="n">2</span><div><b>동맹과 배신의 역학</b> — 3팀 경쟁에서 자연스럽게 2팀이 1팀을 견제하는 암묵적 동맹이 형성된다. 이 동맹은 점수 변화에 따라 실시간으로 재편되는 유동적 구조이다.</div></li>
+        <li><span class="n">3</span><div><b>히트 방향·높이 변주</b> — ① 낮은 라인드라이브(바닥 근처, 다이빙 유도) ② 높은 로브(체공 시간으로 혼란) ③ 사이드 히트(코너 방향, 이동 거리 극대화). 패턴을 읽히지 않도록 변주한다.</div></li>
+        <li><span class="n">4</span><div><b>수비 포메이션</b> — 다이아몬드(1-2-1)가 기본. 히트 방향에 따라 최전방 선수가 리드, 나머지 3명이 서포트하는 구조. 4명의 호흡이 맞아야 거대한 공을 안전하게 받을 수 있다.</div></li>
+      </ul>
+      <p class="note"><b>게임 이론 적용</b> — 킨볼의 3팀 경쟁은 "죄수의 딜레마"와 유사한 게임 이론적 상황을 만든다. 단기 이익(약팀 공격)과 장기 이익(강팀 견제)의 균형이 전략의 핵심이다.</p>
+    </div>
+  </section>
+  <!-- 5. 기술 심화 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">기술 심화</span>
+      <h2>고급 기술 분석</h2>
+      <p class="desc">히트와 리시브의 미세한 기술적 차이</p>
+      <ul>
+        <li><span class="n">1</span><div><b>히트 메커니즘</b> — 3명이 공을 잡고 1명이 타격한다. 히터는 ① 스텝(한 발 전진) ② 팔 백스윙 ③ 체중 이동 ④ 팔 스윙(아래에서 위, 또는 측면) ⑤ 팔로스루(목표 방향)의 5단계로 공을 친다.</div></li>
+        <li><span class="n">2</span><div><b>서포터의 역할</b> — 공을 잡는 3명의 서포터는 히터의 타격 방향과 힘에 맞춰 공을 적절한 높이와 각도로 유지한다. 히터와의 호흡이 히트 정확도의 50%를 결정한다.</div></li>
+        <li><span class="n">3</span><div><b>다이빙 리시브</b> — 낮은 히트에 대응하여 전신을 뻗어 공 아래로 미끄러지듯 들어가는 기술. 팔을 넓게 펴고 공의 운동량을 몸 전체로 분산시켜 흡수한다.</div></li>
+        <li><span class="n">4</span><div><b>트랩 리시브</b> — 공을 잡는 대신 의도적으로 위로 튕겨 올려 팀원이 이어받도록 하는 연계 기술. 직접 잡기 어려운 각도에서 시간을 벌어주는 응급 기술이다.</div></li>
+      </ul>
+      <p class="note"><b>커뮤니케이션</b> — "내가 간다!", "왼쪽!", "높이!" 등 짧고 명확한 콜이 4명의 조율을 가능하게 한다. 소리가 울리는 체육관에서는 비언어적 신호(손짓, 눈짓)도 병행해야 한다.</p>
+    </div>
+  </section>
+  <!-- 6. 스포츠 심리 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">스포츠 심리</span>
+      <h2>협동의 심리학</h2>
+      <p class="desc">4명이 하나가 되어야 하는 스포츠의 심리적 도전</p>
+      <ul>
+        <li><span class="n">1</span><div><b>집단 효능감(Collective Efficacy)</b> — "우리 팀은 이 공을 받을 수 있다"는 공유된 믿음이 실제 수행을 좌우한다. 성공적인 리시브 경험이 집단 효능감을 높이고, 이는 다음 수비의 성공률도 높인다.</div></li>
+        <li><span class="n">2</span><div><b>사회적 태만의 최소화</b> — 킨볼은 4명 전원이 반드시 참여해야 하는 구조(3명 서포트+1명 히트)이므로, 사회적 태만(social loafing)이 구조적으로 억제된다.</div></li>
+        <li><span class="n">3</span><div><b>의사결정의 시간 압박</b> — 히트 시 0.5~1초 이내에 표적 팀과 히트 방향을 결정해야 한다. 직관적 의사결정(heuristic)과 사전 계획의 균형이 필요하다.</div></li>
+        <li><span class="n">4</span><div><b>3팀 경쟁의 감정 관리</b> — 두 팀에게 동시에 공격받는 상황이 발생하면 좌절감과 불공정 인식이 커질 수 있다. 이를 게임의 전략적 요소로 인식하는 인지적 재구성(cognitive reframing)이 필요하다.</div></li>
+      </ul>
+      <p class="note"><b>포용의 심리</b> — 킨볼의 규칙 구조(전원 참여 필수, 체격 무관)는 체육 수업에서 소외감을 느끼는 학생들에게 소속감과 자기효능감을 제공하는 것으로 연구되었다.</p>
+    </div>
+  </section>
+  <!-- 7. 체력 훈련법 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">체력 훈련</span>
+      <h2>킨볼 체력 훈련법</h2>
+      <p class="desc">FITT 원리에 기반한 종목 특이적 훈련</p>
+      <div class="two">
+        <div class="box"><h3>💪 상체·전완 강화</h3><p><b>빈도:</b> 주 2~3회 | <b>강도:</b> 1RM 60~75%<br>숄더프레스, 전완 컬, 푸시업. 반복적 히트와 리시브에 필요한 어깨·팔 근지구력 강화.</p></div>
+        <div class="box"><h3>🏃 민첩성·반응</h3><p><b>빈도:</b> 주 2회 | <b>시간:</b> 15~20분<br>리액션 드릴(불빛/소리 신호에 반응), 방향 전환 셔틀, 4방향 스프린트. 히트 방향 인지 후 빠른 이동이 핵심.</p></div>
+        <div class="box"><h3>❤️ 심폐지구력</h3><p><b>빈도:</b> 주 3회 | <b>강도:</b> HRmax 65~80%<br>인터벌 러닝(30초 빠르게/60초 걷기), 서킷 트레이닝. 세트 간 회복력과 경기 전반의 집중력 유지.</p></div>
+        <div class="box"><h3>🧘 유연성·낙법</h3><p><b>빈도:</b> 매일 | <b>시간:</b> 10분<br>동적 스트레칭, 다이빙 낙법(전방·측면), 구르기. 다이빙 리시브 시 어깨·손목 부상 예방에 필수.</p></div>
+      </div>
+      <p class="note"><b>팀 훈련</b> — 4명 1조로 다양한 각도의 히트를 받는 반복 훈련이 가장 효과적이다. "리시브 실패 = 0점"이므로 수비 연습에 훈련 시간의 60% 이상을 배분한다.</p>
+    </div>
+  </section>
+  <!-- 8. 스포츠 문화 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">스포츠 문화</span>
+      <h2>킨볼 문화와 사회적 가치</h2>
+      <p class="desc">포용·협동·다양성의 가치를 체화하는 스포츠</p>
+      <ul>
+        <li><span class="n">1</span><div><b>전원 참여의 철학</b> — 킨볼 창시자 Mario Demers는 "모든 학생이 경기에 의미 있게 참여해야 한다"는 철학으로 킨볼을 설계했다. 벤치에 앉아 있는 학생이 없는 것이 킨볼의 가장 큰 교육적 가치이다.</div></li>
+        <li><span class="n">2</span><div><b>3팀 경쟁의 교육적 의미</b> — 2팀 대결 구조와 달리, 3팀 경쟁은 "적과 동지의 경계"를 모호하게 만들어 흑백 논리를 넘어선 유연한 사고력을 키운다.</div></li>
+        <li><span class="n">3</span><div><b>체격 무관 설계</b> — 1.22m의 거대한 공은 작은 체구의 학생도 쉽게 접촉하고 리시브할 수 있다. 체격 차이에 의한 스포츠 소외를 구조적으로 해소한다.</div></li>
+        <li><span class="n">4</span><div><b>글로벌 확산</b> — 캐나다에서 시작하여 현재 40개국 이상에서 플레이. 아시아에서는 일본, 한국, 대만이 강호이며, 세계킨볼연맹(IKBF) 주최 세계대회가 격년으로 개최된다.</div></li>
+      </ul>
+      <p class="note"><b>"Omnikin" 정신</b> — 킨볼의 콜 "옴니킨(Omnikin)"은 라틴어 omni(모든) + kinesthetic(운동감각)의 합성어로, "모든 사람의 움직임"이라는 포용적 가치를 담고 있다.</p>
+    </div>
+  </section>
+  <!-- 9. 경기 분석 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">경기 분석</span>
+      <h2>경기 분석 방법</h2>
+      <p class="desc">3팀 동시 경쟁의 데이터 분석 기법</p>
+      <ul>
+        <li><span class="n">1</span><div><b>표적 선택 패턴 분석</b> — 각 팀이 어느 팀을 몇 번 공격했는지를 기록하여 공격 패턴을 파악한다. 특정 팀을 집중 공격하는 패턴이 보이면 대응 전략(동맹 변경)을 수립한다.</div></li>
+        <li><span class="n">2</span><div><b>히트 성공률 분석</b> — 히트 유형별(라인드라이브, 로브, 사이드)로 상대 팀의 리시브 실패율을 분석. 가장 효과적인 히트 유형과 방향을 데이터로 확인한다.</div></li>
+        <li><span class="n">3</span><div><b>리시브 대형 분석</b> — 리시브 실패 시 4명의 위치를 기록하여 대형의 약점을 파악. 특정 방향에서의 실패율이 높으면 대형 조정이 필요하다.</div></li>
+        <li><span class="n">4</span><div><b>세트별 득점 흐름</b> — 3팀의 세트별 점수 변화를 그래프로 시각화. 점수 역전이 발생한 시점의 전술 변화(표적 팀 전환)를 분석하여 전략적 의사결정의 패턴을 학습한다.</div></li>
+      </ul>
+      <p class="note"><b>자기 분석</b> — 영상 촬영 후 ① 히터의 공 방향이 예측 가능했는가 ② 4명의 수비 이동 시 서로 충돌하거나 빈 공간이 생겼는가를 점검하면 팀 호흡 개선에 도움이 된다.</p>
+    </div>
+  </section>
+  <!-- 10. O/X 퀴즈 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">퀴즈</span>
+      <h2>O/X 퀴즈 — 심화</h2>
+      <p class="desc">고급 개념을 점검해 봅시다!</p>
+      <ul>
+        <li><span class="n">Q1</span><div><b>킨볼 공이 비행 거리가 짧은 이유는 표면적 대비 질량이 작아 공기저항이 크기 때문이다.</b> — O. 직경 1.22m에 무게 약 1kg으로, 항력 계수가 높아 비행 중 급격히 감속한다.</div></li>
+        <li><span class="n">Q2</span><div><b>킨볼의 3팀 경쟁에서 가장 유리한 전략은 항상 1위 팀을 공격하는 것이다.</b> — X. 상황에 따라 약한 팀 공격(확실한 득점)과 강한 팀 공격(격차 줄이기)을 유동적으로 선택하는 것이 최적이다.</div></li>
+        <li><span class="n">Q3</span><div><b>킨볼에서 사회적 태만이 적은 이유는 4명 전원이 반드시 참여해야 하는 규칙 구조 때문이다.</b> — O. 3명 서포트+1명 히트 구조가 무임승차를 구조적으로 방지한다.</div></li>
+        <li><span class="n">Q4</span><div><b>다이빙 리시브 시 충격을 줄이려면 팔을 좁게 모아 공의 한 지점에 힘을 집중해야 한다.</b> — X. 팔을 넓게 펴고 몸 전체로 충격을 분산시켜야 안전하게 리시브할 수 있다.</div></li>
+        <li><span class="n">Q5</span><div><b>"Omnikin"은 "모든 사람의 움직임"이라는 뜻의 포용적 가치를 담은 용어이다.</b> — O. 라틴어 omni(모든)와 kinesthetic(운동감각)의 합성어이다.</div></li>
+      </ul>
+    </div>
+  </section>
+  <!-- 11. 핵심 정리 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">핵심 정리</span>
+      <h2>이것만은 꼭!</h2>
+      <p class="desc">심화 학습의 핵심 내용을 정리합니다</p>
+      <div class="two">
+        <div class="box"><h3>🔬 스포츠 과학</h3><p>① 거대한 공의 높은 항력 → 비행 거리 제한<br>② 임펄스-모멘텀 정리로 리시브 분석<br>③ 유산소 65% + 무산소 35% 간헐적 운동<br>④ 전신 운동 사슬 활성(히트 시)</p></div>
+        <div class="box"><h3>🧠 전술·심리</h3><p>① 3팀 경쟁의 표적 선택 전략(게임 이론)<br>② 히트 방향·높이 변주로 패턴 파괴<br>③ 집단 효능감이 수비 성공률 좌우<br>④ 인지적 재구성으로 불공정 감정 관리</p></div>
+        <div class="box"><h3>📊 분석·훈련</h3><p>① 표적 선택 패턴과 히트 성공률 분석<br>② 리시브 대형 약점 시각화<br>③ 상체·전완 근지구력 중심 훈련<br>④ 다이빙 낙법 훈련으로 부상 예방</p></div>
+      </div>
+    </div>
+  </section>
+  <!-- 탐구 질문 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">탐구 질문</span>
+      <h2>생각해 봅시다</h2>
+      <p class="desc">수업을 마무리하며 함께 토론해 봅시다</p>
+      <ul>
+        <li><span class="n">1</span><div><b>킨볼에서 3팀이 동시에 경쟁하는 방식이 기존 스포츠와 어떻게 다를까?</b></div></li>
+        <li><span class="n">2</span><div><b>킨볼의 '모든 팀원이 공에 닿아야 한다'는 규칙이 주는 교육적 가치는?</b></div></li>
+        <li><span class="n">3</span><div><b>협동과 경쟁이 동시에 일어나는 킨볼에서 배울 수 있는 삶의 교훈은?</b></div></li>
+      </ul>
+    </div>
+  </section>
+  <!-- 16. 마무리 -->
+  <section class="slide cover">
+    <img class="cover-bg" src="../assets/img/kb-team.jpg" alt="킨볼 팀 단체 사진">
+    <div class="cover-shade"></div>
+    <div class="kicker">ANY QUESTIONS?</div>
+    <div class="emoji">🟣</div>
+    <h1>THANK YOU!</h1>
+    <p class="lead">킨볼은 함께 움직여야만 이길 수 있는 진정한 협동 스포츠입니다.</p>
+  </section>
+</div>
+
+<div class="nav">
+  <button id="prev" disabled>&#8592;</button>
+  <div class="dots"></div>
+  <button id="next">&#8594;</button>
+</div>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

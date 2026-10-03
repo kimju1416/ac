@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fil">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Soccer · PE Playbook</title>
+<meta name="description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body style="--accent:var(--c-gugi);--accent-ink:#c2410c">
+
+<div class="topbar">
+  <a class="home" href="../index.html">📖 Talaan ng Nilalaman</a>
+  <span class="title">⚽ Soccer</span>
+  <span class="counter"></span>
+</div>
+<div class="progress"></div>
+
+<div class="deck">
+
+  <!-- 1. Cover -->
+  <section class="slide cover active">
+    <img class="cover-bg" src="../assets/img/sc-cover.jpg" alt="Malakas na sipa">
+    <div class="cover-shade"></div>
+    <div class="kicker">Pagsalakay · Ball Sport</div>
+    <div class="emoji">⚽</div>
+    <h1>Soccer</h1>
+    <p class="lead">Ang pinakamamahal na sport sa buong mundo — drama na nagsisimula sa dulo ng paa</p>
+  </section>
+
+  <!-- 2. Ano ang Soccer? -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Panimula sa Sport</span>
+      <h2>Ano ang Soccer?</h2>
+      <p class="desc">Isang 11-a-side na sport na pang-invasion — pinapasok ang bola sa goal ng kalaban gamit ang kahit anong parte ng katawan maliban sa kamay para makakuha ng puntos</p>
+      <ul>
+        <li><span class="n">1</span><div><b>11 players bawat team</b> — 1 goalkeeper + 10 field players. Ang goalkeeper lang ang pwedeng gumamit ng kamay, at doon lang sa loob ng sariling penalty box</div></li>
+        <li><span class="n">2</span><div><b>Dalawang halves na 45 minuto bawat isa</b> — 90 minuto lahat-lahat (pwedeng paikliin sa school PE class, hal. 20 min x 2). 15-minutong halftime break</div></li>
+        <li><span class="n">3</span><div><b>Offside rule</b> — natatanging tactical rule ng soccer na pumipigil sa mga attacker na mag-abang nang masyadong malapit sa goal ng kalaban ("cherry-picking")</div></li>
+      </ul>
+      <div class="chips">
+        <span class="chip">FIFA member nations: <b>211</b></span>
+        <span class="chip">World Cup viewers: <b>5 bilyon+</b></span>
+        <span class="chip">Pinaka-popular na sport sa buong mundo</span>
+        <span class="chip">Para sa lahat, kahit anong edad</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Nakakatuwang Kasaysayan -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Kasaysayan</span>
+      <h2>Nakakatuwang Kasaysayan</h2>
+      <p class="desc">Mula sa sinaunang paglalaro ng pagsipa ng bola hanggang naging pinakamalaking sport sa mundo</p>
+      <ul>
+        <li><span class="n">🏺</span><div><b>Sinaunang Cuju ng Tsina</b> — pagsipa ng bola para sa military training mula pa noong Han Dynasty, mahigit 2,000 taon na ang nakalipas. Opisyal na kinikilala ng FIFA bilang pinagmulan ng soccer</div></li>
+        <li><span class="n">🏴</span><div><b>1863: Itinatag ang FA sa England</b> — nagtipon ang 12 clubs sa London para gumawa ng iisang set ng patakaran. Ang kapanganakan ng modernong soccer! Ang mga gustong gumamit ng kamay ay humiwalay at bumuo ng rugby</div></li>
+        <li><span class="n">🏆</span><div><b>1930: Unang FIFA World Cup</b> — ginanap sa Uruguay na may 13 bansang lumahok. Nanalo ang host na Uruguay! Ngayon, 48 bansa na ang lumalahok (mula 2026)</div></li>
+        <li><span class="n">🇰🇷</span><div><b>2002 Korea-Japan World Cup</b> — ang pinakamagandang sandali sa kasaysayan ng soccer ng Korea! Ang semifinal miracle. Ginulat ng "Dae~han-min-guk!" chants ang buong mundo</div></li>
+        <li><span class="n">⚽</span><div><b>K League (mula 1983)</b> — ang unang professional soccer league sa Asya. Kasalukuyang pinapatakbo ang K League 1 (12 teams) + K League 2 (13 teams)</div></li>
+        <li><span class="n">👩</span><div><b>Paglago ng women's soccer</b> — unang FIFA Women's World Cup ay ginanap noong 1991. Nakalahok din ang Korean women's national team sa World Cup</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. Estruktura ng Field -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Field</span>
+      <h2>Estruktura ng Field</h2>
+      <p class="desc">International standard: 105m x 68m na rectangular na damuhang field</p>
+      <div class="figure">
+        <svg viewBox="0 0 700 440" role="img" aria-label="Diagram ng soccer field">
+          <!-- Background ng field -->
+          <rect x="20" y="20" width="660" height="400" rx="4" fill="#4a8f50" stroke="#fff" stroke-width="3"/>
+          <rect x="20" y="20" width="330" height="400" fill="#458b4c"/>
+          <!-- Halfway line -->
+          <line x1="350" y1="20" x2="350" y2="420" stroke="#fff" stroke-width="2.5"/>
+          <!-- Center circle 9.15m -->
+          <circle cx="350" cy="220" r="52" fill="none" stroke="#fff" stroke-width="2.5"/>
+          <circle cx="350" cy="220" r="3.5" fill="#fff"/>
+          <!-- Kaliwang penalty area 16.5m -->
+          <rect x="20" y="100" width="120" height="240" fill="none" stroke="#fff" stroke-width="2.5"/>
+          <!-- Kaliwang goal area 5.5m -->
+          <rect x="20" y="160" width="44" height="120" fill="none" stroke="#fff" stroke-width="2.5"/>
+          <!-- Kaliwang penalty mark -->
+          <circle cx="104" cy="220" r="3.5" fill="#fff"/>
+          <!-- Kaliwang penalty arc -->
+          <path d="M140,178 A52,52 0 0 1 140,262" fill="none" stroke="#fff" stroke-width="2.5"/>
+          <!-- Kaliwang goal 7.32m×2.44m -->
+          <rect x="6" y="192" width="14" height="56" fill="none" stroke="#fff" stroke-width="3"/>
+          <!-- Kanang penalty area -->
+          <rect x="560" y="100" width="120" height="240" fill="none" stroke="#fff" stroke-width="2.5"/>
+          <!-- Kanang goal area -->
+          <rect x="636" y="160" width="44" height="120" fill="none" stroke="#fff" stroke-width="2.5"/>
+          <!-- Kanang penalty mark -->
+          <circle cx="596" cy="220" r="3.5" fill="#fff"/>
+          <!-- Kanang penalty arc -->
+          <path d="M560,178 A52,52 0 0 0 560,262" fill="none" stroke="#fff" stroke-width="2.5"/>
+          <!-- Kanang goal -->
+          <rect x="680" y="192" width="14" height="56" fill="none" stroke="#fff" stroke-width="3"/>
+          <!-- Corner arc -->
+          <path d="M20,32 A12,12 0 0 1 32,20" fill="none" stroke="#fff" stroke-width="2"/>
+          <path d="M668,20 A12,12 0 0 1 680,32" fill="none" stroke="#fff" stroke-width="2"/>
+          <path d="M32,420 A12,12 0 0 1 20,408" fill="none" stroke="#fff" stroke-width="2"/>
+          <path d="M680,408 A12,12 0 0 1 668,420" fill="none" stroke="#fff" stroke-width="2"/>
+          <!-- Dimension labels -->
+          <text x="350" y="14" font-size="12" fill="#d4edda" text-anchor="middle">105m</text>
+          <text x="8" y="220" font-size="12" fill="#d4edda" text-anchor="middle" transform="rotate(-90 8 220)">68m</text>
+          <text x="350" y="236" font-size="11" fill="#eaffea" text-anchor="middle">Center circle (R=9.15m)</text>
+          <text x="80" y="356" font-size="10.5" fill="#eaffea" text-anchor="middle">Penalty area (16.5m)</text>
+          <text x="42" y="290" font-size="9.5" fill="#eaffea" text-anchor="middle">Goal area</text>
+          <text x="42" y="302" font-size="9.5" fill="#eaffea" text-anchor="middle">(5.5m)</text>
+          <text x="13" y="256" font-size="9" fill="#eaffea" text-anchor="middle">Goal</text>
+          <text x="13" y="268" font-size="8.5" fill="#eaffea" text-anchor="middle">7.32×2.44m</text>
+          <text x="32" y="436" font-size="10" fill="#eaffea">Corner arc</text>
+        </svg>
+        <figcaption>Buong diagram ng soccer field — magkasing-simetriko ang dalawang gilid</figcaption>
+      </div>
+      <div class="chips">
+        <span class="chip"><b>Center circle</b> Kickoff zone</span>
+        <span class="chip"><b>Penalty area</b> Pwedeng gumamit ng kamay ang GK</span>
+        <span class="chip"><b>Penalty mark</b> Lugar ng PK (11m)</span>
+        <span class="chip"><b>Corner arc</b> Lugar ng corner kick</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Mga Patakaran sa Laro -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Mga Patakaran</span>
+      <h2>Mga Patakaran sa Laro</h2>
+      <p class="desc">Alamin kung paano umuusad ang isang laban</p>
+      <div class="two">
+        <div class="box"><h3>⏱️ Tagal ng Laro</h3><p>Dalawang halves na <b>45 minuto</b> bawat isa, 90 minuto lahat-lahat (regular). 15-minutong halftime break. Sa school PE, pwedeng paikliin sa <b>20 min x 2</b>.</p></div>
+        <div class="box"><h3>🏁 Kickoff</h3><p>Nagsisimula mula sa center circle. Ang first half ay napagpapasyahan sa pamamagitan ng coin toss; nagpapalit ng side ang mga team sa second half. Pagkatapos ng goal, ang team na na-scoran ang mag-kickoff.</p></div>
+        <div class="box"><h3>⚽ Pagdedesisyon ng Goal</h3><p>Kailangang <b>tuluyang</b> makatawid ang buong bola sa goal line para maging goal! Kung kalahati lang, hindi ito goal. Gumagamit ng VAR (Video Assistant Referee) ang mga professional match para i-verify.</p></div>
+        <div class="box"><h3>🔄 Substitutions</h3><p>Sa regular na laro, hanggang <b>5 substitutions</b> ang pwede (sa 3 windows). Sa school PE, gumamit ng free substitution para makasali ang lahat!</p></div>
+        <div class="box"><h3>⏳ Added Time</h3><p>Idinaragdag ang oras na na-waste dahil sa injury, substitution, VAR, atbp. Ang referee ang magdedesisyon at ipapakita ito sa scoreboard.</p></div>
+        <div class="box"><h3>🎯 Penalty Shootout</h3><p>Sa knockout match kapag tie: 30 minutong extra time → tie pa rin → 5 players bawat team ang magpapalitang kikick ng penalty!</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Offside Rule -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Mga Patakaran · Pinakamahalaga</span>
+      <h2>Ang Offside Rule</h2>
+      <p class="desc">Ang pinakamahalaga at pinaka-nakakalitong patakaran sa soccer!</p>
+      <div class="figure">
+        <svg viewBox="0 0 680 300" role="img" aria-label="Diagram ng offside">
+          <rect x="0" y="0" width="680" height="300" fill="#4a8f50"/>
+          <!-- Goal line -->
+          <line x1="640" y1="20" x2="640" y2="280" stroke="#fff" stroke-width="3"/>
+          <text x="656" y="155" font-size="12" fill="#fff" text-anchor="middle" transform="rotate(90 656 155)">Goal line</text>
+          <!-- Direksyon ng atake -->
+          <path d="M40,28 L130,28" stroke="#ffe08a" stroke-width="3" marker-end="url(#arrow1)"/>
+          <text x="44" y="20" font-size="11" fill="#ffe08a">Direksyon ng atake →</text>
+          <!-- GK -->
+          <circle cx="610" cy="150" r="14" fill="#eab308"/><text x="610" y="155" font-size="10" fill="#fff" text-anchor="middle" font-weight="800">GK</text>
+          <!-- Ikalawa sa huling defender = reference line -->
+          <circle cx="440" cy="130" r="14" fill="#2563eb"/><text x="440" y="135" font-size="10" fill="#fff" text-anchor="middle" font-weight="800">D2</text>
+          <line x1="480" y1="20" x2="480" y2="280" stroke="#ffe08a" stroke-width="2.5" stroke-dasharray="8 5"/>
+          <text x="480" y="296" font-size="11" fill="#ffe08a" text-anchor="middle">Reference line (2nd-to-last defender)</text>
+          <!-- Ibang defender -->
+          <circle cx="480" cy="200" r="14" fill="#2563eb"/><text x="480" y="205" font-size="10" fill="#fff" text-anchor="middle" font-weight="800">D1</text>
+          <!-- Attacker na nagpapasa -->
+          <circle cx="250" cy="170" r="14" fill="#16a34a"/><text x="250" y="175" font-size="10" fill="#fff" text-anchor="middle" font-weight="800">A1</text>
+          <text x="250" y="206" font-size="11" fill="#d4edda" text-anchor="middle">Player na nagpapasa</text>
+          <!-- Pass arrow -->
+          <path d="M264,164 L486,104" stroke="#fff" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arrow1)"/>
+          <!-- Offside na attacker -->
+          <circle cx="500" cy="100" r="14" fill="#dc2626"/><text x="500" y="105" font-size="10" fill="#fff" text-anchor="middle" font-weight="800">A2</text>
+          <text x="500" y="78" font-size="12" fill="#ffd0d0" text-anchor="middle" font-weight="700">Offside!</text>
+          <!-- Explanation box -->
+          <rect x="20" y="230" width="300" height="50" rx="6" fill="rgba(0,0,0,0.5)"/>
+          <text x="30" y="252" font-size="11" fill="#fff">Kapag mas malapit si A2 sa goal kaysa kay D1</text>
+          <text x="30" y="270" font-size="11" fill="#ffe08a">sa sandali ng pass → Offside! (indirect free kick)</text>
+          <defs><marker id="arrow1" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#ffe08a"/></marker></defs>
+        </svg>
+        <figcaption>Offside = sa sandali ng pass, mas malapit ang attacker sa goal line kaysa sa 2nd-to-last defender</figcaption>
+      </div>
+      <ul>
+        <li><span class="n">1</span><div><b>Offside kapag natugunan ang lahat ng 3 kondisyon</b> — (1) nasa kalahati ng kalaban, (2) mas malapit sa goal kaysa sa 2nd-to-last defender, at (3) sangkot sa laro (na-touch, nakaharang, o may nakuhang advantage)</div></li>
+        <li><span class="n">2</span><div><b>Mga eksepsyon (hindi offside)</b> — pagtanggap galing sa goal kick, throw-in, o corner kick / kasabay o nasa likod ng bola / nasa sariling kalahati</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 7. Mga Pangunahing Foul at Parusa -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Mga Patakaran · Foul</span>
+      <h2>Mga Pangunahing Foul at Parusa</h2>
+      <p class="desc">Malaman mo ang foul, mas maiintindihan mo ang laro!</p>
+      <div class="two">
+        <div class="box warn"><h3>🦵 Direct Free Kick</h3><p>Para sa <b>pagtulak, pagpatid, pagsipa, o paghawak</b> sa kalaban, o handball (paghawak ng bola gamit ang kamay). Pwedeng direktang shumoot sa goal mula sa lugar ng foul!</p></div>
+        <div class="box warn"><h3>🚫 Indirect Free Kick</h3><p>Para sa <b>delikadong paglalaro</b> (mataas na sipa), obstruction (pagharang na walang bola), offside, atbp. Kailangang mag-pass muna bago shumoot.</p></div>
+        <div class="box warn"><h3>🟨 Yellow Card (Babala)</h3><p>Paulit-ulit na foul, pag-aaksaya ng oras, pagreklamo, panunukso sa kalaban, hindi sportsmanlike na kilos. <b>2 yellow sa isang laro = ejection!</b></p></div>
+        <div class="box warn"><h3>🟥 Red Card (Ejection)</h3><p>Marahas na kilos, sadyang handball o foul na nagpapawalang-bisa sa malinaw na goal-scoring opportunity, pagdura, atbp. <b>Agad na ejection</b>, walang kapalit!</p></div>
+        <div class="box"><h3>🎯 Penalty Kick (PK)</h3><p>Kapag gumawa ang defending team ng foul na dapat sana'y direct free kick sa loob ng penalty area → 1-on-1 sa GK mula sa 11m!</p></div>
+        <div class="box"><h3>📋 Paalala sa School PE</h3><p>Bawal ang slide tackle, iwasan ang magaspang na physical play, respetuhin ang desisyon ng referee. Ang ligtas at masayang laro ang pinakaunang priyoridad!</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Mga Posisyon at Pormasyon -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Taktika</span>
+      <h2>Mga Posisyon at Pormasyon</h2>
+      <p class="desc">Ang 11 players ay may hati-hating role para sa organisadong paglalaro</p>
+      <div class="split wide">
+        <div class="figure">
+          <svg viewBox="0 0 380 360" role="img" aria-label="4-3-3 formation">
+            <rect x="10" y="10" width="360" height="340" rx="4" fill="#4a8f50" stroke="#fff" stroke-width="2"/>
+            <line x1="10" y1="180" x2="370" y2="180" stroke="#fff" stroke-width="1.5" stroke-dasharray="6 4"/>
+            <circle cx="190" cy="180" r="36" fill="none" stroke="#fff" stroke-width="1.5"/>
+            <rect x="130" y="10" width="120" height="40" fill="none" stroke="#fff" stroke-width="1.5"/>
+            <g text-anchor="middle" font-size="11" font-weight="800" fill="#fff">
+              <!-- GK -->
+              <circle cx="190" cy="320" r="16" fill="#eab308"/><text x="190" y="325">GK</text>
+              <!-- 4 DF -->
+              <circle cx="60" cy="268" r="15" fill="#2563eb"/><text x="60" y="273">SB</text>
+              <circle cx="145" cy="275" r="15" fill="#2563eb"/><text x="145" y="280">CB</text>
+              <circle cx="235" cy="275" r="15" fill="#2563eb"/><text x="235" y="280">CB</text>
+              <circle cx="320" cy="268" r="15" fill="#2563eb"/><text x="320" y="273">SB</text>
+              <!-- 3 MF -->
+              <circle cx="120" cy="180" r="15" fill="#16a34a"/><text x="120" y="185">CM</text>
+              <circle cx="190" cy="195" r="15" fill="#16a34a"/><text x="190" y="200">DM</text>
+              <circle cx="260" cy="180" r="15" fill="#16a34a"/><text x="260" y="185">CM</text>
+              <!-- 3 FW -->
+              <circle cx="80" cy="80" r="15" fill="#dc2626"/><text x="80" y="85">WG</text>
+              <circle cx="190" cy="70" r="15" fill="#dc2626"/><text x="190" y="75">ST</text>
+              <circle cx="300" cy="80" r="15" fill="#dc2626"/><text x="300" y="85">WG</text>
+            </g>
+            <text x="190" y="352" font-size="12" fill="#d4edda" text-anchor="middle">4-3-3 Formation</text>
+          </svg>
+          <figcaption>4-3-3: kinatawang atakeng pormasyon ng modernong soccer</figcaption>
+        </div>
+        <ul>
+          <li><span class="n">🧤</span><div><b>GK (Goalkeeper)</b> — bantay ng goal, tanging player na pwedeng gumamit ng kamay. Ang huling linya ng depensa!</div></li>
+          <li><span class="n">🛡️</span><div><b>DF (Defenders)</b> — CB (Center back): humaharang sa harap ng goal / SB (Side back): nagdedepensa sa gilid + sumusuporta sa atake</div></li>
+          <li><span class="n">⚙️</span><div><b>MF (Midfielders)</b> — CM (Central): nag-uugnay ng offense at defense / DM (Defensive): unang harang sa atake ng kalaban / AM (Attacking): key pass</div></li>
+          <li><span class="n">🎯</span><div><b>FW (Forwards)</b> — ST (Striker): ang goal hunter / WG (Winger): dumadaloy mula sa gilid + gumagawa ng cross</div></li>
+          <li><span class="n">📐</span><div><b>4-4-2</b> — ang pinaka-balanced na tradisyunal na pormasyon. 4 defenders + 4 midfielders + 2 forwards</div></li>
+          <li><span class="n">📐</span><div><b>4-3-3</b> — atakeng pormasyon. Gustong-gusto ng Barcelona, Liverpool, at iba pa</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Pangunahing Kasanayan 1: Pagsipa -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Pangunahing Kasanayan ①</span>
+      <h2>Pagsipa (Kick)</h2>
+      <p class="desc">Anong parte ng paa, at saang parte ng bola — iyon ang mahalaga!</p>
+      <div class="split">
+        <div class="media"><img src="../assets/img/sc-shoot.jpg" alt="Eksena ng shooting"><span class="caption">Nagsisimula ang tumpak na sipa sa tamang posisyon ng plant foot + naka-lock na ankle</span></div>
+        <ul>
+          <li><span class="n">1</span><div><b>Inside Kick (loob ng paa)</b> — pinakamataas na accuracy! Ginagamit para sa short pass at finishing. I-lock ang ankle sa tamang anggulo at itulak gamit ang bahagi sa ibaba ng bukong-bukong</div></li>
+          <li><span class="n">2</span><div><b>Instep Kick (guhit ng paa)</b> — pinakamalakas na power! Ginagamit para sa malakas na shot at long pass. I-diretso ang mga daliri ng paa at hampasin ang gitna ng bola gamit ang sentro ng instep</div></li>
+          <li><span class="n">3</span><div><b>Outside Kick (labas ng paa)</b> — gumagawa ng curve! Ginagamit sa curving pass at free kick. I-wrap ang labas ng paa sa loob ng bola</div></li>
+          <li><span class="n">4</span><div><b>Volley Kick</b> — sinisipa ang bola habang nasa hangin! Mahalaga ang timing at balanse ng katawan. Mahirap pero epektibo</div></li>
+        </ul>
+      </div>
+      <p class="note"><b>Key na teknik:</b> ilagay ang plant foot 15–20cm sa gilid ng bola → i-swing ang tuhod sa ibabaw ng bola → tingnan ang bola sa sandali ng contact → follow through (nakaturo ang dulo ng paa sa target)</p>
+    </div>
+  </section>
+
+  <!-- 10. Pangunahing Kasanayan 2: Dribbling -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Pangunahing Kasanayan ②</span>
+      <h2>Dribbling</h2>
+      <p class="desc">Pananatiling malapit ang bola sa paa habang dinadala sa gustong direksyon</p>
+      <div class="split flip">
+        <div class="media"><img src="../assets/img/sc-dribble.jpg" alt="Eksena ng dribbling"><span class="caption">Ang key ay tumingala habang nagda-dribble para makita ang paligid</span></div>
+        <ul>
+          <li><span class="n">1</span><div><b>Inside Dribble</b> — hinihipo ang bola gamit ang loob ng paa habang gumagalaw. Ginagamit para sa presisyong kontrol sa masikip na espasyo</div></li>
+          <li><span class="n">2</span><div><b>Outside Dribble</b> — itinutulak ang bola gamit ang labas ng paa. Maganda para sa mabilis na pagbabago ng direksyon at pagpapanatili ng bilis</div></li>
+          <li><span class="n">3</span><div><b>Pull Away</b> — sadyang inaakit ang defender palapit, tapos biglang bilisan sa kabaligtarang direksyon! Isang teknik para makagawa ng espasyo</div></li>
+          <li><span class="n">4</span><div><b>Stepover/Scissors (Feint)</b> — i-swing ang paa sa ibabaw ng bola para linlangin ang direksyon. Magpanggap na papunta sa isang direksyon → tapos pupunta sa kabila!</div></li>
+        </ul>
+      </div>
+      <p class="note"><b>Tip:</b> panatilihing isang hakbang lang ang layo ng bola sa lahat ng oras! Tumingala para makita ang field, dahil kapag masyadong malakas ang sipa, malalayo ang bola at makukuha ng kalaban.</p>
+    </div>
+  </section>
+
+  <!-- 11. Pangunahing Kasanayan 3: Passing at Trapping -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Pangunahing Kasanayan ③</span>
+      <h2>Passing at Trapping</h2>
+      <p class="desc">Hindi solo laro ang soccer! Magpasa ng tumpak, tumanggap nang maayos</p>
+      <div class="split">
+        <div class="media"><img src="../assets/img/sc-pass.jpg" alt="Eksena ng pagpapasa"><span class="caption">Ang magandang pass ay komportable para sa tumatanggap</span></div>
+        <ul>
+          <li><span class="n">1</span><div><b>Short Pass (Inside)</b> — tumpak na pass sa kalapit na kasamahan gamit ang loob ng paa. Ang pinaka-basic na skill sa soccer!</div></li>
+          <li><span class="n">2</span><div><b>Long Pass (Instep)</b> — pass sa malayong kasamahan gamit ang guhit ng paa. Sipain nang bahagyang mababa sa bola para lumipad ito</div></li>
+          <li><span class="n">3</span><div><b>Through Pass</b> — ipapasa ang bola sa pagitan ng mga defender. Ipadala sa direksyon ng takbo ng attacker! Ang pinaka-mapanganib na pass</div></li>
+          <li><span class="n">4</span><div><b>Cross</b> — mataas na pass mula sa gilid papunta sa gitna (harap ng goal). Konektado sa header!</div></li>
+          <li><span class="n">5</span><div><b>Trapping (Ball Control)</b> — mahinahong tumatanggap ng papalapit na bola at inilalagay sa harap ng paa. Gamit ang talampakan/loob ng paa/hita/dibdib</div></li>
+        </ul>
+      </div>
+      <p class="note"><b>Sikreto sa trapping:</b> sa sandali ng contact, bahagyang iurong ang bahaging tumatanggap (cushion). Kapag masyadong tigas, tatalbog ang bola!</p>
+    </div>
+  </section>
+
+  <!-- 12. Batayang Taktika -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Taktika</span>
+      <h2>Batayang Taktika</h2>
+      <p class="desc">Indibidwal na kasanayan + team tactics = susi sa tagumpay</p>
+      <div class="two">
+        <div class="box"><h3>🔨 Build-Up Play</h3><p><b>Maiikling pass mula sa likuran</b> (GK, defenders) para dahan-dahang isulong ang atake. Gumagawa ng espasyo sa pag-iwas sa press ng kalaban.</p></div>
+        <div class="box"><h3>⚡ Counter-Attack</h3><p>Pagkatapos manalo ng bola sa depensa, <b>mabilis na lumipat sa atake!</b> Kaunting players ang sprint papunta sa bukas na espasyo. Ang bilis ang lahat-lahat!</p></div>
+        <div class="box"><h3>🔥 Pressing</h3><p><b>Maramihang player ang nagpe-press</b> sa kalahati ng kalaban para pilitin silang magkamali ng pass. Nakakapagod pero mabisa.</p></div>
+        <div class="box"><h3>🏃 Overlapping Run</h3><p>Ang fullback ay <b>umaakyat sa labas ng winger</b> sa panahon ng atake para lumikha ng numerical advantage. Kailangan na taktika sa modernong soccer!</p></div>
+        <div class="box"><h3>🎯 Set Pieces</h3><p><b>Paunang plinanong galaw</b> sa corner at free kick para lumikha ng scoring chance. Malaking sandata kapag madalas na-practice!</p></div>
+        <div class="box"><h3>🔄 Position Rotation</h3><p>Hindi nananatili sa fixed na posisyon ang mga player kundi <b>nagpapalitan ng posisyon</b> para lituhin ang depensa ng kalaban.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. Mga Patakaran sa Kaligtasan -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Kaligtasan</span>
+      <h2>Mga Patakaran sa Kaligtasan</h2>
+      <p class="desc">Para masiyahan sa soccer nang matagal nang walang injury!</p>
+      <div class="two">
+        <div class="box warn"><h3>🦶 Proteksyon sa Ankle at Tuhod</h3><p>Panganib ang <b>ankle sprain at ligament injury sa tuhod</b> sa mabilis na pagbabago ng direksyon at tackle! Kailangan ang sapat na stretching + strength training.</p></div>
+        <div class="box warn"><h3>💥 Iwasan ang Banggaan</h3><p>Sa header, <b>i-tense ang leeg</b> at huwag ipipikit ang mata. Mag-ingat sa banggaan sa goalpost! Mahigpit na <b>bawal</b> ang slide tackle sa school PE.</p></div>
+        <div class="box warn"><h3>☀️ Pag-iwas sa Heat Stroke</h3><p>Sa tag-init na outdoor exercise, <b>uminom ng tubig bawat 15–20 minuto</b> at magpahinga sa lilim. Itigil agad kapag naliliyo o naduduwal!</p></div>
+        <div class="box"><h3>✅ Kailangang Gamit</h3><p><b>Shin guards</b> — dapat suotin palagi! I-tighten ang laces ng soccer cleats, magdala ng sapat na tubig, mag-warm up nang hindi bababa sa 10 minuto.</p></div>
+      </div>
+      <p class="note"><b>Tandaan:</b> kahit ang mga propesyonal na player ay hindi naglalaro nang walang protective gear! Ang shin guards ay parang seatbelt ng soccer.</p>
+    </div>
+  </section>
+
+  <!-- Tama/Mali na Quiz -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Quiz</span>
+      <h2>Tama/Mali na Quiz</h2>
+      <p class="desc">Tingnan natin kung ano ang natutunan mo!</p>
+      <ul>
+        <li><span class="n">Q1</span><div><b>Sa soccer, pwedeng gumamit ng kamay ang goalkeeper kahit saan sa field.</b> — Mali. Pwede lang gumamit ng kamay ang goalkeeper sa loob ng sariling penalty area.</div></li>
+        <li><span class="n">Q2</span><div><b>Hindi applicable ang offside sa panahon ng goal kick, throw-in, o corner kick.</b> — Tama. Ang tatlong sitwasyong ito ay eksepsyon sa offside rule.</div></li>
+        <li><span class="n">Q3</span><div><b>Kapag nakatanggap ng dalawang yellow card sa isang laro, ma-eeject ang player.</b> — Tama. Ang dalawang naipong yellow card ay itinuturing na red card, kaya ma-eeject.</div></li>
+        <li><span class="n">Q4</span><div><b>Itinuturing na goal kahit kalahati lang ng bola ang tumawid sa goal line.</b> — Mali. Kailangang tuluyang tumawid ang buong bola sa goal line para maging goal.</div></li>
+        <li><span class="n">Q5</span><div><b>Opisyal na kinikilala ng FIFA ang medieval English ball games bilang pinagmulan ng soccer.</b> — Mali. Opisyal na kinikilala ng FIFA ang sinaunang Cuju ng Tsina bilang pinagmulan ng soccer.</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Buod ng Pangunahing Punto -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Buod</span>
+      <h2>Dapat Tandaan!</h2>
+      <p class="desc">Buod ng mga pangunahing punto na natutunan natin ngayon</p>
+      <div class="two">
+        <div class="box"><h3>📌 Pangunahing Patakaran</h3><p>• Dalawang 45-minutong halves, 90 minuto lahat-lahat<br>• Offside: mas malapit sa goal kaysa sa 2nd-to-last defender sa sandali ng pass = violation<br>• Foul sa loob ng penalty area = PK (11m)<br>• 2 yellow card o 1 red card = ejection</p></div>
+        <div class="box"><h3>⭐ Pangunahing Kasanayan</h3><p>• Inside kick: pinakamataas na accuracy para sa pass at finishing<br>• Instep kick: pinakamalakas na power para sa shot at long pass<br>• Trapping: cushion sa sandali ng contact para tumanggap nang mahinahon<br>• Dribbling: panatilihing isang hakbang ang layo ng bola, tumingala para makita ang field</p></div>
+        <div class="box"><h3>🏆 Kaalamang Dapat Malaman</h3><p>• Umabot ang Korea sa semifinals ng 2002 World Cup<br>• Ang K League (itinatag noong 1983) ay ang unang professional soccer league sa Asya<br>• May 211 miyembrong bansa ang FIFA — mas marami kaysa sa UN (193)</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mga Tanong Pangdiskusyon -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Mga Tanong Pangdiskusyon</span>
+      <h2>Pag-isipan Natin Ito</h2>
+      <p class="desc">Tapusin natin ang aralin sa isang group discussion</p>
+      <ul>
+        <li><span class="n">1</span><div><b>Paano naapektuhan ng paggamit ng VAR (Video Assistant Referee) ang katarungan at excitement ng soccer?</b></div></li>
+        <li><span class="n">2</span><div><b>Ano ang mga dahilan kung bakit naging pinaka-popular na sport sa buong mundo ang soccer?</b></div></li>
+        <li><span class="n">3</span><div><b>Anong mga pagbabago sa patakaran ang maaaring gawin para mas masiyahan ang mga estudyante ng iba't ibang antas ng galing sa school soccer?</b></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 14. Closing -->
+  <section class="slide cover">
+    <img class="cover-bg" src="../assets/img/sc-team.jpg" alt="Selebrasyon ng team">
+    <div class="cover-shade"></div>
+    <div class="kicker">ANY QUESTIONS?</div>
+    <div class="emoji">🏆</div>
+    <h1>SALAMAT!</h1>
+    <p class="lead">Ang soccer ay sining ng teamwork, na nagsisimula sa mga paa ng 11 players.</p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" aria-label="Nakaraan">‹</button>
+  <div class="dots"></div>
+  <button id="next" aria-label="Susunod">›</button>
+</div>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

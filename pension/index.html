@@ -1,0 +1,1428 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>교사 연금 시뮬레이터 · 정년 vs 명예퇴직 (임용시기별)</title>
+<meta name="description" content="국공립 초중고 교사를 위한 참고용 연금 시뮬레이터. 임용 시기(1995 이전·1996~2009·2010 이후)를 선택하면 연금개시연령을 반영해 정년과 명예퇴직을 연금·퇴직수당·명퇴금·손익분기로 비교합니다. 확정 금액은 공무원연금공단 '내연금보기'가 기준입니다.">
+<meta name="theme-color" content="#0c1015">
+<link rel="canonical" href="https://kimju.kr/pension/">
+
+<!-- Open Graph (카카오톡·페이스북 등 공유 미리보기) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="교사 연금 비교 시뮬레이터">
+<meta property="og:locale" content="ko_KR">
+<meta property="og:url" content="https://kimju.kr/pension/">
+<meta property="og:title" content="교사 연금 시뮬레이터 · 정년 vs 명예퇴직 (임용시기별)">
+<meta property="og:description" content="임용 시기(1995 이전·1996~2009·2010 이후)를 고르면 연금개시연령을 반영해 정년과 명예퇴직을 연금·퇴직수당·명퇴금·손익분기로 비교합니다. 국공립 초중고 교사용 참고 도구.">
+<meta property="og:image" content="https://kimju.kr/pension/og.png?v=2">
+<meta property="og:image:secure_url" content="https://kimju.kr/pension/og.png?v=2">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="교사 연금 시뮬레이터 — 임용시기별 정년 vs 명예퇴직 비교 도구">
+
+<!-- Twitter/X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="교사 연금 시뮬레이터 · 정년 vs 명예퇴직 (임용시기별)">
+<meta name="twitter:description" content="임용 시기를 고르면 연금개시연령을 반영해 정년과 명예퇴직을 연금·퇴직수당·명퇴금으로 비교합니다.">
+<meta name="twitter:image" content="https://kimju.kr/pension/og.png?v=1">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Space+Grotesk:wght@400;500;600;700&display=swap">
+<style>
+  /* Pretendard는 구글폰트에 없다. 정식 CDN(jsdelivr)에서 받아야 실제로 적용된다. */
+
+  :root{
+    --bg:#0c1015; --surface:#141b24; --surface2:#1b242f; --line:#28333f;
+    --ink:#eef2f6; --mute:#8a98a8; --faint:#5a6776;
+    --gold:#d4a843; --gold-soft:#e8c878;
+    --jade:#5bb98c; --jade-deep:#2d7a56;
+    --coral:#e07856; --coral-soft:#f0a088;
+    --sky:#5b9bd4;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Pretendard Variable','Pretendard',-apple-system,sans-serif;background:var(--bg);
+    color:var(--ink);line-height:1.5;-webkit-font-smoothing:antialiased;}
+
+  /* 헤더 */
+  header{padding:2rem 1.5rem 1.4rem;
+    background:radial-gradient(120% 100% at 50% 0%, #182230 0%, var(--bg) 70%);
+    border-bottom:1px solid var(--line);}
+  .hwrap{max-width:760px;margin:0 auto;}
+  .eyebrow{font-family:'Space Grotesk',sans-serif;font-size:.68rem;font-weight:600;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.7rem;}
+  h1{font-family:'Gowun Batang',serif;font-size:1.75rem;font-weight:700;
+    line-height:1.25;letter-spacing:-.01em;}
+  h1 em{font-style:normal;color:var(--gold-soft);}
+  .lede{font-size:.85rem;color:var(--mute);margin-top:.55rem;max-width:34rem;}
+
+  /* 탭 */
+  .tabs{max-width:760px;margin:0 auto;display:flex;gap:.2rem;padding:0 1.5rem;
+    overflow-x:auto;background:var(--bg);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:50;scrollbar-width:none;}
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{flex-shrink:0;background:none;border:none;cursor:pointer;
+    font-family:'Pretendard Variable','Pretendard',sans-serif;font-size:.8rem;font-weight:500;
+    color:var(--faint);padding:.85rem .85rem;position:relative;white-space:nowrap;
+    transition:color .18s;}
+  .tab.on{color:var(--gold-soft);font-weight:600;}
+  .tab.on::after{content:'';position:absolute;left:.85rem;right:.85rem;bottom:-1px;
+    height:2px;background:var(--gold);border-radius:2px;}
+  .tab:hover:not(.on){color:var(--mute);}
+
+  main{max-width:760px;margin:0 auto;padding:1.5rem 1.5rem 2.5rem;}
+  .panel{display:none;animation:fade .35s ease;}
+  .panel.on{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+
+  /* 카드 */
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    padding:1.3rem 1.4rem;margin-bottom:1rem;}
+  .card-h{display:flex;align-items:baseline;gap:.6rem;margin-bottom:1.1rem;}
+  .card-n{font-family:'Space Grotesk',sans-serif;font-size:.7rem;font-weight:600;
+    color:var(--gold);letter-spacing:.05em;}
+  .card-t{font-size:.92rem;font-weight:600;color:var(--ink);}
+  .card-sub{font-size:.74rem;color:var(--faint);margin-left:auto;}
+
+  /* 입력 */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;}
+  .f{display:flex;flex-direction:column;gap:.35rem;}
+  .f label{font-size:.76rem;color:var(--mute);font-weight:500;}
+  .f .star{color:var(--gold);}
+  .f input,.f select{background:var(--bg);border:1px solid var(--line);
+    border-radius:9px;color:var(--ink);font-family:'Pretendard Variable','Pretendard',sans-serif;
+    font-size:.9rem;padding:.6rem .85rem;width:100%;transition:border-color .18s;
+    -webkit-appearance:none;appearance:none;}
+  .f input:focus,.f select:focus{outline:none;border-color:var(--gold);}
+  .f .help{font-size:.7rem;color:var(--faint);line-height:1.45;}
+  .f .help b{color:var(--gold-soft);font-weight:600;}
+
+  /* 안내 박스 */
+  .guide{background:linear-gradient(135deg,rgba(212,168,67,.07),rgba(212,168,67,.02));
+    border:1px solid rgba(212,168,67,.2);border-radius:11px;padding:1rem 1.1rem;
+    margin-bottom:1rem;font-size:.78rem;color:var(--mute);line-height:1.6;}
+  .guide b{color:var(--gold-soft);}
+  .target-note{background:linear-gradient(135deg,rgba(224,120,86,.1),rgba(224,120,86,.03));
+    border:1px solid rgba(224,120,86,.28);border-radius:11px;padding:1rem 1.1rem;
+    margin-bottom:.85rem;font-size:.78rem;color:var(--mute);line-height:1.6;}
+  .target-note b{color:var(--ink);}
+  .guide .path{font-family:'Space Grotesk',sans-serif;font-size:.74rem;
+    color:var(--ink);background:var(--bg);padding:.15rem .45rem;border-radius:5px;
+    display:inline-block;margin:.15rem 0;}
+
+  /* 슬라이더 */
+  .slider-row{display:flex;align-items:center;gap:.9rem;margin-bottom:.9rem;}
+  .slider-row:last-child{margin-bottom:0;}
+  .slider-lbl{font-size:.78rem;color:var(--mute);min-width:5.5rem;}
+  .slider-wrap{flex:1;display:flex;align-items:center;gap:.7rem;}
+  input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:4px;
+    background:var(--line);border-radius:2px;outline:none;}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+    width:17px;height:17px;border-radius:50%;background:var(--gold);cursor:pointer;
+    box-shadow:0 0 0 3px rgba(212,168,67,.2);transition:transform .1s;}
+  input[type=range]::-webkit-slider-thumb:active{transform:scale(1.15);}
+  input[type=range]::-moz-range-thumb{width:17px;height:17px;border:none;
+    border-radius:50%;background:var(--gold);cursor:pointer;}
+  .slider-val{font-family:'Space Grotesk',sans-serif;font-size:.85rem;font-weight:600;
+    color:var(--gold-soft);min-width:3rem;text-align:right;}
+
+  /* 버튼 */
+  .btn{width:100%;padding:.95rem;background:linear-gradient(135deg,var(--gold),#c0942f);
+    color:#1a1208;font-family:'Pretendard Variable','Pretendard',sans-serif;font-size:.95rem;font-weight:700;
+    border:none;border-radius:11px;cursor:pointer;margin-top:.4rem;letter-spacing:.02em;
+    transition:transform .1s,box-shadow .2s;box-shadow:0 4px 18px rgba(212,168,67,.25);}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 7px 24px rgba(212,168,67,.35);}
+  .btn:active{transform:translateY(0);}
+
+  /* 결과 공통 */
+  .result{display:none;}
+  .result.on{display:block;animation:fade .4s ease;}
+
+  .verdict{border-radius:14px;padding:1.6rem 1.4rem;text-align:center;margin-bottom:1rem;
+    position:relative;overflow:hidden;}
+  .verdict.jade{background:linear-gradient(135deg,var(--jade-deep),#1d5a3d);}
+  .verdict.coral{background:linear-gradient(135deg,#9a4a30,#7a3622);}
+  .verdict.gold{background:linear-gradient(135deg,#9a7420,#7a5a18);}
+  .verdict-lbl{font-size:.74rem;color:rgba(255,255,255,.72);letter-spacing:.05em;
+    margin-bottom:.4rem;}
+  .verdict-main{font-family:'Gowun Batang',serif;font-size:1.7rem;font-weight:700;
+    color:#fff;line-height:1.25;}
+  .verdict-sub{font-size:.8rem;color:rgba(255,255,255,.8);margin-top:.5rem;line-height:1.5;}
+
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1rem;}
+  .stat{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:.95rem 1rem;}
+  .stat-l{font-size:.71rem;color:var(--faint);margin-bottom:.3rem;}
+  .stat-v{font-family:'Space Grotesk',sans-serif;font-size:1.15rem;font-weight:600;color:var(--gold-soft);}
+  .stat-v.jade{color:var(--jade);} .stat-v.coral{color:var(--coral-soft);} .stat-v.sky{color:var(--sky);}
+  .stat-n{font-size:.68rem;color:var(--faint);margin-top:.2rem;}
+
+  /* 비교 바 */
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-bottom:1rem;}
+  .vs-col{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:1.1rem 1rem;}
+  .vs-col.r{border-color:rgba(91,185,140,.3);}
+  .vs-col.e{border-color:rgba(224,120,86,.3);}
+  .vs-tag{font-size:.74rem;font-weight:600;margin-bottom:.7rem;display:flex;align-items:center;gap:.4rem;}
+  .vs-tag.r{color:var(--jade);} .vs-tag.e{color:var(--coral-soft);}
+  .vs-big{font-family:'Space Grotesk',sans-serif;font-size:1.35rem;font-weight:700;color:var(--ink);}
+  .vs-line{font-size:.76rem;color:var(--mute);margin-top:.5rem;padding-top:.5rem;border-top:1px solid var(--line);}
+  .vs-line b{font-family:'Space Grotesk',sans-serif;color:var(--ink);font-weight:600;}
+
+  /* 차트 */
+  .chart-box{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:1rem .8rem .6rem;}
+
+  /* 타임라인 */
+  .tl-row{display:flex;align-items:center;gap:.75rem;padding:.5rem 0;
+    border-bottom:1px solid var(--surface2);font-size:.8rem;}
+  .tl-row:last-child{border-bottom:none;}
+  .tl-yr{font-family:'Space Grotesk',sans-serif;font-size:.72rem;color:var(--faint);min-width:36px;}
+  .tl-dot{width:8px;height:8px;border-radius:50%;background:var(--line);flex-shrink:0;}
+  .tl-dot.gold{background:var(--gold);} .tl-dot.jade{background:var(--jade);}
+  .tl-dot.coral{background:var(--coral);}
+  .tl-desc{flex:1;color:var(--mute);}
+  .tl-amt{font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--ink);text-align:right;font-size:.78rem;}
+
+  /* 정보 */
+  .note{background:rgba(91,155,212,.06);border:1px solid rgba(91,155,212,.18);
+    border-radius:10px;padding:.85rem 1rem;font-size:.76rem;color:var(--mute);
+    line-height:1.6;margin-top:.8rem;}
+  .note b{color:var(--sky);} .note .warn{color:var(--coral-soft);font-weight:600;}
+
+  .disclaimer{font-size:.72rem;color:var(--faint);text-align:center;
+    margin-top:1.5rem;line-height:1.6;padding:0 1rem;}
+  /* 임용시기 세그먼트 (헤더 아래 고정 선택) */
+  .seg-wrap{max-width:760px;margin:0 auto;padding:.9rem 1.5rem 1rem;
+    background:var(--bg);border-bottom:1px solid var(--line);}
+  .seg-label{font-size:.72rem;color:var(--gold);font-weight:600;letter-spacing:.03em;
+    margin-bottom:.55rem;display:flex;align-items:center;gap:.35rem;}
+  .seg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.4rem;}
+  .seg-btn{background:var(--surface);border:1px solid var(--line);border-radius:10px;
+    padding:.65rem .4rem;cursor:pointer;color:var(--mute);font-family:inherit;
+    font-size:.82rem;font-weight:600;text-align:center;line-height:1.25;transition:all .15s;}
+  .seg-btn small{display:block;font-size:.64rem;font-weight:400;color:var(--faint);margin-top:.25rem;}
+  .seg-btn.on{background:linear-gradient(135deg,rgba(212,168,67,.18),rgba(212,168,67,.05));
+    border-color:var(--gold);color:var(--gold-soft);}
+  .seg-btn.on small{color:var(--gold);}
+  .seg-btn:hover:not(.on){border-color:var(--faint);color:var(--ink);}
+  @media(max-width:520px){
+    .seg-wrap{padding:.8rem 1.1rem .9rem;}
+    .seg{gap:.3rem;}
+    .seg-btn{padding:.6rem .2rem;font-size:.76rem;}
+    .seg-btn small{font-size:.58rem;}
+  }
+
+  /* 푸터 */
+  footer{border-top:1px solid var(--line);padding:1.5rem 1.5rem 2.2rem;
+    background:radial-gradient(120% 100% at 50% 100%, #151d29 0%, var(--bg) 70%);}
+  .fwrap{max-width:760px;margin:0 auto;display:flex;flex-direction:column;
+    align-items:center;gap:.75rem;}
+  .flink{display:inline-flex;align-items:center;gap:.5rem;text-decoration:none;
+    color:var(--mute);font-family:'Space Grotesk',sans-serif;font-size:.82rem;
+    font-weight:500;letter-spacing:.02em;padding:.5rem .95rem;
+    border:1px solid var(--line);border-radius:999px;background:var(--surface);
+    transition:color .18s,border-color .18s,transform .1s;}
+  .flink:hover{color:var(--gold-soft);border-color:rgba(212,168,67,.45);transform:translateY(-1px);}
+  .flink:active{transform:translateY(0);}
+  .flink svg{width:15px;height:15px;flex-shrink:0;}
+  .fnote{font-size:.7rem;color:var(--faint);text-align:center;line-height:1.6;}
+
+  .set-why{font-size:.74rem;color:var(--faint);line-height:1.6;
+    margin:-.3rem 0 1.1rem;padding-left:.1rem;}
+  .set-why b{color:var(--gold-soft);font-weight:600;}
+  .set-why:last-child{margin-bottom:0;}
+
+  @media(max-width:520px){
+    /* 헤더 컴팩트 */
+    header{padding:1.3rem 1.1rem 1rem;}
+    .eyebrow{font-size:.6rem;letter-spacing:.16em;margin-bottom:.5rem;}
+    h1{font-size:1.4rem;line-height:1.2;}
+    .lede{font-size:.8rem;margin-top:.45rem;line-height:1.5;}
+    /* 탭: 우측 스크롤 가능 여백 + 패딩 축소 */
+    .tabs{padding:0 1.1rem;}
+    .tab{font-size:.78rem;padding:.8rem .65rem;}
+    .tab.on::after{left:.65rem;right:.65rem;}
+    /* 본문 패딩 축소 */
+    main{padding:1.1rem 1.1rem 2rem;}
+    footer{padding:1.3rem 1.1rem 2rem;}
+    /* 레이아웃 1열 */
+    .grid,.stat-grid,.vs{grid-template-columns:1fr;}
+    .grid-3{grid-template-columns:1fr 1fr 1fr;gap:.5rem;}
+    .verdict-main{font-size:1.4rem;}
+    .slider-lbl{min-width:4.3rem;font-size:.72rem;}
+    /* 큰 숫자 가독성 — 줄바꿈 방지 */
+    .vs-big,.verdict-main{word-break:keep-all;}
+    /* 카드 패딩 축소 */
+    .card{padding:1rem .95rem;}
+    /* 입력칸 터치 영역 확보 */
+    input,select{font-size:16px;}  /* iOS 자동확대 방지 */
+  }
+  @media(max-width:380px){
+    h1{font-size:1.28rem;}
+    .lede{font-size:.76rem;}
+    .tab{font-size:.74rem;padding:.75rem .55rem;}
+    .vs-big{font-size:1.5rem;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="hwrap">
+    <div class="eyebrow">공단 현재값 기반 추정 · 국공립 초중고 교사</div>
+    <h1>공무원 교사 연금 <em>비교 시뮬레이터</em></h1>
+    <p class="lede">공단에 표시된 현재값을 넣으면 <b>정년·명퇴 시나리오의 연금·일시금·퇴직수당</b>을 보수상승 가정으로 비교해요.</p>
+  </div>
+</header>
+
+<div class="seg-wrap">
+  <div class="seg-label">📌 먼저 임용 시기를 고르세요 · 연금 개시 나이가 갈립니다</div>
+  <div class="seg" id="seg-group">
+    <button type="button" class="seg-btn" data-g="pre1996" onclick="setGroup('pre1996')">1995년 이전<small>재직 20년↑ 즉시 개시</small></button>
+    <button type="button" class="seg-btn" data-g="y1996_2009" onclick="setGroup('y1996_2009')">1996~2009년<small>퇴직연도별 60~65세</small></button>
+    <button type="button" class="seg-btn" data-g="y2010_later" onclick="setGroup('y2010_later')">2010년 이후<small>65세 개시</small></button>
+  </div>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button class="tab on" onclick="go(0)">① 내 정보</button>
+  <button class="tab" onclick="go(1)">② 연금 추이</button>
+  <button class="tab" onclick="go(2)">③ 정년 vs 명퇴</button>
+  <button class="tab" onclick="go(3)">④ 일시금 vs 연금</button>
+  <button class="tab" onclick="go(4)">⑤ 손익분기·공백</button>
+  <button class="tab" onclick="go(5)">⑥ 설정</button>
+  <button class="tab" onclick="go(6)">⑦ 설명서</button>
+</nav>
+
+<main>
+
+<!-- ════ 0. 내 정보 입력 ════ -->
+<div class="panel on" id="p0">
+  <div class="target-note">
+    <b>✅ 이 도구는 <span style="color:var(--gold)">국립·공립 초중고 교육공무원</span>의 정년·명퇴 의사결정 참고용이에요.</b><br>
+    사립학교 교사(사학연금)와 정년 65세인 대학 교원은 대상이 아닙니다. <b style="color:var(--gold-soft)">맨 위에서 임용 시기를 먼저 고르면</b> 그에 맞는 연금 개시연령으로 계산해요. 실제 수령액 확정은 공무원연금공단 산정값이 기준이며, 특이 경력·휴직·정직·합산·반납금 이력이 있으면 오차가 커질 수 있어요.
+  </div>
+  <div class="guide">
+    <b>📲 공단 '내연금보기'를 한 번 열어주세요.</b><br>
+    공무원연금공단 앱/홈페이지 → 로그인 → <span class="path">내연금보기</span>의 현재 연금월액·기준소득월액·재직기간을 적어 주세요. 퇴직수당과 일시금은 입력하면 해당 공단값을 기준점으로 사용합니다.
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">필수</span><span class="card-t">공단에서 보이는 값</span></div>
+    <div class="grid">
+      <div class="f">
+        <label>현재 연금월액 <span class="star">*</span></label>
+        <input type="number" id="i-pension" value="" placeholder="예: 1,288,160" step="1000">
+        <span class="help">'퇴직급여 계산액' → <b>연금월액</b></span>
+      </div>
+      <div class="f">
+        <label>현재 퇴직수당</label>
+        <input type="number" id="i-severance" value="" placeholder="예: 24,810,280" step="10000">
+        <span class="help">선택 입력 · 입력하면 공단 현재값을 기준으로 미래 퇴직수당을 추정</span>
+      </div>
+      <div class="f">
+        <label>현재 전액일시금</label>
+        <input type="number" id="i-lump" value="" placeholder="예: 101,360,990" step="10000">
+        <span class="help">선택 입력 · 입력하면 공단 현재값을 기준으로 미래 일시금을 추정</span>
+      </div>
+      <div class="f">
+        <label>현재 기준소득월액 <span class="star">*</span></label>
+        <input type="number" id="i-income" value="" placeholder="예: 4,663,929" step="10000">
+        <span class="help">공단에 표시된 현재 기준소득월액 · 미래 연금·수당·일시금의 기준값</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">필수</span><span class="card-t">재직기간 · 생년월일</span></div>
+    <div class="f" style="margin-bottom:.8rem;">
+      <label>현재 재직기간 (퇴직급여 기준) <span class="star">*</span></label>
+      <div class="grid-3">
+        <div class="f"><label style="font-size:.7rem">년</label><input type="number" id="i-cy" value="" placeholder="16" min="0" max="40"></div>
+        <div class="f"><label style="font-size:.7rem">개월</label><input type="number" id="i-cm" value="" placeholder="4" min="0" max="11"></div>
+        <div class="f"><label style="font-size:.7rem">　</label><input type="text" value="합계 기준" disabled style="color:var(--faint);text-align:center;"></div>
+      </div>
+      <div class="target-note" style="margin-top:.6rem;">
+        <b>⚠️ 직접 계산하지 마세요.</b> 발령일로 햇수를 세면 <b style="color:var(--coral-soft)">군경력·합산기간이 빠져 틀려요.</b><br>
+        공단 '내연금보기' → <b>퇴직급여 기준 재직기간</b>에 나온 숫자를 <b style="color:var(--gold)">그대로</b> 옮겨 적으세요 (예: 16년 4개월).<br>
+        <span style="color:var(--mute);font-size:.92em">군경력·휴직·합산 등은 이미 그 숫자에 반영돼 있어요. 화면에 보이는 대로만 넣으면 됩니다.</span>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="f">
+        <label>생년월일 <span class="star">*</span></label>
+        <input type="date" id="i-birth" value="">
+        <span class="help">정년·연금개시 나이 계산용</span>
+      </div>
+      <div class="f">
+        <label>현재 기본급 (명퇴 비교 시 필수)</label>
+        <input type="number" id="i-basepay" value="" placeholder="예: 4,261,900" step="10000">
+        <span class="help">급여명세서 <b>본봉</b> · 비워두면 명예퇴직수당과 손익분기를 계산하지 않음</span>
+      </div>
+    </div>
+    <input type="hidden" id="i-group" value="">
+    <div class="target-note" style="margin-top:.8rem;">
+      <b>⚠️ 연금 받기 시작하는 나이는 맨 위 <span style="color:var(--gold)">임용 시기</span> 선택으로 갈려요.</b><br>
+      <b style="color:var(--gold)">1995년 이전</b>: 재직 20년을 넘겼으면 <b>퇴직하면서 바로</b> 연금 시작.<br>
+      <b style="color:var(--gold)">1996~2009년</b>: 퇴직 연도에 따라 <b>60~65세</b>부터(2033년 이후 퇴직은 65세).<br>
+      <b style="color:var(--gold)">2010년 이후</b>: <b>65세</b>부터.<br>
+      <span style="color:var(--mute);font-size:.92em">헷갈리면 발령 첫해 기준으로 고르세요. 명퇴 시 소득공백이 이 선택으로 달라집니다.</span>
+    </div>
+  </div>
+
+  <button class="btn" onclick="calcAll()">계산하기 →</button>
+
+  <p class="disclaimer">
+    <b style="color:var(--jade)">현재 연금월액·기준소득월액·퇴직수당·일시금은 공단 표시값을 그대로 넣어야 합니다.</b>
+    법정 지급률과 상한은 반영하지만 미래 보수와 소득재분배는 확정할 수 없어 결과는 <b>참고용 추정</b>입니다.<br>
+    확정 금액은 언제나 공단 '내연금보기'와 상담 결과가 기준이에요.<br>
+    <span style="color:var(--gold-soft)">봉급 인상률·기대수명 등은 마지막 <b>⑥ 설정</b> 탭에서 조정할 수 있습니다.</span>
+  </p>
+</div>
+
+<!-- ════ 1. 연금 추이 ════ -->
+<div class="panel" id="p1">
+  <div class="verdict gold" id="r1-verdict">
+    <div class="verdict-lbl">정년까지 일하면 받게 될 월 연금</div>
+    <div class="verdict-main" id="r1-main">―</div>
+    <div class="verdict-sub" id="r1-sub">―</div>
+  </div>
+  <div class="card">
+    <div class="card-h"><span class="card-n">추이</span><span class="card-t">퇴직 경력별 연금개시 시점 월 연금</span></div>
+    <div class="chart-box" id="r1-chart"></div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat"><div class="stat-l">지금 그만두면 · 개시시점</div><div class="stat-v" id="r1-now">―</div><div class="stat-n">현재 공단값에서 개시시점 환산</div></div>
+    <div class="stat"><div class="stat-l">정년까지 일하면</div><div class="stat-v jade" id="r1-ret">―</div><div class="stat-n" id="r1-ret-pv">월 연금 (추정)</div></div>
+    <div class="stat"><div class="stat-l">정년 퇴직 예정</div><div class="stat-v" id="r1-rdate">―</div></div>
+    <div class="stat"><div class="stat-l">정년 시 총 재직</div><div class="stat-v" id="r1-rcareer">―</div><div class="stat-n">년 · 연금 36년 / 퇴직수당 33년 상한</div></div>
+  </div>
+  <div class="note" id="r1-note">―</div>
+</div>
+
+<!-- ════ 2. 정년 vs 명퇴 ════ -->
+<div class="panel" id="p2">
+  <div class="vs">
+    <div class="vs-col r">
+      <div class="vs-tag r">🏁 정년까지</div>
+      <div class="vs-big" id="r2-rp">―</div>
+      <div class="vs-line">월 연금 (세전)</div>
+      <div class="vs-line">퇴직수당 <b id="r2-rs">―</b></div>
+    </div>
+    <div class="vs-col e">
+      <div class="vs-tag e">✈️ 명예퇴직</div>
+      <div class="vs-big" id="r2-ep">―</div>
+      <div class="vs-line">월 연금 (세전)</div>
+      <div class="vs-line">일시금 <b id="r2-elump">―</b></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-h"><span class="card-n">비교</span><span class="card-t">월 연금 차이</span></div>
+    <div class="chart-box" id="r2-chart"></div>
+    <div style="text-align:center;font-size:.82rem;color:var(--mute);margin-top:.8rem;" id="r2-pdiff">―</div>
+  </div>
+  <div class="stat-grid">
+    <div class="stat"><div class="stat-l">명퇴 퇴직수당</div><div class="stat-v coral" id="r2-es">―</div></div>
+    <div class="stat"><div class="stat-l">명예퇴직수당 (명퇴금)</div><div class="stat-v coral" id="r2-mgmt">―</div><div class="stat-n">본봉×68%×0.5×잔여월수</div></div>
+    <div class="stat"><div class="stat-l">정년 일시 합계</div><div class="stat-v jade" id="r2-rlump">―</div><div class="stat-n">퇴직수당</div></div>
+    <div class="stat"><div class="stat-l">명퇴 일시 합계</div><div class="stat-v coral" id="r2-elump2">―</div><div class="stat-n">퇴직수당+명퇴금</div></div>
+  </div>
+  <div class="note" id="r2-note">―</div>
+</div>
+
+<!-- ════ 3. 일시금 vs 연금 ════ -->
+<div class="panel" id="p3">
+  <div class="verdict jade" id="r3-verdict">
+    <div class="verdict-lbl">정년까지 일하면 받게 될 연금일시금</div>
+    <div class="verdict-main" id="r3-main">―</div>
+    <div class="verdict-sub" id="r3-sub">―</div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">선택지</span><span class="card-t">연금 vs 일시금, 한눈에</span></div>
+    <div class="vs">
+      <div class="vs-col r">
+        <div class="vs-tag r">📅 연금으로</div>
+        <div class="vs-big" id="r3-monthly">―</div>
+        <div class="vs-line">매월 평생 (세전)</div>
+        <div class="vs-line">10년 현재가치 <b id="r3-10yr">―</b></div>
+      </div>
+      <div class="vs-col e">
+        <div class="vs-tag e">💰 일시금으로</div>
+        <div class="vs-big" id="r3-lump">―</div>
+        <div class="vs-line" id="r3-lump-pv">한 번에 (전액 일시금)</div>
+        <div class="vs-line">현재가치로 연금 약 <b id="r3-months">―</b>치</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat"><div class="stat-l">퇴직수당 (일시금)</div><div class="stat-v sky" id="r3-sev">―</div><div class="stat-n">연금과 별도로 무조건 받음</div></div>
+    <div class="stat"><div class="stat-l">손익 분기</div><div class="stat-v" id="r3-be">―</div><div class="stat-n">연금개시 후 현재가치 기준</div></div>
+  </div>
+
+  <div class="note" id="r3-note">―</div>
+</div>
+
+<!-- ════ 4. 손익분기·소득공백 ════ -->
+<div class="panel" id="p4">
+  <div class="verdict" id="r4-verdict">
+    <div class="verdict-lbl">퇴직급여 기준 손익분기 나이</div>
+    <div class="verdict-main" id="r4-main">―</div>
+    <div class="verdict-sub" id="r4-sub">―</div>
+  </div>
+
+  <div class="card" style="border-color:rgba(224,120,86,.35)">
+    <div class="card-h"><span class="card-n">기회비용</span><span class="card-t">명퇴하면 포기하는 재직 중 급여</span></div>
+    <div class="vs">
+      <div class="vs-col e">
+        <div class="vs-tag e">➖ 포기하는 급여</div>
+        <div class="vs-big" id="r4-cost-lost">―</div>
+        <div class="vs-line" id="r4-cost-lost-sub">―</div>
+      </div>
+      <div class="vs-col r">
+        <div class="vs-tag r">➕ 대신 받는 명퇴금</div>
+        <div class="vs-big" id="r4-cost-gain">―</div>
+        <div class="vs-line">명예퇴직수당 현재가치</div>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:.84rem;margin-top:.4rem;" id="r4-cost-diff">―</div>
+    <div class="note" id="r4-cost-note">―</div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">주의</span><span class="card-t">연금 지급개시 전 대기기간</span></div>
+    <div id="r4-gap"></div>
+    <div class="note" id="r4-gap-note">―</div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">생애</span><span class="card-t">오늘 가치로 맞춘 퇴직급여 비교</span></div>
+    <div class="vs">
+      <div class="vs-col r">
+        <div class="vs-tag r">🏁 정년까지</div>
+        <div class="vs-big" id="r4-rtotal">―</div>
+        <div class="vs-line">연금+퇴직수당 현재가치 합계</div>
+      </div>
+      <div class="vs-col e">
+        <div class="vs-tag e">✈️ 명예퇴직</div>
+        <div class="vs-big" id="r4-etotal">―</div>
+        <div class="vs-line">연금+퇴직수당+명퇴금 현재가치</div>
+      </div>
+    </div>
+    <div style="text-align:center;font-size:.84rem;margin-top:.4rem;" id="r4-lifediff">―</div>
+    <div class="note" id="r4-alldiff" style="margin-top:.8rem;">―</div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">흐름</span><span class="card-t">명퇴 시 자산 타임라인</span></div>
+    <div id="r4-tl"></div>
+  </div>
+
+  <div class="note" id="r4-note">―</div>
+</div>
+
+<!-- ════ 5. 설정 ════ -->
+<div class="panel" id="p5">
+  <div class="guide">
+    <b>⚙️ 미래를 예측하려면 몇 가지 가정이 필요합니다.</b><br>
+    아래 값은 합리적인 기본값으로 맞춰뒀어요. 그대로 둬도 되고, 본인 생각에 맞게 바꾸면 모든 결과가 실시간으로 다시 계산됩니다.
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">가정</span><span class="card-t">시나리오 설정</span></div>
+
+    <div class="slider-row">
+      <span class="slider-lbl">내 보수 상승률</span>
+      <div class="slider-wrap">
+        <input type="range" id="s-raise" min="0" max="6" step="0.1" value="4.0" oninput="syncSlider();liveRecalc()">
+        <span class="slider-val" id="v-raise">4.0%</span>
+      </div>
+    </div>
+    <p class="set-why">앞으로 새로 적립되는 연금의 개인 기준소득이 오르는 비율입니다. 기본값 <b>4%</b>는 봉급 인상과 호봉 승급을 합친 비교용 가정이지 법정 확정률이 아닙니다. 이미 쌓인 현재 연금액 전체를 이 비율로 불리지 않고 미래 근무분에만 적용합니다.</p>
+
+    <div class="slider-row">
+      <span class="slider-lbl">보수 현가화율</span>
+      <div class="slider-wrap">
+        <input type="range" id="s-revalue" min="0" max="5" step="0.1" value="2.5" oninput="syncSlider();liveRecalc()">
+        <span class="slider-val" id="v-revalue">2.5%</span>
+      </div>
+    </div>
+    <p class="set-why">이미 쌓인 연금 산정기초와 과거 기준소득을 연금 개시 시점 가치로 환산하는 공무원보수인상률 가정입니다. 실제 미래 고시율은 아직 알 수 없으므로 <b>2.5%</b>는 비교용 기본값입니다.</p>
+
+    <div class="slider-row">
+      <span class="slider-lbl">물가 상승률</span>
+      <div class="slider-wrap">
+        <input type="range" id="s-infl" min="0" max="5" step="0.1" value="2.0" oninput="syncSlider();liveRecalc()">
+        <span class="slider-val" id="v-infl">2.0%</span>
+      </div>
+    </div>
+    <p class="set-why">연금의 소비자물가 조정률과 미래 금액을 오늘 구매력으로 할인하는 비율을 같다고 가정합니다. <b>2.0%</b>는 비교용 기본값이며 실제 연도별 물가변동률은 달라집니다.</p>
+
+    <div class="slider-row">
+      <span class="slider-lbl">기대 수명</span>
+      <div class="slider-wrap">
+        <input type="range" id="s-life" min="75" max="100" step="1" value="85" oninput="syncSlider();liveRecalc()">
+        <span class="slider-val" id="v-life">85세</span>
+      </div>
+    </div>
+    <p class="set-why">몇 살까지 연금을 받는지 가정합니다. 손익분기·생애 현재가치의 핵심 변수예요.
+      <b>기본값 85세</b>는 비교용 가정일 뿐이며, 길게 받을수록 연금의 누적액이 커집니다.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">명퇴</span><span class="card-t">명예퇴직 희망 시점</span></div>
+    <div class="f">
+      <input type="date" id="i-early" value="" onchange="liveRecalc()">
+    </div>
+    <p class="set-why" style="margin-top:.7rem;">
+      <b>"내가 이 날짜에 명퇴한다면?"</b>을 가정해 ③ 정년vs명퇴, ⑤ 손익분기 탭을 계산합니다.
+      명퇴 시점에 따라 재직기간·정년 잔여월수·예상 본봉·연금 대기기간이 함께 바뀝니다. 날짜를 바꿔가며 퇴직급여 결과를 비교해 보세요.</p>
+  </div>
+
+  <button class="btn" onclick="calcAll()">이 설정으로 다시 계산 →</button>
+</div>
+
+<!-- ════ 6. 설명서 ════ -->
+<div class="panel" id="p6">
+  <div class="card">
+    <div class="card-h"><span class="card-n">시작</span><span class="card-t">딱 3단계예요</span></div>
+    <p class="note" style="line-height:1.8">
+      <b style="color:var(--jade)">1단계.</b> 공무원연금공단 홈페이지(또는 앱)에서 <b>'내연금보기'</b> 로그인<br>
+      <b style="color:var(--jade)">2단계.</b> 화면에 나온 숫자 몇 개를 <b>① 내 정보</b> 탭에 그대로 옮겨 적기<br>
+      <b style="color:var(--jade)">3단계.</b> 아래 <b>'계산하기'</b> 버튼을 누르면 끝!<br><br>
+      그러면 ② 연금추이 · ③ 정년vs명퇴 · ④ 일시금vs연금 · ⑤ 손익분기 결과가 자동으로 만들어져요. 어렵지 않아요. 천천히 따라오시면 돼요.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">찾기</span><span class="card-t">공단에서 숫자 찾는 길</span></div>
+    <div class="note" style="line-height:1.85">
+      <b style="color:var(--gold-soft)">① 로그인</b><br>
+      포털에 '공무원연금공단' 검색 → 홈페이지 접속 → 간편인증(카카오·네이버 등)이나 공동인증서로 로그인.<br>
+      <span style="color:var(--mute)">모바일은 '공무원연금공단' 앱에서도 똑같이 돼요.</span><br><br>
+      <b style="color:var(--gold-soft)">② 내연금보기 메뉴</b><br>
+      로그인 후 <b>'내연금보기'</b> 또는 <b>'예상퇴직급여 조회'</b> 클릭.<br><br>
+      <b style="color:var(--gold-soft)">③ 상세보기</b><br>
+      <b>'예상퇴직급여 상세보기'</b>를 누르면 연금액·퇴직수당·기준소득월액이 한 화면에 나와요. 이 숫자들을 옮겨 적으면 됩니다.<br><br>
+      <span class="warn">⚠️ 길을 못 찾겠으면 공단 고객센터(1588-4321)에 전화하면 친절히 안내해줘요.</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">입력</span><span class="card-t">어떤 숫자를 적나요</span></div>
+    <div class="note" style="line-height:1.85">
+      <b style="color:var(--jade)">필수 입력값</b><br><br>
+      <b style="color:var(--gold-soft)">· 현재 연금월액</b><br>
+      <span style="color:var(--mute)">'지금 퇴직하면 매달 받을 연금'. 가장 중요해요.</span><br>
+      <b style="color:var(--gold-soft)">· 현재 기준소득월액</b><br>
+      <span style="color:var(--mute)">상세보기에 '기준소득월액'으로 표시된 현재값이에요. '평균기준소득월액'과 혼동하지 마세요.</span><br>
+      <b style="color:var(--gold-soft)">· 재직기간</b><br>
+      <span style="color:var(--mute)">공단 화면의 재직기간 그대로(예: 16년 4개월). 군경력 합산은 이미 포함돼 있어요.</span><br>
+      <b style="color:var(--gold-soft)">· 생년월일</b><br>
+      <span style="color:var(--mute)">연금 받기 시작하는 나이를 계산하는 데 써요.</span><br><br>
+      <b style="color:var(--jade)">선택 입력값</b><br><br>
+      <b style="color:var(--gold-soft)">· 현재 퇴직수당 · 현재 전액일시금</b><br>
+      <span style="color:var(--mute)">입력하면 공단 현재값을 기준점으로 쓰고, 비워두면 현재 기준소득월액과 법정식으로 추정해요.</span><br><br>
+      <b style="color:var(--coral-soft)">명퇴를 따져보려면 추가로</b><br><br>
+      <b style="color:var(--gold-soft)">· 현재 기본급(본봉)</b><br>
+      <span style="color:var(--mute)">급여명세서의 '봉급'(각종 수당 제외한 금액). 명퇴금 계산에 써요.</span><br>
+      <b style="color:var(--gold-soft)">· 명예퇴직 희망일</b><br>
+      <span style="color:var(--mute)">'이 날짜에 그만둔다면?' 가정할 날짜. ③ 정년vs명퇴 탭에서 바꿀 수 있어요.</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">결과</span><span class="card-t">각 탭 읽는 법</span></div>
+    <div class="note" style="line-height:1.85">
+      <b style="color:var(--gold-soft)">② 연금 추이</b><br>
+      해마다 연금이 얼마씩 늘어나는지 그래프로 보여줘요.<br><br>
+      <b style="color:var(--gold-soft)">③ 정년 vs 명퇴</b><br>
+      정년까지 일할 때와 명퇴할 때, 연금·일시금·명퇴금을 나란히 비교해요.<br><br>
+      <b style="color:var(--gold-soft)">④ 일시금 vs 연금</b><br>
+      연금 대신 목돈으로 한 번에 받으면 얼마인지, 오늘 가치 기준 손익분기가 언제인지 보여줘요.<br><br>
+      <b style="color:var(--gold-soft)">⑤ 손익분기·공백</b><br>
+      퇴직급여만 비교한 <b>손익분기 나이</b>와 명퇴 후 연금 받기 전까지 <b>공무원연금 지급이 없는 기간</b>을 알려줘요. 재직 중 급여와 다른 소득은 별도예요.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">원리</span><span class="card-t">왜 공단 현재값을 기준으로 보나</span></div>
+    <p class="note" style="line-height:1.8">
+      이 앱은 <b style="color:var(--jade)">공단이 이미 계산해 둔 현재 연금·일시금·퇴직수당</b>을 출발점으로 삼아요. 미래 연금은 현재 연금액을 짧은 현재 경력으로 나누지 않고, 앞으로 근무하는 달마다 해당 연도의 법정 지급률로 적립되는 금액을 더합니다. <b>임용 시기별 연금 개시연령(1995 이전은 재직 20년↑ 시 퇴직 즉시, 1996~2009는 퇴직연도별 60~65세 경과조치, 2010 이후는 65세)</b>, 연금 10년 수급요건·36년 상한, 퇴직수당 33년 상한, 교사의 2월·8월 학기말 정년일을 구분해 적용합니다.<br><br>
+      즉, 공단 내부 산식을 완전히 재현하는 도구가 아니라 <b>공단 현재값 기반 시뮬레이터</b>입니다. 실제 확정액은 개인별 경력, 기간구분, 소득재분배, 법 개정, 공단 처리 기준에 따라 달라질 수 있어요.
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">계산식</span><span class="card-t">어떤 공식을 쓰나 (공무원연금법)</span></div>
+    <div class="note" style="line-height:1.85">
+      <b style="color:var(--jade)">① 연금</b> — 공단 현재 연금월액 기반 추정<br>
+      <span style="color:var(--mute)">현재 공단 연금월액의 현가화 + Σ(예상 기준소득월액 × 해당 연도 지급률 × 추가 재직월수÷12)</span><br>
+      2016년 1.878%에서 단계적으로 낮아져 2035년 이후 1.7%가 되는 연도별 지급률, 10년 수급요건, 재직 36년 상한과 임용시기별 개시연령을 반영합니다. 현재 공단값에 들어 있는 소득재분배는 유지하지만, 추가 근무분의 미래 소득재분배는 공무원 전체 평균값이 아직 없어 별도로 적용하지 못합니다.<br><br>
+      <b style="color:var(--jade)">② 전액일시금</b> — 시행령 퇴직연금일시금<br>
+      <span style="color:var(--mute)">적용보수 × [재직연수×0.975 + max(재직연수−5, 0)×재직연수×0.0065]</span><br>
+      현재 일시금을 입력하면 그 값을 기준점으로 쓰고, 없으면 현재 기준소득월액에서 법정식으로 추정해요.<br><br>
+      <b style="color:var(--jade)">③ 퇴직수당</b> — 공무원연금법<br>
+      <span style="color:var(--mute)">재직연수 × 기준소득월액 × 법정비율</span><br>
+      법정비율: 1~5년 6.5% / 5~10년 22.75% / 10~15년 29.25% / 15~20년 32.5% / 20년 이상 39%. 재직기간은 최대 33년만 적용합니다.<br><br>
+      <b style="color:var(--jade)">④ 현재가치</b> — 화폐의 시간가치<br>
+      <span style="color:var(--mute)">미래 금액 ÷ (1 + 물가상승률)<sup>남은 연수</sup></span><br>
+      미래에 받을 금액을 <b>오늘의 물가 기준</b>으로 환산한 체감액이에요. 예: 21년 뒤 614만원은 물가 2%로 따지면 오늘의 약 404만원 가치예요. (본인 공단값 기준이라 임용시기·호봉 등 개인 조건이 이미 반영돼 있어요)<br><br>
+      <b style="color:var(--coral-soft)">공통 규칙</b><br>
+      <span style="color:var(--mute)">· 퇴직연금·연금일시금은 <b>최대 36년</b>, 퇴직수당은 <b>최대 33년</b>까지만 재직기간을 반영해요.<br>
+      · 개시연령: <b>1995 이전 임용</b>은 재직 20년↑이면 퇴직과 동시에, <b>1996~2009 임용</b>은 퇴직연도별 60~65세(2033년 이후 65세)로 계산해요.<br>
+      · 미래 보수와 현가화율은 <b>⑥ 설정</b>의 가정값을 적용해요.</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">현재가치</span><span class="card-t">왜 미래 연금이 커 보이나</span></div>
+    <div class="note" style="line-height:1.85">
+      계산 결과의 <b>명목 금액</b>은 미래의 기준소득 상승을 가정한 숫자예요. 다만 늦게 임용되어 현재 재직기간이 짧다고 해서 지급률이 더 커지지는 않습니다. 추가 근무 1개월마다 그 시기의 법정 지급률만큼만 연금이 늘어요.<br><br>
+      그래서 각 결과 옆에 <b style="color:var(--gold-soft)">현재가치</b>를 함께 보여줘요. "지금 돈으로 따지면 얼마인가"를 알 수 있어요.<br><br>
+      <span style="color:var(--mute)">※ 같은 기준소득이라면 재직기간이 긴 사람이 더 많은 연금을 쌓습니다. 늦은 임용자의 결과가 더 크게 보이면 입력한 현재 연금월액·기준소득월액·재직기간이 같은 기준일 값인지 먼저 확인하세요.</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-h"><span class="card-n">정확도</span><span class="card-t">얼마나 믿을 수 있나</span></div>
+    <div class="note" style="line-height:1.85">
+      이 도구의 결과는 <b style="color:var(--jade)">정확한 확정액이 아니라 참고용 범위 추정</b>입니다.<br><br>
+      입력한 공단 현재값이 정확할수록 비교 방향은 좋아지지만, <b>미래 금액</b>은 보수상승률·현가화율·물가·명퇴일·법 개정·개인 이력에 따라 달라집니다. 특히 미래 소득재분배에 필요한 공무원 전체 평균기준소득월액은 아직 존재하지 않는 값이므로 확정 계산할 수 없습니다.<br><br>
+      <span style="color:var(--mute)">· 보수 상승률을 높이면 → 미래 금액 ↑<br>
+      · 물가 상승률을 높이면 → 현재가치 ↓</span><br><br>
+      <b>가장 정확한 값은 언제나 공단 '내연금보기' 기준</b>이에요. 이 앱의 정년·명퇴 비교는 퇴직급여만 다루며 재직 중 급여는 포함하지 않습니다.
+    </div>
+  </div>
+
+  <div class="card" style="border-color:rgba(224,120,86,.3)">
+    <div class="card-h"><span class="card-n" style="background:rgba(224,120,86,.15)">면책</span><span class="card-t">반드시 읽어주세요</span></div>
+    <p class="note" style="line-height:1.8">
+      이 앱은 <b>참고용 추정 도구</b>예요. 공무원연금의 주요 구조를 단순화해 반영하지만, 아래 이유로 <b>실제 수령액과 차이가 날 수 있어요.</b><br><br>
+      <span style="color:var(--mute)">· <b>미래 가정</b>: 보수 상승률·물가·기대수명은 예측값이라, 실제 미래와 다르면 결과도 달라져요.<br>
+      · <b>개시연령 세부</b>: 1995 이전 임용자의 개시 시점은 <b>2000.12.31 당시 재직기간</b> 등 세부 경과조치로 갈릴 수 있어, 이 앱은 '재직 20년↑ 즉시 개시'로 단순화했어요. 정확한 개시일은 공단 확인이 필요해요.<br>
+      · <b>재직상한</b>: 연금·일시금 인정 재직기간 상한은 <b>2016.1.1 전 재직기간에 따라 33~36년</b>으로 개인마다 달라요. 이 앱은 공단 현재값(그 상한이 이미 반영된 값)을 출발점으로 쓰고 미래 근무분만 더하므로, 이미 재직이 긴 경우 영향이 작지만 완전히 일치하진 않아요.<br>
+      · <b>개인 변수</b>: 휴직·정직·승진·호봉 이력, 소득재분배 구간 등 개인 사정은 공단만 정확히 반영해요.<br>
+      · <b>입력값</b>: 공단 화면의 숫자를 잘못 옮기면 결과 전체가 틀어져요. 단위·자릿수를 꼭 확인하세요.<br>
+      · <b>현재가치</b>: 물가 가정에 따라 달라지는 참고 지표예요. 확정 금액이 아니에요.</span><br><br>
+      <b>명예퇴직·재무 결정 같은 중요한 판단 전에는 반드시 공단 '내연금보기'와 상담(1588-4321)으로 한 번 더 확인</b>하세요. 이 앱의 결과로 생긴 어떤 결정·손해에 대해서도 제작자는 책임지지 않아요.<br><br>
+      <span style="color:var(--gold-soft)">※ 이 시뮬레이터는 <b>국립·공립 초중고 교육공무원</b>을 기준으로 단순화했습니다. 맨 위 임용 시기(1995 이전 / 1996~2009 / 2010 이후) 선택에 따라 연금 개시연령이 달라집니다. 사립학교 교사와 대학 교원은 제외합니다.</span><br><br>
+      <a href="https://www.geps.or.kr/bizInformation_pensionBiz_retirementBenefit" target="_blank" rel="noopener">공무원연금공단 퇴직급여 산정 안내</a> ·
+      <a href="https://www.geps.or.kr/bizInformation_pensionBiz_pensionReceipt" target="_blank" rel="noopener">공무원연금공단 연금액 산정 안내</a> ·
+      <a href="https://www.law.go.kr/법령/공무원연금법" target="_blank" rel="noopener">공무원연금법</a> ·
+      <a href="https://www.law.go.kr/법령/공무원연금법시행령" target="_blank" rel="noopener">공무원연금법 시행령</a> ·
+      <a href="https://www.law.go.kr/법령/교육공무원법" target="_blank" rel="noopener">교육공무원법</a> ·
+      <a href="https://www.law.go.kr/법령/공무원명예퇴직수당등지급규정" target="_blank" rel="noopener">명예퇴직수당 지급규정</a>
+    </p>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div class="fwrap">
+    <a class="flink" href="https://www.instagram.com/kimju.zip/"
+       target="_blank" rel="noopener noreferrer" aria-label="인스타그램 kimju.zip">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="2" y="2" width="20" height="20" rx="5.5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+      </svg>
+      kimju.zip
+    </a>
+    <p class="fnote">공무원연금법 · 교육공무원법 기준 참고용 시뮬레이터 · 확정 금액은 공무원연금공단 '내연금보기'가 기준입니다</p>
+  </div>
+</footer>
+
+<script>
+// ═══════════ 유틸 ═══════════
+const $=id=>document.getElementById(id);
+const won=n=>Math.round(n).toLocaleString('ko-KR')+'원';
+const man=n=>{const v=Math.round(n/10000);return (Object.is(v,-0)?0:v).toLocaleString('ko-KR')+'만원';};
+const eok=n=>{const e=n/100000000;return Math.abs(e)>=1?e.toFixed(2)+'억원':man(n);};
+// 현재가치 환산: 미래금액을 물가상승률로 할인 (PV = FV / (1+r)^n)
+//   미래의 명목 금액을 '오늘의 구매력' 기준으로 환산해 체감액을 보여줌
+const presentValue=(future,years,inflRate)=>future/Math.pow(1+inflRate,Math.max(years,0));
+
+function ymToYears(y,m){return y+m/12;}
+const MS_PER_YEAR=365.2425*24*3600*1000;
+const yearFraction=(from,to)=>(to-from)/MS_PER_YEAR;
+const revalueToDate=(amount,from,to,rate)=>amount*Math.pow(1+Math.max(rate,0),Math.max(yearFraction(from,to),0));
+function lastDayOfFebruary(year){return new Date(year,2,0);}
+// 교육공무원법 제47조: 3~8월생은 8.31, 9~12월생은 다음 해 2월 말,
+// 1~2월생은 62세가 되는 해 2월 말에 정년퇴직한다.
+function retireDate(birth){
+  const year=birth.getFullYear()+62;
+  const month=birth.getMonth();
+  if(month<=1) return lastDayOfFebruary(year);
+  if(month<=7) return new Date(year,7,31);
+  return lastDayOfFebruary(year+1);
+}
+function ageAt(birth,date){return date.getFullYear()-birth.getFullYear()-((date.getMonth()<birth.getMonth()||(date.getMonth()==birth.getMonth()&&date.getDate()<birth.getDate()))?1:0);}
+function addYearsClamped(date,years){
+  const year=date.getFullYear()+years;
+  const month=date.getMonth();
+  const day=Math.min(date.getDate(),new Date(year,month+1,0).getDate());
+  return new Date(year,month,day);
+}
+function pensionStartDate(birth){return addYearsClamped(birth,65);}
+// 2009년 이전 임용자 연금지급개시연령 (공무원연금법 2015년 개정 부칙 경과조치)
+function startAgeByRetireYear(retireYear){
+  if(retireYear<=2021) return 60;
+  if(retireYear<=2023) return 61;
+  if(retireYear<=2026) return 62;
+  if(retireYear<=2029) return 63;
+  if(retireYear<=2032) return 64;
+  return 65;
+}
+// 퇴직 시나리오별 개시일·개시연령. group: 'pre1996'(1995 이전) | 'y1996_2009'(1996~2009) | 'y2010_later'(2010 이후)
+function pensionStartInfo(group, birth, retireDt, careerAtRetire){
+  if(group==='y2010_later'){
+    // 2010.1.1 이후 임용: 연금 개시연령 65세 고정
+    return {age:65, date:addYearsClamped(birth,65)};
+  }
+  if(group==='pre1996'){
+    // 1995.12.31 이전 임용: 재직 20년 이상이면 퇴직과 동시에 개시(연령조건 없음)
+    if(careerAtRetire>=20) return {age:ageAt(birth,retireDt), date:new Date(retireDt.getTime())};
+    return {age:65, date:addYearsClamped(birth,65)};
+  }
+  // 1996~2009 임용: 퇴직연도로 개시연령 결정, 그 연령 도달일에 개시(이미 지났으면 즉시)
+  const age=startAgeByRetireYear(retireDt.getFullYear());
+  const byAge=addYearsClamped(birth,age);
+  return {age, date: byAge>retireDt ? byAge : new Date(retireDt.getTime())};
+}
+function addMonthsClamped(date,months){
+  const first=new Date(date.getFullYear(),date.getMonth()+months,1);
+  const day=Math.min(date.getDate(),new Date(first.getFullYear(),first.getMonth()+1,0).getDate());
+  return new Date(first.getFullYear(),first.getMonth(),day);
+}
+function wholeMonthSpan(from,to){
+  if(to<=from) return 0;
+  return Math.max(0,(to.getFullYear()-from.getFullYear())*12+to.getMonth()-from.getMonth());
+}
+function fullMonthSpan(from,to){
+  if(to<=from) return 0;
+  let months=(to.getFullYear()-from.getFullYear())*12+to.getMonth()-from.getMonth();
+  if(to.getDate()<from.getDate()) months--;
+  return Math.max(0,months);
+}
+function formatDate(date){
+  return `${date.getFullYear()}.${String(date.getMonth()+1).padStart(2,'0')}.${String(date.getDate()).padStart(2,'0')}`;
+}
+function yearsMonthsLabel(totalMonths,yearSuffix='년'){
+  const months=Math.max(0,Math.round(totalMonths));
+  const years=Math.floor(months/12);
+  const rest=months%12;
+  return rest?`${years}${yearSuffix} ${rest}개월`:`${years}${yearSuffix}`;
+}
+
+
+// ═══════════ 퇴직급여 참고 추정 ═══════════
+// 공단 현재값을 앵커로 삼아 보수상승률과 재직기간 증가를 반영한다.
+// 공단 내부 산식 전체를 100% 재현하는 코드가 아니므로 결과는 참고용이다.
+
+
+
+// 연도별 재직 1년당 퇴직연금 지급률.
+// 2010~2015년 1.9%, 2016~2035년 단계적 인하, 2035년 이후 1.7%.
+const PENSION_RATE_BY_YEAR={
+  2016:1.878,2017:1.856,2018:1.834,2019:1.812,2020:1.790,
+  2021:1.780,2022:1.770,2023:1.760,2024:1.750,2025:1.740,
+  2026:1.736,2027:1.732,2028:1.728,2029:1.724,2030:1.720,
+  2031:1.716,2032:1.712,2033:1.708,2034:1.704,2035:1.700
+};
+function pensionAccrualRate(year){
+  if(year<=2015) return 0.019;
+  if(year>=2035) return 0.017;
+  return (PENSION_RATE_BY_YEAR[year]||1.7)/100;
+}
+function shiftedMonth(baseDate,offset){
+  return new Date(baseDate.getFullYear(),baseDate.getMonth()+offset,1);
+}
+function accruedRateForPastCareer(curCareer,baseDate){
+  const months=Math.max(0,Math.round(Math.min(curCareer,36)*12));
+  let rateSum=0;
+  for(let m=months-1;m>=0;m--){
+    const d=shiftedMonth(baseDate,-m);
+    rateSum+=pensionAccrualRate(d.getFullYear())/12;
+  }
+  return rateSum;
+}
+
+// 퇴직연금 — 공단 현재 연금월액을 현가화하면서 미래 재직분을 월별로 더한다.
+// 실제 경과기간과 36년 인정기간을 분리해, 상한 도달 뒤에는 신규 적립 없이 현가화만 한다.
+function projectPension(curOfficial,curCareer,targetCareer,raiseR,revalueR,income,baseDate){
+  const actualTarget=Math.max(targetCareer,0);
+  const current=Math.min(Math.max(curCareer,0),36);
+  const target=Math.min(actualTarget,36);
+  if(target<10) return 0;                          // 퇴직연금 최소 재직요건
+  baseDate=baseDate instanceof Date&&!isNaN(baseDate)?baseDate:new Date();
+  if(actualTarget<=curCareer) return current>=10?Math.max(curOfficial,0):0;
+
+  // 10년 미만이라 현재 연금월액이 0인 경우, 기존 재직분은 현재 기준소득월액으로 근사한다.
+  let projected=curOfficial>0
+    ? curOfficial
+    : Math.max(income,0)*accruedRateForPastCareer(current,baseDate);
+  const elapsedMonths=Math.max(0,Math.round((actualTarget-curCareer)*12));
+  const serviceMonths=Math.max(0,Math.round((target-current)*12));
+  const monthlyRevalue=Math.pow(1+Math.max(revalueR,0),1/12);
+  for(let m=1;m<=elapsedMonths;m++){
+    projected*=monthlyRevalue;
+    if(m>serviceMonths||income<=0) continue;
+    const d=shiftedMonth(baseDate,m);
+    const elapsedYears=(m-0.5)/12;
+    const futureIncome=income*Math.pow(1+raiseR,elapsedYears);
+    projected+=futureIncome*pensionAccrualRate(d.getFullYear())/12;
+  }
+  return projected;
+}
+
+// 퇴직수당 — 최종기준소득월액 × 인정재직연수 × 법정비율
+//   법정비율: 1~5년 6.5%, 5~10년 22.75%, 10~15년 29.25%, 15~20년 32.5%, 20년~ 39%
+//   인정재직연수는 33년 상한. 현재 공단값이 있으면 현재 기준소득을 역산해 앵커로 쓴다.
+function sevRate(years){
+  if(years<5)  return 0.065;
+  if(years<10) return 0.2275;
+  if(years<15) return 0.2925;
+  if(years<20) return 0.325;
+  return 0.39;
+}
+function projectSeverance(curSeverance,curCareer,targetCareer,raiseR,income){
+  const actualTarget=Math.max(targetCareer,0);
+  const service=Math.min(actualTarget,33);
+  if(service<1) return 0;
+  const currentService=Math.min(Math.max(curCareer,0),33);
+  const currentFactor=currentService*sevRate(currentService);
+  const baseIncome=curSeverance>0&&currentFactor>0?curSeverance/currentFactor:Math.max(income,0);
+  if(baseIncome<=0) return 0;
+  const elapsed=Math.max(actualTarget-curCareer,0);
+  const finalIncome=baseIncome*Math.pow(1+Math.max(raiseR,0),elapsed);
+  return finalIncome*service*sevRate(service);
+}
+
+// 전액일시금 — 공무원연금법 시행령 퇴직연금일시금 공식 (곡선표 없음)
+//   일시금 = 적용보수 × [재직연수×0.975 + (재직연수-5)×재직연수×0.0065]
+//   현재 일시금이 있으면 앵커로 쓰고, 없으면 현재 기준소득월액에서 법정식으로 추정한다.
+function lumpFactor(years){
+  const y=Math.min(years,36);
+  return y*0.975 + Math.max(y-5,0)*y*0.0065;
+}
+// curLump: 공단 현재 전액일시금, raiseR: 적용보수 연 성장률(봉급+호봉)
+function projectLumpsum(curLump,curCareer,targetCareer,raiseR,income){
+  const actualTarget=Math.max(targetCareer,0);
+  const targetFactor=lumpFactor(actualTarget);
+  if(targetFactor<=0) return 0;
+  const currentFactor=lumpFactor(curCareer);
+  const baseIncome=curLump>0&&currentFactor>0?curLump/currentFactor:Math.max(income,0);
+  if(baseIncome<=0) return 0;
+  const elapsed=Math.max(actualTarget-curCareer,0);
+  const finalIncome=baseIncome*Math.pow(1+Math.max(raiseR,0),elapsed);
+  return finalIncome*targetFactor;
+}
+
+// 명예퇴직수당 — 월봉급액(본봉×68%) × 정년 잔여월수별 법정 구간식.
+function managementAllowance(basepay,remainMonths){
+  if(basepay<=0||remainMonths<12) return 0;
+  const monthlySalary=basepay*0.68;
+  if(remainMonths<=60) return monthlySalary*0.5*remainMonths;
+  if(remainMonths<=120) return monthlySalary*0.5*(60+(remainMonths-60)/2);
+  return monthlySalary*0.5*90;
+}
+
+// ═══════════ SVG 차트 ═══════════
+function lineChart(id,series,opts){
+  opts=opts||{};
+  // 방어: 데이터가 비었거나 유효하지 않으면 빈 차트
+  if(!series||!series.length||!series[0].points||!series[0].points.length){
+    return '<svg viewBox="0 0 340 170" style="width:100%"></svg>';
+  }
+  // 유효하지 않은 점(NaN) 제거
+  series=series.map(s=>({...s,points:s.points.filter(p=>p&&isFinite(p.x)&&isFinite(p.y))}))
+               .filter(s=>s.points.length>0);
+  if(!series.length) return '<svg viewBox="0 0 340 170" style="width:100%"></svg>';
+  const W=340,H=170,pad={l:10,r:14,t:16,b:26};
+  let allY=[];series.forEach(s=>s.points.forEach(p=>allY.push(p.y)));
+  const allX=series[0].points.map(p=>p.x);
+  const xMin=Math.min(...allX),xMax=Math.max(...allX);
+  const yMin=0,yMax=Math.max(...allY)*1.12;
+  const sx=x=>pad.l+(x-xMin)/(xMax-xMin||1)*(W-pad.l-pad.r);
+  const sy=y=>H-pad.b-(y-yMin)/(yMax-yMin||1)*(H-pad.t-pad.b);
+  let svg='';
+  series.forEach((s,si)=>{
+    let path='',area='';
+    s.points.forEach((p,i)=>{path+=(i?'L':'M')+sx(p.x).toFixed(1)+' '+sy(p.y).toFixed(1)+' ';});
+    area='M'+sx(s.points[0].x).toFixed(1)+' '+(H-pad.b)+' '+path.slice(1)+'L'+sx(s.points[s.points.length-1].x).toFixed(1)+' '+(H-pad.b)+' Z';
+    if(s.fill!==false)svg+='<path d="'+area+'" fill="url(#grad'+id+si+')"/>';
+    svg+='<path d="'+path+'" fill="none" stroke="'+s.color+'" stroke-width="2" stroke-linejoin="round"/>';
+    const last=s.points[s.points.length-1];
+    svg+='<circle cx="'+sx(last.x).toFixed(1)+'" cy="'+sy(last.y).toFixed(1)+'" r="3" fill="'+s.color+'"/>';
+    if(s.label)svg+='<text x="'+(sx(last.x)-4).toFixed(1)+'" y="'+(sy(last.y)-7).toFixed(1)+'" fill="'+s.color+'" font-size="9.5" font-weight="700" text-anchor="end">'+s.label+'</text>';
+  });
+  // x라벨
+  let xlabels='';const pts=series[0].points;
+  for(let i=0;i<pts.length;i+=Math.max(1,Math.ceil(pts.length/5))){
+    xlabels+='<text x="'+sx(pts[i].x).toFixed(1)+'" y="'+(H-9)+'" fill="#5a6776" font-size="8.5" text-anchor="middle">'+(opts.xfmt?opts.xfmt(pts[i].x):pts[i].x)+'</text>';
+  }
+  // 교차점 마커
+  let cross='';
+  if(opts.crossX!=null){
+    const cx=sx(opts.crossX);
+    cross='<line x1="'+cx.toFixed(1)+'" y1="'+pad.t+'" x2="'+cx.toFixed(1)+'" y2="'+(H-pad.b)+'" stroke="#d4a843" stroke-width="1" stroke-dasharray="3 3" opacity="0.6"/>';
+  }
+  let defs='<defs>';
+  series.forEach((s,si)=>{defs+='<linearGradient id="grad'+id+si+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="'+s.color+'" stop-opacity="0.22"/><stop offset="100%" stop-color="'+s.color+'" stop-opacity="0"/></linearGradient>';});
+  defs+='</defs>';
+  return '<svg viewBox="0 0 '+W+' '+H+'" style="width:100%;height:auto;">'+defs+cross+svg+xlabels+'</svg>';
+}
+
+// ═══════════ 입력 수집 ═══════════
+function getInputs(){
+  // 안전 파서: 빈값/NaN → 기본값, 범위 클램프
+  const num=(id,def,min,max)=>{
+    let v=parseFloat($(id).value);
+    if(!isFinite(v)) v=def;
+    if(min!==undefined) v=Math.max(v,min);
+    if(max!==undefined) v=Math.min(v,max);
+    return v;
+  };
+  // 생년: 유효하지 않으면 기본값
+  let birth=new Date($('i-birth').value);
+  if(isNaN(birth.getTime())) birth=new Date('1985-04-12');
+  // 명퇴일은 선택 입력이지만, 비어 있으면 숨은 기본값으로 비교하지 않는다.
+  const earlyRaw=$('i-early').value.trim();
+  let early=new Date(earlyRaw);
+  const hasEarly=earlyRaw!==''&&!isNaN(early.getTime());
+  if(!hasEarly) early=new Date();
+  const group=$('i-group')?$('i-group').value:''; // 임용시기 그룹(미선택 시 빈값)
+  return {
+    group,
+    pension:num('i-pension',0,0),
+    severance:num('i-severance',0,0),
+    hasSeverance:isFinite(parseFloat($('i-severance').value)) && parseFloat($('i-severance').value)>0,
+    lump:num('i-lump',0,0),
+    hasLump:isFinite(parseFloat($('i-lump').value)) && parseFloat($('i-lump').value)>0,
+    income:num('i-income',0,0),
+    cy:num('i-cy',0,0,40), cm:num('i-cm',0,0,11),
+    birth,
+    basepay:num('i-basepay',0,0),
+    hasBasepay:isFinite(parseFloat($('i-basepay').value)) && parseFloat($('i-basepay').value)>0,
+    raise:num('s-raise',4.0,0,10)/100,
+    revalue:num('s-revalue',2.5,0,10)/100,
+    infl:num('s-infl',2.0,0,10)/100,
+    life:num('s-life',85,60,110),
+    early,hasEarly,
+  };
+}
+
+function syncSlider(){
+  $('v-raise').textContent=(+$('s-raise').value).toFixed(1)+'%';
+  $('v-revalue').textContent=(+$('s-revalue').value).toFixed(1)+'%';
+  $('v-infl').textContent=(+$('s-infl').value).toFixed(1)+'%';
+  $('v-life').textContent=$('s-life').value+'세';
+}
+
+// 임용시기 세그먼트 선택
+function setGroup(g){
+  const inp=$('i-group'); if(inp) inp.value=g;
+  document.querySelectorAll('#seg-group .seg-btn').forEach(b=>b.classList.toggle('on', b.dataset.g===g));
+  if(window._calc) calcAll(true);
+}
+
+// 설정 슬라이더 조정 시 이미 계산했으면 실시간 갱신
+function liveRecalc(){
+  if(window._calc) calcAll(true);
+}
+
+function go(i){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab')[i].classList.add('on');
+  $('p'+i).classList.add('on');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ═══════════ 메인 계산 ═══════════
+function calcAll(silent){
+  const I=getInputs();
+  // 필수값(현재연금·현재기준소득·생년월일·재직기간) 미입력 시 계산 중단
+  const hasGroup=I.group==='pre1996'||I.group==='y1996_2009'||I.group==='y2010_later';
+  if(!hasGroup){
+    if(!silent){ alert('먼저 맨 위에서 임용 시기(1995 이전 / 1996~2009 / 2010 이후)를 선택해 주세요.\n\n연금 개시연령이 이 선택으로 달라집니다.'); window.scrollTo({top:0,behavior:'smooth'}); }
+    return;
+  }
+  const hasPension=$('i-pension').value.trim()!=='';
+  const hasIncome=$('i-income').value.trim()!==''&&I.income>0;
+  const hasBirth=$('i-birth').value.trim()!=='';
+  const hasCareer=$('i-cy').value.trim()!=='';
+  if(!hasPension||!hasIncome||!hasBirth||!hasCareer){
+    if(!silent){
+      alert('먼저 ① 내 정보 탭에서 현재 연금액, 현재 기준소득월액, 생년월일, 재직기간을 입력해 주세요.\n\n공단 \'내연금보기\'의 숫자를 그대로 옮겨 적으면 됩니다.');
+      go(0);
+    }
+    return;
+  }
+  const curCareer=ymToYears(I.cy,I.cm);
+  const rd=retireDate(I.birth);
+  const today=new Date();
+  if(rd<=today){
+    if(!silent){
+      alert('입력한 생년월일 기준 정년일이 이미 지났습니다. 생년월일을 다시 확인해 주세요.');
+      go(0);
+    }
+    return;
+  }
+
+  // 정년 시 경력
+  const toRetire=yearFraction(today,rd);
+  const retCareerRaw=curCareer+toRetire;
+
+  // ── 명퇴 유효성 (개시일 계산에 필요하므로 먼저 산출) ──
+  const toEarly=yearFraction(today,I.early);
+  const earlyValid=I.hasEarly&&(I.early>today)&&(I.early<rd); // 명퇴는 입력한 오늘 이후~정년 이전 날짜만 유효
+  const earlyCareer=curCareer+Math.max(toEarly,0);
+
+  // ── 시나리오별 연금 개시일·개시연령 (2009년 이전 임용은 퇴직연도로 갈림) ──
+  const stopInfo=pensionStartInfo(I.group,I.birth,today,curCareer);
+  const retInfo=pensionStartInfo(I.group,I.birth,rd,retCareerRaw);
+  const earlyInfo=earlyValid?pensionStartInfo(I.group,I.birth,I.early,earlyCareer):retInfo;
+  const stopStartDate=stopInfo.date, retStartDate=retInfo.date, earlyStartDate=earlyInfo.date;
+  const normalPensionDate=retStartDate; // 하위호환(정년 개시일)
+
+  // ── 오늘 퇴직 및 정년 연금: 각 시나리오의 개시일 시점 금액으로 맞춘다. ──
+  const stopPensionAtRetirement=projectPension(I.pension,curCareer,curCareer,I.raise,I.revalue,I.income,today);
+  const stopPension=revalueToDate(stopPensionAtRetirement,today,stopStartDate,I.revalue);
+  const retPensionAtRetirement=projectPension(I.pension,curCareer,retCareerRaw,I.raise,I.revalue,I.income,today);
+  const retPension=revalueToDate(retPensionAtRetirement,rd,retStartDate,I.revalue);
+  const retSeverance=projectSeverance(I.severance,curCareer,retCareerRaw,I.raise,I.income);
+  const retLumpsum=projectLumpsum(I.lump,curCareer,retCareerRaw,I.raise,I.income);
+
+  // ── 명퇴 연금 ──
+  const earlyPensionAtRetirement=projectPension(I.pension,curCareer,earlyCareer,I.raise,I.revalue,I.income,today);
+  const earlyPension=revalueToDate(earlyPensionAtRetirement,I.early,earlyStartDate,I.revalue);
+  const earlySeverance=projectSeverance(I.severance,curCareer,earlyCareer,I.raise,I.income);
+
+  // 명퇴금 (명예퇴직수당) — 공무원보수규정 별표11
+  // 월봉급액 = 명퇴시점 본봉(호봉승급 반영) × 68%, 정년잔여 구간별
+  const remainMonths=earlyValid?wholeMonthSpan(I.early,rd):0;
+  // 명퇴 시점 본봉은 현재 본봉에 사용자가 정한 보수상승 가정을 적용한다.
+  const basepayAtEarly=I.basepay*Math.pow(1+I.raise,Math.max(toEarly,0));
+  const earlyCareerYears=earlyCareer; // 명퇴 시 총경력
+  const mgmtEligible=earlyValid&&remainMonths>=12&&earlyCareerYears>=20;
+  const mgmtKnown=!mgmtEligible||I.hasBasepay;
+  // 요건 미충족 또는 본봉 미입력일 때는 금액을 임의 추정하지 않는다.
+  const mgmt=mgmtEligible&&I.hasBasepay?managementAllowance(basepayAtEarly,remainMonths):0;
+  const mgmtMonths=remainMonths; // 표시용
+
+  // 명퇴로 포기하는 재직 중 기준소득 — 명퇴 다음 달부터 정년일까지 월별 합계.
+  //   손익분기는 퇴직급여만 비교하므로 이 금액이 빠진다. 별도로 계산해 함께 보여준다.
+  let forgoneNominal=0, forgonePV=0;
+  if(earlyValid&&I.income>0){
+    for(let m=1;m<=remainMonths;m++){
+      const d=shiftedMonth(I.early,m);
+      const yrs=Math.max(yearFraction(today,d),0);
+      const pay=I.income*Math.pow(1+I.raise,yrs);
+      forgoneNominal+=pay;
+      forgonePV+=pay/Math.pow(1+I.infl,yrs);
+    }
+  }
+
+  // 시나리오별 개시연령 (2009년 이전 임용 경과조치)
+  const retStartAge=retInfo.age;
+  const earlyStartAge=earlyInfo.age;
+
+  window._calc={I,curCareer,rd,today,normalPensionDate,stopStartDate,retStartDate,earlyStartDate,retCareerRaw,
+    stopPensionAtRetirement,stopPension,retPensionAtRetirement,retPension,retSeverance,retLumpsum,toEarly,earlyCareer,
+    earlyPensionAtRetirement,earlyPension,earlySeverance,mgmt,remainMonths,earlyValid,mgmtEligible,mgmtKnown,
+    retStartAge,earlyStartAge,basepayAtEarly,forgoneNominal,forgonePV};
+
+  renderTab1();renderTab2();renderTab3();renderTab4();
+  if(!silent) go(1);
+}
+
+// ── 탭1: 연금 추이 ──
+function renderTab1(){
+  const C=window._calc,I=C.I;
+  const pensionDiff=C.retPension-C.stopPension;
+  const retPensionPV=presentValue(C.retPension,yearFraction(C.today,C.retStartDate),I.infl);
+  $('r1-main').textContent=won(C.retPension)+' / 월';
+  $('r1-sub').textContent=`${C.retStartAge}세 개시 명목액 · 오늘 가치 약 ${man(retPensionPV)} · ${formatDate(C.rd)} 정년`;
+  $('r1-now').textContent=won(C.stopPension);
+  $('r1-ret').textContent=won(C.retPension);
+  {
+    const yrs=yearFraction(C.today,C.retStartDate);
+    const pv=presentValue(C.retPension, yrs, I.infl);
+    $('r1-ret-pv').innerHTML=`월 연금 · <span style="color:var(--gold-soft)">현재가치 ${man(pv)}</span>`;
+  }
+  $('r1-rdate').textContent=formatDate(C.rd);
+  $('r1-rcareer').textContent=C.retCareerRaw.toFixed(1);
+
+  // 각 퇴직 시나리오를 해당 시나리오의 연금개시 시점 금액으로 맞춰 비교한다.
+  const pts=[];
+  const targets=[C.curCareer];
+  for(let c=Math.ceil(C.curCareer);c<C.retCareerRaw;c++) targets.push(c);
+  targets.push(C.retCareerRaw);
+  [...new Set(targets.map(v=>v.toFixed(6)))].map(Number).forEach(c=>{
+    const atRetirement=Math.abs(c-C.retCareerRaw)<0.000001;
+    const atCurrent=Math.abs(c-C.curCareer)<0.000001;
+    const scenarioDate=atRetirement?C.rd:atCurrent?C.today:addMonthsClamped(C.today,Math.round((c-C.curCareer)*12));
+    const startDate=pensionStartInfo(I.group,I.birth,scenarioDate,c).date;
+    const atExit=projectPension(I.pension,C.curCareer,c,I.raise,I.revalue,I.income,C.today);
+    const atStart=revalueToDate(atExit,scenarioDate,startDate,I.revalue);
+    pts.push({x:c,y:atStart});
+  });
+  if(pts.length===1){
+    pts.push({x:C.retCareerRaw,y:C.retPension});
+  }
+  $('r1-chart').innerHTML=lineChart('t1',[{points:pts,color:'#5bb98c',label:man(C.retPension)}],
+    {xfmt:x=>(Number.isInteger(x)?x.toFixed(0):x.toFixed(1))+'년'});
+
+  $('r1-note').innerHTML=`입력한 공단 현재 연금월액은 <b>${won(I.pension)}</b>입니다. 위 비교는 지금 퇴직하는 경우와 정년 퇴직하는 경우를 각각 <b>연금개시 시점</b>(정년 시 ${C.retStartAge}세) 금액으로 맞췄고, 정년 재직에 따른 차이는 월 <b>${man(pensionDiff)}</b>으로 추정됩니다. 보수상승 ${(I.raise*100).toFixed(1)}%, 현가화 ${(I.revalue*100).toFixed(1)}% 가정이며 미래 근무분만 해당 연도의 법정 지급률로 월별 적립합니다. <span class="warn">재직 36년에 도달하면 신규 연금 적립은 멈추고 이후에는 현가화만 적용</span>합니다.`;
+}
+
+// ── 탭2: 정년 vs 명퇴 ──
+function renderTab2(){
+  const C=window._calc,I=C.I;
+  const sevTxt = v => won(v);
+  const mgmtTxt=!C.earlyValid?'날짜 확인':!C.mgmtEligible?'0원':!C.mgmtKnown?'본봉 미입력':won(C.mgmt);
+  $('r2-rp').textContent=won(C.retPension);
+  $('r2-rs').textContent=sevTxt(C.retSeverance);
+  const eLump=C.earlySeverance+C.mgmt;
+  $('r2-rlump').textContent=sevTxt(C.retSeverance);
+  if(!C.earlyValid){
+    $('r2-ep').textContent='―';
+    $('r2-elump').textContent='―';
+    $('r2-es').textContent='―';
+    $('r2-mgmt').textContent='―';
+    $('r2-elump2').textContent='―';
+    $('r2-pdiff').textContent='명퇴 희망일을 입력하면 비교합니다';
+    $('r2-chart').innerHTML='<div style="text-align:center;padding:2.2rem 0;color:var(--mute);font-size:.86rem;">명퇴 희망일 입력 전</div>';
+    $('r2-note').innerHTML=I.hasEarly
+      ?`<span style="color:var(--coral-soft)">명퇴 희망일이 오늘 이전이거나 정년 이후입니다.</span> ⑥ 설정 탭에서 <b>오늘~정년 사이 날짜</b>로 바꿔주세요.`
+      :`⑥ 설정 탭에서 <b>명퇴 희망일</b>을 입력해 주세요. 날짜를 비워두면 임의의 기본 날짜로 계산하지 않습니다.`;
+    return;
+  }
+
+  $('r2-ep').textContent=won(C.earlyPension);
+  $('r2-elump').textContent=C.mgmtKnown?won(eLump):'퇴직수당 + 미입력';
+  $('r2-es').textContent=sevTxt(C.earlySeverance);
+  $('r2-mgmt').textContent=mgmtTxt;
+  $('r2-elump2').textContent=C.mgmtKnown?won(eLump):'계산 불가';
+
+  const pDiff=C.retPension-C.earlyPension;
+  $('r2-pdiff').innerHTML=`정년까지 일하면 명퇴보다 <b style="color:var(--jade)">월 ${man(pDiff)}</b> 더 받습니다`;
+
+  // 바 차트
+  const mx=Math.max(C.retPension,C.earlyPension,1);
+  $('r2-chart').innerHTML=`
+    <div style="padding:.3rem 0;">
+      <div style="display:flex;justify-content:space-between;font-size:.76rem;color:var(--mute);margin-bottom:.3rem;"><span>🏁 정년 연금</span><span style="font-family:'Space Grotesk',sans-serif">${won(C.retPension)}</span></div>
+      <div style="height:9px;background:var(--surface2);border-radius:5px;overflow:hidden;margin-bottom:.9rem;"><div style="height:100%;width:${C.retPension/mx*100}%;background:var(--jade);border-radius:5px;transition:width .8s;"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:.76rem;color:var(--mute);margin-bottom:.3rem;"><span>✈️ 명퇴 연금</span><span style="font-family:'Space Grotesk',sans-serif">${won(C.earlyPension)}</span></div>
+      <div style="height:9px;background:var(--surface2);border-radius:5px;overflow:hidden;"><div style="height:100%;width:${C.earlyPension/mx*100}%;background:var(--coral);border-radius:5px;transition:width .8s;"></div></div>
+    </div>`;
+
+  if(C.mgmtEligible&&!C.mgmtKnown){
+    $('r2-note').innerHTML=`<span style="color:var(--coral-soft)">명예퇴직수당 계산에 현재 기본급(본봉)이 필요합니다.</span> ① 내 정보에 급여명세서의 본봉을 입력해야 명퇴 일시금과 손익분기를 비교할 수 있습니다. 퇴직수당은 ${I.hasSeverance?'입력한 공단 현재값':'현재 기준소득월액 법정식'}을 기준으로 추정했습니다.`;
+  }else if(!C.mgmtEligible){
+    $('r2-note').innerHTML=`선택한 날짜는 명예퇴직수당 계산요건인 <b>재직 20년 이상·정년 잔여기간 1년 이상</b> 중 하나를 충족하지 않아 명퇴금을 0원으로 두었습니다. 이 경우 표는 명예퇴직수당 없는 조기퇴직 비교입니다. 실제 명퇴 자격과 선발 여부는 소속 교육청 공고를 확인해야 합니다.`;
+  }else{
+    $('r2-note').innerHTML=`명퇴 시 받는 <b style="color:var(--coral-soft)">명퇴금 ${man(C.mgmt)}</b>은 명퇴 시점 예상 본봉과 정년 잔여월수의 법정 구간식으로 계산했습니다. 월 연금은 정년 시나리오보다 <b>${man(pDiff)} 적게</b> 추정됩니다. 퇴직수당은 ${I.hasSeverance?'입력한 공단 현재값':'현재 기준소득월액 법정식'}을 기준으로 계산했으며, 실제 명퇴 선발·예산·세금은 반영하지 않았습니다.`;
+  }
+}
+
+// ── 탭3: 일시금 vs 연금 ──
+function renderTab3(){
+  const C=window._calc,I=C.I;
+  const monthly=C.retPension;
+  const lumpsum=C.retLumpsum;
+  const hasLump=lumpsum>0;
+  const toStart=yearFraction(C.today,C.normalPensionDate);
+  const toRetire=yearFraction(C.today,C.rd);
+  const monthlyPV=presentValue(monthly,toStart,I.infl);
+  const annualPensionPV=monthlyPV*12;
+  const lumpPV=hasLump?presentValue(lumpsum,toRetire,I.infl):0;
+  const canCompare=hasLump&&annualPensionPV>0;
+  const beYears=canCompare?lumpPV/annualPensionPV:0;
+
+  $('r3-main').textContent=hasLump?won(lumpsum):'계산 불가';
+  $('r3-sub').textContent=hasLump
+    ? `${I.hasLump?'입력한 공단 현재 일시금':'현재 기준소득월액과 법정식'} 기준 추정 · 퇴직수당 별도`
+    : '재직기간과 기준소득월액을 확인해 주세요';
+
+  $('r3-monthly').textContent=won(monthly);
+  $('r3-10yr').textContent=annualPensionPV>0?won(annualPensionPV*10):'수급요건 미충족';
+  $('r3-lump').textContent=hasLump?won(lumpsum):'계산 불가';
+  $('r3-lump-pv').innerHTML=hasLump
+    ? `정년 퇴직 시 수령 · <span style="color:var(--gold-soft)">오늘 가치 ${eok(lumpPV)}</span>`
+    : '전액일시금 계산 불가';
+  $('r3-months').textContent=canCompare?`${beYears.toFixed(1)}년`:'―';
+  $('r3-sev').textContent=won(C.retSeverance);
+  $('r3-be').textContent=canCompare?`${beYears.toFixed(1)}년`:'―';
+
+  const sevBasis=I.hasSeverance?'입력한 공단 현재 퇴직수당':'현재 기준소득월액 법정식';
+  const sevLine=`<b>퇴직수당 ${won(C.retSeverance)}</b>은 ${sevBasis} 기준 추정이며 연금·일시금 선택과 별도로 지급됩니다.`;
+  if(!canCompare){
+    $('r3-note').innerHTML=`퇴직연금 최소 재직요건 10년을 충족하지 못하면 월 연금과 전액일시금을 같은 방식으로 비교할 수 없습니다. 입력한 재직기간을 확인해 주세요.<br><br>${sevLine}`;
+  }else{
+    $('r3-note').innerHTML=`전액일시금은 정년 퇴직 때 먼저 받고, 연금은 개시연령(${C.retStartAge}세)부터 받으므로 두 금액을 모두 <b>오늘의 구매력</b>으로 환산했습니다. 이 기준에서 일시금은 연금 약 <b>${beYears.toFixed(1)}년치</b>입니다. 이는 단순 손익분기일 뿐 어느 선택이 무조건 유리하다는 뜻은 아닙니다. <span class="warn">세금·연금 인상방식·일시금 투자수익·건강과 자금수요는 제외</span>했습니다.<br><br>${sevLine}`;
+  }
+}
+
+// ── 탭4: 손익분기·소득공백 ──
+function renderTab4(){
+  const C=window._calc,I=C.I;
+  const comparisonReady=C.earlyValid&&C.mgmtKnown;
+  // 공무원연금은 매년 물가상승률만큼 인상된다(공무원연금법 제35조). 오늘 구매력(현재가치)으로 보면
+  // 명목 인상(×(1+π)^t)과 물가 할인(÷(1+π)^t)이 상쇄되어, 개시 이후 매월 연금의 현재가치는 일정하다.
+  // 따라서 각 시나리오 연금은 '개시시점 현재가치'를 상수로 두고 수령 개월수만큼 누적한다.
+  const gapStartDate=C.earlyValid?C.earlyStartDate:C.retStartDate; // 명퇴 연금 개시일
+  const retStartAgeM=Math.round(fullMonthSpan(I.birth,C.retStartDate));
+  const earlyStartAgeM=C.earlyValid?Math.round(fullMonthSpan(I.birth,gapStartDate)):retStartAgeM;
+  const retLumpPV=presentValue(C.retSeverance,yearFraction(C.today,C.rd),I.infl);
+  const earlyLumpPV=presentValue(C.earlySeverance+C.mgmt,yearFraction(C.today,I.early),I.infl);
+  const retMonthPV=presentValue(C.retPension,yearFraction(C.today,C.retStartDate),I.infl);   // 물가연동 → 매월 일정
+  const earlyMonthPV=presentValue(C.earlyPension,yearFraction(C.today,gapStartDate),I.infl);
+  const lifeAgeM=Math.round(I.life*12);
+  const maxAgeM=Math.max(110*12,lifeAgeM);
+  const cumAtAge=a=>({
+    ret:retLumpPV+retMonthPV*Math.max(0,a-retStartAgeM),
+    early:earlyLumpPV+earlyMonthPV*Math.max(0,a-earlyStartAgeM)
+  });
+  let beAgeM=null;
+  for(let a=Math.min(retStartAgeM,earlyStartAgeM);a<=maxAgeM;a++){
+    const t=cumAtAge(a);
+    // 손익분기 = 이후로 계속 정년이 앞서는 첫 나이(다중교차 시 조기 오판 방지 — 뒤집히면 리셋)
+    if(comparisonReady){ if(t.ret>=t.early){if(beAgeM===null)beAgeM=a;} else beAgeM=null; }
+  }
+  const lifeTotals=cumAtAge(Math.max(lifeAgeM,Math.min(retStartAgeM,earlyStartAgeM)));
+  let retTotal=lifeTotals.ret, earlyTotal=lifeTotals.early;
+  if(lifeAgeM<Math.min(retStartAgeM,earlyStartAgeM)){retTotal=retLumpPV;earlyTotal=earlyLumpPV;} // 수명<개시 방어
+  const beAgeLabel=beAgeM===null?'―':yearsMonthsLabel(beAgeM,'세');
+  const beWithinLife=beAgeM!==null&&beAgeM<=I.life*12;
+  const beDate=beAgeM===null?null:addMonthsClamped(I.birth,beAgeM);
+
+  if(!C.earlyValid){
+    $('r4-verdict').className='verdict coral';
+    $('r4-main').textContent='명퇴일 확인';
+    $('r4-sub').textContent='명퇴 희망일을 오늘 이후이면서 정년일 이전으로 설정해야 비교할 수 있습니다.';
+  }else if(!C.mgmtKnown){
+    $('r4-verdict').className='verdict coral';
+    $('r4-main').textContent='본봉 입력 필요';
+    $('r4-sub').textContent='명예퇴직수당이 빠진 0원 비교를 하지 않습니다. 현재 기본급을 입력해 주세요.';
+  }else if(beAgeM!==null){
+    $('r4-verdict').className='verdict '+(beWithinLife?'jade':'coral');
+    $('r4-main').textContent=beAgeLabel;
+    $('r4-sub').innerHTML=`연금·퇴직수당·명퇴금만 비교하면 이때부터 정년 시나리오가 앞섭니다 (기대수명 가정 ${I.life}세). <b>재직 중 급여는 빠진 숫자</b>이니 아래 기회비용 카드를 반드시 함께 보세요.`;
+  }else{
+    $('r4-verdict').className='verdict coral';
+    $('r4-main').textContent='110세까지 미역전';
+    $('r4-sub').textContent='입력 가정에서는 퇴직급여 현재가치만으로 정년 시나리오가 명퇴 시나리오를 추월하지 않습니다.';
+  }
+
+  const earlyAgeLabel=yearsMonthsLabel(fullMonthSpan(I.birth,I.early),'세');
+  const gapMonths=C.earlyValid?fullMonthSpan(I.early,gapStartDate):0;
+  const gapLabel=yearsMonthsLabel(gapMonths);
+  const gapEl=$('r4-gap');
+  if(!C.earlyValid){
+    gapEl.innerHTML=`<div style="text-align:center;padding:1rem;color:var(--coral-soft);font-size:.9rem;">명퇴 희망일을 먼저 수정해 주세요.</div>`;
+    $('r4-gap-note').textContent='유효한 명퇴일이 있어야 연금개시 전 대기기간을 계산할 수 있습니다.';
+  }else if(gapMonths>0){
+    gapEl.innerHTML=`
+      <div style="display:flex;align-items:center;gap:.8rem;padding:.5rem 0;">
+        <div style="flex:1;text-align:center;background:var(--bg);border-radius:9px;padding:.7rem;">
+          <div style="font-size:.7rem;color:var(--faint)">명퇴 나이</div>
+          <div style="font-family:'Space Grotesk';font-size:1.08rem;font-weight:700;color:var(--coral-soft)">${earlyAgeLabel}</div>
+        </div>
+        <div style="font-size:1.4rem;color:var(--coral)">→</div>
+        <div style="flex:1;text-align:center;background:rgba(224,120,86,.1);border:1px solid rgba(224,120,86,.3);border-radius:9px;padding:.7rem;">
+          <div style="font-size:.7rem;color:var(--coral-soft)">연금 대기</div>
+          <div style="font-family:'Space Grotesk';font-size:1.08rem;font-weight:700;color:var(--coral)">${gapLabel}</div>
+        </div>
+        <div style="font-size:1.4rem;color:var(--coral)">→</div>
+        <div style="flex:1;text-align:center;background:var(--bg);border-radius:9px;padding:.7rem;">
+          <div style="font-size:.7rem;color:var(--faint)">연금 개시</div>
+          <div style="font-family:'Space Grotesk';font-size:1.08rem;font-weight:700;color:var(--jade)">${formatDate(gapStartDate)}</div>
+        </div>
+      </div>`;
+    $('r4-gap-note').innerHTML=`명퇴일 ${formatDate(I.early)}부터 연금개시일 ${formatDate(gapStartDate)}(${C.earlyStartAge}세)까지 <b>${gapLabel}</b> 동안 공무원연금 지급이 없습니다. 생활비는 월 연금액으로 대신 계산할 수 없으므로 표시하지 않았습니다. 이 기간의 실제 지출·다른 소득을 별도로 준비해야 합니다.`;
+  }else{
+    gapEl.innerHTML=`<div style="text-align:center;padding:1rem;color:var(--jade);font-size:.9rem;">명퇴 후 연금개시 전 대기기간이 없습니다.</div>`;
+    $('r4-gap-note').textContent=`연금 지급개시일 ${formatDate(gapStartDate)} 이후에 퇴직하는 시나리오입니다.`;
+  }
+
+  // 기회비용 카드 — 명퇴로 포기하는 급여와 대신 받는 명퇴금을 오늘 가치로 비교
+  const mgmtPV=C.earlyValid?presentValue(C.mgmt,yearFraction(C.today,I.early),I.infl):0;
+  if(!C.earlyValid){
+    $('r4-cost-lost').textContent='―';
+    $('r4-cost-lost-sub').textContent='명퇴 희망일 입력 필요';
+    $('r4-cost-gain').textContent='―';
+    $('r4-cost-diff').innerHTML='<span style="color:var(--coral-soft)">명퇴 희망일을 입력하면 계산합니다</span>';
+    $('r4-cost-note').textContent='명퇴일이 있어야 정년까지 남은 기간의 급여를 계산할 수 있습니다.';
+  }else{
+    const costDiff=C.forgonePV-mgmtPV; // 양수면 명퇴가 그만큼 손해
+    $('r4-cost-lost').textContent=eok(C.forgonePV);
+    $('r4-cost-lost-sub').innerHTML=`${yearsMonthsLabel(C.remainMonths)}치 · 명목 ${eok(C.forgoneNominal)}`;
+    $('r4-cost-gain').textContent=C.mgmtKnown?eok(mgmtPV):'본봉 미입력';
+    $('r4-cost-diff').innerHTML=!C.mgmtKnown
+      ?`<span style="color:var(--coral-soft)">본봉을 입력하면 명퇴금과 비교합니다</span>`
+      :costDiff>0
+      ?`<span style="color:var(--coral-soft)">명퇴하면 급여가 명퇴금보다 ${eok(costDiff)} 많이 사라집니다</span>`
+      :`<span style="color:var(--jade)">명퇴금이 포기하는 급여보다 ${eok(-costDiff)} 큽니다</span>`;
+    $('r4-cost-note').innerHTML=`정년까지 일하면 <b>${yearsMonthsLabel(C.remainMonths)}</b> 동안 기준소득월액 기준으로 <b>${eok(C.forgoneNominal)}</b>(오늘 가치 ${eok(C.forgonePV)})을 더 법니다. <span class="warn">위 손익분기 나이에는 이 급여가 빠져 있으니 함께 보고 판단하세요.</span> 세전 기준소득이라 실수령액은 이보다 적고, 명퇴 후 재취업 소득이 있으면 그만큼 상쇄됩니다.`;
+  }
+
+  $('r4-rtotal').textContent=eok(retTotal);
+  $('r4-etotal').textContent=comparisonReady?eok(earlyTotal):'계산 불가';
+  const lifeDiff=retTotal-earlyTotal;
+  $('r4-lifediff').innerHTML=!comparisonReady
+    ?`<span style="color:var(--coral-soft)">명퇴일 또는 본봉 입력을 확인해 주세요</span>`
+    :Math.abs(lifeDiff)<10000000
+    ?`<span style="color:var(--mute)">기대수명까지 현재가치 차이가 1천만원 미만입니다</span>`
+    :lifeDiff>0
+    ?`<span style="color:var(--jade)">정년 시나리오의 현재가치가 ${eok(lifeDiff)} 큽니다</span>`
+    :`<span style="color:var(--coral-soft)">명퇴 시나리오의 현재가치가 ${eok(-lifeDiff)} 큽니다</span>`;
+
+  // 종합 — 위 퇴직급여 비교에 재직 중 급여까지 더한 결과
+  if(!comparisonReady){
+    $('r4-alldiff').innerHTML='명퇴일과 본봉을 입력하면 급여까지 포함한 종합 비교를 보여드립니다.';
+  }else{
+    const allDiff=(retTotal+C.forgonePV)-earlyTotal;
+    const verdict=allDiff>0
+      ?`<b style="color:var(--jade)">정년까지 근무가 ${eok(allDiff)} 앞섭니다</b>`
+      :`<b style="color:var(--coral-soft)">명퇴가 ${eok(-allDiff)} 앞섭니다</b>`;
+    $('r4-alldiff').innerHTML=`<b>급여까지 포함한 종합</b> — 위 카드의 퇴직급여 비교에 <b>재직 중 급여 ${eok(C.forgonePV)}</b>(오늘 가치)를 더하면 ${verdict}. <span class="warn">명퇴 후 다른 소득이 전혀 없다고 가정한 값</span>이라, 제2직업·재취업 소득이 있으면 차이가 줄어듭니다. 세금·건강보험료는 양쪽 모두 빠져 있습니다.`;
+  }
+
+  // 타임라인
+  const tl=$('r4-tl');
+  const evs=[
+    {yr:C.today.getFullYear(),lbl:'현재',amt:I.income>0?`기준소득 ${man(I.income)}`:'기준소득 미입력',dot:'gold'},
+  ];
+  if(C.earlyValid){
+    evs.push({yr:I.early.getFullYear(),lbl:`명퇴 (${earlyAgeLabel})`,amt:C.mgmtKnown?`+${man(C.earlySeverance+C.mgmt)} 예상`:'명퇴금 미계산',dot:'coral'});
+    if(gapMonths>0)evs.push({yr:I.early.getFullYear(),lbl:`연금 대기 ${gapLabel}`,amt:'공무원연금 지급 전',dot:''});
+    evs.push({yr:gapStartDate.getFullYear(),lbl:`연금 개시 (${C.earlyStartAge}세)`,amt:`${man(C.earlyPension)}/월`,dot:'jade'});
+    if(beDate)evs.push({yr:beDate.getFullYear(),lbl:`손익분기 (${beAgeLabel})`,amt:'퇴직급여 기준',dot:'gold'});
+  }else{
+    evs.push({yr:'―',lbl:'명퇴 희망일 입력 필요',amt:'비교 대기',dot:'coral'});
+  }
+  evs.push({yr:I.birth.getFullYear()+I.life,lbl:`기대수명 (${I.life}세)`,amt:'',dot:''});
+
+  tl.innerHTML=evs.map(e=>`<div class="tl-row"><span class="tl-yr">${e.yr}</span><span class="tl-dot ${e.dot}"></span><span class="tl-desc">${e.lbl}</span><span class="tl-amt">${e.amt}</span></div>`).join('');
+
+  if(!C.earlyValid){
+    $('r4-note').innerHTML='명퇴 희망일을 입력하거나 수정하면 손익분기를 다시 계산합니다.';
+  }else if(!C.mgmtKnown){
+    $('r4-note').innerHTML='<span class="warn">현재 기본급이 없어 명예퇴직수당과 손익분기를 계산하지 않았습니다.</span> 본봉을 입력하면 자동으로 반영됩니다.';
+  }else{
+    $('r4-note').innerHTML=`<b>손익분기 ${beAgeLabel}</b>는 퇴직수당·명예퇴직수당·연금만 물가상승률로 할인해 오늘 구매력으로 비교한 결과입니다. <span class="warn">정년까지 받는 급여·성과급, 세금, 건강보험료, 투자수익, 실제 명퇴 선발 여부는 제외</span>했습니다.${C.mgmtEligible?'':' 선택한 날짜는 명예퇴직수당 계산요건을 충족하지 않아 명퇴금을 0원으로 둔 조기퇴직 비교입니다.'}`;
+  }
+}
+
+syncSlider();
+// 기본값으로 미리 계산 (탭 누르면 바로 결과)
+calcAll(true);
+</script>
+</body>
+</html>

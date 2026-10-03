@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>地板球 · PE Playbook</title>
+<meta name="description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body style="--accent:var(--c-new);--accent-ink:#6d28d9">
+
+<div class="topbar">
+  <a class="home" href="../index.html">📖 目录</a>
+  <span class="title">🏑 地板球</span>
+  <span class="counter"></span>
+</div>
+<div class="progress"></div>
+
+<div class="deck">
+
+  <!-- 1. 封面 -->
+  <section class="slide cover active">
+    <img class="cover-bg" src="../assets/img/fb-cover.jpg" alt="地板球比赛场景">
+    <div class="cover-shade"></div>
+    <div class="kicker">新兴运动 · 球棍运动</div>
+    <div class="emoji">🏑</div>
+    <h1>地板球</h1>
+    <p class="lead">把冰球的刺激感搬进室内，人人都能享受的球棍运动</p>
+  </section>
+
+  <!-- 2. 什么是地板球？ -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">项目介绍</span>
+      <h2>什么是地板球？</h2>
+      <p class="desc">在室内用塑料球棍和带孔球进行的曲棍球类运动</p>
+      <ul>
+        <li><span class="n">1</span><div><b>冰球的室内版本</b> — 不在冰面上，而是在体育馆地板上享受的曲棍球运动。不需要复杂装备，只要有球棍和球就OK！</div></li>
+        <li><span class="n">2</span><div><b>安全的比赛</b> — 使用轻质塑料器材，受伤风险低，护具负担也小</div></li>
+        <li><span class="n">3</span><div><b>节奏迅速</b> — 在狭小场地上攻防迅速转换的动感比赛</div></li>
+      </ul>
+      <div class="chips">
+        <span class="chip"><b>发源地</b> 瑞典</span>
+        <span class="chip"><b>特点</b> 装备简化</span>
+        <span class="chip">校园体育热门项目</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 历史 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">历史 · 发展</span>
+      <h2>地板球的历史</h2>
+      <p class="desc">起源于瑞典体育课，传播到世界各地的运动</p>
+      <ul>
+        <li><span class="n">1</span><div><b>20世纪70年代 瑞典</b> — 为学校体育课开发，旨在让人们能在室内轻松享受冰球运动</div></li>
+        <li><span class="n">2</span><div><b>1986年 IFF成立</b> — 国际地板球联合会（International Floorball Federation）成立，跃升为国际性运动</div></li>
+        <li><span class="n">3</span><div><b>普及欧洲与亚洲</b> — 迅速传播到芬兰、瑞士、捷克等欧洲各国，以及日本、新加坡等亚洲国家</div></li>
+        <li><span class="n">4</span><div><b>引入韩国</b> — 成为学校体育俱乐部的热门项目，并举办全国性比赛</div></li>
+        <li><span class="n">5</span><div><b>世界锦标赛</b> — 截至2024年，举办国持续增加，正在推动成为奥运会正式项目</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. 场地与装备 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">规则 · 装备</span>
+      <h2>场地与装备</h2>
+      <p class="desc">了解地板球场地的结构和所需装备</p>
+      <div class="split">
+        <div class="figure">
+          <svg viewBox="0 0 400 220" role="img" aria-label="地板球场地示意图">
+            <!-- 场地外框 (围板) -->
+            <rect x="20" y="20" width="360" height="180" rx="20" fill="#e8f5e9" stroke="#2e7d32" stroke-width="3"/>
+            <!-- 中线 -->
+            <line x1="200" y1="20" x2="200" y2="200" stroke="#2e7d32" stroke-width="2" stroke-dasharray="6,4"/>
+            <!-- 中圈 -->
+            <circle cx="200" cy="110" r="25" fill="none" stroke="#2e7d32" stroke-width="1.5"/>
+            <!-- 左侧球门 -->
+            <rect x="25" y="88" width="8" height="44" rx="2" fill="#d32f2f" stroke="#b71c1c" stroke-width="1.5"/>
+            <!-- 左侧球门区 -->
+            <path d="M33 70 Q70 70 70 90 L70 130 Q70 150 33 150" fill="rgba(244,67,54,.1)" stroke="#d32f2f" stroke-width="1.5" fill-rule="nonzero"/>
+            <!-- 右侧球门 -->
+            <rect x="367" y="88" width="8" height="44" rx="2" fill="#1565c0" stroke="#0d47a1" stroke-width="1.5"/>
+            <!-- 右侧球门区 -->
+            <path d="M367 70 Q330 70 330 90 L330 130 Q330 150 367 150" fill="rgba(25,118,210,.1)" stroke="#1565c0" stroke-width="1.5" fill-rule="nonzero"/>
+            <!-- 标签 -->
+            <text x="200" y="14" font-size="9" fill="#333" text-anchor="middle">中线</text>
+            <text x="50" y="118" font-size="8" fill="#d32f2f" text-anchor="middle">球门</text>
+            <text x="52" y="128" font-size="7" fill="#d32f2f" text-anchor="middle">160×115cm</text>
+            <text x="350" y="118" font-size="8" fill="#1565c0" text-anchor="middle">球门</text>
+            <text x="348" y="128" font-size="7" fill="#1565c0" text-anchor="middle">160×115cm</text>
+            <text x="200" y="215" font-size="10" fill="#555" text-anchor="middle">40m × 20m（学校：可根据体育馆大小调整）</text>
+            <!-- 围板标注 -->
+            <text x="200" y="35" font-size="8" fill="#2e7d32" text-anchor="middle">围板（高度50cm）</text>
+          </svg>
+          <figcaption>场地40m×20m · 围板高度50cm · 球门160cm×115cm</figcaption>
+        </div>
+        <ul>
+          <li><span class="n">🏒</span><div><b>球棍</b> — 碳纤维/玻璃纤维材质，长度最长114cm。球头（前端）为塑料材质，轻便安全。</div></li>
+          <li><span class="n">⚪</span><div><b>球</b> — 带有26个孔的塑料球，直径72mm。轻巧且在地面上滚动顺畅。</div></li>
+          <li><span class="n">🧤</span><div><b>守门员装备</b> — 佩戴头盔、上下身护垫。不用球棍，仅用身体挡球！</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 比赛规则 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">规则 · 比赛</span>
+      <h2>比赛规则</h2>
+      <p class="desc">地板球比赛的基本进行方式</p>
+      <div class="two">
+        <div class="box"><h3>👥 人员构成</h3><p>场上球员5名 + 守门员1名 = 共6名组成一队。学校可根据人数进行调整。</p></div>
+        <div class="box"><h3>⏱️ 比赛时间</h3><p>3节 × 20分钟（共60分钟）。学校课堂可调整为2节 × 10分钟等。节间包含休息时间。</p></div>
+        <div class="box"><h3>🏒 开球</h3><p>比赛开始及得分后，在场地中央开球重新开始。对方须保持3m以上距离。</p></div>
+        <div class="box"><h3>🤚 禁止用手</h3><p>只有守门员可在球门区内用手。场上球员用手触球即犯规！</p></div>
+        <div class="box"><h3>📏 高杆犯规</h3><p>将球棍举过膝盖挥击即犯规。这是保障安全的最重要规则！</p></div>
+        <div class="box"><h3>🔄 自由换人</h3><p>比赛不中断，可自由更换球员。在换人区快速完成交替！</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. 主要犯规 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">规则 · 犯规</span>
+      <h2>主要犯规</h2>
+      <p class="desc">为了安全公平的比赛，必须了解的犯规行为</p>
+      <div class="two">
+        <div class="box warn"><h3>📐 高杆犯规</h3><p>将球棍举过膝盖挥杆的行为。是最常见也最危险的犯规，绝对禁止！</p></div>
+        <div class="box warn"><h3>⚔️ 击打犯规</h3><p>用力击打或敲击对方球棍的行为。非针对球的故意击打属于犯规。</p></div>
+        <div class="box warn"><h3>🦵 绊人犯规</h3><p>用球棍或脚将对方绊倒的行为。可能造成严重伤害，将被严格处罚。</p></div>
+        <div class="box warn"><h3>✋ 手球犯规</h3><p>场上球员用手或手臂触球的行为。守门员在球门区外同样不能用手。</p></div>
+        <div class="box"><h3>🎯 自由击球</h3><p>发生犯规时，在犯规地点执行自由击球。对方须保持3m以上距离。</p></div>
+        <div class="box"><h3>⚡ 点球</h3><p>球门区内发生犯规时判罚点球。在中场与守门员进行1对1射门机会！</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. 核心技术①：球棍控制 -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/fb-stick.jpg" alt="球棍控制姿势">
+        <figcaption>基本握法 — 双手间距约30cm，上手负责控制方向，下手负责发力</figcaption>
+      </figure>
+      <div>
+        <span class="tag">核心技术①</span>
+        <h2>球棍控制</h2>
+        <p class="desc">自如运球的基本功</p>
+        <ul>
+          <li><span class="n">1</span><div><b>基本握法</b> — 双手间距约30cm。上手（左手）握住球棍末端调整方向，下手（右手）握住中段传递力量。</div></li>
+          <li><span class="n">2</span><div><b>运球</b> — 用球头前后交替触球前进。视线要看前方而不是球！</div></li>
+          <li><span class="n">3</span><div><b>假动作</b> — 左右晃动球棍迷惑对手的技巧。需配合身体重心的移动进行。</div></li>
+          <li><span class="n">4</span><div><b>护球</b> — 将身体置于对手与球之间以防被抢断。用肩膀顶开对手争取空间。</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. 核心技术②：传球 -->
+  <section class="slide">
+    <div class="media flip">
+      <div>
+        <span class="tag">核心技术②</span>
+        <h2>传球</h2>
+        <p class="desc">团队配合的核心，精准的传球技术</p>
+        <ul>
+          <li><span class="n">1</span><div><b>扫地传球</b> — 用球头像扫地一样推送出球的基本传球方式。精准度高且稳定。</div></li>
+          <li><span class="n">2</span><div><b>抽杆传球</b> — 将球棍略微抬起后用力挥下送出的传球。适合远距离传递。</div></li>
+          <li><span class="n">3</span><div><b>反手传球</b> — 使用球头背面进行的传球。难以预测，可迷惑对手。</div></li>
+          <li><span class="n">4</span><div><b>一触传球</b> — 接球后立即传给下一名球员。是快速攻转的核心！</div></li>
+          <li><span class="n">5</span><div><b>借板传球（利用围板）</b> — 让球弹击围板传递给队友。是绕过防守的创意方法。</div></li>
+        </ul>
+      </div>
+      <figure class="photo">
+        <img src="../assets/img/fb-pass.jpg" alt="传球场景">
+        <figcaption>扫地传球 — 像扫地一样平滑推球，实现精准传递</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 9. 核心技术③：射门 -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/fb-shoot.jpg" alt="射门姿势">
+        <figcaption>手腕射门 — 利用手腕抖动实现的快速精准射门</figcaption>
+      </figure>
+      <div>
+        <span class="tag">核心技术③</span>
+        <h2>射门</h2>
+        <p class="desc">进球所需的多种射门技术</p>
+        <ul>
+          <li><span class="n">1</span><div><b>手腕射门</b> — 利用手腕抖动的快速射门。动作幅度小，守门员难以反应。</div></li>
+          <li><span class="n">2</span><div><b>抽射</b> — 将球棍大幅后摆再用力击打的强力射门。适合远距离使用。</div></li>
+          <li><span class="n">3</span><div><b>拖拽射门</b> — 边将球向侧方拖拽边射门，打乱守门员节奏的技术。</div></li>
+          <li><span class="n">4</span><div><b>一脚射门</b> — 接到传球后不停球立即射门。不给守门员准备时间！</div></li>
+          <li><span class="n">5</span><div><b>攻击空档</b> — 读取守门员姿势并瞄准空档（五孔区、上方角落等）的判断力是关键。</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. 位置与战术 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">战术 · 位置</span>
+      <h2>位置与战术</h2>
+      <p class="desc">了解各位置的职责与基本战术</p>
+      <div class="two">
+        <div class="box"><h3>⚡ 前锋（2名）</h3><p>进攻最前线。主要任务是进球。要求快速移动和精准射门。</p></div>
+        <div class="box"><h3>🛡️ 后卫（2名）</h3><p>防守核心。阻断对方进攻并保护守门员。以精准传球担当反击起点。</p></div>
+        <div class="box"><h3>🔗 中场（1名）</h3><p>攻防连接的核心。在防守中抢球并转为进攻的中场角色。</p></div>
+        <div class="box"><h3>🧤 守门员</h3><p>用手、脚、全身挡球。不使用球棍，仅在球门区内活动。</p></div>
+        <div class="box"><h3>🔺 三角传球</h3><p>3人以三角形站位互相传球来动摇防守的基本进攻战术。</p></div>
+        <div class="box"><h3>⚡ 反击与强攻</h3><p>抢到球后立即快速转为进攻。对方被罚下时利用人数优势展开强攻。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. 安全守则 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">安全守则</span>
+      <h2>安全地享受运动</h2>
+      <p class="desc">无伤享受地板球运动的必备守则</p>
+      <div class="two">
+        <div class="box warn"><h3>📐 绝对禁止高杆</h3><p>将球棍举过膝盖可能对对方造成严重伤害。球棍务必保持低位！</p></div>
+        <div class="box warn"><h3>👓 建议佩戴护目镜</h3><p>球可能快速飞来，建议佩戴运动护目镜保护眼睛。</p></div>
+        <div class="box warn"><h3>🧤 守门员护具必不可少</h3><p>守门员必须佩戴头盔、上下身护垫。禁止无护具担任守门员！</p></div>
+        <div class="box warn"><h3>🚧 注意围板碰撞</h3><p>专注比赛时可能撞上围板。靠近围板时请放慢速度。</p></div>
+        <div class="box"><h3>🤸 热身运动必不可少</h3><p>特别要充分拉伸手腕、肩膀、腰部！由于方向变换频繁，预防关节损伤十分重要。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. 判断题小测验 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">小测验</span>
+      <h2>判断题小测验</h2>
+      <p class="desc">来检验一下学到的内容吧！</p>
+      <ul>
+        <li><span class="n">Q1</span><div><b>在地板球中，将球棍举过膝盖击球是被允许的</b> — 错。高杆犯规是最重要的犯规规则，为了安全绝对禁止。</div></li>
+        <li><span class="n">Q2</span><div><b>地板球守门员不使用球棍，仅用身体挡球</b> — 对。守门员不用球棍，用手、脚和全身挡球。</div></li>
+        <li><span class="n">Q3</span><div><b>地板球比赛不中断也可以自由更换球员</b> — 对。采用自由换人方式，在换人区可在比赛中自由交替。</div></li>
+        <li><span class="n">Q4</span><div><b>地板球场上球员也可以用手接球并投掷</b> — 错。场上球员用手或手臂触球属于手球犯规。</div></li>
+        <li><span class="n">Q5</span><div><b>地板球是最先在美国发明的运动</b> — 错。这是20世纪70年代为瑞典学校体育课开发的运动。</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 13. 核心总结 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">核心总结</span>
+      <h2>请务必牢记！</h2>
+      <p class="desc">总结今天学到的核心内容</p>
+      <div class="two">
+        <div class="box"><h3>📌 核心规则</h3><p>① 绝对禁止高杆（不可举过膝盖挥杆）<br>② 场上球员禁止手球（仅守门员可用手）<br>③ 5名球员+守门员1名=共6人<br>④ 3节 × 20分钟进行</p></div>
+        <div class="box"><h3>⭐ 核心技术</h3><p>① 球棍控制（运球+假动作）<br>② 扫地传球（精准的地面传球）<br>③ 手腕射门（快速手腕抖动射门）<br>④ 一脚射门（接球后立即射门）</p></div>
+        <div class="box"><h3>🏆 值得了解的小知识</h3><p>• 为了能在室内轻松享受冰球运动而诞生<br>• 国际地板球联合会（IFF）正推动成为奥运会正式项目<br>• 守门员只能在球门区内活动</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 探究问题 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">探究问题</span>
+      <h2>一起来思考</h2>
+      <p class="desc">在课程结束前一起讨论一下吧</p>
+      <ul>
+        <li><span class="n">1</span><div><b>地板球起源于冰球，哪些特点使它更适合学校体育课？</b></div></li>
+        <li><span class="n">2</span><div><b>地板球中守门员不用装备、仅用身体挡球的规则，对比赛有什么影响？</b></div></li>
+        <li><span class="n">3</span><div><b>在学校体育中引入新项目时应考虑哪些因素？</b></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 14. 结束 -->
+  <section class="slide cover">
+    <img class="cover-bg" src="../assets/img/fb-team.jpg" alt="地板球团队">
+    <div class="cover-shade"></div>
+    <div class="emoji">🏑</div>
+    <h1>还有问题吗？</h1>
+    <p class="lead">地板球是一项凭借快速判断力和团队配合而闪耀的运动。<br><br>谢谢!</p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" aria-label="上一页">‹</button>
+  <div class="dots"></div>
+  <button id="next" aria-label="下一页">›</button>
+</div>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

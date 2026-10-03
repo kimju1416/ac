@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fil">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Tchoukball · PE Playbook</title>
+<meta name="description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body style="--accent:var(--c-new);--accent-ink:#6d28d9">
+
+<div class="topbar">
+  <a class="home" href="../index.html">📖 Talaan ng Nilalaman</a>
+  <span class="title">🎯 Tchoukball</span>
+  <span class="counter"></span>
+</div>
+<div class="progress"></div>
+
+<div class="deck">
+
+  <!-- 1. Cover -->
+  <section class="slide cover active">
+    <img class="cover-bg" src="../assets/img/tc-cover.jpg" alt="Larawan ng laro ng Tchoukball">
+    <div class="cover-shade"></div>
+    <div class="kicker">Bagong Palakasan · Team Sport</div>
+    <div class="emoji">🎯</div>
+    <h1>Tchoukball</h1>
+    <p class="lead">Walang pinipigilan sa opensa o depensa — ang pinaka-fair na sport</p>
+  </section>
+
+  <!-- 2. Ano ang Tchoukball? -->
+  <section class="slide">
+    <div class="content" data-num="02">
+      <span class="tag">Panimula sa Sport</span>
+      <h2>Ano ang Tchoukball?</h2>
+      <p class="desc">Isang team sport kung saan itinatapon ang bola sa frame, at nakaka-score kapag hindi na-catch ng kalaban ang rebound</p>
+      <ul>
+        <li><span class="n">1</span><div><b>Non-contact sport</b> — Bawal sa rules ang anumang pananakot o pag-block sa kalaban. Ang pag-intercept, pag-block, at tackle ay lahat foul!</div></li>
+        <li><span class="n">2</span><div><b>Pinakamataas na antas ng fair play</b> — Hindi puwedeng harangan ang kalaban habang nag-aatake. Ang tanging puwede lang ay subukang mahuli ang rebound</div></li>
+        <li><span class="n">3</span><div><b>Puwedeng atakehin ang dalawang frame</b> — Kahit anong team ay puwedeng umatake sa alinman sa dalawang frame, kaya iba't-ibang taktika ang puwedeng gamitin</div></li>
+      </ul>
+      <div class="note">Itinalaga ng <b>UNESCO</b> bilang "Sport of Peace" (2001) — coexistence at cooperation sa pamamagitan ng non-contact, non-interference rules</div>
+    </div>
+  </section>
+
+  <!-- 3. Kasaysayan -->
+  <section class="slide">
+    <div class="content" data-num="03">
+      <span class="tag">Kasaysayan · Ebolusyon</span>
+      <h2>Kasaysayan ng Tchoukball</h2>
+      <p class="desc">Ipinanganak mula sa pananaliksik ng isang siyentipiko na nangangarap ng sport na walang injury</p>
+      <ul>
+        <li><span class="n">1</span><div><b>Ipinanganak sa Switzerland noong 1970</b> — Dinisenyo ito ni Dr. Hermann Brandt, isang biologist, matapos mag-research kung "Puwede bang maalis ang injury sa sports?"</div></li>
+        <li><span class="n">2</span><div><b>Pinagmulan ng pangalan</b> — Ang "Tshouk" ay onomatopoeia na ginagaya ang tunog ng bola habang tumatalbog sa frame</div></li>
+        <li><span class="n">3</span><div><b>Itinatag ang FITB</b> — Ang Federation Internationale de Tchoukball ay itinatag, na naging dahilan ng pag-unlad nito bilang international sport</div></li>
+        <li><span class="n">4</span><div><b>Sikat na sikat sa Asia</b> — Mabilis itong kumalat bilang school sport sa mga bansa sa Asia tulad ng Taiwan, Singapore, at Korea</div></li>
+        <li><span class="n">5</span><div><b>Kinilala ang educational value</b> — Itinuturing na ideal na school sport dahil sa disenyong nagpapababa ng injury at fair play philosophy nito</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. Court at Kagamitan -->
+  <section class="slide">
+    <div class="content" data-num="04">
+      <span class="tag">Rules · Kagamitan</span>
+      <h2>Court at Kagamitan</h2>
+      <p class="desc">Alamin ang structure ng Tchoukball court at pangunahing kagamitan</p>
+      <div class="split">
+        <div class="figure">
+          <svg viewBox="0 0 400 200" role="img" aria-label="Diagram ng Tchoukball court">
+            <!-- Border ng court -->
+            <rect x="20" y="20" width="360" height="160" fill="#f3e8ff" stroke="#7c3aed" stroke-width="2.5"/>
+            <!-- Center line -->
+            <line x1="200" y1="20" x2="200" y2="180" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="6,4"/>
+            <!-- Kaliwang forbidden zone (semicircle) -->
+            <path d="M 20 60 A 40 40 0 0 1 20 140" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="2"/>
+            <path d="M 20 60 Q 60 100 20 140" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="2"/>
+            <!-- Kanang forbidden zone (semicircle) -->
+            <path d="M 380 60 A 40 40 0 0 0 380 140" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="2"/>
+            <path d="M 380 60 Q 340 100 380 140" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="2"/>
+            <!-- Kaliwang frame -->
+            <rect x="12" y="82" width="10" height="36" fill="#7c3aed" rx="1"/>
+            <line x1="22" y1="82" x2="30" y2="75" stroke="#7c3aed" stroke-width="2"/>
+            <line x1="22" y1="118" x2="30" y2="125" stroke="#7c3aed" stroke-width="2"/>
+            <!-- Kanang frame -->
+            <rect x="378" y="82" width="10" height="36" fill="#7c3aed" rx="1"/>
+            <line x1="378" y1="82" x2="370" y2="75" stroke="#7c3aed" stroke-width="2"/>
+            <line x1="378" y1="118" x2="370" y2="125" stroke="#7c3aed" stroke-width="2"/>
+            <!-- Labels -->
+            <text x="200" y="12" text-anchor="middle" font-size="10" fill="#7c3aed" font-weight="700">26~29m</text>
+            <text x="6" y="105" text-anchor="middle" font-size="7" fill="#7c3aed" writing-mode="tb" font-weight="600">15~17m</text>
+            <text x="48" y="104" text-anchor="middle" font-size="8" fill="#ef4444" font-weight="600">Forbidden Zone</text>
+            <text x="352" y="104" text-anchor="middle" font-size="8" fill="#ef4444" font-weight="600">Forbidden Zone</text>
+            <text x="17" y="75" text-anchor="middle" font-size="7" fill="#7c3aed" font-weight="700">Frame</text>
+            <text x="383" y="75" text-anchor="middle" font-size="7" fill="#7c3aed" font-weight="700">Frame</text>
+            <text x="200" y="195" text-anchor="middle" font-size="8" fill="#666">Radius ng semicircular forbidden zone 3m / Anggulo ng frame 55°</text>
+          </svg>
+          <figcaption>Structure ng Tchoukball court (frame sa magkabilang dulo + forbidden zone)</figcaption>
+        </div>
+        <ul>
+          <li><span class="n">1</span><div><b>Court</b> — 26~29m x 15~17m, puwedeng paliitin kapag ginagamit sa school PE</div></li>
+          <li><span class="n">2</span><div><b>Frame</b> — Nakahiling na net na parang trampoline (55° na anggulo), isa sa bawat dulo</div></li>
+          <li><span class="n">3</span><div><b>Forbidden Zone</b> — Semicircular na area sa harap ng frame (3m radius), bawal pasukan ng players</div></li>
+          <li><span class="n">4</span><div><b>Bola</b> — Gumagamit ng bola na kasing-laki ng handball</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Batayang Rules -->
+  <section class="slide">
+    <div class="content" data-num="05">
+      <span class="tag">Rules</span>
+      <h2>Batayang Rules</h2>
+      <p class="desc">Alamin ang core rules ng Tchoukball</p>
+      <div class="two">
+        <div class="box">
+          <h3>⚡ Paraan ng Paglalaro</h3>
+          <p>• Official 7-a-side (5-a-side puwede sa school)<br>• Kailangan mag-shoot sa loob ng 3 passes<br>• Kapag tinamaan ng bola ang frame, kailangan i-catch ng kalabang team<br>• Failed catch = puntos para sa team na nag-shoot!</p>
+        </div>
+        <div class="box warn">
+          <h3>🚫 Mga Foul</h3>
+          <p>• Foul ang pagpasok sa forbidden zone (semicircle)<br>• Shot na hindi tumama sa frame = puntos para sa kalabang team<br>• Bawal maglakad ng higit sa 3 steps habang may hawak na bola<br>• Foul agad kapag hinarangan ang kalaban habang nag-aatake</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Natatanging Rules -->
+  <section class="slide">
+    <div class="content" data-num="06">
+      <span class="tag">Rules · Espesyal</span>
+      <h2>Natatanging Rules</h2>
+      <p class="desc">Mga espesyal na rules na tanging Tchoukball lang ang may ganito</p>
+      <ul>
+        <li><span class="n">★</span><div><b>Absolutely bawal harangan ang kalaban habang nag-aatake</b> — Foul lahat ang pag-intercept, pag-block, at pag-disrupt ng pass. Kailangan panoorin lang hanggang sa mag-shoot ang kalaban!</div></li>
+        <li><span class="n">2</span><div><b>Puwedeng atakehin ang dalawang frame</b> — Kahit anong team ay puwedeng pumili ng frame na gustong atakehin. Pero max 3 consecutive attacks lang sa parehong frame</div></li>
+        <li><span class="n">3</span><div><b>3-Step Rule</b> — Foul kapag lumakad ng higit sa 3 steps habang may hawak na bola. Mabilis na pass ang susi!</div></li>
+        <li><span class="n">4</span><div><b>Self-Rebound Penalty</b> — Kapag bumalik ang rebound sa taong nag-shoot mismo, ang kalabang team ang makaka-score</div></li>
+      </ul>
+      <div class="note"><b>Core Philosophy</b> — Sport na hindi nakatuon sa pagtalo sa kalaban, kundi sa pag-improve ng skills ng sariling team</div>
+    </div>
+  </section>
+
+  <!-- 7. Pangunahing Skill: Shooting -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/tc-throw.jpg" alt="Shooting stance sa Tchoukball">
+        <figcaption>Overhand shooting motion</figcaption>
+      </figure>
+      <div>
+        <span class="tag">Skill ①</span>
+        <h2>Shooting</h2>
+        <ul>
+          <li><span class="n">1</span><div><b>Overhand Shot</b> — Pinaka-basic. Malakas na itapon papunta sa frame mula sa taas ng ulo</div></li>
+          <li><span class="n">2</span><div><b>Sidearm Shot</b> — Pagtapon mula sa gilid. Nagpapahirap sa defense na mag-predict</div></li>
+          <li><span class="n">3</span><div><b>Jump Shot</b> — Tumatalon habang nagtatapon sa mataas na anggulo para baguhin ang rebound angle</div></li>
+          <li><span class="n">4</span><div><b>Pag-target sa Gilid ng Frame</b> — Kapag tinamaan ang gilid, hindi mapre-predict ang rebound</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Pangunahing Skill: Catching -->
+  <section class="slide">
+    <div class="media flip">
+      <div>
+        <span class="tag">Skill ②</span>
+        <h2>Catching</h2>
+        <ul>
+          <li><span class="n">1</span><div><b>Pag-predict sa Rebound</b> — Basahin nang maaga ang trajectory ng bola gamit ang anggulo ng frame at posisyon ng shot</div></li>
+          <li><span class="n">2</span><div><b>Two-Hand Catch</b> — Pinaka-stable. Yakapin ang bola gamit ang dalawang kamay</div></li>
+          <li><span class="n">3</span><div><b>Diving Catch</b> — Sumisid papunta sa mababang bola para ma-catch ito</div></li>
+          <li><span class="n">4</span><div><b>Body Catch</b> — Yakapin ang bola sa dibdib para siguradong ma-secure</div></li>
+          <li><span class="n">5</span><div><b>Position Distribution</b> — Hatiin ang zones kasama ang teammates para ma-cover ang iba't-ibang direksyon ng rebound</div></li>
+        </ul>
+      </div>
+      <figure class="photo">
+        <img src="../assets/img/tc-catch.jpg" alt="Catching scene sa Tchoukball">
+        <figcaption>Diving catch motion</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 9. Pangunahing Skill: Passing -->
+  <section class="slide">
+    <div class="content" data-num="09">
+      <span class="tag">Skill ③</span>
+      <h2>Passing</h2>
+      <p class="desc">Pangunahing skill para makagawa ng shooting opportunity sa loob ng 3 passes</p>
+      <ul>
+        <li><span class="n">1</span><div><b>Chest Pass</b> — Basic na pass gamit ang dalawang kamay mula sa taas ng dibdib. Accurate at mabilis</div></li>
+        <li><span class="n">2</span><div><b>Bounce Pass</b> — Ipapadpad muna sa sahig bago maabot ang teammate. Nakaka-lower ng atensyon ng defense</div></li>
+        <li><span class="n">3</span><div><b>Overhead Pass</b> — Itatapon nang mataas sa ulo para maabot ang teammate na malayo</div></li>
+        <li><span class="n">4</span><div><b>Quick Pass Chains</b> — Sunud-sunod na pass para maguluhan ang defensive formation ng kalaban</div></li>
+        <li><span class="n">5</span><div><b>3-Pass Strategy</b> — Dahil 3 passes lang ang pinapayagan ng rules, mahalaga ang efficient na koneksyon para manalo</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 10. Taktika -->
+  <section class="slide">
+    <div class="content" data-num="10">
+      <span class="tag">Taktika · Estratehiya</span>
+      <h2>Taktika</h2>
+      <p class="desc">Tactical approach sa opensa at depensa</p>
+      <div class="two">
+        <div class="box">
+          <h3>⚔️ Offensive Tactics</h3>
+          <p>• <b>Mabilis na Pag-develop ng Pass</b> — Mabilis na atake gamit ang 3-pass rule<br>• <b>Pagpili ng Frame</b> — Atakehin ang frame na may mas mahinang defense<br>• <b>Paggawa ng Angles</b> — Gumamit ng jump/sidearm shots para di mapre-predict ang rebound<br>• <b>Fake Shot</b> — Magpanggap na magtatapon para maguluhan ang timing ng defense</p>
+        </div>
+        <div class="box">
+          <h3>🛡️ Defensive Tactics</h3>
+          <p>• <b>Pag-predict sa Rebound</b> — I-predict ang trajectory ng bola base sa anggulo ng shot at posisyon ng frame<br>• <b>Positioning</b> — Ipamahagi nang pantay-pantay ang teammates sa hugis-pamaypay sa harap ng frame<br>• <b>Pag-cover sa Open Space</b> — Mabilis na gumalaw base sa posisyon ng shooter<br>• <b>Communication</b> — Sigawan ang zones sa teammates para maiwasan ang overlap</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. Safety Guidelines -->
+  <section class="slide">
+    <div class="content" data-num="11">
+      <span class="tag">Kaligtasan</span>
+      <h2>Safety Guidelines</h2>
+      <p class="desc">Mga dapat tandaan para sa masaya at ligtas na Tchoukball</p>
+      <div class="two">
+        <div class="box warn">
+          <h3>⚠️ Mga Dapat Iwasan</h3>
+          <p>• <b>Iwasan ang Banggaan sa Frame</b> — Mag-ingat sa distansya para di mabangga sa frame pagkatapos mag-shoot<br>• <b>Pagkadulas sa Forbidden Zone</b> — Mag-ingat na di madulas papasok sa forbidden zone habang mabilis na gumagalaw<br>• <b>Injury sa Daliri</b> — Gumamit ng dalawang kamay kapag humaharap sa malakas na rebound para maiwasan ang pagkabaluktot ng daliri</p>
+        </div>
+        <div class="box">
+          <h3>🏃 Warm-Up</h3>
+          <p>• <b>Pag-stretch ng Balikat</b> — Malaki ang gamit ng balikat sa shooting, kaya i-warm up nang maayos<br>• <b>Pag-ikot ng Wrist</b> — Parehong stressful sa wrist ang catching at shooting. Kailangan talaga ang warm-up<br>• <b>Pag-stretch ng Lower Body</b> — Paghahanda para sa mabilis na pagbabago ng direksyon at diving<br>• <b>Light Pass Practice</b> — Magpasahan nang magaan kasama ang teammates bago ang totoong laro</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. True/False Quiz -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Quiz</span>
+      <h2>True/False Quiz</h2>
+      <p class="desc">Suriin natin ang natutunan mo!</p>
+      <ul>
+        <li><span class="n">Q1</span><div><b>Sa Tchoukball, puwedeng i-intercept o i-block ang kalabang nag-aatake</b> — Mali. Foul ang lahat ng anyo ng pananakot sa kalaban (intercept, block, tackle).</div></li>
+        <li><span class="n">Q2</span><div><b>Sa Tchoukball, ang shot na hindi tumama sa frame ay nagbibigay ng puntos sa kalabang team</b> — Tama. Kapag hindi tumama sa frame, ang kalabang team ang makaka-puntos.</div></li>
+        <li><span class="n">Q3</span><div><b>Sa Tchoukball, puwede lang atakehin ng isang team ang frame sa sarili nilang side</b> — Mali. Kahit anong team ay puwedeng umatake sa parehong frame.</div></li>
+        <li><span class="n">Q4</span><div><b>Sa Tchoukball, foul kapag lumakad ng higit sa 3 steps habang may hawak na bola</b> — Tama. Mahalaga ang mabilis na pass, at foul ang paglalakad nang higit sa 3 steps habang may hawak na bola.</div></li>
+        <li><span class="n">Q5</span><div><b>Itinalaga ng UNESCO ang Tchoukball bilang "Sport of Peace" noong 2001</b> — Tama. Kinilala ito dahil sa non-contact, non-interference rules na nagpapakita ng coexistence at cooperation.</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 13. Key Takeaways -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Key Takeaways</span>
+      <h2>Tandaan Mo Ito!</h2>
+      <p class="desc">Buod ng mga natutunan natin ngayon</p>
+      <div class="two">
+        <div class="box"><h3>📌 Key Rules</h3><p>① Absolutely bawal harangan ang kalaban habang nag-aatake (non-contact)<br>② Kailangan mag-shoot sa loob ng 3 passes<br>③ Bawal pumasok sa forbidden zone (3m radius)<br>④ Max 3 consecutive attacks sa parehong frame</p></div>
+        <div class="box"><h3>⭐ Key Skills</h3><p>① Overhand/Sidearm Shooting<br>② Pag-target sa gilid ng frame (unpredictable rebound)<br>③ Two-Hand Catch at Diving Catch<br>④ Chest/Bounce/Overhead Pass</p></div>
+        <div class="box"><h3>🏆 Mga Fun Fact</h3><p>• Dinisenyo ito ni Dr. Hermann Brandt, Swiss biologist, para sa sport na walang injury<br>• Ang "Tshouk" ay tunog na ginagaya mula sa bola na tumatalbog sa frame<br>• Sikat na sikat sa Asia — Taiwan, Singapore, at iba pa</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Discussion Questions -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Discussion Questions</span>
+      <h2>Pag-isipan Natin</h2>
+      <p class="desc">Bago tayo mag-wrap up, mag-usap tayo tungkol dito</p>
+      <ul>
+        <li><span class="n">1</span><div><b>Ano ang kahulugan ng rule na "bawal harangan ang depensa ng kalaban" sa Tchoukball?</b></div></li>
+        <li><span class="n">2</span><div><b>Puwede bang magbigay ng ibang klaseng value ang Tchoukball, na walang physical contact, kumpara sa ibang regular sports?</b></div></li>
+        <li><span class="n">3</span><div><b>Puwede bang i-apply sa ibang sports ang fair play spirit ng Tchoukball?</b></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 14. Closing -->
+  <section class="slide cover">
+    <img class="cover-bg" src="../assets/img/tc-team.jpg" alt="Team photo ng Tchoukball">
+    <div class="cover-shade"></div>
+    <div class="kicker">MAY MGA TANONG BA KAYO?</div>
+    <div class="emoji">🎯</div>
+    <h1>SALAMAT!</h1>
+    <p class="lead">Ang Tchoukball ay sport kung saan ang paggalang sa kalaban mismo ang siyang estratehiya.</p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" disabled>&#8592;</button>
+  <div class="dots"></div>
+  <button id="next">&#8594;</button>
+</div>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

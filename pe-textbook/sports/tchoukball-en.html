@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>Tchoukball · PE Playbook</title>
+<meta name="description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body style="--accent:var(--c-new);--accent-ink:#6d28d9">
+
+<div class="topbar">
+  <a class="home" href="../index.html">📖 Contents</a>
+  <span class="title">🎯 Tchoukball</span>
+  <span class="counter"></span>
+</div>
+<div class="progress"></div>
+
+<div class="deck">
+
+  <!-- 1. Cover -->
+  <section class="slide cover active">
+    <img class="cover-bg" src="../assets/img/tc-cover.jpg" alt="Tchoukball game in action">
+    <div class="cover-shade"></div>
+    <div class="kicker">New Sports · Team Game</div>
+    <div class="emoji">🎯</div>
+    <h1>Tchoukball</h1>
+    <p class="lead">No interfering with offense or defense — the fairest sport there is</p>
+  </section>
+
+  <!-- 2. What Is Tchoukball? -->
+  <section class="slide">
+    <div class="content" data-num="02">
+      <span class="tag">Introduction</span>
+      <h2>What Is Tchoukball?</h2>
+      <p class="desc">A team sport where you throw the ball at a frame and score if the opponent fails to catch the rebound</p>
+      <ul>
+        <li><span class="n">1</span><div><b>Non-contact sport</b> — All interference with opponents is prohibited by the rules. Intercepting, blocking, and tackling are all fouls!</div></li>
+        <li><span class="n">2</span><div><b>The pinnacle of fair play</b> — You cannot interfere with an opponent who is attacking. You can only try to catch the rebounded ball</div></li>
+        <li><span class="n">3</span><div><b>Both frames are open</b> — Either team can attack either frame, creating diverse tactical possibilities</div></li>
+      </ul>
+      <div class="note"><b>UNESCO</b> designated it the "Sport of Peace" (2001) — coexistence and cooperation through non-contact, non-interference rules</div>
+    </div>
+  </section>
+
+  <!-- 3. History -->
+  <section class="slide">
+    <div class="content" data-num="03">
+      <span class="tag">History · Development</span>
+      <h2>History of Tchoukball</h2>
+      <p class="desc">Born from a scientist's quest to create an injury-free sport</p>
+      <ul>
+        <li><span class="n">1</span><div><b>Born in Switzerland, 1970</b> — Biologist Dr. Hermann Brandt designed it after researching the question "Can we eliminate injuries from sports?"</div></li>
+        <li><span class="n">2</span><div><b>Origin of the name</b> — "Tshouk" is an onomatopoeia imitating the sound the ball makes rebounding off the frame</div></li>
+        <li><span class="n">3</span><div><b>FITB established</b> — The Federation Internationale de Tchoukball was founded, developing it into an international sport</div></li>
+        <li><span class="n">4</span><div><b>Great popularity in Asia</b> — Rapidly spread as a school sport in Asian countries including Taiwan, Singapore, and Korea</div></li>
+        <li><span class="n">5</span><div><b>Educational value recognized</b> — Rated as an ideal school sport for its injury-minimizing design and fair play philosophy</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. Court and Equipment -->
+  <section class="slide">
+    <div class="content" data-num="04">
+      <span class="tag">Rules · Equipment</span>
+      <h2>Court and Equipment</h2>
+      <p class="desc">Learn the structure of the tchoukball court and key equipment</p>
+      <div class="split">
+        <div class="figure">
+          <svg viewBox="0 0 400 200" role="img" aria-label="Tchoukball court diagram">
+            <!-- Court outline -->
+            <rect x="20" y="20" width="360" height="160" fill="#f3e8ff" stroke="#7c3aed" stroke-width="2.5"/>
+            <!-- Center line -->
+            <line x1="200" y1="20" x2="200" y2="180" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="6,4"/>
+            <!-- Left forbidden zone (semicircle) -->
+            <path d="M 20 60 A 40 40 0 0 1 20 140" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="2"/>
+            <path d="M 20 60 Q 60 100 20 140" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="2"/>
+            <!-- Right forbidden zone (semicircle) -->
+            <path d="M 380 60 A 40 40 0 0 0 380 140" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="2"/>
+            <path d="M 380 60 Q 340 100 380 140" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="2"/>
+            <!-- Left frame -->
+            <rect x="12" y="82" width="10" height="36" fill="#7c3aed" rx="1"/>
+            <line x1="22" y1="82" x2="30" y2="75" stroke="#7c3aed" stroke-width="2"/>
+            <line x1="22" y1="118" x2="30" y2="125" stroke="#7c3aed" stroke-width="2"/>
+            <!-- Right frame -->
+            <rect x="378" y="82" width="10" height="36" fill="#7c3aed" rx="1"/>
+            <line x1="378" y1="82" x2="370" y2="75" stroke="#7c3aed" stroke-width="2"/>
+            <line x1="378" y1="118" x2="370" y2="125" stroke="#7c3aed" stroke-width="2"/>
+            <!-- Labels -->
+            <text x="200" y="12" text-anchor="middle" font-size="10" fill="#7c3aed" font-weight="700">26~29m</text>
+            <text x="6" y="105" text-anchor="middle" font-size="7" fill="#7c3aed" writing-mode="tb" font-weight="600">15~17m</text>
+            <text x="48" y="104" text-anchor="middle" font-size="8" fill="#ef4444" font-weight="600">Forbidden Zone</text>
+            <text x="352" y="104" text-anchor="middle" font-size="8" fill="#ef4444" font-weight="600">Forbidden Zone</text>
+            <text x="17" y="75" text-anchor="middle" font-size="7" fill="#7c3aed" font-weight="700">Frame</text>
+            <text x="383" y="75" text-anchor="middle" font-size="7" fill="#7c3aed" font-weight="700">Frame</text>
+            <text x="200" y="195" text-anchor="middle" font-size="8" fill="#666">Semicircular forbidden zone radius 3m / Frame angle 55°</text>
+          </svg>
+          <figcaption>Tchoukball court layout (frames on both sides + forbidden zones)</figcaption>
+        </div>
+        <ul>
+          <li><span class="n">1</span><div><b>Court</b> — 26~29m x 15~17m, can be scaled down for school use</div></li>
+          <li><span class="n">2</span><div><b>Frame</b> — An angled trampoline-like net (55° angle), one on each end</div></li>
+          <li><span class="n">3</span><div><b>Forbidden zone</b> — A semicircular zone in front of the frame (3m radius), players cannot enter</div></li>
+          <li><span class="n">4</span><div><b>Ball</b> — A handball-sized ball is used</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Basic Rules -->
+  <section class="slide">
+    <div class="content" data-num="05">
+      <span class="tag">Rules</span>
+      <h2>Basic Rules</h2>
+      <p class="desc">Learn the core rules of tchoukball</p>
+      <div class="two">
+        <div class="box">
+          <h3>⚡ Game Operations</h3>
+          <p>- Official 7-a-side (5-a-side possible for school)<br>- Must shoot within 3 passes<br>- Throw the ball at the frame; the opposing team must catch it<br>- Failed catch = point for the throwing team!</p>
+        </div>
+        <div class="box warn">
+          <h3>🚫 Foul Situations</h3>
+          <p>- Entering the forbidden zone (semicircle) is a foul<br>- A shot that misses the frame = point for the opposing team<br>- Cannot take more than 3 steps while holding the ball<br>- Interfering with opponents during their attack is an immediate foul</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Unique Rules -->
+  <section class="slide">
+    <div class="content" data-num="06">
+      <span class="tag">Rules · Unique</span>
+      <h2>Unique Rules</h2>
+      <p class="desc">Special rules found only in tchoukball and no other sport</p>
+      <ul>
+        <li><span class="n">★</span><div><b>Absolutely no interfering with opponent's attack</b> — Intercepting, blocking, and pass disruption are all fouls. You must watch until the opponent shoots!</div></li>
+        <li><span class="n">2</span><div><b>Both frames open for attack</b> — Either team can attack either frame. However, the same frame can only be attacked 3 consecutive times</div></li>
+        <li><span class="n">3</span><div><b>3-step rule</b> — Taking more than 3 steps while holding the ball is a foul. Quick passing is essential!</div></li>
+        <li><span class="n">4</span><div><b>Self-rebound penalty</b> — If the rebounded ball returns to the shooter, the opposing team scores</div></li>
+      </ul>
+      <div class="note"><b>Core philosophy</b> — A sport focused not on beating the opponent, but on improving your own team's skills</div>
+    </div>
+  </section>
+
+  <!-- 7. Key Skills: Shooting -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/tc-throw.jpg" alt="Tchoukball shooting stance">
+        <figcaption>Overhand shooting motion</figcaption>
+      </figure>
+      <div>
+        <span class="tag">Skills 1</span>
+        <h2>Shooting</h2>
+        <ul>
+          <li><span class="n">1</span><div><b>Overhand shot</b> — The most basic. Throw hard at the frame from above the head</div></li>
+          <li><span class="n">2</span><div><b>Sidearm shot</b> — Throwing from the side. Makes it harder for the defense to predict</div></li>
+          <li><span class="n">3</span><div><b>Jump shot</b> — Throw at a high angle while jumping to change the rebound angle</div></li>
+          <li><span class="n">4</span><div><b>Target the frame edges</b> — Hitting the edges creates unpredictable rebounds</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Key Skills: Catching -->
+  <section class="slide">
+    <div class="media flip">
+      <div>
+        <span class="tag">Skills 2</span>
+        <h2>Catching</h2>
+        <ul>
+          <li><span class="n">1</span><div><b>Predict the rebound</b> — Read the ball's trajectory based on the frame angle and shot position</div></li>
+          <li><span class="n">2</span><div><b>Two-hand catch</b> — The most stable method. Wrap both hands around the ball</div></li>
+          <li><span class="n">3</span><div><b>Diving catch</b> — Dive toward low balls to make the catch</div></li>
+          <li><span class="n">4</span><div><b>Body catch</b> — Secure the ball against your chest for a reliable hold</div></li>
+          <li><span class="n">5</span><div><b>Position distribution</b> — Divide zones among teammates to cover different rebound directions</div></li>
+        </ul>
+      </div>
+      <figure class="photo">
+        <img src="../assets/img/tc-catch.jpg" alt="Tchoukball catch scene">
+        <figcaption>Diving catch motion</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 9. Key Skills: Passing -->
+  <section class="slide">
+    <div class="content" data-num="09">
+      <span class="tag">Skills 3</span>
+      <h2>Passing</h2>
+      <p class="desc">Key techniques for creating shooting opportunities within 3 passes</p>
+      <ul>
+        <li><span class="n">1</span><div><b>Chest pass</b> — Push out from chest height with both hands. The basic pass — accurate and fast</div></li>
+        <li><span class="n">2</span><div><b>Bounce pass</b> — Bounce once off the floor. Effective at lowering the defense's attention</div></li>
+        <li><span class="n">3</span><div><b>Overhead pass</b> — Throw high over the head to reach distant teammates</div></li>
+        <li><span class="n">4</span><div><b>Quick pass chains</b> — Consecutive passes to disrupt the opponent's defensive formation</div></li>
+        <li><span class="n">5</span><div><b>3-pass strategy</b> — Since rules allow only 3 passes, efficient connections are the key to victory</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 10. Tactics -->
+  <section class="slide">
+    <div class="content" data-num="10">
+      <span class="tag">Tactics · Strategy</span>
+      <h2>Tactics</h2>
+      <p class="desc">Tactical approaches to offense and defense</p>
+      <div class="two">
+        <div class="box">
+          <h3>⚔️ Offensive Tactics</h3>
+          <p>- <b>Quick passing</b> — Swift attacks utilizing the 3-pass rule<br>- <b>Frame selection</b> — Target the frame with weaker defense<br>- <b>Create angles</b> — Use jump/sidearm shots for unpredictable rebounds<br>- <b>Fake shots</b> — Pretend to throw to disrupt defensive timing</p>
+        </div>
+        <div class="box">
+          <h3>🛡️ Defensive Tactics</h3>
+          <p>- <b>Predict rebounds</b> — Anticipate ball trajectory from shot angle and frame position<br>- <b>Positioning</b> — Distribute teammates evenly in a fan shape in front of the frame<br>- <b>Cover open spaces</b> — Move quickly based on the shooter's position<br>- <b>Communication</b> — Call out zones to teammates to prevent overlap</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. Safety Guidelines -->
+  <section class="slide">
+    <div class="content" data-num="11">
+      <span class="tag">Safety</span>
+      <h2>Safety Guidelines</h2>
+      <p class="desc">Precautions for safe and enjoyable tchoukball</p>
+      <div class="two">
+        <div class="box warn">
+          <h3>⚠️ Cautions</h3>
+          <p>- <b>Frame collision warning</b> — Maintain distance to avoid running into the frame after shooting<br>- <b>Sliding into forbidden zone</b> — Be careful not to slide into the forbidden zone while moving quickly<br>- <b>Finger injuries</b> — Use both hands to catch strong rebounds to prevent fingers from bending back</p>
+        </div>
+        <div class="box">
+          <h3>🏃 Warm-up</h3>
+          <p>- <b>Shoulder stretching</b> — Shooting heavily uses the shoulders, so warm them up well<br>- <b>Wrist rotations</b> — Both catching and shooting stress the wrists. Warm-up is essential<br>- <b>Lower body stretching</b> — Prepare for quick direction changes and diving<br>- <b>Light pass practice</b> — Exchange gentle passes with teammates before the game</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. O/X Quiz -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Quiz</span>
+      <h2>True/False Quiz</h2>
+      <p class="desc">Let's check what you've learned!</p>
+      <ul>
+        <li><span class="n">Q1</span><div><b>In tchoukball, you can intercept or block an attacking opponent.</b> — False. All interference (intercepting, blocking, tackling) is a foul.</div></li>
+        <li><span class="n">Q2</span><div><b>In tchoukball, a shot that misses the frame gives a point to the opposing team.</b> — True. If you miss the frame, the opposing team earns a point.</div></li>
+        <li><span class="n">Q3</span><div><b>In tchoukball, a team can only attack the frame on their own side.</b> — False. Either team can attack either frame.</div></li>
+        <li><span class="n">Q4</span><div><b>In tchoukball, taking more than 3 steps while holding the ball is a foul.</b> — True. Quick passing is essential, and taking more than 3 steps is a foul.</div></li>
+        <li><span class="n">Q5</span><div><b>UNESCO designated tchoukball the "Sport of Peace" in 2001.</b> — True. It was recognized for embodying coexistence and cooperation through non-contact, non-interference rules.</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 13. Key Takeaways -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Key Takeaways</span>
+      <h2>Remember These!</h2>
+      <p class="desc">A summary of today's key lessons</p>
+      <div class="two">
+        <div class="box"><h3>📌 Key Rules</h3><p>1. Absolutely no interfering with opponent's attack (non-contact)<br>2. Must shoot within 3 passes<br>3. Cannot enter the forbidden zone (3m radius)<br>4. Max 3 consecutive attacks on the same frame</p></div>
+        <div class="box"><h3>⭐ Key Skills</h3><p>1. Overhand/sidearm shooting<br>2. Targeting frame edges (unpredictable rebounds)<br>3. Two-hand catch & diving catch<br>4. Chest/bounce/overhead pass</p></div>
+        <div class="box"><h3>🏆 Fun Facts</h3><p>- Swiss biologist Dr. Hermann Brandt designed it for injury-free sports<br>- "Tshouk" imitates the sound of the ball rebounding off the frame<br>- Especially popular in Asia: Taiwan, Singapore, etc.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Discussion Questions -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">Discussion Questions</span>
+      <h2>Let's Think About It</h2>
+      <p class="desc">Wrap up the lesson with a discussion</p>
+      <ul>
+        <li><span class="n">1</span><div><b>What is the significance of the rule "you must not interfere with the opponent's defense" in tchoukball?</b></div></li>
+        <li><span class="n">2</span><div><b>Can tchoukball, which competes without physical contact, offer different values from regular sports?</b></div></li>
+        <li><span class="n">3</span><div><b>Can the fair play spirit of tchoukball be applied to other sports?</b></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 14. Closing -->
+  <section class="slide cover">
+    <img class="cover-bg" src="../assets/img/tc-team.jpg" alt="Tchoukball team photo">
+    <div class="cover-shade"></div>
+    <div class="kicker">ANY QUESTIONS?</div>
+    <div class="emoji">🎯</div>
+    <h1>THANK YOU!</h1>
+    <p class="lead">Tchoukball is a sport where respecting your opponent is itself a strategy.</p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" disabled>&#8592;</button>
+  <div class="dots"></div>
+  <button id="next">&#8594;</button>
+</div>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>플라잉디스크 - 네온 스포츠</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700;900&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Noto Sans KR', sans-serif; background: #050510; overflow: hidden; height: 100vh; }
+.slider { width: 100vw; height: 100vh; position: relative; }
+.slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.5s ease; pointer-events: none; }
+.slide.active { opacity: 1; pointer-events: all; }
+
+.nav-arrows { position: fixed; bottom: 30px; right: 30px; z-index: 100; display: flex; gap: 8px; }
+.nav-arrows button { width: 44px; height: 44px; border: 1px solid #39FF14; background: transparent; cursor: pointer; font-size: 16px; color: #39FF14; transition: all 0.2s; box-shadow: 0 0 8px rgba(57,255,20,0.3); }
+.nav-arrows button:hover { background: #39FF14; color: #050510; box-shadow: 0 0 20px rgba(57,255,20,0.6); }
+.slide-counter { position: fixed; bottom: 34px; left: 30px; font-family: 'Orbitron', sans-serif; font-size: 12px; color: rgba(57,255,20,0.4); z-index: 100; }
+
+/* Neon glow keyframes */
+@keyframes neonPulse { 0%,100% { text-shadow: 0 0 10px #39FF14, 0 0 20px #39FF14, 0 0 40px #39FF14; } 50% { text-shadow: 0 0 5px #39FF14, 0 0 10px #39FF14, 0 0 20px #39FF14; } }
+@keyframes lineGlow { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
+@keyframes borderGlow { 0%,100% { box-shadow: 0 0 5px #39FF14, inset 0 0 5px rgba(57,255,20,0.1); } 50% { box-shadow: 0 0 15px #39FF14, 0 0 30px rgba(57,255,20,0.3), inset 0 0 10px rgba(57,255,20,0.15); } }
+
+/* Slide 1 - Cover */
+.slide-1 { display: flex; align-items: center; justify-content: center; position: relative; }
+.slide-1 .bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('../flying-disc-images/01_title.jpg') center/cover; opacity: 0.15; filter: contrast(1.2); }
+.slide-1 .dark-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(ellipse at center, transparent 0%, #050510 70%); }
+.slide-1 .content { position: relative; z-index: 2; text-align: center; }
+.slide-1 .title { font-family: 'Orbitron', sans-serif; font-size: clamp(40px, 8vw, 90px); font-weight: 900; color: #39FF14; letter-spacing: 6px; animation: neonPulse 3s ease-in-out infinite; line-height: 1.2; }
+.slide-1 .subtitle { font-size: 14px; color: rgba(255,255,255,0.5); margin-top: 24px; letter-spacing: 4px; }
+.slide-1 .neon-line { width: 200px; height: 2px; background: linear-gradient(90deg, transparent, #B026FF, transparent); margin: 30px auto; position: relative; overflow: hidden; }
+.slide-1 .neon-line::after { content: ''; position: absolute; top: 0; left: 0; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, #fff, transparent); animation: lineGlow 2s ease-in-out infinite; }
+
+/* Slide 2 */
+.slide-2 { background: #050510; padding: 60px 40px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.slide-2 h2 { font-family: 'Orbitron', sans-serif; font-size: clamp(24px, 4vw, 40px); color: #39FF14; text-shadow: 0 0 10px rgba(57,255,20,0.5); margin-bottom: 48px; letter-spacing: 3px; }
+.slide-2 .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 960px; width: 100%; }
+.slide-2 .card { border: 1px solid rgba(57,255,20,0.3); background: rgba(57,255,20,0.02); padding: 36px 24px; text-align: center; animation: borderGlow 3s ease-in-out infinite; transition: all 0.3s; }
+.slide-2 .card:nth-child(2) { border-color: rgba(176,38,255,0.3); animation-name: borderGlowPurple; }
+.slide-2 .card:nth-child(3) { animation-delay: 1s; }
+@keyframes borderGlowPurple { 0%,100% { box-shadow: 0 0 5px #B026FF, inset 0 0 5px rgba(176,38,255,0.1); } 50% { box-shadow: 0 0 15px #B026FF, 0 0 30px rgba(176,38,255,0.3), inset 0 0 10px rgba(176,38,255,0.15); } }
+.slide-2 .card:hover { transform: translateY(-4px); }
+.slide-2 .card .icon { font-size: 32px; margin-bottom: 12px; filter: drop-shadow(0 0 6px rgba(57,255,20,0.5)); }
+.slide-2 .card .number { font-family: 'Orbitron', sans-serif; font-size: 36px; color: #39FF14; font-weight: 900; margin-bottom: 8px; text-shadow: 0 0 10px rgba(57,255,20,0.6); }
+.slide-2 .card:nth-child(2) .number { color: #B026FF; text-shadow: 0 0 10px rgba(176,38,255,0.6); }
+.slide-2 .card .keyword { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 10px; }
+.slide-2 .card .desc { font-size: 12px; color: rgba(255,255,255,0.4); line-height: 1.7; }
+
+/* Slide 3 */
+.slide-3 { background: #050510; display: grid; grid-template-columns: 1fr 1fr; height: 100%; }
+.slide-3 .image-section { position: relative; display: flex; align-items: center; padding: 40px; }
+.slide-3 .image-section img { width: 100%; height: auto; max-height: 70vh; object-fit: cover; border: 2px solid #B026FF; box-shadow: 0 0 20px rgba(176,38,255,0.4), inset 0 0 20px rgba(176,38,255,0.1); filter: contrast(1.1) brightness(0.9); }
+.slide-3 .text-section { padding: 60px 40px; display: flex; flex-direction: column; justify-content: center; }
+.slide-3 h2 { font-family: 'Orbitron', sans-serif; font-size: clamp(22px, 3vw, 34px); color: #39FF14; text-shadow: 0 0 10px rgba(57,255,20,0.5); margin-bottom: 40px; letter-spacing: 2px; }
+.slide-3 .steps { list-style: none; }
+.slide-3 .steps li { display: flex; align-items: flex-start; gap: 20px; margin-bottom: 28px; padding-bottom: 28px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+.slide-3 .steps li:last-child { border-bottom: none; }
+.slide-3 .steps .num { font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; color: #B026FF; text-shadow: 0 0 10px rgba(176,38,255,0.6); min-width: 44px; }
+.slide-3 .steps .step-text strong { display: block; color: #fff; font-size: 15px; margin-bottom: 6px; }
+.slide-3 .steps .step-text p { color: rgba(255,255,255,0.4); font-size: 13px; line-height: 1.7; }
+
+@media (max-width: 768px) {
+  .slide-2 .cards { grid-template-columns: 1fr; max-width: 360px; }
+  .slide-3 { grid-template-columns: 1fr; grid-template-rows: 40% 60%; }
+  .slide-3 .image-section { padding: 20px; }
+  .slide-3 .text-section { padding: 30px 24px; }
+}
+</style>
+</head>
+<body>
+<div class="slider">
+  <div class="slide slide-1 active">
+    <div class="bg"></div>
+    <div class="dark-overlay"></div>
+    <div class="content">
+      <h1 class="title">FLYING<br>DISC</h1>
+      <div class="neon-line"></div>
+      <p class="subtitle">ULTIMATE SPORTS GUIDE</p>
+    </div>
+  </div>
+
+  <div class="slide slide-2">
+    <h2>FLYING DISC?</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="icon">&#9917;</div>
+        <div class="number">7:7</div>
+        <div class="keyword">팀 스포츠</div>
+        <div class="desc">한 팀 7명이 패스만으로 디스크를 전진시켜 상대 엔드존에서 캐치하면 득점합니다.</div>
+      </div>
+      <div class="card">
+        <div class="icon">&#9878;</div>
+        <div class="number">S.O.G</div>
+        <div class="keyword">자율 심판</div>
+        <div class="desc">Spirit of the Game. 심판 없이 선수 스스로 파울을 판정하며 페어플레이가 핵심입니다.</div>
+      </div>
+      <div class="card">
+        <div class="icon">&#9995;</div>
+        <div class="number">ZERO</div>
+        <div class="keyword">비접촉</div>
+        <div class="desc">신체 접촉 제로. 누구나 안전하게 경기할 수 있는 비접촉 팀 스포츠입니다.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide slide-3">
+    <div class="image-section">
+      <img src="../flying-disc-images/02_backhand.jpg" alt="백핸드 스로우">
+    </div>
+    <div class="text-section">
+      <h2>BACKHAND THROW</h2>
+      <ul class="steps">
+        <li><span class="num">01</span><div class="step-text"><strong>그립 (Grip)</strong><p>엄지를 디스크 위에, 나머지 네 손가락은 림 안쪽에 감아 단단히 잡습니다.</p></div></li>
+        <li><span class="num">02</span><div class="step-text"><strong>자세 (Stance)</strong><p>목표를 향해 어깨를 회전시키고, 팔을 가슴 앞으로 당겨 회전력을 모읍니다.</p></div></li>
+        <li><span class="num">03</span><div class="step-text"><strong>릴리스 (Release)</strong><p>손목 스냅을 주며 디스크를 수평으로 날립니다. 기울어지지 않게 수평 유지.</p></div></li>
+        <li><span class="num">04</span><div class="step-text"><strong>팔로스루 (Follow-through)</strong><p>던진 후 팔을 목표 방향으로 끝까지 뻗어 정확도와 비거리를 높입니다.</p></div></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="slide-counter"><span id="current">01</span> / 03</div>
+<div class="nav-arrows">
+  <button onclick="prevSlide()">&larr;</button>
+  <button onclick="nextSlide()">&rarr;</button>
+</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+function showSlide(i) { slides.forEach(s => s.classList.remove('active')); slides[i].classList.add('active'); document.getElementById('current').textContent = String(i+1).padStart(2,'0'); }
+function nextSlide() { current = (current+1)%total; showSlide(current); }
+function prevSlide() { current = (current-1+total)%total; showSlide(current); }
+document.addEventListener('keydown', e => { if(e.key==='ArrowRight') nextSlide(); if(e.key==='ArrowLeft') prevSlide(); });
+let tx=0; document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;});
+document.addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-tx; if(d<-50)nextSlide(); if(d>50)prevSlide();});
+</script>
+</body>
+</html>

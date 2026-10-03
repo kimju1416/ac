@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>플라잉디스크 - 볼드 브루탈리스트</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Noto Sans KR','Space Grotesk',sans-serif; overflow:hidden; height:100vh; background:#fff; }
+
+.slides { position:relative; height:100vh; }
+.slide {
+  display:none; position:absolute; inset:0; background:#fff; padding:40px;
+  flex-direction:column; justify-content:center;
+}
+.slide.active { display:flex; animation:slideIn 0.4s ease; }
+@keyframes slideIn { from{opacity:0;transform:translateX(30px)} to{opacity:1;transform:translateX(0)} }
+
+/* Slide 1 */
+.slide1 { align-items:center; justify-content:center; position:relative; }
+.slide1 .lime-block {
+  position:absolute; top:60px; right:60px; width:200px; height:200px;
+  background:#BFFF00; z-index:0;
+}
+.slide1 .lime-block2 {
+  position:absolute; bottom:80px; left:40px; width:120px; height:120px;
+  background:#BFFF00; z-index:0;
+}
+.slide1 h1 {
+  font-family:'Space Grotesk',sans-serif; font-size:clamp(4rem,12vw,9rem);
+  font-weight:700; color:#000; line-height:0.9; z-index:1; text-align:center;
+}
+.slide1 .sub { font-size:1.2rem; color:#333; margin-top:16px; z-index:1; letter-spacing:4px; text-transform:uppercase; }
+
+/* Slide 2 */
+.slide2 .big-num { font-family:'Space Grotesk'; font-size:8rem; font-weight:700; color:#BFFF00; line-height:1; margin-bottom:-20px; }
+.slide2 h2 { font-size:2.5rem; font-weight:900; color:#000; margin-bottom:30px; }
+.slide2 .points { display:flex; flex-direction:column; gap:16px; }
+.slide2 .point {
+  font-size:1.1rem; font-weight:700; padding:12px 20px;
+  border-left:6px solid #000; background:#f8f8f8;
+}
+.slide2 .point .hl { background:#BFFF00; padding:2px 8px; }
+
+/* Slide 3 */
+.slide3 .content { display:flex; gap:30px; align-items:center; flex-wrap:wrap; }
+.slide3 .img-wrap {
+  flex:1; min-width:260px; position:relative;
+}
+.slide3 .img-wrap img {
+  width:100%; border-radius:0; filter:grayscale(100%);
+  border:6px solid #BFFF00;
+}
+.slide3 .steps-wrap { flex:1; min-width:280px; }
+.slide3 .step { display:flex; gap:16px; margin-bottom:20px; align-items:flex-start; }
+.slide3 .step-num {
+  font-family:'Space Grotesk'; font-size:3rem; font-weight:700; color:#BFFF00; line-height:1; min-width:60px;
+}
+.slide3 .step-content h4 { font-size:1.1rem; font-weight:900; color:#000; margin-bottom:4px; }
+.slide3 .step-content p { font-size:0.9rem; color:#444; line-height:1.5; }
+
+/* Nav */
+.nav {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:10;
+  display:flex; gap:12px; align-items:center;
+  background:#000; padding:10px 20px; border-radius:0;
+}
+.nav button {
+  background:#BFFF00; border:none; color:#000;
+  width:40px; height:40px; border-radius:0; cursor:pointer;
+  font-size:1.2rem; font-weight:700; transition:all 0.2s;
+}
+.nav button:hover { background:#fff; }
+.dots { display:flex; gap:8px; }
+.dot { width:12px; height:12px; border-radius:0; background:#333; cursor:pointer; transition:all 0.3s; }
+.dot.active { background:#BFFF00; }
+</style>
+</head>
+<body>
+
+<div class="slides">
+  <div class="slide slide1 active">
+    <div class="lime-block"></div>
+    <div class="lime-block2"></div>
+    <h1>FLYING<br>DISC</h1>
+    <p class="sub">플라잉디스크 얼티밋</p>
+  </div>
+
+  <div class="slide slide2">
+    <div class="big-num">01</div>
+    <h2>플라잉디스크란?</h2>
+    <div class="points">
+      <div class="point"><span class="hl">팀 스포츠 7명</span> — 원반 패스로 엔드존 득점</div>
+      <div class="point"><span class="hl">자율심판 SOTG</span> — 심판 없이 선수가 직접 판정</div>
+      <div class="point"><span class="hl">비접촉 원칙</span> — 신체 접촉 없는 안전한 경기</div>
+    </div>
+  </div>
+
+  <div class="slide slide3">
+    <div class="content">
+      <div class="img-wrap">
+        <img src="../flying-disc-images/02_backhand.jpg" alt="백핸드 스로우">
+      </div>
+      <div class="steps-wrap">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h4>그립</h4>
+            <p>엄지는 위, 4손가락은 림 안쪽을 감싸 잡기</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h4>자세</h4>
+            <p>몸을 회전하며 팔을 가슴 앞으로</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h4>릴리스</h4>
+            <p>손목 스냅으로 수평 방향 릴리스</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-content">
+            <h4>팔로스루</h4>
+            <p>끝까지 팔을 목표 방향으로 뻗기</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <button id="prev">&#8592;</button>
+  <div class="dots">
+    <div class="dot active" data-i="0"></div>
+    <div class="dot" data-i="1"></div>
+    <div class="dot" data-i="2"></div>
+  </div>
+  <button id="next">&#8594;</button>
+</div>
+
+<script>
+let cur=0; const slides=document.querySelectorAll('.slide'), dots=document.querySelectorAll('.dot'), total=slides.length;
+function go(n){ cur=(n+total)%total; slides.forEach((s,i)=>{s.classList.toggle('active',i===cur)}); dots.forEach((d,i)=>{d.classList.toggle('active',i===cur)}); }
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+dots.forEach(d=>d.onclick=()=>go(+d.dataset.i));
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(cur-1);if(e.key==='ArrowRight')go(cur+1);});
+</script>
+</body>
+</html>

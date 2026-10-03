@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>匹克球 · PE Playbook</title>
+<meta name="description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body style="--accent:var(--c-new);--accent-ink:#6d28d9">
+
+<div class="topbar">
+  <a class="home" href="../index.html">📖 目录</a>
+  <span class="title">🏓 匹克球</span>
+  <span class="counter"></span>
+</div>
+<div class="progress"></div>
+
+<div class="deck">
+
+  <!-- 1. 封面 -->
+  <section class="slide cover active">
+    <img class="cover-bg" src="../assets/img/pk-cover.jpg" alt="匹克球比赛场景">
+    <div class="cover-shade"></div>
+    <div class="kicker">新兴运动 · 混合球拍运动</div>
+    <div class="emoji">🏓</div>
+    <h1>匹克球</h1>
+    <p class="lead">网球、羽毛球、乒乓球融合而成的混合运动 — 认识这项任何人只需30分钟就能上手、全球发展最快的运动。</p>
+  </section>
+
+  <!-- 2. 什么是匹克球？ -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">项目介绍</span>
+      <h2>什么是匹克球？</h2>
+      <p class="desc">在羽毛球场大小的球场上，用坚硬的球拍和带孔的塑料球进行的球拍运动</p>
+      <ul>
+        <li><span class="n">1</span><div><b>混合运动</b> — 结合网球的战术、羽毛球的场地、乒乓球的球拍，独具特色的运动项目</div></li>
+        <li><span class="n">2</span><div><b>入门门槛低</b> — 规则简单、容易学习，30分钟即可上场比赛</div></li>
+        <li><span class="n">3</span><div><b>全年龄运动</b> — 从儿童到老年人，无论体力如何都能一起享受</div></li>
+      </ul>
+      <div class="chips">
+        <span class="chip"><b>全球热潮</b> 美国增长最快的运动</span>
+        <span class="chip"><b>双打人气</b> 2人一组的团队比赛</span>
+        <span class="chip">室内外皆可进行</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 有趣的历史 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">历史 · 起源</span>
+      <h2>有趣的历史</h2>
+      <p class="desc">1965年夏天，起源于美国华盛顿州贝恩布里奇岛的故事</p>
+      <ul>
+        <li><span class="n">1</span><div><b>1965年夏天</b> — Joel Pritchard和Bill Bell因为周末孩子们无聊，即兴设计了一个新游戏</div></li>
+        <li><span class="n">2</span><div><b>器材的诞生</b> — 因为找不到羽毛球，便用乒乓球拍和带孔的塑料球代替进行游戏</div></li>
+        <li><span class="n">3</span><div><b>第三位创始人</b> — 邻居Barney McCallum加入，整理并系统化了正式规则</div></li>
+        <li><span class="n">4</span><div><b>名字的由来</b> — 有两种说法：①源自赛艇比赛中收留剩余选手的"Pickle Boat"（咸菜船）；②源自家里养的狗"Pickles"（不过这只狗其实是在游戏发明之后才被收养的）</div></li>
+      </ul>
+      <p class="note"><b>三位创始人</b> — Joel Pritchard（国会议员）、Bill Bell（商人）、Barney McCallum（商人）。从后院游戏开始，如今已成为一项世界性运动！</p>
+    </div>
+  </section>
+
+  <!-- 4. 球场与器材 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">规则 · 球场</span>
+      <h2>球场与器材</h2>
+      <p class="desc">匹克球球场的结构和所需器材</p>
+      <div class="split">
+        <div class="figure">
+          <svg viewBox="0 0 400 280" role="img" aria-label="匹克球球场示意图">
+            <!-- 球场外框 -->
+            <rect x="20" y="20" width="360" height="240" rx="4" fill="#e8f0fe" stroke="#1565c0" stroke-width="2.5"/>
+            <!-- 中央球网 -->
+            <line x1="200" y1="20" x2="200" y2="260" stroke="#333" stroke-width="3" stroke-dasharray="6,3"/>
+            <text x="200" y="14" font-size="9" fill="#333" text-anchor="middle">球网（34英寸/中央）</text>
+            <!-- 左侧球场 -->
+            <!-- 禁止截击区（厨房区）左 -->
+            <rect x="130" y="20" width="70" height="240" fill="rgba(239,68,68,.12)" stroke="#1565c0" stroke-width="1.5"/>
+            <!-- 禁止截击区（厨房区）右 -->
+            <rect x="200" y="20" width="70" height="240" fill="rgba(239,68,68,.12)" stroke="#1565c0" stroke-width="1.5"/>
+            <!-- 发球区 左上 -->
+            <rect x="20" y="20" width="110" height="120" fill="rgba(34,197,94,.06)" stroke="#1565c0" stroke-width="1"/>
+            <!-- 发球区 左下 -->
+            <rect x="20" y="140" width="110" height="120" fill="rgba(34,197,94,.06)" stroke="#1565c0" stroke-width="1"/>
+            <!-- 发球区 右上 -->
+            <rect x="270" y="20" width="110" height="120" fill="rgba(34,197,94,.06)" stroke="#1565c0" stroke-width="1"/>
+            <!-- 发球区 右下 -->
+            <rect x="270" y="140" width="110" height="120" fill="rgba(34,197,94,.06)" stroke="#1565c0" stroke-width="1"/>
+            <!-- 标签 -->
+            <text x="75" y="85" font-size="10" fill="#1565c0" text-anchor="middle">右侧</text>
+            <text x="75" y="98" font-size="10" fill="#1565c0" text-anchor="middle">发球区</text>
+            <text x="75" y="195" font-size="10" fill="#1565c0" text-anchor="middle">左侧</text>
+            <text x="75" y="208" font-size="10" fill="#1565c0" text-anchor="middle">发球区</text>
+            <text x="165" y="140" font-size="11" font-weight="700" fill="#dc2626" text-anchor="middle">禁止截击区</text>
+            <text x="165" y="155" font-size="9" fill="#dc2626" text-anchor="middle">（厨房区）7ft</text>
+            <text x="235" y="140" font-size="11" font-weight="700" fill="#dc2626" text-anchor="middle">禁止截击区</text>
+            <text x="235" y="155" font-size="9" fill="#dc2626" text-anchor="middle">（厨房区）7ft</text>
+            <text x="325" y="85" font-size="10" fill="#1565c0" text-anchor="middle">左侧</text>
+            <text x="325" y="98" font-size="10" fill="#1565c0" text-anchor="middle">发球区</text>
+            <text x="325" y="195" font-size="10" fill="#1565c0" text-anchor="middle">右侧</text>
+            <text x="325" y="208" font-size="10" fill="#1565c0" text-anchor="middle">发球区</text>
+            <!-- 尺寸标示 -->
+            <text x="200" y="275" font-size="10" fill="#555" text-anchor="middle">44ft（13.4m）</text>
+            <text x="8" y="140" font-size="10" fill="#555" writing-mode="tb" text-anchor="middle">20ft（6.1m）</text>
+          </svg>
+          <figcaption>球场 20ft×44ft（6.1m×13.4m） · 球网高度：两侧36英寸，中央34英寸</figcaption>
+        </div>
+        <ul>
+          <li><span class="n">🏓</span><div><b>球拍</b> — 表面坚硬的球拍。比乒乓球拍大，比网球拍小。材质有木质、复合材料、石墨等多种。</div></li>
+          <li><span class="n">⚪</span><div><b>球</b> — 轻量带孔的塑料球（类似打孔的塑料球）。室内用球有26个孔（较软），室外用球有40个孔（较硬、抗风）。</div></li>
+          <li><span class="n">👟</span><div><b>着装</b> — 球场专用运动鞋（防滑）、舒适的运动服。建议穿网球鞋。</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 发球规则 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">规则 · 发球</span>
+      <h2>发球规则</h2>
+      <p class="desc">了解匹克球独特的发球方式</p>
+      <ul>
+        <li><span class="n">1</span><div><b>只允许下手发球</b> — 必须从腰部以下向上挥拍发球。禁止上手发球！</div></li>
+        <li><span class="n">2</span><div><b>对角线发球</b> — 从己方发球区沿对角线方向发向对方发球区</div></li>
+        <li><span class="n">3</span><div><b>底线之后</b> — 发球时双脚必须位于底线之后</div></li>
+        <li><span class="n">4</span><div><b>只有发球方能得分</b> — 只有发球的一方才能得分（发球权得分制）</div></li>
+        <li><span class="n">5</span><div><b>发球顺序</b> — 双打中，第一发球员失分后轮到搭档发球，若搭档也失分，则发球权转移给对方</div></li>
+      </ul>
+      <p class="note"><b>落地发球</b> — 从2021年起，先将球放手落地弹起后再击球的"落地发球（Drop Serve）"也被正式允许。</p>
+    </div>
+  </section>
+
+  <!-- 6. 双弹跳规则 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">规则 · 核心</span>
+      <h2>双弹跳规则</h2>
+      <p class="desc">决定匹克球比赛走向的最核心规则！</p>
+      <ul>
+        <li><span class="n">1</span><div><b>第1次弹跳（接发球）</b> — 发球落入对方场地后，接发球方必须让球先弹跳一次后才能回击。直接凌空截击发球即为犯规！</div></li>
+        <li><span class="n">2</span><div><b>第2次弹跳（发球方回击）</b> — 接发球方的回击球也必须在发球方场地弹跳一次后才能击打。直接凌空截击回击球也是犯规！</div></li>
+        <li><span class="n">3</span><div><b>此后自由比赛</b> — 完成两次弹跳后，之后就可以自由进行凌空截击（不经弹跳直接击球）</div></li>
+      </ul>
+      <p class="note"><b>为什么会有这条规则？</b> — 这是为了防止"发球上网"的抢攻战术，使回合更持久，让比赛更有趣、更公平的设计。正是这条规则，造就了匹克球独特的战术魅力！</p>
+    </div>
+  </section>
+
+  <!-- 7. 禁止截击区（厨房区） -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">规则 · 厨房区</span>
+      <h2>禁止截击区（厨房区）</h2>
+      <p class="desc">别名"厨房（Kitchen）"——匹克球中最重要的区域</p>
+      <ul>
+        <li><span class="n">📏</span><div><b>位置与大小</b> — 从球网两侧各延伸7英尺（2.1m）的矩形区域</div></li>
+        <li><span class="n">🚫</span><div><b>核心规则</b> — 在这个区域内，不能在球落地弹跳之前进行凌空截击</div></li>
+        <li><span class="n">👟</span><div><b>连线也算</b> — 只要踩到厨房区的界线也算犯规！哪怕脚尖轻轻碰到也会失分</div></li>
+        <li><span class="n">🏃</span><div><b>惯性也算犯规</b> — 凌空击球后因惯性使身体进入厨房区，也算犯规。必须保持平衡并停住</div></li>
+        <li><span class="n">✅</span><div><b>例外情况</b> — 如果球先在厨房区内弹跳，之后可以进入区域内击球（应对轻吊球）</div></li>
+      </ul>
+      <p class="note"><b>"Kitchen"名称的由来</b> — 一般认为源自沙壶球（shuffleboard）游戏中扣分区域的名称"kitchen"。意思是一旦进入就会处于不利的区域！</p>
+    </div>
+  </section>
+
+  <!-- 8. 得分与比赛形式 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">规则 · 得分</span>
+      <h2>得分与比赛形式</h2>
+      <p class="desc">匹克球独特的报分系统</p>
+      <div class="two">
+        <div class="box"><h3>📢 双打报分方式</h3><p>"（发球方得分）-（接发球方得分）-（发球员编号）"<br>例如：<b>"3-2-1"</b> = 发球方3分，接发球方2分，第1发球员</p></div>
+        <div class="box"><h3>🏆 获胜条件</h3><p>先得11分获胜（但必须领先2分以上）。锦标赛中也会采用15分或21分制。</p></div>
+        <div class="box"><h3>🔄 发球权转移</h3><p>双打中第一发球员失分 → 换第二发球员 → 第二发球员也失分 → 发球权转移给对方！</p></div>
+        <div class="box"><h3>⚡ 开局例外</h3><p>比赛开始时，首个发球方只有1名发球员发球（从0-0-2开始）。这是为了保持平衡的规则！</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. 核心技术①：发球与接发球 -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/pk-serve.jpg" alt="匹克球发球姿势">
+        <figcaption>下手发球 — 手臂向后引，从下往上自然挥拍</figcaption>
+      </figure>
+      <div>
+        <span class="tag">核心技术 ①</span>
+        <h2>发球与接发球</h2>
+        <p class="desc">决定比赛开局的两项基本功</p>
+        <ul>
+          <li><span class="n">1</span><div><b>下手发球</b> — 手臂向后引，从腰部以下自然向上挥拍。不要过度折腕。</div></li>
+          <li><span class="n">2</span><div><b>深远发球</b> — 将球发到靠近对方底线的深处，把对方逼退。发球过短会给对方进攻机会。</div></li>
+          <li><span class="n">3</span><div><b>深远回击</b> — 牢记双弹跳规则，回击球也要打深！关键在于不让发球方顺利上网。</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. 核心技术②：轻吊球与放小球 -->
+  <section class="slide">
+    <div class="media flip">
+      <div>
+        <span class="tag">核心技术 ②</span>
+        <h2>轻吊球与放小球</h2>
+        <p class="desc">匹克球的精华——柔和触球的艺术</p>
+        <ul>
+          <li><span class="n">1</span><div><b>轻吊球（Dink）</b> — 在厨房区附近，将球轻轻擦网而过的柔和击球。是让对方无法强力回击的控球核心技术。</div></li>
+          <li><span class="n">2</span><div><b>放小球（Drop Shot）</b> — 从底线后方将球柔和地落在厨房区前方的击球方式。可以打断对方的防守节奏，为自己争取上网的时间。</div></li>
+          <li><span class="n">3</span><div><b>第三拍放小球</b> — 发球方的第3拍（发球→接发球→第三拍）用放小球处理。是双弹跳规则后争夺网前控制权的核心战术！</div></li>
+        </ul>
+      </div>
+      <figure class="photo">
+        <img src="../assets/img/pk-dink.jpg" alt="轻吊球场景">
+        <figcaption>轻吊球——刚好擦网而过的细腻控球是关键</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 11. 核心技术③：扣杀与相持 -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/pk-rally.jpg" alt="匹克球相持球">
+        <figcaption>快速相持——耐心与精准决定胜负</figcaption>
+      </figure>
+      <div>
+        <span class="tag">核心技术 ③</span>
+        <h2>扣杀与相持</h2>
+        <p class="desc">掌握攻守平衡的技术</p>
+        <ul>
+          <li><span class="n">1</span><div><b>扣杀（Smash）</b> — 用力向下扣击对方高高弹起的球的进攻技术。在厨房区外尝试更有效。</div></li>
+          <li><span class="n">2</span><div><b>高吊球（Lob）</b> — 将球高高送过站在网前对手头顶的防守技术。可以把对方逼退，打乱其站位。</div></li>
+          <li><span class="n">3</span><div><b>相持战术</b> — 匹克球中，耐心比强攻更重要！减少自己的失误、诱导对方犯错，才是获胜的秘诀。</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. 基本战术 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">战术 · 策略</span>
+      <h2>基本战术</h2>
+      <p class="desc">了解后能大幅提升比赛表现的双打核心战术</p>
+      <div class="two">
+        <div class="box"><h3>🎯 掌控厨房区</h3><p>抢占网前厨房区界线附近的位置是比赛的核心。站在厨房区前方的一方能掌握主动权。</p></div>
+        <div class="box"><h3>🏓 轻吊球对决</h3><p>在厨房区前互相进行轻吊球的耐心较量。谁先尝试强力击球，谁失分的风险就更高。</p></div>
+        <div class="box"><h3>📏 深远发球/回击</h3><p>发球和回击都要打到对方底线深处，把对方逼退。短球会给对方进攻机会。</p></div>
+        <div class="box"><h3>👥 并排站位</h3><p>双打的基本站位是并排站立。将球场分成两半，最大限度减少空档。</p></div>
+        <div class="box"><h3>🎯 攻击弱点</h3><p>集中攻击对方的反手位。两名选手之间的中间地带也是有效的攻击点！</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. 安全守则 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">安全守则</span>
+      <h2>安全地享受运动</h2>
+      <p class="desc">无伤享受匹克球的注意事项</p>
+      <div class="two">
+        <div class="box warn"><h3>👁️ 保护眼睛</h3><p>匹克球飞行速度很快！尤其是在网前接扣杀球时要格外小心。建议佩戴护目镜。</p></div>
+        <div class="box warn"><h3>🩹 注意防滑</h3><p>室内球场可能较滑。急速变向时要小心，并穿着球场专用防滑运动鞋。</p></div>
+        <div class="box warn"><h3>💪 保护肩肘</h3><p>反复挥拍动作可能导致肩部、肘部受伤（网球肘）。需要充分的拉伸和休息。</p></div>
+        <div class="box"><h3>✅ 准备事项确认</h3><p>室内专用运动鞋（不留痕迹）、充足的水分补给、5分钟以上的热身运动、与搭档的沟通（喊球"Mine!""Yours!"）。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14. 判断题小测验 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">小测验</span>
+      <h2>判断题小测验</h2>
+      <p class="desc">来检验一下学到的内容吧！</p>
+      <ul>
+        <li><span class="n">Q1</span><div><b>匹克球发球也可以用上手发球</b> — 错。匹克球发球必须在腰部以下用下手方式进行。</div></li>
+        <li><span class="n">Q2</span><div><b>在禁止截击区（厨房区）中，无论任何情况都不能击球</b> — 错。如果球先在厨房区内弹跳，之后可以进入区域内击球。</div></li>
+        <li><span class="n">Q3</span><div><b>双弹跳规则是指发球和回击都必须各弹跳一次后才能击球的规则</b> — 对。发球后的接发球，以及那次回击，都必须先弹跳一次后才能击打。</div></li>
+        <li><span class="n">Q4</span><div><b>匹克球双打报分由两个数字组成</b> — 错。双打报分由"发球方得分-接发球方得分-发球员编号"三个数字组成。</div></li>
+        <li><span class="n">Q5</span><div><b>匹克球中只有发球方才能得分</b> — 对。这是发球权得分制，只有拥有发球权的一方才能得分。</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 15. 核心整理 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">核心整理</span>
+      <h2>一定要记住！</h2>
+      <p class="desc">整理今天学到的核心内容</p>
+      <div class="two">
+        <div class="box"><h3>📌 核心规则</h3><p>①只允许下手发球<br>②双弹跳规则（发球、回击各弹跳1次）<br>③禁止截击区（厨房区）内不能凌空截击<br>④先得11分，且需领先2分以上获胜</p></div>
+        <div class="box"><h3>⭐ 核心技术</h3><p>①深远下手发球<br>②轻吊球（厨房区前的柔和触球）<br>③第三拍放小球（争夺网前控制权战术）<br>④扣杀与高吊球（攻守平衡）</p></div>
+        <div class="box"><h3>🏆 值得了解的小知识</h3><p>• 世界上发展最快的运动（以美国为准）<br>• 名字源自"Pickle Boat"（赛艇用语）或宠物狗"Pickles"<br>• 从2021年起正式允许落地发球</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 探究问题 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">探究问题</span>
+      <h2>一起来思考</h2>
+      <p class="desc">在课程结束前，一起讨论一下吧</p>
+      <ul>
+        <li><span class="n">1</span><div><b>匹克球最近在全球范围内快速发展的原因是什么？</b></div></li>
+        <li><span class="n">2</span><div><b>匹克球的"禁止截击区（NVZ）"规则给比赛带来了怎样的战术变化？</b></div></li>
+        <li><span class="n">3</span><div><b>一项新运动要诞生并走向大众化，需要具备哪些条件？</b></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 16. 结尾 -->
+  <section class="slide cover">
+    <img class="cover-bg" src="../assets/img/pk-team.jpg" alt="匹克球体育精神">
+    <div class="cover-shade"></div>
+    <div class="emoji">🏓</div>
+    <h1>ANY QUESTIONS?</h1>
+    <p class="lead">匹克球不仅仅是一项运动，更是一个快乐交流的舞台。<br>拿起球拍，在球场上结交新朋友吧！<br><br>谢谢!</p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" aria-label="上一页">‹</button>
+  <div class="dots"></div>
+  <button id="next" aria-label="下一页">›</button>
+</div>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>플라잉디스크 - 글래스모피즘</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Noto Sans KR','Poppins',sans-serif; overflow:hidden; height:100vh; }
+.bg {
+  position:fixed; inset:0; z-index:0;
+  background:#0a0a2e;
+}
+.blob {
+  position:absolute; border-radius:50%; filter:blur(80px); opacity:0.7;
+  animation: float 8s ease-in-out infinite;
+}
+.blob1 { width:400px; height:400px; background:#7c3aed; top:10%; left:10%; animation-delay:0s; }
+.blob2 { width:350px; height:350px; background:#2563eb; top:50%; left:50%; animation-delay:-2s; }
+.blob3 { width:300px; height:300px; background:#10b981; bottom:10%; right:10%; animation-delay:-4s; }
+@keyframes float {
+  0%,100% { transform:translate(0,0) scale(1); }
+  33% { transform:translate(30px,-20px) scale(1.05); }
+  66% { transform:translate(-20px,30px) scale(0.95); }
+}
+.slides { position:relative; z-index:1; height:100vh; }
+.slide {
+  display:none; position:absolute; inset:0;
+  align-items:center; justify-content:center; flex-direction:column; padding:40px;
+}
+.slide.active { display:flex; animation: fadeIn 0.5s ease; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+.glass {
+  background:rgba(255,255,255,0.1);
+  backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:24px; padding:40px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.2);
+}
+.glass-sm {
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.15);
+  border-radius:16px; padding:24px;
+  box-shadow:0 4px 16px rgba(0,0,0,0.15);
+}
+
+/* Slide 1 */
+.slide1 .glass { text-align:center; max-width:600px; }
+.slide1 h1 { font-family:'Poppins',sans-serif; font-size:3rem; color:#fff; font-weight:700; margin-bottom:8px; }
+.slide1 h2 { font-size:1.2rem; color:rgba(255,255,255,0.7); font-weight:300; margin-bottom:20px; }
+.slide1 .subtitle { font-size:0.9rem; color:rgba(255,255,255,0.5); }
+.slide1 img { width:100%; max-width:400px; border-radius:16px; margin-bottom:24px; opacity:0.9; }
+
+/* Slide 2 */
+.slide2 .content { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; max-width:900px; }
+.slide2 .glass-sm { flex:1; min-width:220px; max-width:280px; text-align:center; transition:transform 0.3s; }
+.slide2 .glass-sm:hover { transform:translateY(-8px); }
+.slide2 .icon { font-size:2.5rem; margin-bottom:12px; }
+.slide2 h3 { color:#fff; font-size:1.1rem; margin-bottom:8px; }
+.slide2 p { color:rgba(255,255,255,0.7); font-size:0.85rem; line-height:1.6; }
+.slide2 .def { color:rgba(255,255,255,0.9); font-size:1rem; margin-bottom:24px; text-align:center; }
+.slide2 .section-title { color:#fff; font-family:'Poppins'; font-size:1.8rem; margin-bottom:8px; text-align:center; }
+
+/* Slide 3 */
+.slide3 .content { display:flex; gap:24px; flex-wrap:wrap; justify-content:center; align-items:stretch; max-width:950px; }
+.slide3 .left { flex:1; min-width:280px; }
+.slide3 .left img { width:100%; border-radius:16px; object-fit:cover; height:100%; max-height:400px; }
+.slide3 .right { flex:1; min-width:280px; display:flex; flex-direction:column; gap:12px; }
+.slide3 .step { display:flex; align-items:flex-start; gap:12px; }
+.slide3 .step-num {
+  min-width:32px; height:32px; border-radius:50%;
+  background:rgba(124,58,237,0.5); color:#fff; display:flex; align-items:center; justify-content:center;
+  font-family:'Poppins'; font-weight:700; font-size:0.9rem;
+}
+.slide3 .step-content h4 { color:#fff; font-size:0.95rem; margin-bottom:4px; }
+.slide3 .step-content p { color:rgba(255,255,255,0.7); font-size:0.8rem; line-height:1.5; }
+.slide3 .section-title { color:#fff; font-family:'Poppins'; font-size:1.5rem; margin-bottom:16px; }
+
+/* Nav */
+.nav {
+  position:fixed; bottom:30px; left:50%; transform:translateX(-50%); z-index:10;
+  display:flex; gap:12px; align-items:center;
+}
+.nav button {
+  background:rgba(255,255,255,0.15); backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.2); color:#fff;
+  width:44px; height:44px; border-radius:50%; cursor:pointer;
+  font-size:1.2rem; transition:all 0.3s; display:flex; align-items:center; justify-content:center;
+}
+.nav button:hover { background:rgba(255,255,255,0.3); transform:scale(1.1); }
+.dots { display:flex; gap:8px; }
+.dot {
+  width:10px; height:10px; border-radius:50%;
+  background:rgba(255,255,255,0.3); transition:all 0.3s; cursor:pointer;
+}
+.dot.active { background:#fff; transform:scale(1.3); }
+</style>
+</head>
+<body>
+<div class="bg">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="blob blob3"></div>
+</div>
+
+<div class="slides">
+  <div class="slide slide1 active">
+    <div class="glass">
+      <img src="../flying-disc-images/01_title.jpg" alt="플라잉디스크">
+      <h1>플라잉디스크</h1>
+      <h2>Flying Disc (Ultimate)</h2>
+      <p class="subtitle">뉴스포츠 | 체육 실기</p>
+    </div>
+  </div>
+
+  <div class="slide slide2">
+    <p class="section-title">플라잉디스크란?</p>
+    <p class="def">원반을 패스하여 엔드존에서 득점하는 팀 스포츠</p>
+    <div class="content">
+      <div class="glass-sm">
+        <div class="icon">👥</div>
+        <h3>팀 스포츠 7명</h3>
+        <p>한 팀 7명이 원반을 패스하며 엔드존 득점을 목표로 하는 팀 경기</p>
+      </div>
+      <div class="glass-sm">
+        <div class="icon">🤝</div>
+        <h3>자율심판 SOTG</h3>
+        <p>Spirit of the Game - 심판 없이 선수 스스로 공정하게 판정하는 정신</p>
+      </div>
+      <div class="glass-sm">
+        <div class="icon">🚫</div>
+        <h3>비접촉 원칙</h3>
+        <p>상대 선수와 신체 접촉 없이 플레이하는 안전한 비접촉 스포츠</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide slide3">
+    <div class="content">
+      <div class="left glass-sm">
+        <img src="../flying-disc-images/02_backhand.jpg" alt="백핸드 스로우">
+      </div>
+      <div class="right glass-sm">
+        <p class="section-title">백핸드 스로우</p>
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>그립</h4>
+            <p>엄지는 위, 나머지 4손가락은 림 안쪽을 감싸 잡기</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>자세</h4>
+            <p>몸을 회전하며 팔을 가슴 앞으로 가져오기</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>릴리스</h4>
+            <p>손목 스냅으로 수평 방향 릴리스</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>팔로스루</h4>
+            <p>끝까지 팔을 목표 방향으로 뻗기</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <button id="prev">&#8592;</button>
+  <div class="dots">
+    <div class="dot active" data-i="0"></div>
+    <div class="dot" data-i="1"></div>
+    <div class="dot" data-i="2"></div>
+  </div>
+  <button id="next">&#8594;</button>
+</div>
+
+<script>
+let cur=0; const slides=document.querySelectorAll('.slide'), dots=document.querySelectorAll('.dot'), total=slides.length;
+function go(n){ cur=(n+total)%total; slides.forEach((s,i)=>{s.classList.toggle('active',i===cur)}); dots.forEach((d,i)=>{d.classList.toggle('active',i===cur)}); }
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+dots.forEach(d=>d.onclick=()=>go(+d.dataset.i));
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(cur-1);if(e.key==='ArrowRight')go(cur+1);});
+</script>
+</body>
+</html>

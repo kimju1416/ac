@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>체육 플레이북 - 광평중학교</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --orange: #E8590C;
+  --orange-light: #FFF4F0;
+  --black: #111;
+  --gray-dark: #333;
+  --gray-mid: #666;
+  --gray-light: #e5e5e5;
+  --white: #fff;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--black);
+  background: var(--white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url('../assets/img/hero-bg.jpg') center/cover no-repeat;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.75) 100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: var(--white);
+  padding: 0 24px;
+}
+
+.hero-tag {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 24px;
+  border: 1px solid var(--orange);
+  padding: 6px 16px;
+}
+
+.hero-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(42px, 7vw, 80px);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+
+.hero-title span {
+  color: var(--orange);
+}
+
+.hero-sub {
+  font-size: 16px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 40px;
+}
+
+.hero-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.6);
+  font-size: 13px;
+  letter-spacing: 1px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* Navigation Bar */
+.nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--gray-light);
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.nav-brand span { color: var(--orange); }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--gray-mid);
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--orange); }
+
+.nav-info {
+  font-size: 12px;
+  color: var(--gray-mid);
+}
+
+/* Sections */
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 40px;
+}
+
+.section-header {
+  margin-bottom: 48px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  border-bottom: 1px solid var(--gray-light);
+  padding-bottom: 20px;
+}
+
+.section-number {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--orange);
+  line-height: 1;
+}
+
+.section-title-group {
+  flex: 1;
+}
+
+.section-tag {
+  display: inline-block;
+  background: var(--orange);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.section-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.section-count {
+  font-size: 13px;
+  color: var(--gray-mid);
+  align-self: flex-end;
+}
+
+/* Card Grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  border: 1px solid var(--gray-light);
+  padding: 28px 24px;
+  position: relative;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  background: var(--white);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--orange);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.card:hover::before {
+  transform: scaleX(1);
+}
+
+.card:hover {
+  border-color: var(--orange);
+  transform: translateY(-2px);
+}
+
+.card-emoji {
+  font-size: 36px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.card-name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.card-type {
+  font-size: 12px;
+  color: var(--gray-mid);
+  letter-spacing: 0.5px;
+}
+
+.card-status {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--orange);
+}
+
+/* Soon cards */
+.card.soon {
+  opacity: 0.5;
+  border-style: dashed;
+}
+
+.card.soon:hover {
+  opacity: 0.7;
+  border-color: var(--gray-light);
+  transform: none;
+}
+
+.card.soon::before { display: none; }
+
+.card.soon .card-status {
+  background: var(--gray-light);
+}
+
+/* Footer */
+.footer {
+  border-top: 1px solid var(--gray-light);
+  padding: 40px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--gray-mid);
+}
+
+.footer-brand {
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--black);
+  margin-bottom: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-bar { padding: 14px 20px; }
+  .nav-links { display: none; }
+  .section { padding: 60px 20px; }
+  .section-number { font-size: 36px; }
+  .section-title { font-size: 22px; }
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+  .card { padding: 20px 16px; }
+  .hero { min-height: 500px; }
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Physical Education</div>
+    <h1 class="hero-title">체육 <span>교과서</span></h1>
+    <p class="hero-sub">광평중학교 &middot; 김주현</p>
+    <div class="hero-scroll">아래로 스크롤 &darr;</div>
+  </div>
+</section>
+
+<nav class="nav-bar">
+  <div class="nav-brand">체육<span>.</span>교과서</div>
+  <ul class="nav-links">
+    <li><a href="#ball">구기 종목</a></li>
+    <li><a href="#track">육상 &middot; 체조</a></li>
+    <li><a href="#new">뉴스포츠</a></li>
+    <li><a href="#expression">표현 &middot; 기타</a></li>
+  </ul>
+  <span class="nav-info">2/27 종목 준비 완료</span>
+</nav>
+
+<!-- 구기 종목 -->
+<div class="section" id="ball">
+  <div class="section-header">
+    <div class="section-number">01</div>
+    <div class="section-title-group">
+      <div class="section-tag">BALL SPORTS</div>
+      <h2 class="section-title">구기 종목</h2>
+    </div>
+    <span class="section-count">8종목</span>
+  </div>
+  <div class="card-grid">
+    <a href="sports/basketball.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏀</span>
+      <div class="card-name">농구</div>
+      <div class="card-type">영역형</div>
+    </a>
+    <a href="sports/soccer.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">⚽</span>
+      <div class="card-name">축구</div>
+      <div class="card-type">영역형</div>
+    </a>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🤾</span>
+      <div class="card-name">핸드볼</div>
+      <div class="card-type">영역형</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🥅</span>
+      <div class="card-name">풋살</div>
+      <div class="card-type">영역형</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏐</span>
+      <div class="card-name">배구</div>
+      <div class="card-type">네트형</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏸</span>
+      <div class="card-name">배드민턴</div>
+      <div class="card-type">네트형</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏓</span>
+      <div class="card-name">탁구</div>
+      <div class="card-type">네트형</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🎾</span>
+      <div class="card-name">테니스</div>
+      <div class="card-type">네트형</div>
+    </div>
+  </div>
+</div>
+
+<!-- 육상·체조 -->
+<div class="section" id="track">
+  <div class="section-header">
+    <div class="section-number">02</div>
+    <div class="section-title-group">
+      <div class="section-tag">TRACK & GYMNASTICS</div>
+      <h2 class="section-title">육상 &middot; 체조</h2>
+    </div>
+    <span class="section-count">7종목</span>
+  </div>
+  <div class="card-grid">
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏃</span>
+      <div class="card-name">단거리</div>
+      <div class="card-type">육상</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🤝</span>
+      <div class="card-name">이어달리기</div>
+      <div class="card-type">육상</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🦘</span>
+      <div class="card-name">멀리뛰기</div>
+      <div class="card-type">육상</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">⬆️</span>
+      <div class="card-name">높이뛰기</div>
+      <div class="card-type">육상</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🤸</span>
+      <div class="card-name">뜀틀</div>
+      <div class="card-type">체조</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🤸‍♂️</span>
+      <div class="card-name">매트운동</div>
+      <div class="card-type">체조</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">📊</span>
+      <div class="card-name">PAPS</div>
+      <div class="card-type">건강체력</div>
+    </div>
+  </div>
+</div>
+
+<!-- 뉴스포츠 -->
+<div class="section" id="new">
+  <div class="section-header">
+    <div class="section-number">03</div>
+    <div class="section-title-group">
+      <div class="section-tag">NEW SPORTS</div>
+      <h2 class="section-title">뉴스포츠</h2>
+    </div>
+    <span class="section-count">6종목</span>
+  </div>
+  <div class="card-grid">
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏑</span>
+      <div class="card-name">플로어볼</div>
+      <div class="card-type">뉴스포츠</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🎯</span>
+      <div class="card-name">츄크볼</div>
+      <div class="card-type">뉴스포츠</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏓</span>
+      <div class="card-name">피클볼</div>
+      <div class="card-type">뉴스포츠</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🧺</span>
+      <div class="card-name">넷볼</div>
+      <div class="card-type">뉴스포츠</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🟣</span>
+      <div class="card-name">킨볼</div>
+      <div class="card-type">뉴스포츠</div>
+    </div>
+    <a href="sports/flying-disc.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🥏</span>
+      <div class="card-name">플라잉디스크</div>
+      <div class="card-type">뉴스포츠</div>
+    </a>
+  </div>
+</div>
+
+<!-- 표현·기타 -->
+<div class="section" id="expression">
+  <div class="section-header">
+    <div class="section-number">04</div>
+    <div class="section-title-group">
+      <div class="section-tag">EXPRESSION & MORE</div>
+      <h2 class="section-title">표현 &middot; 기타</h2>
+    </div>
+    <span class="section-count">3종목</span>
+  </div>
+  <div class="card-grid">
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">💃</span>
+      <div class="card-name">창작댄스</div>
+      <div class="card-type">표현</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🎵</span>
+      <div class="card-name">리듬운동</div>
+      <div class="card-type">표현</div>
+    </div>
+    <div class="card soon">
+      <span class="card-status"></span>
+      <span class="card-emoji">🪢</span>
+      <div class="card-name">줄넘기</div>
+      <div class="card-type">도전</div>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-brand">체육.플레이북</div>
+  <p>광평중학교 &middot; 김주현 &middot; 2026</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 AI 도구 완벽 가이드</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="description" content="대화부터 이미지·영상·코딩까지 — 2026년 10월 기준 꼭 알아야 할 AI 도구를 한눈에 정리한 가이드">
+<meta property="og:type" content="website">
+<meta property="og:title" content="2026 AI 도구 완벽 가이드">
+<meta property="og:description" content="대화부터 이미지·영상·코딩까지 — 2026년 10월 기준 꼭 알아야 할 AI 도구를 한눈에">
+<meta property="og:url" content="https://kimju.kr/codex/">
+<meta property="og:image" content="https://kimju.kr/codex/og.png?v=20261002">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="2026 AI 도구 완벽 가이드">
+<meta name="twitter:description" content="대화부터 이미지·영상·코딩까지 — 2026년 10월 기준 꼭 알아야 할 AI 도구를 한눈에">
+<meta name="twitter:image" content="https://kimju.kr/codex/og.png?v=20261002">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0d0d0f;
+  --surface: #16161a;
+  --surface2: #1e1e24;
+  --border: #2a2a32;
+  --text: #f0ede8;
+  --muted: #7a7885;
+  --accent: #7c6af7;
+  --accent2: #f7706a;
+  --accent3: #4fd8a0;
+  --accent4: #f7b96a;
+  --claude: #7c6af7;
+  --openai: #3dbe8a;
+  --google: #4d9ef7;
+  --indie: #f7706a;
+  --img: #f7b96a;
+  --video: #e06af7;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.4;
+}
+
+
+
+.uses{display:flex;flex-direction:column;gap:5px;margin:10px 0 8px}
+.use-row{display:flex;align-items:flex-start;gap:7px;font-size:12px;color:#9a97a8;line-height:1.5}
+.use-ok{flex-shrink:0;margin-top:1px}
+.use-warn{flex-shrink:0;margin-top:1px}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  padding: 80px 24px 60px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 50%, rgba(124,106,247,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 80% 50%, rgba(77,158,247,0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 50% 100%, rgba(247,112,106,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero-eyebrow {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  animation: fadeUp 0.6s ease both;
+}
+
+.hero-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 10vw, 88px);
+  letter-spacing: 0.02em;
+  line-height: 0.95;
+  margin-bottom: 20px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+
+.hero-title span { color: var(--accent); }
+
+.hero-sub {
+  font-size: 15px;
+  color: var(--muted);
+  max-width: 480px;
+  margin: 0 auto 32px;
+  font-weight: 300;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(124,106,247,0.12);
+  border: 1px solid rgba(124,106,247,0.3);
+  border-radius: 100px;
+  padding: 6px 14px;
+  font-size: 12px;
+  color: var(--accent);
+  font-family: 'Space Mono', monospace;
+  animation: fadeUp 0.6s 0.3s ease both;
+}
+
+/* ── NAV TABS ── */
+.nav-wrap {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(13,13,15,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.nav-wrap::-webkit-scrollbar { display: none; }
+
+/* margin:auto centers the tabs when they fit; collapses to 0 (scroll
+   from the start) when they overflow on narrow screens */
+.nav-inner {
+  display: flex;
+  margin: auto;
+  gap: 0;
+  padding: 0 12px;
+}
+
+.nav-btn {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  padding: 14px 16px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
+.nav-btn:hover { color: var(--text); }
+.nav-btn.active {
+  color: var(--text);
+  font-weight: 500;
+}
+.nav-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 2px 2px 0 0;
+}
+
+/* ── MAIN CONTENT ── */
+.main { padding: 40px 24px 80px; max-width: 900px; margin: 0 auto; }
+
+.section { display: none; animation: fadeUp 0.4s ease both; }
+.section.active { display: block; }
+
+/* ── SECTION HEADER ── */
+.sec-header {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.sec-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 64px;
+  line-height: 1;
+  color: var(--border);
+}
+.sec-info { flex: 1; }
+.sec-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+.sec-desc { font-size: 13px; color: var(--muted); }
+
+/* ── TOOL CARD ── */
+.tools-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+
+.tool-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px 24px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 16px;
+  align-items: start;
+  transition: border-color 0.2s, transform 0.2s;
+  cursor: default;
+  position: relative;
+  overflow: hidden;
+}
+.tool-card::before { display:none; }
+.tool-card:hover {
+  border-color: var(--card-color, var(--accent));
+  transform: translateY(-2px);
+}
+
+.tool-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  background: rgba(255,255,255,0.05);
+  flex-shrink: 0;
+}
+
+.tool-body { min-width: 0; }
+.tool-name {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tool-by {
+  font-size: 11px;
+  color: var(--muted);
+  font-family: 'Space Mono', monospace;
+  margin-bottom: 8px;
+}
+.tool-desc { font-size: 13px; color: #c0bdc8; line-height: 1.6; }
+
+.tool-meta { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; flex-shrink: 0; }
+
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  padding: 3px 8px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+.badge-hot { background: rgba(247,112,106,0.15); color: var(--accent2); border: 1px solid rgba(247,112,106,0.3); }
+.badge-free { background: rgba(79,216,160,0.1); color: var(--accent3); border: 1px solid rgba(79,216,160,0.25); }
+.badge-paid { background: rgba(247,185,106,0.1); color: var(--accent4); border: 1px solid rgba(247,185,106,0.25); }
+.badge-rec { background: rgba(124,106,247,0.15); color: var(--accent); border: 1px solid rgba(124,106,247,0.3); }
+.badge-new { background: rgba(77,158,247,0.12); color: var(--google); border: 1px solid rgba(77,158,247,0.3); }
+
+/* tags */
+.tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.tag {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.06);
+  color: var(--muted);
+}
+
+/* ── MAP SECTION ── */
+.map-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.map-row {
+  display: grid;
+  grid-template-columns: 72px repeat(5, 1fr);
+  gap: 6px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+.map-row:last-child { border-bottom: none; }
+
+.map-header-row {
+  display: grid;
+  grid-template-columns: 72px repeat(5, 1fr);
+  gap: 6px;
+  padding-bottom: 8px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+.map-col-header {
+  font-size: 10px;
+  font-weight: 600;
+  text-align: center;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 6px 4px;
+}
+.map-row-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--muted);
+  display: flex;
+  align-items: flex-start;
+  padding-top: 8px;
+  line-height: 1.3;
+}
+.map-cell {
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 11px;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  min-height: 52px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.map-cell:not(.empty):hover {
+  filter: brightness(1.1);
+  transform: scale(1.02);
+}
+.map-cell.empty { background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.06); }
+.cell-name { font-weight: 600; margin-bottom: 2px; }
+.cell-sub { font-size: 10px; opacity: 0.7; }
+.cell-hot { font-size: 11px; font-weight: 600; color: #f7706a; margin-bottom: 3px; }
+.cell-star { font-size: 11px; font-weight: 600; color: #7c6af7; margin-bottom: 3px; }
+
+/* company colors */
+.c-claude { background: rgba(124,106,247,0.12); border-color: rgba(124,106,247,0.25); color: #c4bef7; }
+.c-claude-hl { background: rgba(124,106,247,0.2); border-color: rgba(124,106,247,0.5); color: #c4bef7; }
+.c-openai { background: rgba(61,190,138,0.1); border-color: rgba(61,190,138,0.2); color: #9de8c5; }
+.c-google { background: rgba(77,158,247,0.1); border-color: rgba(77,158,247,0.2); color: #a4ccf7; }
+.c-google-hl { background: rgba(77,158,247,0.18); border-color: rgba(77,158,247,0.45); color: #a4ccf7; }
+.c-indie { background: rgba(247,112,106,0.1); border-color: rgba(247,112,106,0.2); color: #f7a8a5; }
+.c-indie-hl { background: rgba(247,112,106,0.18); border-color: rgba(247,112,106,0.45); color: #f7a8a5; }
+.c-neutral { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: #aaa8b8; }
+
+/* ── COMPARISON TABLE ── */
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.compare-table th {
+  padding: 12px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+}
+.compare-table td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: top;
+  line-height: 1.5;
+}
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: rgba(255,255,255,0.02); }
+.tool-th { font-weight: 600; font-size: 13px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+
+/* ── TIPS SECTION ── */
+.tips-grid { display: grid; gap: 14px; }
+.tip-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.tip-num {
+  width: 40px; height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  background: rgba(124,106,247,0.15);
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.tip-title { font-weight: 600; margin-bottom: 4px; }
+.tip-body { font-size: 13px; color: #c0bdc8; line-height: 1.6; }
+.tip-body strong { color: var(--accent); font-weight: 600; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  padding: 32px 24px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 12px;
+  font-family: 'Space Mono', monospace;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* responsive */
+@media (max-width: 600px) {
+  .tool-card { grid-template-columns: auto 1fr; }
+  .tool-meta { display: none; }
+  .map-grid { overflow-x: auto; }
+  .map-wrap { min-width: 560px; }
+}
+
+  .tool-card{box-sizing:border-box;width:100%;-webkit-tap-highlight-color:transparent}
+  .tools-grid{display:flex;flex-direction:column;gap:16px}
+  .nav-scroll{-webkit-overflow-scrolling:touch}
+  .nav-btn{min-height:44px;padding:8px 16px}
+  @media (max-width:400px){
+    .hero-title{font-size:clamp(28px,8vw,48px)}
+    .tool-desc{font-size:13px;line-height:1.7}
+    .use-row span:last-child{font-size:13px;line-height:1.6}
+    .mm-pill{font-size:11px;padding:5px 12px}
+  }
+
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="hero-eyebrow">Teacher's AI Compass · 2026</div>
+    <h1 class="hero-title">AI 도구<br><span>완벽 가이드</span></h1>
+    <p class="hero-sub">대화부터 이미지·영상·코딩까지 — 2026년 꼭 알아야 할 AI 도구를 한눈에</p>
+    <div class="hero-badge">✦ Updated September 2026 ✦</div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav-wrap">
+  <div class="nav-inner">
+    <button class="nav-btn active" onclick="showSection('map')">🗺️ 전체 지도</button>
+    <button class="nav-btn" onclick="showSection('chat')">💬 AI 어시스턴트</button>
+    <button class="nav-btn" onclick="showSection('auto')">🖥️ 업무 자동화</button>
+    <button class="nav-btn" onclick="showSection('code')">💻 코딩 에이전트</button>
+    <button class="nav-btn" onclick="showSection('image')">🎨 이미지 생성</button>
+    <button class="nav-btn" onclick="showSection('video')">🎬 영상·음악</button>
+  </div>
+</nav>
+
+<main class="main">
+<section id="map" class="section active">
+  <div class="sec-header">
+    <div class="sec-num">00</div>
+    <div class="sec-info">
+      <div class="sec-title">전체 지도</div>
+      <div class="sec-desc">2026 주요 AI 도구를 한눈에 — 카테고리를 탭하면 해당 탭으로 이동</div>
+    </div>
+  </div>
+  <style>
+  .mm{padding:0 0 12px}
+  .mm-grid{display:flex;flex-direction:column;gap:12px}
+  .mm-row{display:grid;gap:12px}
+  .mm-row.r2{grid-template-columns:1fr 1fr}
+  .mm-row.r3{grid-template-columns:1fr}
+  .mm-cluster{border-radius:16px;padding:16px;cursor:pointer;transition:transform .18s,box-shadow .18s;position:relative;overflow:hidden}
+  .mm-cluster:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+  .mm-cluster:active{transform:scale(.98)}
+  .mm-emoji{font-size:22px;margin-bottom:6px}
+  .mm-cat{font-size:13px;font-weight:800;margin-bottom:3px;letter-spacing:-.01em}
+  .mm-desc{font-size:10px;opacity:.5;margin-bottom:10px;line-height:1.5}
+  .mm-pills{display:flex;flex-wrap:wrap;gap:5px}
+  .mm-pill{font-size:10px;font-weight:600;padding:4px 10px;border-radius:100px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#bbb;white-space:nowrap}
+  .mm-pill.star{background:rgba(255,255,255,.12);color:#f0ede8;font-weight:700}
+  .c1{background:rgba(124,106,247,.06);border:1px solid rgba(124,106,247,.18)}.c1 .mm-cat{color:#c4bef7}
+  .c2{background:rgba(61,190,138,.05);border:1px solid rgba(61,190,138,.14)}.c2 .mm-cat{color:#4fd8a0}
+  .c3{background:rgba(247,185,106,.05);border:1px solid rgba(247,185,106,.14)}.c3 .mm-cat{color:#f7b96a}
+  .c4{background:rgba(247,112,106,.05);border:1px solid rgba(247,112,106,.14)}.c4 .mm-cat{color:#f7706a}
+  .c5{background:rgba(224,106,247,.05);border:1px solid rgba(224,106,247,.14)}.c5 .mm-cat{color:#e06af7}
+  </style>
+  <div class="mm">
+    <div class="mm-grid">
+      <div class="mm-row r2">
+        <div class="mm-cluster c1" onclick="showSection('chat')">
+          <div class="mm-emoji">💬</div>
+          <div class="mm-cat">AI 어시스턴트</div>
+          <div class="mm-desc">대화·검색·문서·프레젠테이션</div>
+          <div class="mm-pills">
+            <span class="mm-pill star">Claude.ai</span><span class="mm-pill star">ChatGPT</span><span class="mm-pill">Gemini</span><span class="mm-pill">DeepSeek</span><span class="mm-pill">Perplexity</span><span class="mm-pill">Grok</span><span class="mm-pill">Gemini Notebook</span><span class="mm-pill">Genspark</span><span class="mm-pill">Gamma</span><span class="mm-pill">Copilot</span>
+          </div>
+        </div>
+        <div class="mm-cluster c2" onclick="showSection('auto')">
+          <div class="mm-emoji">🖥️</div>
+          <div class="mm-cat">업무 자동화</div>
+          <div class="mm-desc">PC 조작부터 워크플로 자동화까지</div>
+          <div class="mm-pills">
+            <span class="mm-pill star">Cowork</span><span class="mm-pill">Spark</span><span class="mm-pill">Manus</span><span class="mm-pill">OpenClaw</span><span class="mm-pill">Codex</span><span class="mm-pill">n8n</span><span class="mm-pill">Zapier</span>
+          </div>
+        </div>
+      </div>
+      <div class="mm-row r2">
+        <div class="mm-cluster c3" onclick="showSection('code')">
+          <div class="mm-emoji">💻</div>
+          <div class="mm-cat">코딩 에이전트</div>
+          <div class="mm-desc">말로 설명하면 코드를 만들어줘요</div>
+          <div class="mm-pills">
+            <span class="mm-pill star">Claude Code</span><span class="mm-pill">Codex</span><span class="mm-pill">Antigravity</span><span class="mm-pill">Cursor</span><span class="mm-pill">Devin Desktop</span><span class="mm-pill">Copilot</span><span class="mm-pill">Bolt.new</span><span class="mm-pill">Lovable</span><span class="mm-pill">v0</span><span class="mm-pill">Replit</span><span class="mm-pill">Devin</span>
+          </div>
+        </div>
+        <div class="mm-cluster c4" onclick="showSection('image')">
+          <div class="mm-emoji">🎨</div>
+          <div class="mm-cat">이미지 생성</div>
+          <div class="mm-desc">텍스트 → 이미지, 포스터, 썸네일</div>
+          <div class="mm-pills">
+            <span class="mm-pill star">GPT Image</span><span class="mm-pill star">Midjourney V8</span><span class="mm-pill">Ideogram</span><span class="mm-pill">FLUX 3</span><span class="mm-pill">Nano Banana</span><span class="mm-pill">Firefly</span><span class="mm-pill">Canva AI</span>
+          </div>
+        </div>
+      </div>
+      <div class="mm-row r3">
+        <div class="mm-cluster c5" onclick="showSection('video')">
+          <div class="mm-emoji">🎬</div>
+          <div class="mm-cat">영상 · 음악</div>
+          <div class="mm-desc">텍스트 → 영상·음악·음성</div>
+          <div class="mm-pills">
+            <span class="mm-pill star">Veo 3.1</span><span class="mm-pill star">Kling 3.0</span><span class="mm-pill">Runway Gen-4.5</span><span class="mm-pill" style="opacity:.4;text-decoration:line-through">Sora (종료)</span><span class="mm-pill">Suno v6 🎵</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>
+  .tl-title{font-size:13px;font-weight:800;color:#c4bef7;margin:28px 0 12px;letter-spacing:-.01em}
+  .tl{display:flex;flex-direction:column;gap:0;position:relative;padding-left:18px}
+  .tl::before{content:'';position:absolute;left:5px;top:8px;bottom:8px;width:1.5px;background:linear-gradient(to bottom,rgba(124,106,247,.5),rgba(224,106,247,.2))}
+  .tl-item{position:relative;padding:7px 0 7px 14px}
+  .tl-item::before{content:'';position:absolute;left:-17px;top:13px;width:9px;height:9px;border-radius:50%;background:#7c6af7;border:2px solid #16161c}
+  .tl-date{font-size:10px;font-weight:700;color:#7c6af7;letter-spacing:.04em}
+  .tl-event{font-size:12px;color:#ccc;line-height:1.6;margin-top:2px}
+  .tl-event b{color:#f0ede8}
+  .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  .stat-cell{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:12px 14px}
+  .stat-num{font-size:18px;font-weight:900;letter-spacing:-.02em;color:#f0ede8}
+  .stat-label{font-size:10px;color:#888;margin-top:3px;line-height:1.5}
+  </style>
+
+  <div class="tl-title">📅 2026년 AI 판도를 바꾼 핵심 사건</div>
+  <div class="tl">
+    <div class="tl-item">
+      <div class="tl-date">2026. 02</div>
+      <div class="tl-event"><b>Kling 3.0</b> 출시 — 4K/60fps·멀티샷·음성 동시 생성으로 영상 AI 판도 변화</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 04. 07</div>
+      <div class="tl-event"><b>Claude Mythos Preview</b> 공개 — 취약점 발견·악용 능력이 너무 강해 일반 공개하지 않은 최상위 모델, AWS·Apple·Google·Microsoft 등 보안 파트너에만 제한 제공(Project Glasswing)</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 04</div>
+      <div class="tl-event"><b>Sora</b> 앱 종료 — 단독 앱 철수와 함께 ChatGPT 내 영상 생성도 제거 (API도 9.24 종료, 대체 모델 없음)</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 05</div>
+      <div class="tl-event"><b>DALL-E 3</b> 공식 종료 — OpenAI 이미지 생성은 GPT Image 2로 통합</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 06. 09</div>
+      <div class="tl-event"><b>Claude Fable 5</b> 출시 — Opus를 뛰어넘는 Mythos급 첫 일반 공개 모델. 6.12 미 정부 수출 통제로 일시 중단됐다가 6.30 해제, 7.1부터 전면 재공개</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 06. 18</div>
+      <div class="tl-event"><b>Gemini CLI → Antigravity CLI</b> 전환 — 5.19 Antigravity CLI 공개 후 6.18 개인 계정 Gemini CLI 서비스 종료, Google 코딩 에이전트 세대교체</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 07. 09</div>
+      <div class="tl-event"><b>GPT-5.6 패밀리</b>(Sol·Terra·Luna) ChatGPT 전면 적용 — 유료는 Sol, 무료는 Luna로 세대교체</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 07. 16</div>
+      <div class="tl-event"><b>NotebookLM → Gemini Notebook</b> 개명 — Gemini 앱 안에서도 노트북 생성 가능, 주소(notebooklm.google)는 그대로</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 07</div>
+      <div class="tl-event"><b>Claude 5 패밀리</b> 완성 — Sonnet 5(6.30)·Opus 5(7.24) 출시로 전 티어 세대교체</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 07. 23</div>
+      <div class="tl-event"><b>FLUX 3</b> 공개 — 이미지+20초 영상+오디오를 단일 모델로 처리하는 멀티모달 진화</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 07. 30</div>
+      <div class="tl-event"><b>Gemini Spark</b> 한국 포함 160여 개국 확대 — AI Pro 구독이면 자율 에이전트 사용 가능</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 08. 10</div>
+      <div class="tl-event"><b>ChatGPT 무료 티어</b> 무제한 텍스트 채팅 개방 — GPT-5.6 Luna 기준, 이미지 생성 등은 한도 유지</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 08. 13</div>
+      <div class="tl-event"><b>Gemini 3.7 Flash</b> 출시 — 3.6 Flash를 3주 만에 대체, Spark·Antigravity 기본 모델로 즉시 투입</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 08. 14</div>
+      <div class="tl-event"><b>SpaceX, Cursor 인수 완료</b> — 개발사 Anysphere를 $60B 전액 주식 거래로, 역대 최대 스타트업 인수</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 08. 14</div>
+      <div class="tl-event"><b>Anthropic, 'Model 2' 출시 계획 없음</b> — 8월 위험 보고서에서 Mythos 5보다 강력한 내부 모델의 존재를 밝혔지만 외부 출시 계획은 없다고 발표 (8.17엔 연 환산 매출 $65B 돌파 보도)</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 01</div>
+      <div class="tl-event"><b>Claude Fable 5.1</b> 출시 — Fable 5보다 성능은 높이고 비용은 약 25% 낮춘 최상위 모델. Max는 기본 포함, Pro는 크레딧 과금</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 02</div>
+      <div class="tl-event"><b>Gemini 3.8 Flash</b> 출시 — 6주 새 세 번째 Flash, 코딩·에이전트 성능 강화로 Antigravity·검색 AI 모드에 즉시 투입</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 03</div>
+      <div class="tl-event"><b>GPT-6 Astra</b> 공개 — OpenAI 최상위 모델, Pro·Business·Enterprise부터 적용하고 무료·Go는 Luna 유지 (추론 과정을 들여다보기 어려워 안전성 논란)</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 08</div>
+      <div class="tl-event"><b>ChatGPT Images 2.5</b> 출시 — 무료 포함 전 요금제 적용, 이미지 Arena 1·2위(Sunburst·Flare) 차지</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 09</div>
+      <div class="tl-event"><b>Suno v6</b> 출시 — v6·v6-wild(유료)·v6-mini(무료) 3종, 이전 모델로는 새 곡 생성 종료. 9.3부터 다운로드 한도(무료 평생 7곡)도 시행</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 10</div>
+      <div class="tl-event"><b>Gemini Windows 데스크톱 앱</b> 출시 — Alt+Space로 어디서든 호출, 개인·Workspace(교육 포함) 계정 모두 무료 설치</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 16</div>
+      <div class="tl-event"><b>Claude 채팅 + Cowork 통합</b> — 두 제품이 하나의 Claude로 합쳐져 한 대화에서 질문·작업을 모두 처리 (Pro·Max부터 순차 적용)</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 16</div>
+      <div class="tl-event"><b>Gemini Notebook 학습 도구</b> 확대 — 노트북과 실시간 음성 대화(약 100개 언어), 요약·퀴즈·플래시카드를 묶은 학습 개요 추가</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 18</div>
+      <div class="tl-event"><b>Universal·Sony, Suno 재소송</b> — 라이선스로 새로 만든 v6도 이전 모델의 저작권 침해를 물려받았다고 주장</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 18</div>
+      <div class="tl-event"><b>Manus</b> 독립 운영 재개 후 $4B 기업가치로 $500M 투자 유치 협상 — Meta 인수 무산(중국 규제) 뒤 홍콩 상장도 검토</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 21</div>
+      <div class="tl-event"><b>Grok 4.7</b> 출시 — 여러 번 미뤄진 끝에 공개, 모델은 커졌지만 API 가격은 4.6과 동일</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 22</div>
+      <div class="tl-event"><b>Claude Opus 5.5</b> 출시 — Claude 5.5 패밀리 첫 모델, 대부분 작업에서 Fable 5.1급 성능에 비용은 Opus 5보다 약 40% 낮음. Pro·Max·Team 사용 한도도 상향</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 22</div>
+      <div class="tl-event"><b>GPT-6 Sol·Luna</b> 출시 — Astra의 장점을 더 빠르고 저렴한 모델로, ChatGPT Work·Codex 전용 (무료·Go는 데스크톱 앱에서 Luna 체험)</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 23</div>
+      <div class="tl-event"><b>Google Vids에 Gemini Omni 1.1 Flash</b> 적용 — 1080p·길이 조절 지원, 영상 Arena 1위 모델</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 23</div>
+      <div class="tl-event"><b>Zapier Next Gen Zaps</b> 공개 — Claude·ChatGPT·Cursor에서 말로 설명한 자동화를 Zapier에 바로 배포 (유료 요금제 얼리 액세스)</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 24</div>
+      <div class="tl-event"><b>Sora API</b> 종료 — 4월 앱 종료에 이어 API까지 닫히며 OpenAI 영상 생성 완전 철수, 대체 모델 없음</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 24</div>
+      <div class="tl-event"><b>Lovable</b> 연매출 $600M 돌파 — 6월 $500M에서 3개월 만에</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 27</div>
+      <div class="tl-event"><b>Gemini Gems → skills</b> 전환 발표 — 10.13부터 Gemini 앱에 순차 적용, 기존 Gems는 자동 변환 (학교·회사 계정은 2027년)</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 28</div>
+      <div class="tl-event"><b>Claude Sonnet 5.5</b> 출시 — Sonnet 5보다 30% 이상 빠르고 작업당 비용은 최대 30% 절감, 무료 요금제에서도 사용 가능</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 28</div>
+      <div class="tl-event"><b>Kling 4.0</b> 발표 — 한 번에 최대 30초 영상, 4.0 Flash만 Ultra 연간 구독자에게 먼저 공개 (정식판 10월)</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 29</div>
+      <div class="tl-event"><b>OpenAI DevDay 2026</b> — Astra에 가까운 GPT-6.1 Sol(가격 1/5), 상시 에이전트 'Dots'(Pro·Business 베타), $500 Pro 요금제, Codex Cloud 공개. 주간 사용자 12억 명 발표</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 30</div>
+      <div class="tl-event"><b>Gemini 4 Argon</b> 공개 — 3.1 Pro 이후 첫 최상위 모델, 보안 취약점 탐지에 강해 보안 협력사에만 제한 제공</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2026. 09. 30</div>
+      <div class="tl-event"><b>Ideogram 4.5</b> 출시 — 여러 번 고쳐도 화질이 무너지지 않는 편집 특화 모델, 오픈웨이트 공개 예정</div>
+    </div>
+  </div>
+
+  <div class="tl-title">📊 숫자로 보는 2026 AI</div>
+  <div class="stats-grid">
+    <div class="stat-cell">
+      <div class="stat-num">ELO 1,424</div>
+      <div class="stat-label">GPT Image 2.5 Sunburst — 이미지 Arena 1위 (1~3위 모두 OpenAI, 타사 최고 MAI-Image-2.6과 약 90점 차 · 9.24 기준)</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">39.1만+ ⭐</div>
+      <div class="stat-label">OpenClaw — GitHub 역사상 최단기간 스타 기록 (2026.10.1 기준)</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">1,516점</div>
+      <div class="stat-label">Gemini Omni 1.1 Flash — 영상 Arena 1위 (2위도 Google, 3위 FLUX 3 Video · 9.21 기준)</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">1만+ 건</div>
+      <div class="stat-label">Project Glasswing 첫 한 달간 Claude Mythos Preview로 찾아낸 고위험·치명적 취약점 (2026.5 발표)</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">$13.3B</div>
+      <div class="stat-label">Lovable 기업가치(2026.8 Series C) — 연매출 $500M(6월)→$600M 돌파(9.24), 바이브코딩 최대 플랫폼</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num">12억 명</div>
+      <div class="stat-label">ChatGPT 주간 사용자 수 (2026.9.29 DevDay OpenAI 발표)</div>
+    </div>
+  </div>
+  <div style="font-size:10px;color:#555;margin-top:14px;text-align:center">※ 모든 수치·사건은 2026년 10월 2일 기준 웹 검색으로 검증된 정보입니다</div>
+
+</section>
+<!-- ────────────────── AI 어시스턴트 ────────────────── -->
+<section id="chat" class="section">
+  <div class="sec-header">
+    <div class="sec-num">01</div>
+    <div class="sec-info">
+      <div class="sec-title">AI 어시스턴트</div>
+      <div class="sec-desc">대화·검색·글쓰기·문서 분석·프레젠테이션까지 — 가장 기본이 되는 AI</div>
+    </div>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-card" style="--card-color:var(--claude)">
+      <div class="tool-icon">🟣</div>
+      <div class="tool-body">
+        <div class="tool-name">Claude.ai</div>
+        <div class="tool-by">Anthropic · claude.ai</div>
+        <div class="tool-desc">글쓰기·분석·코딩에서 최상위 성능을 보이는 AI. 자연스러운 한국어 작문이 강점이에요. 최상위 모델은 9.1 출시된 Fable 5.1 — Opus 위에 신설된 Mythos급 티어로, Fable 5보다 성능은 높이고 비용은 약 25% 낮췄어요(Max 요금제는 주간 한도의 최대 50%까지 기본 포함, Pro는 사용 크레딧 과금, 무료 요금제는 사용 불가). 9월 하순엔 Claude 5.5 패밀리가 시작됐어요 — Opus 5.5(9.22, Pro 이상)는 대부분 작업에서 Fable 5.1급 성능을 내면서 Opus 5보다 약 40% 저렴하고, Sonnet 5.5(9.28)는 무료 요금제에서도 쓸 수 있어요(Haiku 5.5는 출시 예정). 9.16부터는 채팅과 Cowork가 하나의 Claude로 합쳐져서, 같은 대화 안에서 질문도 하고 일도 맡길 수 있어요(Pro·Max부터 순차 적용). 최대 100만 토큰 컨텍스트(모델별 차이)로 긴 문서도 한 번에 처리하고, 환각(잘못된 정보 생성)이 낮은 편이에요. Projects로 프로젝트별 맞춤 AI 공간을 만들고, Artifacts로 대화 중 코드·문서·차트를 실시간 미리보기 가능. MCP 연동으로 Gmail·캘린더·Drive까지 직접 연결.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>보고서·기획서·블로그·이메일 초안 작성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>PDF·엑셀 업로드 후 내용 기반 Q&A</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>웹 검색 내장 — 최신 정보를 실시간으로 반영</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>긴 문서 요약·번역·감수 — "이 계약서 핵심 3줄로 요약해줘"</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>MCP 연동 (Gmail·캘린더·Drive 등)</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>이미지 생성은 불가 — 이미지가 필요하면 ChatGPT나 Midjourney 사용</span></div>
+        </div>
+        <div class="tags"><span class="tag">글쓰기</span><span class="tag">분석</span><span class="tag">번역</span><span class="tag">문서작성</span><span class="tag">MCP</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--openai)">
+      <div class="tool-icon">🟢</div>
+      <div class="tool-body">
+        <div class="tool-name">ChatGPT</div>
+        <div class="tool-by">OpenAI · chatgpt.com</div>
+        <div class="tool-desc">전 세계 사용자 수 1위, 가장 범용적인 올인원 AI. 2026년 7월부터 GPT-5.6 패밀리(Sol·Terra·Luna)로 세대교체됐고, 9월 3일에는 최상위 모델 GPT-6 Astra가 공개됐어요(Pro·Business·Enterprise 요금제부터 적용, Plus는 Work·Codex 안에서 횟수 제한으로 사용). 9월 22일에는 GPT-6 Sol·Luna, 9월 29일에는 Astra에 가까운 성능을 1/5 가격에 내는 GPT-6.1 Sol이 나왔는데, 모두 아직은 일반 채팅 창이 아니라 ChatGPT Work(일 맡기기 모드)와 Codex에서만 쓸 수 있어요. 8월부터는 무료 티어도 텍스트 채팅이 무제한으로 열렸어요(무료는 Luna 모델 — 이미지 생성·파일 업로드·음성은 한도 유지). 대화·이미지 생성(GPT Image)·음성 대화·Deep Research·코드 실행·파일 분석을 하나의 앱에서 모두 처리해요. Custom GPT를 만들어 반복 작업을 자동화할 수 있고, Memory 기능으로 대화 맥락을 기억. "이 문서 읽고 요약한 뒤 인포그래픽으로 만들어줘"처럼 여러 작업을 한 흐름에서 연결.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>대화하다 바로 이미지 생성 — "카페 오픈 포스터 만들어줘"</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Deep Research — "최근 AI 활용 사례 논문 10개 정리해줘"</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>엑셀 업로드 후 "이 매출 데이터 분석해줘" → 차트+해석</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>음성 대화 — 영어 회화 연습 상대로 활용 가능</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료는 텍스트만 무제한, 이미지·파일·음성은 한도. Go($8/월)는 한도만 늘고 모델은 Luna, 최신 Sol은 Plus($20/월), GPT-6 Astra는 Pro($100/월~)부터. Pro는 100·200·500달러 세 단계(9.29부터)</span></div>
+        </div>
+        <div class="tags"><span class="tag">올인원</span><span class="tag">이미지</span><span class="tag">음성 대화</span><span class="tag">Deep Research</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--google)">
+      <div class="tool-icon">🔵</div>
+      <div class="tool-body">
+        <div class="tool-name">Gemini</div>
+        <div class="tool-by">Google DeepMind · gemini.google.com</div>
+        <div class="tool-desc">Google 생태계와 가장 깊이 통합된 AI. 최신 모델은 Gemini 3.1 Pro·3.8 Flash(9.2 출시). 3.8 Flash는 Gemini 앱에서는 AI Pro·Ultra 구독자에게 먼저 제공되고, 무료로는 Google AI Studio에서 써볼 수 있어요. 9월 30일엔 차세대 Gemini 4 Argon이 공개됐지만 지금은 보안 협력사에만 제한 제공돼 일반 사용자는 아직 쓸 수 없어요. 맞춤 AI인 Gems는 10월 13일부터 skills로 바뀌고, 기존 Gems는 자동 변환돼요(학교·회사 계정은 2027년). 9월 10일에는 Windows용 Gemini 데스크톱 앱이 나와 Alt+Space로 어느 화면에서든 바로 부를 수 있어요. Gmail·Docs·Drive·캘린더·YouTube와 직접 연동. 100만 토큰 컨텍스트로 긴 문서도 한 번에 처리 가능. 응답 속도가 빠르고 멀티모달 이해력이 뛰어나요. Google Workspace 사용자라면 가장 자연스럽게 쓸 수 있는 AI.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>Gmail에서 "이 메일 요약해줘" → 답장 초안까지 생성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Google Docs에서 "이 문단 더 쉽게 바꿔줘" 직접 편집</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>유튜브 영상 URL 붙여넣기 → 내용 요약·핵심 추출</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Google 검색 결합 — "이번 주 마케팅 트렌드 정리해줘"</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>한국어 글쓰기 품질은 Claude보다 약간 뒤처짐</span></div>
+        </div>
+        <div class="tags"><span class="tag">Google 연동</span><span class="tag">Gmail</span><span class="tag">Docs</span><span class="tag">무료티어</span><span class="tag">100만토큰</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">🔍</div>
+      <div class="tool-body">
+        <div class="tool-name">Perplexity</div>
+        <div class="tool-by">Perplexity AI · perplexity.ai</div>
+        <div class="tool-desc">검색과 AI를 결합한 "답변형 검색 엔진". 모든 답변에 출처 번호가 붙어서 팩트 확인이 바로 돼요. 실시간 웹 검색 결과를 반영. AI 전용 브라우저 Comet는 무료로 전 플랫폼(Windows·Mac·모바일)에서 내려받을 수 있어요. 다만 AI가 브라우저를 직접 조작해 예약·양식 작성을 대신하는 기능은 9월부터 'Computer 크레딧'을 쓰는 방식으로 바뀌어 Pro에서도 크레딧이 금방 줄어든다는 보도가 있어요. Pro 모드에서는 여러 소스를 교차 검증해서 깊이 있는 리서치도 가능.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"2026 노동법 개정 내용 알려줘" → 출처 링크 포함 답변</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"AI 생산성 최근 연구 논문 찾아줘" → 학술 검색</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Comet 브라우저로 웹사이트 내용 자동 요약·비교</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>무료로 하루 여러 번 사용 가능. Pro($20/월)·인증된 학생·교육자용 Education Pro($10/월, 대상 여부는 인증 화면에서 확인)</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>글쓰기·분석은 Claude가 낫고, 검색·팩트 확인은 여기가 최고</span></div>
+        </div>
+        <div class="tags"><span class="tag">실시간 검색</span><span class="tag">출처 제시</span><span class="tag">Comet</span><span class="tag">팩트체크</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">🌐</div>
+      <div class="tool-body">
+        <div class="tool-name">Genspark</div>
+        <div class="tool-by">Genspark AI · genspark.ai</div>
+        <div class="tool-desc">GPT·Claude·Gemini 등 여러 AI를 한 플랫폼에서 쓸 수 있는 올인원 AI. 80개 이상의 내장 도구로 채팅·PPT 생성·이미지·영상·딥리서치까지 하나의 구독으로 해결해요. 같은 질문을 여러 AI에 동시에 던져 답변을 나란히 비교할 수 있어서 "어떤 AI가 이 작업에 가장 잘 맞는지" 직접 확인하기 좋아요. 2026년 7월 AI Workspace 6.0으로 업데이트됐고, PC 앱에서 일을 대신 처리하는 'Genspark Claw'도 나왔어요. 9월 18일부터 Plus·Pro 회원은 매주 일정량을 크레딧 차감 없이 쓰는 'Free Quota'도 받아요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>여러 AI 답변을 동시에 비교</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>채팅하다 바로 PPT·이미지 생성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"AI 활용 사례 조사해줘" → 딥리서치로 수백 소스 정리</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>하나의 구독으로 ChatGPT·Claude·Gemini 모두 사용</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>각 기능 품질은 전문 도구(Midjourney, Claude 등)보다 얕음</span></div>
+        </div>
+        <div class="tags"><span class="tag">멀티AI</span><span class="tag">올인원</span><span class="tag">PPT생성</span><span class="tag">딥리서치</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--google)">
+      <div class="tool-icon">🪟</div>
+      <div class="tool-body">
+        <div class="tool-name">Microsoft Copilot</div>
+        <div class="tool-by">Microsoft · copilot.microsoft.com</div>
+        <div class="tool-desc">Windows 11·Edge 브라우저·Office 365에 내장된 AI. 별도 앱 설치 없이 Windows 작업표시줄에서 바로 대화 가능. Word에서 문서 초안 작성, Excel에서 데이터 분석·수식 제안, Teams에서 회의 자동 요약까지 AI가 처리. 이미 Microsoft 생태계를 쓰고 있다면 가장 자연스럽게 AI를 시작할 수 있는 선택. 2026년 8~9월부터 개인용 Copilot과 Microsoft 365 Copilot 앱이 하나의 'Copilot' 앱으로 합쳐져, 개인 계정과 학교·회사 계정을 한 앱에서 바꿔 쓸 수 있어요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>Word에서 "프로젝트 제안서 초안 만들어줘" → 문서 자동 생성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>PowerPoint에서 "이 내용으로 슬라이드 만들어줘" → 자동 생성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Teams 회의 자동 요약·회의록 생성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Windows 기본 탑재 — 설치 없이 바로 사용</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>개인은 Microsoft 365 구독에 Copilot 포함 · 기업용 풀 기능은 M365 Copilot($30/인/월) 별도 구독</span></div>
+        </div>
+        <div class="tags"><span class="tag">Office 통합</span><span class="tag">Windows 내장</span><span class="tag">Teams</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">🔵</div>
+      <div class="tool-body">
+        <div class="tool-name">DeepSeek</div>
+        <div class="tool-by">DeepSeek AI (중국) · chat.deepseek.com</div>
+        <div class="tool-desc">채팅·앱이 완전 무료인데 GPT·Claude급 성능을 보여주는 중국 AI. 수학·코딩·논리 추론에서 특히 강하고, 7월 V4 정식 출시에 이어 9월 10일 최신 V4.1-Flash가 나왔어요 — 이미지 이해를 기본 지원하고, 추론 깊이를 조절해 단계별로 사고 과정을 보여주며 풀어요. 오픈웨이트(MIT 라이선스)라 내 PC에서 직접 돌릴 수 있고, 100만 토큰 컨텍스트 지원. 단 API는 유료(8월부터 피크/오프피크 요금제, 오프피크는 절반 가격).</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>채팅 완전 무료 — 가입만 하면 바로 사용 가능 (API는 유료)</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"이 수학 문제 풀이 과정 설명해줘" → 단계별 추론</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>오픈웨이트 — Ollama로 로컬 실행 시 개인정보 걱정 없음</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Claude·ChatGPT 비교 검증용으로 활용 (무료니까)</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>웹 사용 시 중국 서버 경유. 민감 정보 입력 주의</span></div>
+        </div>
+        <div class="tags"><span class="tag">무료</span><span class="tag">추론</span><span class="tag">코딩</span><span class="tag">오픈소스</span><span class="tag">수학</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">⚡</div>
+      <div class="tool-body">
+        <div class="tool-name">Grok (xAI)</div>
+        <div class="tool-by">xAI (Elon Musk) · grok.com / X 내장</div>
+        <div class="tool-desc">X(구 트위터)에 내장된 xAI의 챗봇. 최대 강점은 X의 실시간 포스트·트렌드를 검색·분석할 수 있다는 것. DeepSearch로 웹 심층 검색, Big Brain 모드로 수학·추론, Grok Imagine으로 이미지·영상 생성까지 가능. 톤이 직설적이고 유머러스. 최신 모델은 9월 21일 나온 Grok 4.7(50만 토큰 컨텍스트) — 몇 시간씩 걸리는 어려운 작업에 맞춰 훈련했고, API 가격은 4.6과 같아요. grok.com·앱 적용 시점은 아직 발표되지 않았어요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"이 이슈에 대한 X 여론 분석해줘" → 실시간 트렌드 분석</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>DeepSearch — 웹 실시간 심층 검색</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>grok.com에서 텍스트 대화 무료 사용 가능</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>이미지 생성(Grok Imagine) — SuperGrok Lite($10/월)부터 지원</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>풀 기능은 SuperGrok($30/월, 최상위 Heavy $300/월). X 생태계에 종속적</span></div>
+        </div>
+        <div class="tags"><span class="tag">실시간 검색</span><span class="tag">X/트위터</span><span class="tag">이미지</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--google)">
+      <div class="tool-icon">📓</div>
+      <div class="tool-body">
+        <div class="tool-name">Gemini Notebook (구 NotebookLM)</div>
+        <div class="tool-by">Google · notebooklm.google</div>
+        <div class="tool-desc">내가 올린 자료만 기반으로 답변하는 AI — 환각이 거의 없는 게 최대 강점. PDF·웹페이지·유튜브 영상을 넣으면 그 안에서만 검색해서 답해요. Audio Overview는 자료를 팟캐스트처럼 두 사람이 대화하는 오디오로 변환. Video Overview는 요약 영상 자동 생성 — 2026년엔 세로 1분 Short Video(Pro·Ultra에 먼저 제공)와 시네마틱 영상(AI Pro·Ultra, Pro는 하루 2회 · 영어 내레이션·만 18세 이상)까지 추가됐어요. 슬라이드·퀴즈·플래시카드도 원클릭 생성. 9월엔 요약·인포그래픽·퀴즈·플래시카드를 한데 묶은 '학습 개요'와 단답형·빈칸 채우기 퀴즈가 순차 적용되고, 노트북과 실시간 음성으로 대화하는 기능(약 100개 언어, 모바일 앱)도 나왔어요. 2026년 7월 이름이 Gemini Notebook으로 바뀌었고, Gemini 앱 안에서도 노트북을 만들 수 있어요. Google 계정만 있으면 무료.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>PDF 업로드 → "3장 핵심 내용 정리해줘" 내용 기반 Q&A</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Audio Overview — 자료를 팟캐스트 형식 오디오로 변환</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Video Overview·슬라이드·인포그래픽·퀴즈 자동 생성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Google Classroom 연동 + 무료 사용</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>업로드한 자료 밖의 질문에는 답변 불가 (일반 대화 AI 아님)</span></div>
+        </div>
+        <div class="tags"><span class="tag">Google 연동</span><span class="tag">무료</span><span class="tag">팩트체크</span><span class="tag">오디오</span><span class="tag">문서분석</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">🎯</div>
+      <div class="tool-body">
+        <div class="tool-name">Gamma</div>
+        <div class="tool-by">Gamma · gamma.app</div>
+        <div class="tool-desc">주제만 입력하면 디자인된 PPT가 자동 완성되는 AI 프레젠테이션 도구. 사용자 7천만 명 이상(회사 발표)을 모은 대표적인 AI PPT 서비스. 이미지·다이어그램 자동 삽입, PDF→프레젠테이션 변환, 웹 링크로 바로 공유까지 가능. Gamma 3.0 Agent가 내용 구성·디자인·이미지 선택까지 알아서 해줘요. 2026년 3월엔 로고·인포그래픽을 만드는 Gamma Imagine도 추가됐어요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"AI 트렌드 2026 발표 자료 만들어줘" → 10장 슬라이드 자동 완성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>회의 발표 자료·사업 제안서 5분 만에 제작</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>PDF 보고서 업로드 → 핵심 요약 프레젠테이션 변환</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>웹 링크로 공유 가능 — PPT 파일 없이 바로 발표</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>PPT 파일 내보내기 시 서식 깨질 수 있음. 웹 공유가 더 깔끔</span></div>
+        </div>
+        <div class="tags"><span class="tag">PPT생성</span><span class="tag">디자인중심</span><span class="tag">무료티어</span><span class="tag">프레젠테이션</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────── 업무 자동화 AI ────────────────── -->
+<section id="auto" class="section">
+  <div class="sec-header">
+    <div class="sec-num">02</div>
+    <div class="sec-info">
+      <div class="sec-title">업무 자동화 AI</div>
+      <div class="sec-desc">내 PC 조작부터 클라우드 앱 연결까지, AI가 업무를 대신 처리하는 자동화 도구</div>
+    </div>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-card" style="--card-color:var(--claude)">
+      <div class="tool-icon">🖥️</div>
+      <div class="tool-body">
+        <div class="tool-name">Claude Cowork</div>
+        <div class="tool-by">Anthropic · 데스크탑 앱 · 웹 · 모바일</div>
+        <div class="tool-desc">내 PC 폴더에 직접 접근해서 파일을 열고, 읽고, 수정하고, 새 파일을 만들어주는 에이전트. 다른 AI는 "답변만" 하지만 Cowork은 "실행까지" 해요. Gmail·Drive·캘린더 연동도 가능하고, 8월 말부터는 내장 브라우저로 웹사이트 양식 입력·자료 수집까지 맡길 수 있어요. 중요 작업은 실행 전 확인을 요청해서 실수를 방지. 9월 16일부터는 Cowork가 일반 채팅과 하나의 Claude로 합쳐지고 있어요(Pro·Max부터 순차 적용, Team·무료는 이후) — 따로 모드를 고를 필요 없이 대화창에서 일을 맡기면 되고, 노트북을 닫아도 작업을 이어가서 폰으로 진행 상황을 확인할 수 있어요. PC 파일 작업은 데스크탑 앱(Windows·macOS)에서 하고, 웹(claude.ai)·모바일 앱에서도 쓸 수 있어요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"이 폴더 안 PDF 10개 읽고 요약 보고서 만들어줘"</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"오늘 메일 중 클라이언트 관련만 정리해줘"</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"이 엑셀 매출 데이터로 월별 분석 보고서 만들어줘"</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>파일 정리·이름 변경·폴더 분류 자동 처리</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>Pro($20/월) 이상 유료 요금제 필요 — 무료 요금제는 아직 사용 불가(채팅 통합판이 추후 확대 예정). 중요 파일 작업 전 백업 권장</span></div>
+        </div>
+        <div class="tags"><span class="tag">데스크탑 에이전트</span><span class="tag">파일처리</span><span class="tag">Gmail</span><span class="tag">Windows</span><span class="tag">macOS</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--openai)">
+      <div class="tool-icon">🟢</div>
+      <div class="tool-body">
+        <div class="tool-name">OpenAI Codex (업무 활용)</div>
+        <div class="tool-by">OpenAI · chatgpt.com/codex</div>
+        <div class="tool-desc">원래 코딩 에이전트로 출발했지만 업무 자동화에도 강력한 도구. 브라우저 자동 조작, 파일 처리, 보고서 생성, 반복 작업 스케줄링을 AI가 처리해요. Computer Use 기능으로 데스크탑 앱을 직접 조작할 수도 있어서 "매주 금요일 이 스프레드시트 업데이트해줘" 같은 반복 업무 위임이 가능.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>브라우저 자동 조작·웹 작업 처리</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>파일 정리·변환·보고서 자동화</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>스케줄 자동화 — "매주 금요일 주간 보고서 만들어줘"</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>데스크탑 앱 직접 조작 (Computer Use, macOS·Windows — 6월부터 EU도 개방, 일부 지역은 아직 제한)</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료 계정도 소량 사용 가능 — 본격 사용·Computer Use는 Plus($20/월) 이상</span></div>
+        </div>
+        <div class="tags"><span class="tag">업무자동화</span><span class="tag">Computer Use</span><span class="tag">스케줄</span><span class="tag">브라우저</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--google)">
+      <div class="tool-icon">✨</div>
+      <div class="tool-body">
+        <div class="tool-name">Gemini Spark</div>
+        <div class="tool-by">Google · gemini.google.com (AI Pro 이상)</div>
+        <div class="tool-desc">사용자가 명령하지 않아도 AI가 24시간 클라우드에서 스스로 상황을 파악하고 처리하는 자율 에이전트. "매주 월요일 아침에 지난주 메일 정리해서 할 일 목록 만들어줘" 같은 장기 위임이 가능해요. 노트북을 꺼도 계속 실행되고, 중요 작업은 실행 전 확인을 요청. Gmail·캘린더·Docs뿐 아니라 웹 브라우저도 자동 조작 가능.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>중요 메일 자동 감지·알림</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>일정 충돌 자동 감지·조율</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>장기 위임 — "내일 미팅 자료 아침까지 준비해줘"</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Gmail·Docs·Sheets 자동 연동</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>AI Pro 이상 구독 필요 — 7월 말 한국 포함 160여 개국 확대 (EU·영국 등 제외)</span></div>
+        </div>
+        <div class="tags"><span class="tag">자율 에이전트</span><span class="tag">24/7</span><span class="tag">Google 연동</span><span class="tag">클라우드</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">🤖</div>
+      <div class="tool-body">
+        <div class="tool-name">Manus AI</div>
+        <div class="tool-by">Manus · manus.im</div>
+        <div class="tool-desc">목표만 알려주면 인터넷 검색·자료 수집·분석·문서 작성까지 혼자 처리하는 범용 자율 에이전트. 수십 개 웹사이트를 직접 방문해서 데이터를 수집하고, 내용을 종합해 완성된 보고서로 만들어줘요. 사람 개입 없이 10단계 이상의 복잡한 작업을 자율 처리. 브라우저 자동 조작으로 양식 작성·예약 같은 실행 작업도 가능. Meta 인수가 중국 규제로 무산되면서 2026년 9월 1일부터 다시 독립 회사로 운영돼요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>경쟁사·시장 조사 보고서 자동 생성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>여러 사이트 정보 수집·정리·문서화</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>여행 계획·부동산 비교 등 복잡한 리서치</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>데이터 수집 → 분석 → 시각화까지 자동</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료 플랜(매일 300크레딧 리필) 제공, 본격 사용은 유료. Meta 분리 과정에서 일부 데이터 삭제가 있었으니 중요한 결과물은 따로 백업</span></div>
+        </div>
+        <div class="tags"><span class="tag">자율 에이전트</span><span class="tag">리서치</span><span class="tag">보고서</span><span class="tag">브라우저 조작</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">🦀</div>
+      <div class="tool-body">
+        <div class="tool-name">OpenClaw (오픈클로)</div>
+        <div class="tool-by">OpenClaw Foundation · github.com/openclaw</div>
+        <div class="tool-desc">오픈소스 로컬 AI 에이전트로 GitHub 스타 39만 개(2026.10 기준)를 넘긴 화제의 도구. 데이터를 외부 서버에 보내지 않고 내 PC에서 직접 실행돼요. Claude·GPT·Gemini·DeepSeek 등 원하는 AI 모델을 자유롭게 연결할 수 있고, 파일 관리·브라우저 조작·앱 자동화까지 가능해요. 다만 샌드박스(격리 실행)가 기본으로 켜져 있지 않아서, 직접 켜고 써야 안전해요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>로컬 실행 — 데이터가 외부로 나가지 않아 프라이버시 적합</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"이 폴더 PDF 요약해줘" → 로컬에서 직접 처리</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>PPT·Word·Excel 문서를 AI가 직접 생성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>샌드박스 격리 기능 제공 — 기본은 꺼져 있으니 설정에서 켜고 사용</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>소프트웨어 자체는 무료. 연결할 AI 모델의 API 키(유료) 별도 필요</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>다수 CVE·악성 스킬 공급망 공격 사례 있음 — 격리 환경에서만 사용 권장</span></div>
+        </div>
+        <div class="tags"><span class="tag">오픈소스</span><span class="tag">로컬 실행</span><span class="tag">멀티모델</span><span class="tag">프라이버시</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">🔗</div>
+      <div class="tool-body">
+        <div class="tool-name">n8n</div>
+        <div class="tool-by">n8n GmbH · n8n.io</div>
+        <div class="tool-desc">오픈소스 워크플로 자동화 도구. "Gmail에 첨부파일 오면 → Drive에 저장 → Slack 알림" 같은 자동화를 코드 없이 드래그앤드롭으로 만들어요. 공식 연동 1,000개 이상에 커뮤니티 노드 800여 개까지 더해 거의 모든 앱과 연결되고, 셀프호스팅도 지원해서 자체 서버에서 직접 운영 가능. AI 노드를 추가하면 자동화 중간에 Claude·GPT 분석을 끼워넣을 수 있어요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"메일 첨부파일 → Drive 저장 → Slack 알림" 자동화</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Google Form 응답 → AI 분석 → 보고서 자동 생성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>AI 노드로 "고객 리뷰 자동 분류 → 긍정/부정/건의 태그"</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>셀프호스팅 가능 — 데이터가 외부로 나가지 않음</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>워크플로 설계에 초기 학습 곡선 있음. 무료는 내 서버에 직접 설치(셀프호스팅)할 때만이고, 클라우드판은 무료 체험 후 Starter €20/월(연간 결제)부터</span></div>
+        </div>
+        <div class="tags"><span class="tag">오픈소스</span><span class="tag">워크플로</span><span class="tag">업무자동화</span><span class="tag">셀프호스팅</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">⚡</div>
+      <div class="tool-body">
+        <div class="tool-name">Zapier AI</div>
+        <div class="tool-by">Zapier · zapier.com</div>
+        <div class="tool-desc">10,000개 이상 앱을 연결하는 세계 최대 노코드 자동화 플랫폼. 드래그앤드롭 5분 만에 자동화 완성. AI 기능이 추가돼서 자연어로 "매주 금요일에 주간 보고서 만들어줘"라고 하면 자동화를 직접 구성. n8n과 달리 셀프호스팅 없이 클라우드에서 바로 사용 가능해 비개발자에게 더 적합. 9월 23일에는 Claude·ChatGPT 같은 AI 도구에서 말로 설명한 자동화를 그대로 Zapier에 올리는 'Next Gen Zaps'가 공개됐어요(유료 요금제 대상 얼리 액세스).</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>Google Form → 스프레드시트 → 이메일 자동 발송</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>자연어로 자동화 워크플로 생성 (AI 기능)</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>10,000+ 앱 연동 — 거의 모든 서비스 지원</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>n8n보다 쉬움 — 코딩 지식 없이 5분 만에 자동화 구성</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료 플랜은 월 100작업·2단계 자동화까지. 복잡한 자동화는 유료</span></div>
+        </div>
+        <div class="tags"><span class="tag">노코드</span><span class="tag">업무자동화</span><span class="tag">10000+앱</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────── 코딩 에이전트 ────────────────── -->
+<section id="code" class="section">
+  <div class="sec-header">
+    <div class="sec-num">03</div>
+    <div class="sec-info">
+      <div class="sec-title">코딩 에이전트</div>
+      <div class="sec-desc">코드를 직접 작성·수정·배포하는 AI 에이전트</div>
+    </div>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-card" style="--card-color:var(--claude)">
+      <div class="tool-icon">🟣</div>
+      <div class="tool-body">
+        <div class="tool-name">Claude Code</div>
+        <div class="tool-by">Anthropic · 터미널·데스크탑 앱·웹 (설치 안내: code.claude.com)</div>
+        <div class="tool-desc">터미널에서 자연어로 지시하면 웹앱·스크립트·API를 만들어주는 코딩 에이전트. 대표 코딩 벤치마크(SWE-bench)에서 Claude 모델이 선두권을 지키고 있어요. 여러 파일을 동시에 이해하고 수정하는 능력이 탁월하고, 기존 프로젝트에 투입해도 코드베이스를 스스로 파악해요. Git 연동으로 커밋·PR까지 자동 처리. 바이브코딩 입문부터 전문 개발까지 커버.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"회원 관리 웹앱 만들어줘" → 완성된 앱 배포까지</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"이 GAS 코드에 Gemini API 연동해줘" → 자동 수정</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>대시보드·예약 시스템·이벤트 페이지 같은 웹앱 제작</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>기존 코드 버그를 자동으로 찾아 수정 + 설명</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>Pro($20/월) 이상 유료 요금제 필요(무료 불가). 터미널이 낯설면 데스크탑 앱이나 웹(claude.ai/code)에서도 사용 가능</span></div>
+        </div>
+        <div class="tags"><span class="tag">코딩 에이전트</span><span class="tag">터미널</span><span class="tag">Git</span><span class="tag">바이브코딩</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--openai)">
+      <div class="tool-icon">🟢</div>
+      <div class="tool-body">
+        <div class="tool-name">OpenAI Codex</div>
+        <div class="tool-by">OpenAI · chatgpt.com/codex</div>
+        <div class="tool-desc">클라우드 기반 코딩 에이전트. 로컬에 아무것도 설치하지 않고 웹 브라우저에서 바로 코드를 생성·수정할 수 있어서 접근성이 높아요. 여러 코딩 작업을 동시 병렬 처리 가능하고, ChatGPT 대화 중에 바로 호출해서 사용 가능. GitHub와 연동해 코드 리뷰·테스트·PR까지 자동화. 9월 29일 DevDay에서 노트북을 닫아도 작업이 이어지고 다른 기기에서 이어받는 Codex Cloud와 자동 코드 리뷰가 추가됐어요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"이 API 엔드포인트 추가해줘" → 클라우드에서 바로 수정</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>여러 작업 동시 병렬 처리 (PR 3개를 동시에)</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>CLI·웹·ChatGPT 등 다양한 환경에서 사용</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>GitHub 연동으로 코드 리뷰·테스트 자동화</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료·Go도 데스크톱 앱에서 소량 사용 가능(GPT-6 Luna) — CLI·IDE·웹·Codex Cloud는 Plus($20/월) 이상</span></div>
+        </div>
+        <div class="tags"><span class="tag">클라우드</span><span class="tag">병렬처리</span><span class="tag">GitHub</span><span class="tag">웹 기반</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--google)">
+      <div class="tool-icon">🔵</div>
+      <div class="tool-body">
+        <div class="tool-name">Google Antigravity CLI</div>
+        <div class="tool-by">Google · antigravity.google</div>
+        <div class="tool-desc">Gemini CLI를 대체하는 터미널 기반 코딩 에이전트(명령어 agy). 최신 Gemini 3.8 Flash(2026.9)를 쓸 수 있어요. Go 기반이라 설치가 빠르고, Google Cloud·Firebase 프로젝트 개발에 특히 강해요. 멀티에이전트 모드로 여러 에이전트가 동시에 다른 작업을 병렬 처리하는 게 Claude Code에 없는 차별점.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>Go 기반이라 설치 빠르고 응답 속도 우수</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"Firebase로 로그인 기능 추가해줘" → Google 프로젝트에 강점</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>멀티에이전트 — 여러 에이전트가 병렬로 작업</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>데스크탑 앱(Antigravity 2.0)도 별도 제공</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료 사용 가능하지만 사용량 제한 있음. 대형 프로젝트에선 한계</span></div>
+        </div>
+        <div class="tags"><span class="tag">Gemini</span><span class="tag">멀티에이전트</span><span class="tag">Google Cloud</span><span class="tag">터미널</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">💜</div>
+      <div class="tool-body">
+        <div class="tool-name">Cursor / Devin Desktop (구 Windsurf)</div>
+        <div class="tool-by">Anysphere(SpaceX 자회사) · cursor.com / Cognition AI · devin.ai/desktop</div>
+        <div class="tool-desc">VS Code 기반의 AI 전용 코드 에디터. Cursor는 VS Code를 포크해서 만든 독립 IDE이고(개발사 Anysphere는 2026년 8월 SpaceX가 $60B에 인수 — 역대 최대 스타트업 인수), Windsurf는 Cognition AI(Devin 개발사)가 인수해 2026년 6월 'Devin Desktop'으로 이름을 바꿨어요. 코드 자동완성뿐 아니라 프로젝트 전체를 이해하고 여러 파일을 동시에 수정하는 에이전트 모드가 핵심.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>코드 작성 중 자동 완성·다음 줄 제안</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>선택한 코드 블록 설명·리팩토링·버그 수정</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"이 함수 리팩토링해줘" → 관련 파일 여러 개를 동시에 수정</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Claude·GPT·Gemini 등 원하는 모델 선택 가능</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료(Hobby)는 에이전트 사용량이 적고, Pro $20/월부터 본격 사용. 코딩 경험이 있어야 효과적. 입문은 Bolt.new 추천</span></div>
+        </div>
+        <div class="tags"><span class="tag">AI IDE</span><span class="tag">자동완성</span><span class="tag">에이전트 모드</span><span class="tag">모델 선택</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--openai)">
+      <div class="tool-icon">🤖</div>
+      <div class="tool-body">
+        <div class="tool-name">GitHub Copilot</div>
+        <div class="tool-by">GitHub · github.com/features/copilot</div>
+        <div class="tool-desc">VS Code·JetBrains·Visual Studio 등 주요 IDE에 내장돼 가장 많은 개발자가 실제로 사용하는 AI 코딩 도구. 코드를 입력하면 다음 줄·다음 함수를 자동 완성해주고, 채팅 창에서 코드 질문도 가능. GitHub PR 요약·코드 리뷰 자동화. Claude·GPT·Gemini 중 원하는 모델을 선택해서 쓸 수 있어요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>지금 쓰는 IDE 그대로 AI 코딩 기능 추가</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>함수명 입력하면 → 전체 구현 코드를 자동 완성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"이 코드 설명해줘" → 채팅 창에서 바로 질문 가능</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Claude·OpenAI·Gemini 등 원하는 모델 선택 가능</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료 플랜은 월 2,000회 자동완성 제한(모델은 자동 선택만). Pro $10/월 — 교사 인증(GitHub Education)을 받으면 Pro 무료</span></div>
+        </div>
+        <div class="tags"><span class="tag">VS Code 내장</span><span class="tag">자동완성</span><span class="tag">PR 리뷰</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">⚡</div>
+      <div class="tool-body">
+        <div class="tool-name">Bolt.new</div>
+        <div class="tool-by">StackBlitz · bolt.new</div>
+        <div class="tool-desc">브라우저에서 바로 웹앱을 만드는 AI 코딩 도구. 아무것도 설치하지 않고 "할 일 관리 앱 만들어줘"라고 하면 코드 작성→실행→미리보기→배포까지 브라우저 안에서 끝나요. 결과를 실시간으로 보면서 "버튼 색 바꿔줘" 같은 대화형 수정 가능. 코딩 지식 없이 바이브코딩을 시작하기 가장 쉬운 도구. V2부터는 DB·인증·호스팅까지 내장한 Bolt Cloud 제공, Netlify 원클릭 배포도 가능.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"투표 웹앱 만들어줘" → 브라우저에서 바로 완성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>코드+실행결과를 나란히 보며 "버튼 색 바꿔줘" 즉시 수정</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>완성 후 Netlify로 원클릭 배포 → 링크로 바로 공유</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>React·Vue·Svelte 등 주요 프레임워크 자동 지원</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료는 월 100만 토큰(하루 30만). Pro $25/월. 복잡한 대형 프로젝트보다 간단한 앱·프로토타입에 적합</span></div>
+        </div>
+        <div class="tags"><span class="tag">바이브코딩</span><span class="tag">브라우저</span><span class="tag">프로토타입</span><span class="tag">Netlify</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">💜</div>
+      <div class="tool-body">
+        <div class="tool-name">Lovable</div>
+        <div class="tool-by">Lovable Labs · lovable.dev</div>
+        <div class="tool-desc">연 매출 $600M(2026.9)을 돌파한 바이브코딩 최대 플랫폼. 대화만으로 풀스택 웹앱(프론트+백엔드+DB+인증)을 완성. Bolt.new보다 디자인 품질이 높다는 평가가 많고, 내장 백엔드(Lovable Cloud)가 기본으로 붙어 있어서 회원가입·데이터 저장이 자동 처리돼요. 모바일 앱에서 음성으로 아이디어를 던지면 AI가 자동 빌드. 2026.8 Series C $400M(Menlo Ventures·Scaleup Europe Fund 주도)로 기업가치 $13.3B, 9월 24일엔 연매출 $600M을 넘어섰어요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"고객 예약 시스템 만들어줘" → 로그인+DB 포함 풀스택 앱</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>디자인이 예쁜 React 앱 — UI 품질이 Bolt.new보다 높다는 평가</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>실시간 멀티플레이어 협업 — 팀원과 동시에 앱 빌드</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>GitHub·Vercel·Netlify 연동으로 원클릭 배포</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료는 하루 5크레딧(월 최대 30). Pro $25/월부터 본격 사용 — 크레딧이 바닥나면 배포한 앱의 DB·로그인도 멈추니 잔고 확인 필수</span></div>
+        </div>
+        <div class="tags"><span class="tag">바이브코딩</span><span class="tag">풀스택</span><span class="tag">디자인중심</span><span class="tag">모바일앱</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">🎨</div>
+      <div class="tool-body">
+        <div class="tool-name">v0 by Vercel</div>
+        <div class="tool-by">Vercel · v0.app</div>
+        <div class="tool-desc">UI 디자인 중심의 AI 코딩 도구. "모바일 친화적인 로그인 페이지 만들어줘"라고 하면 예쁜 React 컴포넌트 코드를 바로 생성해요. 스크린샷이나 디자인 이미지를 업로드하면 그대로 코드로 변환하는 기능도 있어요. 디자인 감각이 뛰어나서 시각적으로 완성도 높은 UI를 빠르게 만들 수 있고, Next.js·Tailwind CSS에 최적화.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"대시보드 UI 만들어줘" → 예쁜 React 컴포넌트 바로 생성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>이미지·스크린샷을 보고 UI 코드로 변환</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>생성된 코드를 프로젝트에 바로 복사 사용</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>React·Next.js·Tailwind CSS 최적화</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료는 월 $5 크레딧·하루 7메시지 제한. 유료는 Plus $30/월부터(기존 Premium $20은 신규 가입 종료). 백엔드는 별도 구현 필요</span></div>
+        </div>
+        <div class="tags"><span class="tag">UI생성</span><span class="tag">React</span><span class="tag">Tailwind</span><span class="tag">디자인중심</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">🔄</div>
+      <div class="tool-body">
+        <div class="tool-name">Replit Agent</div>
+        <div class="tool-by">Replit · replit.com</div>
+        <div class="tool-desc">브라우저에서 코딩·실행·호스팅까지 한 번에 되는 올인원 개발 플랫폼에 AI 에이전트가 탑재된 도구. "파이썬으로 데이터 분석 앱 만들어줘"라고 하면 코드를 만들고 바로 실행해서 결과를 보여줘요. 완성된 앱을 별도 서버 설정 없이 Replit에서 바로 호스팅, 링크 하나로 공유 가능. 40+ 프로그래밍 언어 지원.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>코딩·실행·배포를 한 화면에서 처리</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>40+ 언어 지원 — 파이썬·JS·Go·Rust 등 즉시 실행</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>완성한 앱을 링크로 바로 공유 가능</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>코딩 입문자 교육 환경으로도 활용</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료 플랜 제한적. Core $20/월부터 본격 사용 가능</span></div>
+        </div>
+        <div class="tags"><span class="tag">브라우저 기반</span><span class="tag">호스팅</span><span class="tag">파이썬</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">🤖</div>
+      <div class="tool-body">
+        <div class="tool-name">Devin</div>
+        <div class="tool-by">Cognition AI · devin.ai</div>
+        <div class="tool-desc">GitHub 이슈를 할당하면 코드 작성·테스트·PR 생성까지 사람 개입 없이 혼자 처리하는 완전 자율 AI 소프트웨어 엔지니어. 프로젝트 전체를 이해하고 설계·구현·테스트·배포까지 한 사이클을 자율로 완료. 실제 개발팀에서 주니어 개발자 역할을 대체하는 수준. Slack에서 대화하듯 작업 지시 가능.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>GitHub 이슈 → 코드 자동 구현·PR 생성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"이 버그 수정하고 테스트까지 해줘" → 자율 처리 후 PR 제출</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>기존 코드베이스를 이해하고 수정·배포까지 자율 처리</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Slack 연동 — 채팅으로 작업 지시 가능</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료 플랜(소량)으로 맛보기 가능, 본격 사용은 Pro $20/월부터 (Max $200/월·팀용 Teams는 인당 과금). 전문 개발자용. 비개발자 바이브코딩에는 과한 도구</span></div>
+        </div>
+        <div class="tags"><span class="tag">자율 에이전트</span><span class="tag">GitHub</span><span class="tag">Slack</span><span class="tag">전문가용</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────── 이미지 생성 AI ────────────────── -->
+<section id="image" class="section">
+  <div class="sec-header">
+    <div class="sec-num">04</div>
+    <div class="sec-info">
+      <div class="sec-title">이미지 생성 AI</div>
+      <div class="sec-desc">텍스트 설명으로 이미지를 만드는 AI</div>
+    </div>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-card" style="--card-color:var(--img)">
+      <div class="tool-icon">🎨</div>
+      <div class="tool-body">
+        <div class="tool-name">Midjourney V8</div>
+        <div class="tool-by">Midjourney · midjourney.com</div>
+        <div class="tool-desc">예술적 감성과 스타일 표현에서 독보적인 이미지 AI. 수채화·유화·영화 스틸·일러스트·3D 렌더링 등 어떤 스타일이든 최고 품질로 뽑아줘요. 2026년 3월 알파를 거쳐 7월부터 V8.2가 기본 — 엔진을 새로 짜서 생성 속도 4~5배, 네이티브 2K 해상도, 텍스트 렌더링도 대폭 개선됐어요. 8월 27일엔 V8.2 기반 편집 모델(Edit)이 전체 테스트로 공개돼 기존 Omni Reference를 대신해요. 참조 이미지를 최대 4장까지 넣어 같은 캐릭터를 일관되게 유지하고, 말로 지시해 고치거나 부분 수정(인페인팅)·바깥 확장(아웃페인팅)까지 한곳에서 할 수 있어요. 9월 16일엔 웹 화면(alpha.midjourney.com)에 한국어 지원이 추가됐고, 9월 24일 업데이트로 부분 수정 품질도 좋아졌어요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"watercolor painting of a spring park with cherry blossoms" → 감성 포스터</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>앨범 표지·이벤트 배경·콘셉트 아트 제작</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>아트 레퍼런스 — "모네 스타일로 바다 풍경"</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>웹 인터페이스에서 바로 생성 (Discord 없이도 가능)</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료 플랜 없음. Basic $10/월부터. 텍스트 정확도는 GPT Image 2.5가 우세</span></div>
+        </div>
+        <div class="tags"><span class="tag">감성·예술</span><span class="tag">스타일</span><span class="tag">일러스트</span><span class="tag">웹 에디터</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--img)">
+      <div class="tool-icon">📸</div>
+      <div class="tool-body">
+        <div class="tool-name">FLUX 3 / Flux 2</div>
+        <div class="tool-by">Black Forest Labs · bfl.ai</div>
+        <div class="tool-desc">사진같은 사실적 이미지 생성에서 최고 수준. 최신 FLUX 3(2026.7.23 공개)는 이미지+최대 20초 영상+오디오까지 단일 모델로 처리하는 멀티모달로 진화했어요(10월 초 현재 영상(FLUX 3 Video)만 공개됐고 영상 Arena 3위까지 올랐어요 — 이미지 API·오픈웨이트 Dev는 아직 준비 중). Flux 2 계열은 인물 얼굴·피부 질감·조명·제품 목업에 강하고, Pro는 API 전용(fal.ai·Replicate 등에서 이미지당 몇 원), 오픈웨이트인 Dev(비상업)·Klein 4B(Apache 2.0)는 로컬에서 무료 실행 가능. 월 구독 없이 쓴 만큼만 결제.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"비즈니스 정장 입은 사람" → 실사 수준 인물 이미지</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>제품 목업·광고용 이미지</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>이미지당 몇 원 수준 — 구독 없이 쓴 만큼만 결제</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Dev·Klein 오픈웨이트 버전으로 로컬 실행도 가능</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>일반인용 생성 사이트는 없음 — BFL 공식 API 대시보드나 fal.ai·Replicate·Krea 같은 플랫폼에서 이용</span></div>
+        </div>
+        <div class="tags"><span class="tag">사실감</span><span class="tag">API 전용</span><span class="tag">오픈웨이트</span><span class="tag">종량제</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--img)">
+      <div class="tool-icon">✏️</div>
+      <div class="tool-body">
+        <div class="tool-name">Ideogram 4.5 / 4.0</div>
+        <div class="tool-by">Ideogram · ideogram.ai</div>
+        <div class="tool-desc">복잡한 타이포그래피 디자인에 특화된 이미지 AI. 9월 30일엔 같은 그림을 여러 번 고쳐도 색이 바뀌거나 화질이 무너지지 않는 편집 특화 모델 4.5가 나왔어요(Ideogram 사이트·API에서 바로 사용, 오픈웨이트는 공개 예정). 2026년 6월 나온 4.0은 다국어·고밀도 소형 텍스트·로고·간판·패키징까지 타이포그래피가 한층 강화됐고, 특이하게 모델 가중치를 공개(오픈웨이트)해서 연구·개인용은 무료로 내려받아 쓸 수 있고, 상업적으로 직접 돌리려면 별도 유료 라이선스가 필요해요. 단순 텍스트 정확도는 GPT Image 2.5와 경쟁하지만, 여러 줄 텍스트 레이아웃·폰트 스타일링 같은 복잡한 작업에서 강해요. 한글·영문 모두 깔끔하게 렌더링. 무료 티어는 슬로우 큐 소량 크레딧에 생성물이 공개돼요 — 본격 사용은 유료 구독이 필요하고, 구독 없이 이미지당 $0.03~0.10 API 종량제로도 쓸 수 있어요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"Summer Festival 2026, 파란 하늘, 큰 글씨" → 글자 정확!</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>SNS 썸네일·카드뉴스 — 텍스트 포함 이미지 한 번에</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>로고 개념·브랜드 이미지 초안</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>특정 캐릭터 여러 이미지에 일관성 있게</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>예술적 감성은 Midjourney보다 부족. 텍스트 작업에 집중</span></div>
+        </div>
+        <div class="tags"><span class="tag">텍스트 삽입</span><span class="tag">타이포그래피</span><span class="tag">로고</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--openai)">
+      <div class="tool-icon">🖼️</div>
+      <div class="tool-body">
+        <div class="tool-name">GPT Image 2.5 (ChatGPT Images 2.5)</div>
+        <div class="tool-by">OpenAI · chatgpt.com</div>
+        <div class="tool-desc">AI 이미지 생성 Arena 리더보드 1·2위(Sunburst·Flare). 9월 8일 나온 2.5는 이전 GPT Image 2보다 디테일이 선명하고, 참고 사진 속 인물·제품을 잘 유지하며, 여러 번 고쳐도 결과가 흔들리지 않아요. 생성 속도도 최대 50% 빨라졌어요. 한글을 포함한 글자 렌더링과 프롬프트 이해력·구도 배치가 뛰어나고, ChatGPT 대화 창에서 바로 생성할 수 있어서 접근성도 최고. 무료부터 Pro까지 모든 요금제가 같은 모델을 쓰고(유료는 생성 횟수가 많아요), 대화형 수정·스타일 전환·인페인팅까지 하나의 모델에서 처리하는 2026년 이미지 AI의 올라운더.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>ChatGPT 쓰다가 바로 이미지 생성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"배경만 바꿔줘" 같은 대화형 수정 반복</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>한글 포함 글자 렌더링이 정확 — 포스터·안내문 이미지에 강함 (아주 작은 글씨·빽빽한 글자는 아직 약함)</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>블로그·SNS·프레젠테이션용 이미지</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료 계정도 생성 가능(한도는 공개되지 않고 수시로 바뀜), 넉넉히 쓰려면 Go·Plus. 예술적 감성·분위기는 Midjourney가 우세</span></div>
+        </div>
+        <div class="tags"><span class="tag">Arena 1위</span><span class="tag">글자 렌더링</span><span class="tag">올라운더</span><span class="tag">대화형 수정</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--img)">
+      <div class="tool-icon">🔥</div>
+      <div class="tool-body">
+        <div class="tool-name">Adobe Firefly</div>
+        <div class="tool-by">Adobe · firefly.adobe.com</div>
+        <div class="tool-desc">Adobe가 자체 보유한 라이선스 콘텐츠만으로 학습해서 저작권 안전성에서 가장 신뢰받는 이미지 AI. 상업용 광고·공식 인쇄물·배포 자료에 가장 안전. Photoshop·Illustrator에 직접 내장돼 있어서 생성 후 바로 전문 편집 가능. 텍스트 효과·벡터 일러스트·3D 합성까지 지원.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>공식 인쇄물·상업용 홍보물 — 저작권 문제 없음</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>생성형 채우기 — 이미지 일부를 자연스럽게 확장·교체</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"불꽃 효과 3D 텍스트" → 텍스트 효과·벡터 일러스트</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Firefly 무료 플랜으로 이미지·영상·오디오를 매일 제한적으로 생성 가능(한도는 매일 초기화)</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>풀 기능은 Firefly 단독 플랜($9.99/월~) 또는 Creative Cloud 구독 필요. 스타일 다양성은 Midjourney보다 낮음</span></div>
+        </div>
+        <div class="tags"><span class="tag">저작권 안전</span><span class="tag">공식문서</span><span class="tag">Photoshop</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--google)">
+      <div class="tool-icon">🔵</div>
+      <div class="tool-body">
+        <div class="tool-name">Nano Banana 2</div>
+        <div class="tool-by">Google DeepMind · Gemini 내장</div>
+        <div class="tool-desc">Gemini에 내장된 Google의 이미지 생성 모델(Gemini 3.1 Flash Image). 구형 Imagen 계열은 2026.8.17 API 종료가 완료되고 Nano Banana 2로 세대교체됐어요 — 4K 생성과 한층 좋아진 텍스트 렌더링이 강점. Google 계정만 있으면 별도 가입·결제 없이 Gemini 채팅에서 바로 이미지를 생성할 수 있어서 진입 장벽이 가장 낮아요. 고품질이 필요하면 AI Plus·Pro·Ultra 구독자는 결과 메뉴의 'Pro로 다시 실행'으로 상위 모델 Nano Banana Pro를 쓸 수 있어요. Google Workspace와 연동돼 Docs·Slides에 바로 삽입. 이미지 AI를 처음 써보는 분에게 가장 추천.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>Google 계정으로 바로 사용 — 추가 가입·결제 불필요</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Gemini에서 "비즈니스 일러스트 만들어줘" → Slides에 바로 삽입</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>프레젠테이션·문서 삽화를 빠르게 생성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>이미 Gemini 쓰는 분이라면 별도 도구 없이 바로 활용</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>감성·스타일은 Midjourney에, 사실감은 Flux에 뒤처짐</span></div>
+        </div>
+        <div class="tags"><span class="tag">Google 연동</span><span class="tag">무료</span><span class="tag">설치불필요</span><span class="tag">실무활용</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">🎨</div>
+      <div class="tool-body">
+        <div class="tool-name">Canva AI (Magic Studio)</div>
+        <div class="tool-by">Canva · canva.com</div>
+        <div class="tool-desc">디자인 플랫폼 Canva에 AI 기능(Magic Studio)이 내장. 수만 개 템플릿 + AI 이미지 생성(Dream Lab) + 배경 제거 + 텍스트 자동 생성이 하나로 합쳐져 있어서 디자인 초보자도 전문가급 결과물을 빠르게 완성. 포스터·카드뉴스·SNS 콘텐츠·PPT까지 한 플랫폼에서 끝. Canva for Education으로 교사·학생 무료 계정도 제공. 2026년 4월엔 대화하듯 디자인을 만드는 Canva AI 2.0도 나왔어요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"이벤트 포스터" 검색 → 템플릿 선택 → AI 이미지 삽입</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>배경 제거·이미지 확장·요소 교체 AI 편집</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>무료 플랜으로 시작 가능 (초·중·고 교사·학생은 Canva for Education으로 Pro 기능 무료, 학생용 Dream Lab은 학교 관리자가 켜야 해요)</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>PPT·인쇄물·SNS 콘텐츠 한 플랫폼에서 완성</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>AI 이미지 품질은 Midjourney·Flux보다 낮음. 디자인 편의성이 강점</span></div>
+        </div>
+        <div class="tags"><span class="tag">디자인중심</span><span class="tag">교육용</span><span class="tag">포스터</span><span class="tag">템플릿</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ────────────────── 영상·음악 AI ────────────────── -->
+<section id="video" class="section">
+  <div class="sec-header">
+    <div class="sec-num">05</div>
+    <div class="sec-info">
+      <div class="sec-title">영상·음악 AI</div>
+      <div class="sec-desc">텍스트로 영상·음악을 만드는 AI — 2026년 가장 급성장한 분야</div>
+    </div>
+  </div>
+  <div class="tools-grid">
+    <div class="tool-card" style="--card-color:var(--video)">
+      <div class="tool-icon">🎬</div>
+      <div class="tool-body">
+        <div class="tool-name">Veo 3.1</div>
+        <div class="tool-by">Google DeepMind · Google Vids / Flow / Gemini API</div>
+        <div class="tool-desc">영상과 음성·효과음·대사를 동시에 생성하는 AI의 원조. "바닷가 노을을 보는 소년, 파도 소리와 갈매기 울음"을 입력하면 영상+소리가 한 번에 완성. 대사·효과음·배경음까지 한 번에 생성해요. 8초 기본, 확장하면 더 긴 영상도 가능. 물리 법칙 이해가 뛰어나서 자연스러운 움직임 표현이 강점. 현재 최신 버전은 Veo 3.1. Gemini 앱 안의 영상 생성은 Google I/O 2026부터 Gemini Omni로 바뀌었고, 9월 23일부터는 Google Vids에도 Gemini Omni 1.1 Flash가 들어가 1080p·길이 조절을 지원해요(Workspace·AI Pro·Ultra 대상). 9월 영상 Arena 1위도 Gemini Omni 1.1 Flash예요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"카페에서 바리스타가 커피 내리는 장면, 잔잔한 재즈" → 영상+소리</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>SNS·유튜브용 — "우주에서 본 지구, 웅장한 배경음악"</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Midjourney 이미지 → Veo로 영상 변환 (이미지→영상)</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>Google Vids에서 무료 계정도 월 10회 생성 가능</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>생성 횟수를 늘리거나 고급 기능을 쓰려면 Google AI Pro·Ultra 구독 필요</span></div>
+        </div>
+        <div class="tags"><span class="tag">영상+음성</span><span class="tag">Google 연동</span><span class="tag">물리엔진</span><span class="tag">무료티어</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--video)">
+      <div class="tool-icon">🎬</div>
+      <div class="tool-body">
+        <div class="tool-name">Kling 3.0</div>
+        <div class="tool-by">Kuaishou · klingai.com</div>
+        <div class="tool-desc">텍스트→영상, 이미지→영상 모두 가능한 가성비 최고 영상 AI. Midjourney 이미지를 넣으면 자연스럽게 움직이는 영상으로 변환. 4K/60fps 고화질 지원, 5개 언어 립싱크, 최대 6컷 멀티샷 스토리보드로 장면 연결이 가능해요. 음성도 동시 생성(Omni Native Audio) 가능하고, 6월엔 더 빠르고 저렴한 3.0 Turbo와 4K 편집을 지원하는 Omni 업그레이드도 나왔어요. 9월 28일엔 한 번에 최대 30초 영상을 만드는 차세대 Kling 4.0이 발표됐어요 — 지금은 가벼운 4.0 Flash(720p·최대 20초)만 Ultra 연간 구독자에게 먼저 열렸고, 정식판은 10월 공개 예정이에요. 매일 무료 크레딧(66크레딧/일, 표준 모드 기준 약 3~6개 클립 — 고품질 모드는 1~2개 수준) 제공.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>Motion Brush — 이미지에서 움직일 부분만 브러시로 지정</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>SNS 숏폼·프레젠테이션용 영상 클립</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"도시 거리를 달리는 사람" → 텍스트만으로 영상 생성</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>가성비 최고 — 무료 크레딧으로 시작</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료는 720p+워터마크, 상업적 사용 불가. 워터마크 제거는 Standard 첫 달 $6.99(이후 $10/월)부터</span></div>
+        </div>
+        <div class="tags"><span class="tag">이미지→영상</span><span class="tag">4K</span><span class="tag">멀티샷</span><span class="tag">무료크레딧</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--video)">
+      <div class="tool-icon">🎬</div>
+      <div class="tool-body">
+        <div class="tool-name">Runway Gen-4 / Gen-4.5</div>
+        <div class="tool-by">Runway · runwayml.com</div>
+        <div class="tool-desc">영상 생성과 편집을 동시에 하는 전문가급 AI 영상 도구. Gen-4.5는 출시 당시 Video Arena 1위를 기록했을 만큼 영상 품질이 높아요(지금은 Google Gemini Omni·FLUX 3 Video·Seedance·Wan 3.0 등이 아레나 상위권을 차지하고, Gen-4.5는 9월 기준 20위권 밖이에요). 배경 교체·인물 이동·표정 변경 같은 정밀 편집은 물론, 같은 캐릭터가 일관되게 등장하는 시리즈 영상도 가능. Hollywood 스튜디오에서 실제 사용 중인 프로페셔널 도구. 요즘은 Runway 안에서 Kling 3.0·Seedance·Wan 3.0 같은 다른 회사 모델도 골라 쓸 수 있고, 9월 8일부터는 Premiere Pro·After Effects, 9월 23일부터는 DaVinci Resolve 안에서도 바로 돌아가요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>영상에서 배경 제거 → 원하는 배경으로 교체</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>같은 캐릭터가 반복 등장하는 시리즈·브랜드 영상</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>유튜브·SNS 숏폼 전문적 편집·효과</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>이미지 → 영상 변환도 가능 (Gen-4 기능)</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료는 가입 시 125크레딧 1회뿐(Gen-4.5는 Standard부터). Standard $12/월(연간 결제, 월 결제는 $15)~. 영상 편집 경험자에게 효과적</span></div>
+        </div>
+        <div class="tags"><span class="tag">전문가용</span><span class="tag">영상편집</span><span class="tag">시리즈</span><span class="tag">Hollywood</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--indie)">
+      <div class="tool-icon">🎬</div>
+      <div class="tool-body">
+        <div class="tool-name">Sora 2 <span style='font-size:11px;color:#f7706a;font-weight:400;'>(2026년 4월 서비스 종료)</span></div>
+        <div class="tool-by">OpenAI</div>
+        <div class="tool-desc">2026년 4월 26일부로 Sora 단독 앱(sora.com)이 종료됐고, ChatGPT 안의 영상 생성 기능도 함께 제거돼 현재 OpenAI에서는 영상 생성이 불가능해요(비용 문제로 전략 전환). API도 2026년 9월 24일 종료돼 이제 OpenAI 제품으로는 영상을 만들 수 없어요. 전문적인 영상 생성이 필요하면 Kling 3.0, Veo 3.1, Runway Gen-4.5 등을 추천.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-warn">⚠️</span><span>2026.4.26 앱·웹 종료, API도 9.24 종료 완료</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>ChatGPT 내 영상 생성도 제거 — 현재 OpenAI로는 영상 생성 불가</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>대안: Kling 3.0, Veo 3.1, Runway Gen-4.5 권장</span></div>
+        </div>
+        <div class="tags"><span class="tag">서비스종료</span><span class="tag">대체필요</span></div>
+      </div>
+    </div>
+
+    <div class="tool-card" style="--card-color:var(--video)">
+      <div class="tool-icon">🎵</div>
+      <div class="tool-body">
+        <div class="tool-name">Suno</div>
+        <div class="tool-by">Suno AI · suno.com</div>
+        <div class="tool-desc">텍스트를 입력하면 보컬·악기·편곡이 모두 포함된 완성 노래가 1분 만에 만들어지는 AI 음악 생성 도구. 장르·분위기·가사를 지정하면 프로 수준의 곡이 나와요. 2026년 9월 9일 나온 최신 v6 세대는 v6·v6-wild(Pro 이상)와 누구나 쓰는 v6-mini 세 모델로 나뉘고, 이전 v4~v5.5 모델로는 더 이상 새 곡을 만들 수 없어요(기존 곡은 그대로 유지). 완성곡의 한 구간만 말로 고치는 편집, 내 목소리를 입히는 Voices, 커스텀 모델 학습(베타)도 지원하고, 매일 무료 크레딧(50크레딧=10곡)이 제공돼서 부담 없이 시작 가능. 다만 9월 3일부터 다운로드 한도가 생겨 무료는 평생 7곡(개인용만), Pro는 월 20곡, Premier는 월 60곡까지만 내려받을 수 있어요. Warner·BMG 등 음반사와 라이선스 계약을 맺어 v6를 '음악 업계와 함께 만든 첫 모델'로 내놨고, 생성곡 워터마크 도입도 예고했어요. 다만 9월 18일 Universal·Sony가 v6도 저작권 침해라며 새로 소송을 내 분쟁은 이어지고 있어요.</div>
+        <div class="uses">
+          <div class="use-row"><span class="use-ok">✅</span><span>"신나는 응원가, 힙합 스타일" → 1분 만에 완성곡</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>"브랜드 징글, 팝 발라드" → 광고·콘텐츠용 음악</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>이벤트·축제·유튜브 영상 배경곡 제작</span></div>
+          <div class="use-row"><span class="use-ok">✅</span><span>무료 플랜 매일 10곡 생성 가능 (50크레딧/일, v6-mini) — 단 다운로드는 평생 7곡까지</span></div>
+          <div class="use-row"><span class="use-warn">⚠️</span><span>무료 플랜은 비상업용 제한 — 무료로 만든 곡은 유료 전환 후에도 상업권 없음. 상업적 사용은 Pro($10/월) 필요하고, Pro도 다운로드는 월 20곡까지</span></div>
+        </div>
+        <div class="tags"><span class="tag">음악 생성</span><span class="tag">무료티어</span><span class="tag">콘텐츠</span><span class="tag">배경음악</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div style="margin-bottom:6px;">2026 AI Tools Guide for Teachers · @kimju.zip</div>
+  <div style="font-size:10px;color:#3a3a48;">정보는 2026년 10월 2일 기준 · AI 도구 시장은 빠르게 변화합니다</div>
+</footer>
+
+<script>
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  // 지도 카드에서 호출돼도 상단 탭 강조가 따라오도록 onclick 인자로 매칭
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.toggle('active', (b.getAttribute('onclick') || '').includes("'" + id + "'"));
+  });
+  window.scrollTo({ top: document.querySelector('.nav-wrap').offsetTop - 10, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

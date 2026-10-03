@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>五人制足球 · PE Playbook</title>
+<meta name="description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body style="--accent:var(--c-gugi);--accent-ink:#c2410c">
+
+<div class="topbar">
+  <a class="home" href="../index.html">📖 目录</a>
+  <span class="title">🥅 五人制足球</span>
+  <span class="counter"></span>
+</div>
+<div class="progress"></div>
+
+<div class="deck">
+
+  <!-- 1. 封面 -->
+  <section class="slide cover active">
+    <img class="cover-bg" src="../assets/img/fs-cover.jpg" alt="五人制足球比赛场景">
+    <div class="cover-shade"></div>
+    <div class="kicker">球类运动 · 室内足球</div>
+    <div class="emoji">🥅</div>
+    <h1>五人制足球</h1>
+    <p class="lead">在狭小场地上闪耀的技术，室内足球的魅力</p>
+  </section>
+
+  <!-- 2. 什么是五人制足球？ -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">项目介绍</span>
+      <h2>什么是五人制足球？</h2>
+      <p class="desc">5人制室内足球，FIFA认证的世界人气运动</p>
+      <ul>
+        <li><span class="n">1</span><div><b>5人制室内足球</b> — 包括守门员在内5名队员组成一队，在狭小的室内场地上进行的足球运动。是FIFA认证的正式项目。</div></li>
+        <li><span class="n">2</span><div><b>更小更重的球</b> — 使用比普通足球（5号）更小的4号球，弹跳较少，因此需要更精细的脚下技术。</div></li>
+        <li><span class="n">3</span><div><b>技术与快速判断力</b> — 在狭小空间内攻防转换极快，个人技术和瞬间判断力比足球更为重要。</div></li>
+        <li><span class="n">4</span><div><b>世界性人气</b> — 以巴西、阿根廷等南美国家为中心，在全世界广受喜爱。欧洲和亚洲的联赛也十分活跃。</div></li>
+      </ul>
+      <div class="chips">
+        <span class="chip"><b>人数</b> 5 对 5</span>
+        <span class="chip"><b>用球</b> 4号低弹跳球</span>
+        <span class="chip"><b>场地</b> 体育馆大小</span>
+        <span class="chip">FIFA认证项目</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 历史 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">历史 · 发展</span>
+      <h2>五人制足球的历史</h2>
+      <p class="desc">起源于南美街头足球，风靡世界的运动</p>
+      <ul>
+        <li><span class="n">1</span><div><b>1930年 乌拉圭</b> — 体育教师Juan Carlos Ceriani设计出可在室内进行的足球运动。'Futbol de Salon（客厅足球）'是五人制足球的起源。</div></li>
+        <li><span class="n">2</span><div><b>南美街头足球文化</b> — 五人制足球在巴西狭窄的街道和室内场地上爆发式发展，形成了以技术为中心的独特足球文化。</div></li>
+        <li><span class="n">3</span><div><b>足球巨星的摇篮</b> — 梅西、罗纳尔迪尼奥、内马尔、罗纳尔多等世界级足球明星都曾在童年时期通过五人制足球磨炼技术。</div></li>
+        <li><span class="n">4</span><div><b>1989年FIFA五人制足球世界杯</b> — 首届FIFA五人制足球世界杯在荷兰举办，使其确立为国际性运动。此后每4年举办一次。</div></li>
+        <li><span class="n">5</span><div><b>韩国的五人制足球</b> — K-五人制足球联赛正在运营，并以业余爱好者和学校体育俱乐部为中心迅速普及。</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. 场地（SVG） -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">场地 · 设施</span>
+      <h2>五人制足球场</h2>
+      <p class="desc">比赛在相当于学校体育馆大小的长方形场地上进行</p>
+      <div class="split">
+        <div class="figure">
+          <svg viewBox="0 0 440 260" role="img" aria-label="五人制足球场平面图">
+            <!-- 场地外框 -->
+            <rect x="20" y="20" width="400" height="220" fill="#c8e6c9" stroke="#2e7d32" stroke-width="2.5"/>
+            <!-- 中线 -->
+            <line x1="220" y1="20" x2="220" y2="240" stroke="#fff" stroke-width="2"/>
+            <!-- 中圈 -->
+            <circle cx="220" cy="130" r="24" fill="none" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="220" cy="130" r="2.5" fill="#fff"/>
+
+            <!-- 左侧罚球区（半圆6m） -->
+            <path d="M20 82 A48 48 0 0 1 20 178" fill="rgba(255,255,255,.25)" stroke="#fff" stroke-width="1.5" transform="translate(0,0)"/>
+            <line x1="20" y1="82" x2="68" y2="82" stroke="#fff" stroke-width="1.5"/>
+            <line x1="20" y1="178" x2="68" y2="178" stroke="#fff" stroke-width="1.5"/>
+            <path d="M68 82 A48 48 0 0 1 68 178" fill="none" stroke="#fff" stroke-width="1.5"/>
+            <!-- 左侧球门 -->
+            <rect x="14" y="112" width="6" height="36" rx="1" fill="#d32f2f" stroke="#b71c1c" stroke-width="1"/>
+            <!-- 左侧点球点（6m） -->
+            <circle cx="68" cy="130" r="2" fill="#fff"/>
+            <!-- 左侧第二点球点（10m） -->
+            <circle cx="100" cy="130" r="2" fill="#ffeb3b"/>
+
+            <!-- 右侧罚球区（半圆6m） -->
+            <path d="M420 82 A48 48 0 0 0 420 178" fill="rgba(255,255,255,.25)" stroke="#fff" stroke-width="1.5"/>
+            <line x1="420" y1="82" x2="372" y2="82" stroke="#fff" stroke-width="1.5"/>
+            <line x1="420" y1="178" x2="372" y2="178" stroke="#fff" stroke-width="1.5"/>
+            <path d="M372 82 A48 48 0 0 0 372 178" fill="none" stroke="#fff" stroke-width="1.5"/>
+            <!-- 右侧球门 -->
+            <rect x="420" y="112" width="6" height="36" rx="1" fill="#1565c0" stroke="#0d47a1" stroke-width="1"/>
+            <!-- 右侧点球点（6m） -->
+            <circle cx="372" cy="130" r="2" fill="#fff"/>
+            <!-- 右侧第二点球点（10m） -->
+            <circle cx="340" cy="130" r="2" fill="#ffeb3b"/>
+
+            <!-- 角球弧 -->
+            <path d="M20 20 Q28 20 28 28" fill="none" stroke="#fff" stroke-width="1"/>
+            <path d="M420 20 Q412 20 412 28" fill="none" stroke="#fff" stroke-width="1"/>
+            <path d="M20 240 Q28 240 28 232" fill="none" stroke="#fff" stroke-width="1"/>
+            <path d="M420 240 Q412 240 412 232" fill="none" stroke="#fff" stroke-width="1"/>
+
+            <!-- 换人区标示 -->
+            <line x1="195" y1="240" x2="195" y2="248" stroke="#E8590C" stroke-width="2"/>
+            <line x1="245" y1="240" x2="245" y2="248" stroke="#E8590C" stroke-width="2"/>
+            <text x="220" y="256" font-size="7" fill="#E8590C" text-anchor="middle" font-weight="600">换人区</text>
+
+            <!-- 标签 -->
+            <text x="42" y="133" font-size="7" fill="#d32f2f" text-anchor="middle">球门</text>
+            <text x="42" y="142" font-size="6" fill="#d32f2f" text-anchor="middle">3m×2m</text>
+            <text x="68" y="100" font-size="6" fill="#555" text-anchor="middle">罚球区</text>
+            <text x="68" y="108" font-size="6" fill="#555" text-anchor="middle">（6m）</text>
+            <text x="100" y="120" font-size="6" fill="#b8860b" text-anchor="middle">第二点球</text>
+            <text x="100" y="128" font-size="6" fill="#b8860b" text-anchor="middle">（10m）</text>
+            <text x="220" y="14" font-size="8" fill="#333" text-anchor="middle">中线</text>
+            <text x="220" y="270" font-size="9" fill="#555" text-anchor="middle">场地：25~42m × 16~25m（学校体育馆大小）</text>
+          </svg>
+          <figcaption>五人制足球场 · 25~42m × 16~25m · 球门3m×2m · 罚球区半圆6m</figcaption>
+        </div>
+        <ul>
+          <li><span class="n">📐</span><div><b>场地大小</b> — 25~42m × 16~25m。正好符合一般学校体育馆的大小。</div></li>
+          <li><span class="n">🥅</span><div><b>球门</b> — 宽3m × 高2m。比足球球门（7.32m×2.44m）小得多。</div></li>
+          <li><span class="n">⭕</span><div><b>罚球区</b> — 以球门中央为圆心的半圆形6m区域。只有守门员可以在此区域用手触球。</div></li>
+          <li><span class="n">🔴</span><div><b>第二点球点</b> — 距球门10m处。累计犯规达6次以上时，在此处主罚无人墙直接任意球。</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 比赛规则 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">规则 · 比赛</span>
+      <h2>比赛规则</h2>
+      <p class="desc">了解五人制足球独有的规则</p>
+      <div class="two">
+        <div class="box"><h3>⏱️ 比赛时间</h3><p>上下半场各20分钟，采用非跑动计时而是<b>比赛用时（停表制）</b>方式。球出界时计时停止。学校课堂上则为上下半场各10分钟。</p></div>
+        <div class="box"><h3>⚽ 开球</h3><p>比赛开始及进球后在中圈开球。球可朝任意方向踢出，开球队员在其他队员触球前不得再次触球。</p></div>
+        <div class="box"><h3>⏰ 4秒规则</h3><p>发边线球（相当于足球的界外球）、角球、门球必须在<b>4秒内</b>完成。超时则球权转移给对方！</p></div>
+        <div class="box"><h3>🔙 回传守门员限一次</h3><p>回传给守门员仅限<b>一次</b>。守门员处理球后，在对方触球前不能再次回传。</p></div>
+        <div class="box"><h3>⚡ 累计犯规</h3><p>上下半场各自累计犯规次数。累计达<b>6次以上</b>时，判给对方在第二点球点（10m）处无人墙直接任意球！</p></div>
+        <div class="box"><h3>🔄 自由换人</h3><p>比赛不中断，可在换人区自由换人。换人次数不限，可随时上场或下场。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. 足球与五人制足球的区别 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">比较 · 分析</span>
+      <h2>足球 vs 五人制足球</h2>
+      <p class="desc">看似相同却不同的两项运动，比较其核心差异</p>
+      <table>
+        <thead>
+          <tr><th>项目</th><th>足球</th><th>五人制足球</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><b>人数</b></td><td>11对11</td><td>5对5</td></tr>
+          <tr><td><b>场地长度</b></td><td>约105m</td><td>约40m</td></tr>
+          <tr><td><b>用球</b></td><td>5号标准足球</td><td>4号低弹跳球</td></tr>
+          <tr><td><b>换人</b></td><td>限3~5人</td><td>自由换人（无限制）</td></tr>
+          <tr><td><b>越位</b></td><td>有</td><td>无</td></tr>
+          <tr><td><b>时间</b></td><td>跑动计时（45分钟×2）</td><td>比赛用时（20分钟×2）</td></tr>
+        </tbody>
+      </table>
+      <div class="note"><b>核心要点：</b> 五人制足球凭借狭小场地、较少人数、无越位规则，能让球员更多地触球，更快地提升技术！</div>
+    </div>
+  </section>
+
+  <!-- 7. 核心技术①：射门 -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/fs-kick.jpg" alt="五人制足球射门场景">
+        <figcaption>脚尖射门 — 用脚尖快速射门的五人制足球特有技术</figcaption>
+      </figure>
+      <div>
+        <span class="tag">核心技术 ①</span>
+        <h2>射门</h2>
+        <p class="desc">在狭小场地上闪耀的多种射门技术</p>
+        <ul>
+          <li><span class="n">1</span><div><b>脚尖射门</b> — 用脚尖快速射门的五人制足球代表性射门方式。动作幅度小，守门员难以反应。</div></li>
+          <li><span class="n">2</span><div><b>脚内侧射门</b> — 用脚内侧踢出的最精准的射门方式。是传球和近距离射门的基本技术。</div></li>
+          <li><span class="n">3</span><div><b>脚背射门</b> — 用脚背用力踢出的强力射门。用于远距离攻门。</div></li>
+          <li><span class="n">4</span><div><b>脚跟射门</b> — 用脚跟向后或侧向踢出的花式射门。是打乱对方预判的高级技术。</div></li>
+          <li><span class="n">5</span><div><b>挑射</b> — 让球轻轻浮起踢出的技术。用于越过倒地的守门员或用于撞墙配合。</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. 核心技术②：盘带 -->
+  <section class="slide">
+    <div class="media flip">
+      <div>
+        <span class="tag">核心技术 ②</span>
+        <h2>盘带</h2>
+        <p class="desc">脚底是关键！五人制足球独有的盘带技术</p>
+        <ul>
+          <li><span class="n">1</span><div><b>脚底盘带</b> — 五人制足球的核心技术！用脚底踩球并拖拽，自如变换方向。是在狭小空间内不失球的秘诀。</div></li>
+          <li><span class="n">2</span><div><b>牛尾巴过人</b> — 用脚外侧将球推出后瞬间用脚内侧拉回的技术。左右晃过防守队员实现突破。</div></li>
+          <li><span class="n">3</span><div><b>滚球</b> — 用脚底将球左右或前后滚动，打乱对方节奏的技术。</div></li>
+          <li><span class="n">4</span><div><b>1对1运用</b> — 在狭小场地上1对1突破能力就是得分机会！结合假动作与盘带摆脱防守。</div></li>
+        </ul>
+      </div>
+      <figure class="photo">
+        <img src="../assets/img/fs-dribble.jpg" alt="五人制足球盘带场景">
+        <figcaption>脚底盘带 — 五人制足球中最重要的基本技术</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 9. 核心技术③：传球 -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/fs-pass.jpg" alt="五人制足球传球场景">
+        <figcaption>撞墙配合（二过一） — 用快速传接球瓦解防守</figcaption>
+      </figure>
+      <div>
+        <span class="tag">核心技术 ③</span>
+        <h2>传球</h2>
+        <p class="desc">快速精准的传球是五人制足球取胜的关键</p>
+        <ul>
+          <li><span class="n">1</span><div><b>撞墙配合（二过一）</b> — 传球给队友后立即跑动接回传球的基本战术。是穿透防守队员之间的核心武器。</div></li>
+          <li><span class="n">2</span><div><b>脚尖传球</b> — 用脚尖快速触球连接的传球方式。动作幅度小，对方难以判断。</div></li>
+          <li><span class="n">3</span><div><b>脚底停球传球</b> — 用脚底停（接）球后立即传出的技术。将"停球+传球"合并为一个动作。</div></li>
+          <li><span class="n">4</span><div><b>背身拿球运用（背对防守接球）</b> — 背对对方接球后转身完成传球或射门的高级技术。</div></li>
+          <li><span class="n">5</span><div><b>空当传球</b> — 提前传向队友将要跑动的空当区域的传球。需要预判跑动的眼光。</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. 位置 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">战术 · 位置</span>
+      <h2>位置</h2>
+      <p class="desc">4名场上球员 + 1名守门员，了解各自的角色</p>
+      <div class="two">
+        <div class="box"><h3>🧤 守门员（Goleiro）</h3><p>不仅要扑救球门，在五人制足球中<b>还要积极参与进攻</b>！精准的手抛球和踢球是快速反击的起点。</p></div>
+        <div class="box"><h3>🛡️ Fixo（后卫型）</h3><p>在球队最后方负责防守的指挥官。进攻时则在后方通过传球调度比赛，提供稳定感。</p></div>
+        <div class="box"><h3>⚡ Ala（左右边路）</h3><p>活跃于左右两侧，兼顾盘带突破、传球和射门的全能位置。是攻防转换的核心。</p></div>
+        <div class="box"><h3>🎯 Pivo（支点前锋）</h3><p>站在最前方背对球门的中央支点球员。负责接球做球或转身直接射门，是进攻的核心。</p></div>
+      </div>
+      <div class="note"><b>阵型：</b> 基本阵型有<b>3-1</b>（1后卫-2边路-1支点）和<b>4-0</b>（无支点前锋，4人自由轮转）两种代表性阵型。4-0的核心在于位置轮转！</div>
+    </div>
+  </section>
+
+  <!-- 11. 战术 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">战术 · 策略</span>
+      <h2>五人制足球战术</h2>
+      <p class="desc">在狭小场地上创造胜利的团队战术</p>
+      <div class="two">
+        <div class="box"><h3>🔄 轮转</h3><p>4名场上球员不断轮换位置移动的战术。使防守盯人陷入混乱，从而创造空当。</p></div>
+        <div class="box"><h3>⚡ 强攻战术（Power Play）</h3><p>用场上球员替换守门员，投入5人进攻的战术。是比赛临近结束落后时使用的孤注一掷！</p></div>
+        <div class="box"><h3>🔥 高位逼抢</h3><p>从对方半场开始高强度施压抢球的战术。体力消耗大，但可通过自由换人来弥补。</p></div>
+        <div class="box"><h3>💨 反击（Counter-Attack）</h3><p>刚从防守中抢到球就迅速向前场推进的反击战术。以少数人快速形成有效攻势！</p></div>
+        <div class="box"><h3>🎯 定位球战术</h3><p>角球、任意球等静止状态下开始的进攻。通过事先约定的跑位（暗号战术）创造得分机会。</p></div>
+        <div class="box"><h3>🧱 防守组织</h3><p>根据情况在1对1盯人防守与区域防守之间切换。在狭小场地上哪怕只被突破一人也会陷入危机！</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. 安全须知 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">安全须知</span>
+      <h2>安全地享受运动</h2>
+      <p class="desc">无伤病享受五人制足球的必备安全须知</p>
+      <div class="two">
+        <div class="box warn"><h3>🦶 注意脚趾受伤</h3><p>脚尖射门时脚趾可能承受较大冲击。正确的姿势和穿着五人制足球鞋是必须的！</p></div>
+        <div class="box warn"><h3>🦵 注意膝盖受伤</h3><p>急停急转动作频繁，对膝关节韧带负担较大。充分的热身和拉伸必不可少。</p></div>
+        <div class="box warn"><h3>💥 注意碰撞</h3><p>在狭小场地上有10人奔跑，选手间碰撞风险较高。要时刻观察周围，避免鲁莽的铲球！</p></div>
+        <div class="box warn"><h3>🏟️ 注意地面湿滑</h3><p>室内场地地面可能因汗水或水渍而湿滑。比赛前确认地面状况，并用毛巾及时处理。</p></div>
+        <div class="box"><h3>👟 必须穿着五人制足球鞋</h3><p>严禁穿普通运动鞋或足球钉鞋！必须穿着五人制足球专用室内鞋（橡胶鞋底、无痕鞋底）。</p></div>
+        <div class="box"><h3>🤸 热身运动</h3><p>充分拉伸脚踝、膝盖、大腿！由于变向动作较多，下肢关节的热身尤为重要。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. 五人制足球礼仪 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">礼仪 · 体育精神</span>
+      <h2>五人制足球礼仪</h2>
+      <p class="desc">为享受愉快比赛应遵守的礼仪</p>
+      <ul>
+        <li><span class="n">1</span><div><b>尊重对手</b> — 禁止粗野动作、辱骂和抗议。尊重裁判判罚，对对手保持礼貌。</div></li>
+        <li><span class="n">2</span><div><b>关心受伤球员</b> — 若对方球员受伤，应将球踢出界外以暂停比赛。之后发界外球时将球还给对方是一种礼仪。</div></li>
+        <li><span class="n">3</span><div><b>公平竞争</b> — 故意拖延时间、犯规性动作有违体育精神。要堂堂正正地以技术一决胜负。</div></li>
+        <li><span class="n">4</span><div><b>赛后致意</b> — 无论胜负，都要与对方球队、裁判握手致谢，并将场地清理干净。</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 对/错 测验 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">测验</span>
+      <h2>对/错 测验</h2>
+      <p class="desc">来确认一下学到的内容吧！</p>
+      <ul>
+        <li><span class="n">Q1</span><div><b>五人制足球适用越位规则。</b> — 错。五人制足球没有越位规则。这是与足球的核心区别之一。</div></li>
+        <li><span class="n">Q2</span><div><b>五人制足球中发边线球（相当于足球的界外球）必须在4秒内完成。</b> — 对。发边线球、角球、门球都必须在4秒内完成。</div></li>
+        <li><span class="n">Q3</span><div><b>五人制足球使用普通足球（5号球）。</b> — 错。五人制足球使用弹跳较少的4号低弹跳球。</div></li>
+        <li><span class="n">Q4</span><div><b>球队累计犯规达6次以上时，判给对方无人墙直接任意球。</b> — 对。上下半场各自累计达6次以上时，在第二点球点（10m）处主罚无人墙直接任意球。</div></li>
+        <li><span class="n">Q5</span><div><b>五人制足球的球门大小与足球相同。</b> — 错。五人制足球球门为3m x 2m，比足球球门（7.32m x 2.44m）小得多。</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 核心总结 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">核心总结</span>
+      <h2>这些一定要记住！</h2>
+      <p class="desc">总结今天学到的核心内容</p>
+      <div class="two">
+        <div class="box"><h3>📌 核心规则</h3><p>• 5人制，上下半场各20分钟（比赛用时）<br>• 无越位，自由换人（无限制）<br>• 4秒规则：发边线球·角球·门球<br>• 累计犯规达6次以上判给第二点球（10m）</p></div>
+        <div class="box"><h3>⭐ 核心技术</h3><p>• 脚底盘带：五人制足球最重要的基本技术<br>• 脚尖射门：动作幅度小，守门员难以反应的射门方式<br>• 撞墙配合（二过一）：穿透防守队员之间的核心武器<br>• 脚底停球传球：用脚底停球后立即传球连接</p></div>
+        <div class="box"><h3>🏆 值得了解的小知识</h3><p>• 梅西、内马尔、罗纳尔迪尼奥等都曾在童年通过五人制足球磨炼技术<br>• 1930年起源于乌拉圭的室内足球<br>• 强攻战术：用场上球员替换守门员投入5人进攻的孤注一掷</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 探究问题 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">探究问题</span>
+      <h2>一起来思考</h2>
+      <p class="desc">让我们在课程结束时一起讨论</p>
+      <ul>
+        <li><span class="n">1</span><div><b>五人制足球与足球的规则差异会对比赛的进行方式产生怎样的影响？</b></div></li>
+        <li><span class="n">2</span><div><b>在狭小场地上进行的五人制足球对提升足球实力有帮助吗？原因是什么？</b></div></li>
+        <li><span class="n">3</span><div><b>为什么五人制足球适合作为学校体育项目？</b></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 14. 结尾 -->
+  <section class="slide cover">
+    <img class="cover-bg" src="../assets/img/fs-team.jpg" alt="五人制足球队伍">
+    <div class="cover-shade"></div>
+    <div class="emoji">🥅</div>
+    <h1>ANY QUESTIONS?</h1>
+    <p class="lead">五人制足球是让足球技术进步最快的最佳训练场。<br><br>谢谢!</p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" aria-label="上一页">&#8249;</button>
+  <div class="dots"></div>
+  <button id="next" aria-label="下一页">&#8250;</button>
+</div>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

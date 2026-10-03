@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>楚克球 · PE Playbook</title>
+<meta name="description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body style="--accent:var(--c-new);--accent-ink:#6d28d9">
+
+<div class="topbar">
+  <a class="home" href="../index.html">📖 目录</a>
+  <span class="title">🎯 楚克球</span>
+  <span class="counter"></span>
+</div>
+<div class="progress"></div>
+
+<div class="deck">
+
+  <!-- 1. 封面 -->
+  <section class="slide cover active">
+    <img class="cover-bg" src="../assets/img/tc-cover.jpg" alt="楚克球比赛场景">
+    <div class="cover-shade"></div>
+    <div class="kicker">新兴运动 · 团队比赛</div>
+    <div class="emoji">🎯</div>
+    <h1>楚克球</h1>
+    <p class="lead">不妨碍进攻也不妨碍防守，最公平的运动</p>
+  </section>
+
+  <!-- 2. 什么是楚克球？ -->
+  <section class="slide">
+    <div class="content" data-num="02">
+      <span class="tag">项目介绍</span>
+      <h2>什么是楚克球？</h2>
+      <p class="desc">将球投向框架，若对方未能接住反弹球即可得分的团队运动</p>
+      <ul>
+        <li><span class="n">1</span><div><b>非接触运动</b> — 规则禁止一切妨碍对方的行为。抢断、阻挡、擒抱全部算犯规！</div></li>
+        <li><span class="n">2</span><div><b>公平竞赛的极致</b> — 绝对不能妨碍正在进攻的对方。只能尝试接住反弹球</div></li>
+        <li><span class="n">3</span><div><b>两侧框架均可进攻</b> — 无论哪支队伍都能进攻两端的任意框架，战术更加多样</div></li>
+      </ul>
+      <div class="note"><b>联合国教科文组织</b>认定的"和平运动"（2001年） — 以非接触、非妨碍规则体现共存与合作的价值</div>
+    </div>
+  </section>
+
+  <!-- 3. 历史 -->
+  <section class="slide">
+    <div class="content" data-num="03">
+      <span class="tag">历史 · 发展</span>
+      <h2>楚克球的历史</h2>
+      <p class="desc">诞生于一位科学家对"无伤害运动"的研究</p>
+      <ul>
+        <li><span class="n">1</span><div><b>1970年诞生于瑞士</b> — 生物学家赫尔曼·布兰特（Hermann Brandt）博士在研究"能否让运动远离伤害？"之后设计而成</div></li>
+        <li><span class="n">2</span><div><b>名称的由来</b> — "Tshouk"是模拟球从框架弹回时发出声音的拟声词</div></li>
+        <li><span class="n">3</span><div><b>FITB成立</b> — 国际楚克球联合会（Federation Internationale de Tchoukball）成立，发展为国际性运动</div></li>
+        <li><span class="n">4</span><div><b>在亚洲广受欢迎</b> — 在中国台湾、新加坡、韩国等亚洲国家迅速普及为学校体育项目</div></li>
+        <li><span class="n">5</span><div><b>教育价值获得认可</b> — 凭借将伤害降到最低的设计和公平竞赛理念，被评为学校体育的理想项目</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. 场地与器材 -->
+  <section class="slide">
+    <div class="content" data-num="04">
+      <span class="tag">规则 · 器材</span>
+      <h2>场地与器材</h2>
+      <p class="desc">了解楚克球场地的结构与核心器材</p>
+      <div class="split">
+        <div class="figure">
+          <svg viewBox="0 0 400 200" role="img" aria-label="楚克球场地示意图">
+            <!-- 场地外框 -->
+            <rect x="20" y="20" width="360" height="160" fill="#f3e8ff" stroke="#7c3aed" stroke-width="2.5"/>
+            <!-- 中线 -->
+            <line x1="200" y1="20" x2="200" y2="180" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="6,4"/>
+            <!-- 左侧禁区（半圆） -->
+            <path d="M 20 60 A 40 40 0 0 1 20 140" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="2"/>
+            <path d="M 20 60 Q 60 100 20 140" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="2"/>
+            <!-- 右侧禁区（半圆） -->
+            <path d="M 380 60 A 40 40 0 0 0 380 140" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="2"/>
+            <path d="M 380 60 Q 340 100 380 140" fill="rgba(239,68,68,0.15)" stroke="#ef4444" stroke-width="2"/>
+            <!-- 左侧框架 -->
+            <rect x="12" y="82" width="10" height="36" fill="#7c3aed" rx="1"/>
+            <line x1="22" y1="82" x2="30" y2="75" stroke="#7c3aed" stroke-width="2"/>
+            <line x1="22" y1="118" x2="30" y2="125" stroke="#7c3aed" stroke-width="2"/>
+            <!-- 右侧框架 -->
+            <rect x="378" y="82" width="10" height="36" fill="#7c3aed" rx="1"/>
+            <line x1="378" y1="82" x2="370" y2="75" stroke="#7c3aed" stroke-width="2"/>
+            <line x1="378" y1="118" x2="370" y2="125" stroke="#7c3aed" stroke-width="2"/>
+            <!-- 标签 -->
+            <text x="200" y="12" text-anchor="middle" font-size="10" fill="#7c3aed" font-weight="700">26~29m</text>
+            <text x="6" y="105" text-anchor="middle" font-size="7" fill="#7c3aed" writing-mode="tb" font-weight="600">15~17m</text>
+            <text x="48" y="104" text-anchor="middle" font-size="8" fill="#ef4444" font-weight="600">禁区</text>
+            <text x="352" y="104" text-anchor="middle" font-size="8" fill="#ef4444" font-weight="600">禁区</text>
+            <text x="17" y="75" text-anchor="middle" font-size="7" fill="#7c3aed" font-weight="700">框架</text>
+            <text x="383" y="75" text-anchor="middle" font-size="7" fill="#7c3aed" font-weight="700">框架</text>
+            <text x="200" y="195" text-anchor="middle" font-size="8" fill="#666">半圆形禁区半径3m / 框架角度55°</text>
+          </svg>
+          <figcaption>楚克球场地结构（两侧框架＋禁区）</figcaption>
+        </div>
+        <ul>
+          <li><span class="n">1</span><div><b>场地</b> — 26~29m x 15~17m，学校课堂可适当缩小</div></li>
+          <li><span class="n">2</span><div><b>框架</b> — 倾斜的蹦床式球网（角度55°），两端各设一个</div></li>
+          <li><span class="n">3</span><div><b>禁区</b> — 框架前方的半圆形区域（半径3m），禁止球员进入</div></li>
+          <li><span class="n">4</span><div><b>球</b> — 使用手球大小的球</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 基本规则 -->
+  <section class="slide">
+    <div class="content" data-num="05">
+      <span class="tag">规则</span>
+      <h2>基本规则</h2>
+      <p class="desc">了解楚克球的核心比赛规则</p>
+      <div class="two">
+        <div class="box">
+          <h3>⚡ 比赛进行</h3>
+          <p>• 正式比赛为7人制（学校课堂可采用5人制）<br>• 必须在3次传球以内完成射门<br>• 球击中框架后对方必须接住<br>• 未能接住＝投掷方得分！</p>
+        </div>
+        <div class="box warn">
+          <h3>🚫 犯规情形</h3>
+          <p>• 进入禁区（半圆）即犯规<br>• 射门未击中框架＝对方得分<br>• 持球移动不得超过3步<br>• 进攻中妨碍对方即判犯规</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. 独特规则 -->
+  <section class="slide">
+    <div class="content" data-num="06">
+      <span class="tag">规则 · 特色</span>
+      <h2>独特规则</h2>
+      <p class="desc">其他运动没有的楚克球专属特殊规则</p>
+      <ul>
+        <li><span class="n">★</span><div><b>绝对禁止妨碍对方进攻</b> — 抢断、阻挡、断球全部算犯规。必须等对方射门后才能行动！</div></li>
+        <li><span class="n">2</span><div><b>两侧框架均可进攻</b> — 无论哪支队伍都可以选择想进攻的框架。但连续进攻同一框架最多3次</div></li>
+        <li><span class="n">3</span><div><b>3步规则</b> — 持球移动超过3步即犯规。快速传球是关键！</div></li>
+        <li><span class="n">4</span><div><b>自我反弹失分</b> — 若反弹球回到投掷者本人手中，则判对方得分</div></li>
+      </ul>
+      <div class="note"><b>核心理念</b> — 这项运动的重点不是战胜对手，而是提升本队的技术水平</div>
+    </div>
+  </section>
+
+  <!-- 7. 核心技术：射门 -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/tc-throw.jpg" alt="楚克球射门姿势">
+        <figcaption>上手射门动作</figcaption>
+      </figure>
+      <div>
+        <span class="tag">技术①</span>
+        <h2>射门</h2>
+        <ul>
+          <li><span class="n">1</span><div><b>上手射门</b> — 最基本的方式。从头顶用力朝框架投掷</div></li>
+          <li><span class="n">2</span><div><b>侧手射门</b> — 从身体侧面投掷。让防守更难预测</div></li>
+          <li><span class="n">3</span><div><b>跳跃射门</b> — 跳起后以较高角度投掷，改变反弹角度</div></li>
+          <li><span class="n">4</span><div><b>瞄准框架边缘</b> — 击中边缘会产生难以预测的反弹</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. 核心技术：接球 -->
+  <section class="slide">
+    <div class="media flip">
+      <div>
+        <span class="tag">技术②</span>
+        <h2>接球</h2>
+        <ul>
+          <li><span class="n">1</span><div><b>预判反弹</b> — 根据框架角度和射门位置提前读取球的轨迹</div></li>
+          <li><span class="n">2</span><div><b>双手接球</b> — 最稳定的方式。用双手包住球接住</div></li>
+          <li><span class="n">3</span><div><b>鱼跃接球</b> — 向低处的球扑身接住</div></li>
+          <li><span class="n">4</span><div><b>躯干接球</b> — 用胸部将球紧紧抱住确保稳固</div></li>
+          <li><span class="n">5</span><div><b>位置分工</b> — 与队友分区站位，按反弹方向分工覆盖</div></li>
+        </ul>
+      </div>
+      <figure class="photo">
+        <img src="../assets/img/tc-catch.jpg" alt="楚克球接球场景">
+        <figcaption>鱼跃接球动作</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 9. 核心技术：传球 -->
+  <section class="slide">
+    <div class="content" data-num="09">
+      <span class="tag">技术③</span>
+      <h2>传球</h2>
+      <p class="desc">在3次以内创造射门机会的核心技术</p>
+      <ul>
+        <li><span class="n">1</span><div><b>胸前传球</b> — 在胸部高度用双手推出球的基本传球方式。准确又迅速</div></li>
+        <li><span class="n">2</span><div><b>击地传球</b> — 让球先触地弹起再传出。可降低防守者的视线</div></li>
+        <li><span class="n">3</span><div><b>头顶传球</b> — 从头顶高高抛出，传给远处的队友</div></li>
+        <li><span class="n">4</span><div><b>快速连续传球</b> — 通过连续传球打乱对方的防守阵型</div></li>
+        <li><span class="n">5</span><div><b>3次以内策略</b> — 由于规则规定最多只能传球3次，高效的传接配合是胜负的关键</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 10. 战术 -->
+  <section class="slide">
+    <div class="content" data-num="10">
+      <span class="tag">战术 · 策略</span>
+      <h2>战术</h2>
+      <p class="desc">进攻与防守的战术方法</p>
+      <div class="two">
+        <div class="box">
+          <h3>⚔️ 进攻战术</h3>
+          <p>• <b>快速传球展开</b> — 利用3次以内规则快速发起进攻<br>• <b>选择框架</b> — 攻击两侧中防守较弱的一方<br>• <b>制造角度</b> — 通过跳跃／侧手射门制造难以预测的反弹<br>• <b>假射门</b> — 假装投掷以打乱防守的时机判断</p>
+        </div>
+        <div class="box">
+          <h3>🛡️ 防守战术</h3>
+          <p>• <b>预判反弹</b> — 根据射门角度和框架位置预测球的轨迹<br>• <b>站位安排</b> — 队友在框架前呈扇形均匀分布<br>• <b>补空档</b> — 根据投手位置迅速移动<br>• <b>沟通</b> — 与队友喊出区域分工，避免重叠</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. 安全守则 -->
+  <section class="slide">
+    <div class="content" data-num="11">
+      <span class="tag">安全</span>
+      <h2>安全守则</h2>
+      <p class="desc">享受安全愉快的楚克球运动的注意事项</p>
+      <div class="two">
+        <div class="box warn">
+          <h3>⚠️ 注意事项</h3>
+          <p>• <b>注意框架碰撞</b> — 射门后奔跑时保持距离，避免撞上框架<br>• <b>禁区内打滑</b> — 快速移动时注意不要滑入禁区<br>• <b>手指受伤</b> — 接住强力反弹球时应用双手，避免手指弯折受伤</p>
+        </div>
+        <div class="box">
+          <h3>🏃 热身运动</h3>
+          <p>• <b>肩部拉伸</b> — 射门时大量使用肩部，需充分放松<br>• <b>手腕转动</b> — 接球和射门都会给手腕带来负担，热身必不可少<br>• <b>下肢拉伸</b> — 为快速变向和鱼跃动作做准备<br>• <b>轻度传球练习</b> — 正式比赛前与队友轻松传接球</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. 判断题测验 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">测验</span>
+      <h2>判断题测验</h2>
+      <p class="desc">来检验一下学到的内容吧！</p>
+      <ul>
+        <li><span class="n">Q1</span><div><b>在楚克球中可以对正在进攻的对方进行抢断或阻挡</b> — 错。妨碍对方的一切行为（抢断、阻挡、擒抱）都算犯规。</div></li>
+        <li><span class="n">Q2</span><div><b>在楚克球中，射门未击中框架会让对方得分</b> — 对。若未能击中框架，对方将获得分数。</div></li>
+        <li><span class="n">Q3</span><div><b>在楚克球中，一支队伍只能进攻自己一侧的框架</b> — 错。无论哪支队伍都可以进攻两侧的框架。</div></li>
+        <li><span class="n">Q4</span><div><b>在楚克球中，持球移动超过3步即犯规</b> — 对。快速传球是关键，持球移动超过3步即判犯规。</div></li>
+        <li><span class="n">Q5</span><div><b>联合国教科文组织于2001年将楚克球认定为"和平运动"</b> — 对。因非接触、非妨碍规则体现共存与合作的价值而获得认可。</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 13. 核心整理 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">核心整理</span>
+      <h2>务必牢记！</h2>
+      <p class="desc">整理今天学到的核心内容</p>
+      <div class="two">
+        <div class="box"><h3>📌 核心规则</h3><p>① 绝对禁止妨碍对方进攻（非接触）<br>② 必须在3次传球以内射门<br>③ 禁止进入禁区（半径3m）<br>④ 连续进攻同一框架最多3次</p></div>
+        <div class="box"><h3>⭐ 核心技术</h3><p>① 上手／侧手射门<br>② 瞄准框架边缘（制造难以预测的反弹）<br>③ 双手接球与鱼跃接球<br>④ 胸前／击地／头顶传球</p></div>
+        <div class="box"><h3>🏆 值得了解的小知识</h3><p>• 瑞士生物学家赫尔曼·布兰特博士为打造无伤害运动而设计<br>• "Tshouk"模拟球从框架弹回时的声音<br>• 在中国台湾、新加坡等亚洲地区尤其受欢迎</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 探究问题 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">探究问题</span>
+      <h2>一起来思考</h2>
+      <p class="desc">在结束课程之际，一起讨论一下吧</p>
+      <ul>
+        <li><span class="n">1</span><div><b>楚克球中"不得妨碍对方防守"这条规则具有怎样的意义？</b></div></li>
+        <li><span class="n">2</span><div><b>不发生身体接触的楚克球，能否带来与一般运动不同的价值？</b></div></li>
+        <li><span class="n">3</span><div><b>楚克球的公平竞赛精神能否应用到其他运动中？</b></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 14. 结束 -->
+  <section class="slide cover">
+    <img class="cover-bg" src="../assets/img/tc-team.jpg" alt="楚克球团队合影">
+    <div class="cover-shade"></div>
+    <div class="kicker">还有问题吗？</div>
+    <div class="emoji">🎯</div>
+    <h1>谢谢!</h1>
+    <p class="lead">楚克球是一项尊重对手本身就是战略的运动。</p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" disabled>&#8592;</button>
+  <div class="dots"></div>
+  <button id="next">&#8594;</button>
+</div>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

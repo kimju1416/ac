@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>键球 · PE Playbook</title>
+<meta name="description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body style="--accent:var(--c-new);--accent-ink:#6d28d9">
+
+<div class="topbar">
+  <a class="home" href="../index.html">📖 目录</a>
+  <span class="title">🟣 键球</span>
+  <span class="counter"></span>
+</div>
+<div class="progress"></div>
+
+<div class="deck">
+
+  <!-- 1. 封面 -->
+  <section class="slide cover active">
+    <img class="cover-bg" src="../assets/img/kb-cover.jpg" alt="键球比赛场景">
+    <div class="cover-shade"></div>
+    <div class="kicker">新兴运动 · 团队比赛</div>
+    <div class="emoji">🟣</div>
+    <h1>键球</h1>
+    <p class="lead">三支队伍共用一个巨大的球，协作精神的极致体现</p>
+  </section>
+
+  <!-- 2. 什么是键球？ -->
+  <section class="slide">
+    <div class="content" data-num="02">
+      <span class="tag">项目介绍</span>
+      <h2>什么是键球？</h2>
+      <p class="desc">使用直径1.22米的巨大球体，由3支队伍同时进行比赛的运动</p>
+      <ul>
+        <li><span class="n">1</span><div><b>3队同时比赛 — 独一无二！</b> — 大多数运动都是2队对抗，而键球是世界上唯一一项由三支队伍同时在一个场地比赛的团队运动</div></li>
+        <li><span class="n">2</span><div><b>巨大的球</b> — 使用直径1.22米（122厘米）、重约1千克的超大型球。虽然一个人抱不动，但重量很轻，任何人都能击打</div></li>
+        <li><span class="n">3</span><div><b>必须全员参与</b> — 击球（发球）时，4名队员必须全部触球。这是一项绝对无法独自完成的真正的团队运动</div></li>
+      </ul>
+      <div class="note"><b>🇨🇦 起源于加拿大</b> — 以"让所有学生都不被冷落地参与体育课"为目标，在加拿大诞生的运动</div>
+    </div>
+  </section>
+
+  <!-- 3. 历史 -->
+  <section class="slide">
+    <div class="content" data-num="03">
+      <span class="tag">历史 · 发展</span>
+      <h2>键球的历史</h2>
+      <p class="desc">一位教师追求全员参与体育课的挑战</p>
+      <ul>
+        <li><span class="n">1</span><div><b>1986年诞生于加拿大</b> — 由魁北克省体育教师Mario Demers发明。源于"不让任何学生在课堂上孤零零地站在角落"的教育理念</div></li>
+        <li><span class="n">2</span><div><b>KIN的含义</b> — KIN取自"Kinesthesia（动觉）"一词，蕴含着通过身体的动作与感知共同成长的意义</div></li>
+        <li><span class="n">3</span><div><b>IKBF成立</b> — 国际键球联合会（International Kin-Ball Federation）成立，正式获得国际运动项目的认可</div></li>
+        <li><span class="n">4</span><div><b>键球世界杯</b> — 定期举办键球世界杯，加拿大、日本、法国、比利时等国家表现强劲</div></li>
+        <li><span class="n">5</span><div><b>在韩国校园体育俱乐部中的流行</b> — 在韩国也作为校园体育俱乐部项目迅速普及，其协作精神与全员参与的教育价值备受好评</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 4. 装备与场地 -->
+  <section class="slide">
+    <div class="content" data-num="04">
+      <span class="tag">规则 · 装备</span>
+      <h2>装备与场地</h2>
+      <p class="desc">了解键球比赛所需的设施与装备</p>
+      <div class="split">
+        <div class="figure">
+          <svg viewBox="0 0 400 400" role="img" aria-label="键球场地示意图">
+            <!-- 场地外框（正方形） -->
+            <rect x="40" y="40" width="320" height="320" fill="#f3e8ff" stroke="#7c3aed" stroke-width="2.5" rx="4"/>
+            <!-- 中线（横） -->
+            <line x1="40" y1="200" x2="360" y2="200" stroke="#7c3aed" stroke-width="1" stroke-dasharray="6,4"/>
+            <!-- 中线（竖） -->
+            <line x1="200" y1="40" x2="200" y2="360" stroke="#7c3aed" stroke-width="1" stroke-dasharray="6,4"/>
+            <!-- 中心圆 -->
+            <circle cx="200" cy="200" r="50" fill="rgba(124,58,237,0.08)" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4,3"/>
+            <!-- 中央键球标记 -->
+            <circle cx="200" cy="200" r="20" fill="rgba(168,85,247,0.25)" stroke="#a855f7" stroke-width="2"/>
+            <text x="200" y="204" text-anchor="middle" font-size="9" fill="#7c3aed" font-weight="700">KIN</text>
+            <!-- 队伍位置标记（3队） -->
+            <!-- 黑队 -->
+            <circle cx="120" cy="120" r="8" fill="#374151"/><circle cx="140" cy="105" r="8" fill="#374151"/>
+            <circle cx="100" cy="140" r="8" fill="#374151"/><circle cx="130" cy="145" r="8" fill="#374151"/>
+            <text x="120" y="168" text-anchor="middle" font-size="9" fill="#374151" font-weight="700">黑队</text>
+            <!-- 灰队 -->
+            <circle cx="280" cy="120" r="8" fill="#9ca3af"/><circle cx="260" cy="105" r="8" fill="#9ca3af"/>
+            <circle cx="300" cy="140" r="8" fill="#9ca3af"/><circle cx="270" cy="145" r="8" fill="#9ca3af"/>
+            <text x="280" y="168" text-anchor="middle" font-size="9" fill="#6b7280" font-weight="700">灰队</text>
+            <!-- 粉队 -->
+            <circle cx="200" cy="290" r="8" fill="#f472b6"/><circle cx="175" cy="305" r="8" fill="#f472b6"/>
+            <circle cx="225" cy="305" r="8" fill="#f472b6"/><circle cx="200" cy="320" r="8" fill="#f472b6"/>
+            <text x="200" y="345" text-anchor="middle" font-size="9" fill="#ec4899" font-weight="700">粉队</text>
+            <!-- 尺寸标注 -->
+            <text x="200" y="30" text-anchor="middle" font-size="11" fill="#7c3aed" font-weight="700">最小20米</text>
+            <text x="25" y="205" text-anchor="middle" font-size="10" fill="#7c3aed" font-weight="600" writing-mode="tb">最小20米</text>
+            <text x="200" y="385" text-anchor="middle" font-size="8" fill="#666">室内体育馆 · 3队各4人 · 正方形场地</text>
+          </svg>
+          <figcaption>键球场地布置图（3队 × 4人）</figcaption>
+        </div>
+        <ul>
+          <li><span class="n">1</span><div><b>场地</b> — 室内体育馆，最小20米 × 20米。天花板高度也需充足（应对高吊球）</div></li>
+          <li><span class="n">2</span><div><b>键球</b> — 直径122厘米，重约1千克。乳胶内胆+尼龙外皮构成。使用打气筒充气</div></li>
+          <li><span class="n">3</span><div><b>队服</b> — 正式比赛：黑、灰、粉三色。学校课堂上可用背心等代替</div></li>
+          <li><span class="n">4</span><div><b>打气筒</b> — 键球专用打气筒。气压不同，球的弹性和击球距离也会随之变化</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 基本规则 -->
+  <section class="slide">
+    <div class="content" data-num="05">
+      <span class="tag">规则</span>
+      <h2>基本规则</h2>
+      <p class="desc">3队同时较量的键球独特规则体系</p>
+      <ul>
+        <li><span class="n">1</span><div><b>3队，各4人</b> — 黑、灰、粉三队同时在一个场地比赛。共12人同场奔跑</div></li>
+        <li><span class="n">2</span><div><b>击球与喊队名</b> — 进攻队一边击球一边喊出另一支队伍的颜色。<em>"Omnikin，粉队（Pink）！"</em></div></li>
+        <li><span class="n">3</span><div><b>接球任务</b> — 被点名的队伍必须在球落地前接住球</div></li>
+        <li><span class="n">4</span><div><b>失分规则</b> — 接球失败时，其余两队各得1分。失败的队伍得0分</div></li>
+        <li><span class="n">5</span><div><b>下一次发球</b> — 接球成功的队伍获得下一次击球机会</div></li>
+      </ul>
+      <div class="note"><b>核心要点</b> — 点名哪支队伍正是策略的开始！是瞄准弱队，还是牵制强队，判断十分重要</div>
+    </div>
+  </section>
+
+  <!-- 6. 击球（发球）规则 -->
+  <section class="slide">
+    <div class="content" data-num="06">
+      <span class="tag">规则 · 击球</span>
+      <h2>击球（发球）规则</h2>
+      <p class="desc">4人共同完成的键球独特发球方式</p>
+      <ul>
+        <li><span class="n">1</span><div><b>4人中3人托住球</b> — 击球手（负责击球的人）1名 + 支撑手3名。3名支撑手需跪地稳稳托住球</div></li>
+        <li><span class="n">2</span><div><b>"Omnikin + 队伍颜色！"口号</b> — 击球前必须大声喊出"Omnikin，○○！"口号。不喊口号击球判为犯规</div></li>
+        <li><span class="n">3</span><div><b>只能向上、向前击球</b> — 向下或向后击球判为犯规。必须朝对方能够接到的方向击球</div></li>
+        <li><span class="n">4</span><div><b>方向要多变！</b> — 一直朝同一方向击球判为犯规。必须用多变的方向和战术扰乱对手</div></li>
+      </ul>
+      <div class="note"><b>犯规时</b> — 发生击球犯规时，其余两队各得1分。精准的击球才是真正的实力！</div>
+    </div>
+  </section>
+
+  <!-- 7. 接球规则 -->
+  <section class="slide">
+    <div class="content" data-num="07">
+      <span class="tag">规则 · 接球</span>
+      <h2>接球规则</h2>
+      <p class="desc">球落地之前，全队齐心协力接住它！</p>
+      <ul>
+        <li><span class="n">1</span><div><b>落地前接住</b> — 被点名队伍的4名队员必须在球落地前用身体任意部位接住球</div></li>
+        <li><span class="n">2</span><div><b>必须控制住球才算成功</b> — 球落地前队员必须控制住球，才算接球成功</div></li>
+        <li><span class="n">3</span><div><b>团队协作是关键</b> — 巨大的球很难一个人接住。4人同时冲上前一起接是最稳妥的方式</div></li>
+        <li><span class="n">4</span><div><b>接球成功后</b> — 接球成功的队伍获得下一次击球机会。迅速做好准备，再次进攻！</div></li>
+      </ul>
+      <div class="note"><b>请记住！</b> — 接球失败 = 本队得0分，其余两队各+1分。一次失败让两支队伍受益！</div>
+    </div>
+  </section>
+
+  <!-- 8. 核心技术①：击球 -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/kb-hit.jpg" alt="键球击球场景">
+        <figcaption>队员托住球，击球手用力击打的瞬间</figcaption>
+      </figure>
+      <div>
+        <span class="tag">技术①</span>
+        <h2>击球技术</h2>
+        <ul>
+          <li><span class="n">1</span><div><b>基本击球</b> — 单臂用力向上击球。最基本的击球方式</div></li>
+          <li><span class="n">2</span><div><b>平击（Drive Hit）</b> — 水平方向快速低平地击球。速度快，难以接住</div></li>
+          <li><span class="n">3</span><div><b>高吊球（Lob Hit）</b> — 将球高高击起送向远方。给对手留出移动时间，看似简单，但落点难以预测</div></li>
+          <li><span class="n">4</span><div><b>支撑技术</b> — 3人跪地稳稳托住球的技术。球的高度和角度决定击球质量</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. 核心技术②：接球 -->
+  <section class="slide">
+    <div class="media flip">
+      <div>
+        <span class="tag">技术②</span>
+        <h2>接球技术</h2>
+        <ul>
+          <li><span class="n">1</span><div><b>双臂接球</b> — 最基本的接球方式。张开双臂将球环抱住</div></li>
+          <li><span class="n">2</span><div><b>鱼跃接球</b> — 向低空飞来的球扑身接住。应对平击球时必不可少</div></li>
+          <li><span class="n">3</span><div><b>团队协作接球</b> — 4人同时聚拢到球下方一起接住的方法。最稳妥可靠</div></li>
+          <li><span class="n">4</span><div><b>接应站位</b> — 平时4人分散在体育馆各处待命。能够对任何方向的击球迅速反应</div></li>
+        </ul>
+      </div>
+      <figure class="photo">
+        <img src="../assets/img/kb-catch.jpg" alt="键球接球场景">
+        <figcaption>队员们齐心协力接球的场景</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 10. 战术 -->
+  <section class="slide">
+    <div class="content" data-num="10">
+      <span class="tag">战术 · 策略</span>
+      <h2>战术</h2>
+      <p class="desc">3队同场竞技，让策略世界更复杂也更有趣</p>
+      <div class="two">
+        <div class="box">
+          <h3>⚔️ 进攻战术</h3>
+          <p>• <b>点名弱队</b> — 战略性地点名当前接球成功率较低的队伍，诱使其失分<br>• <b>攻击空当</b> — 朝对方队员不在的方向击球，拉长移动距离，诱导接球失败<br>• <b>低平快击</b> — 用低而快的击球缩短反应时间，让接球更加困难</p>
+        </div>
+        <div class="box">
+          <h3>🛡️ 防守战术</h3>
+          <p>• <b>迅速击球</b> — 接球成功后趁对手尚未准备好迅速击球，出其不意<br>• <b>拉开站位</b> — 4人分散站位以覆盖整个体育馆<br>• <b>预测点名</b> — 分析对方队伍的击球模式，提前预判会点到哪支队伍</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. 安全守则 -->
+  <section class="slide">
+    <div class="content" data-num="11">
+      <span class="tag">安全</span>
+      <h2>安全守则</h2>
+      <p class="desc">与巨大的球一起玩键球，如何安全享受？</p>
+      <div class="two">
+        <div class="box warn">
+          <h3>⚠️ 注意事项</h3>
+          <p>• <b>注意视线遮挡</b> — 巨大的球可能挡住视线，小心与球另一侧的队员相撞<br>• <b>鱼跃时防滑倒</b> — 在体育馆地面鱼跃接球时，注意摩擦造成的擦伤、瘀伤<br>• <b>手腕受伤</b> — 用力击球时手腕承受较大力量，务必掌握正确的击球姿势<br>• <b>确保足够空间</b> — 与墙壁、器材保持充足距离。12人同时奔跑，需留意周围情况</p>
+        </div>
+        <div class="box">
+          <h3>🏃 热身运动</h3>
+          <p>• <b>手腕、肩部拉伸</b> — 击球动作大量使用手腕和肩部<br>• <b>活动膝关节</b> — 担任支撑手时需反复跪地动作<br>• <b>全身拉伸</b> — 鱼跃、跑动、转身等全身运动，务必仔细热身<br>• <b>轻松传球练习</b> — 先从熟悉球感的持球练习开始</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. 键球发球动作 -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/kb-serve.jpg" alt="键球发球动作">
+        <figcaption>3名支撑手托球，击球手准备击球的场景</figcaption>
+      </figure>
+      <div>
+        <span class="tag">技术进阶</span>
+        <h2>发球动作顺序</h2>
+        <ul>
+          <li><span class="n">1</span><div><b>支撑手准备</b> — 3人跪地，用双手稳稳将键球托起</div></li>
+          <li><span class="n">2</span><div><b>击球手选位</b> — 击球手站在想要击球方向的对面，准备助跑</div></li>
+          <li><span class="n">3</span><div><b>高喊口号</b> — 大声清晰地喊出"Omnikin，○○！"口号，让所有队员都能听到！</div></li>
+          <li><span class="n">4</span><div><b>执行击球</b> — 喊口号的同时用单臂（或双臂）用力击球。支撑手松开球，自然地闪开</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. 比赛小贴士与礼仪 -->
+  <section class="slide">
+    <div class="content" data-num="13">
+      <span class="tag">实战 · 小贴士</span>
+      <h2>比赛小贴士与礼仪</h2>
+      <p class="desc">让键球玩得更有趣、更帅气的方法</p>
+      <ul>
+        <li><span class="n">1</span><div><b>沟通就是实力</b> — "我来！""左边！""准备！"等，与队员不断沟通。4人要像一个人一样行动</div></li>
+        <li><span class="n">2</span><div><b>口号要洪亮！</b> — 自信洪亮地喊出"Omnikin"口号才够帅气，也能避免犯规</div></li>
+        <li><span class="n">3</span><div><b>角色轮换</b> — 轮流担任击球手和支撑手。人人都能击球又能支撑，才是强队</div></li>
+        <li><span class="n">4</span><div><b>尊重三支队伍</b> — 这是3队比赛，不要只集中攻击一支队伍，要坚持公平竞赛精神</div></li>
+        <li><span class="n">5</span><div><b>失败也没关系！</b> — 接球失败经常发生。互相鼓励、专注下一球才是真正的实力</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 14. 判断题 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">测验</span>
+      <h2>判断题</h2>
+      <p class="desc">来检验一下所学内容吧！</p>
+      <ul>
+        <li><span class="n">Q1</span><div><b>键球和其他运动一样，是由2支队伍对抗的比赛</b> — 错。键球是世界上唯一由3支队伍同时比赛的运动。</div></li>
+        <li><span class="n">Q2</span><div><b>键球击球时，4名队员必须全部触球</b> — 对。3名支撑手托住球，1名击球手击球。击球瞬间4人都必须触球，否则判为犯规。</div></li>
+        <li><span class="n">Q3</span><div><b>键球中接球失败时，其余两队各得1分</b> — 对。失败的队伍得0分，其余两队各得1分。</div></li>
+        <li><span class="n">Q4</span><div><b>键球击球前必须喊出"Omnikin + 队伍颜色"口号</b> — 对。不喊口号击球会被判为犯规。</div></li>
+        <li><span class="n">Q5</span><div><b>键球的直径约为50厘米</b> — 错。键球的直径约为122厘米（1.22米），是非常大的球。</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 15. 核心整理 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">核心整理</span>
+      <h2>务必牢记！</h2>
+      <p class="desc">整理今天学到的核心内容</p>
+      <div class="two">
+        <div class="box"><h3>📌 核心规则</h3><p>① 3队 × 4人同时比赛<br>② 必须喊"Omnikin + 队伍颜色"口号<br>③ 接球失败时其余两队各+1分<br>④ 只能向上、向前击球</p></div>
+        <div class="box"><h3>⭐ 核心技术</h3><p>① 基本击球/平击/高吊球<br>② 3名支撑手的稳定托球技术<br>③ 双臂接球/鱼跃接球/团队协作接球<br>④ 拉开站位（4人全面覆盖）</p></div>
+        <div class="box"><h3>🏆 值得了解的小知识</h3><p>• 加拿大体育教师Mario Demers为"不冷落任何人的体育"而发明<br>• KIN源自"Kinesthesia（动觉）"<br>• 正式比赛队伍颜色：黑、灰、粉</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 探究问题 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">探究问题</span>
+      <h2>一起来思考</h2>
+      <p class="desc">结束课程前，让我们一起讨论</p>
+      <ul>
+        <li><span class="n">1</span><div><b>键球中3队同时竞争的方式与传统体育项目有何不同？</b></div></li>
+        <li><span class="n">2</span><div><b>键球"所有队员都必须触球"的规则蕴含着怎样的教育价值？</b></div></li>
+        <li><span class="n">3</span><div><b>在协作与竞争同时发生的键球中，我们能学到怎样的人生道理？</b></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 16. 结束 -->
+  <section class="slide cover">
+    <img class="cover-bg" src="../assets/img/kb-team.jpg" alt="键球团队合影">
+    <div class="cover-shade"></div>
+    <div class="kicker">还有问题吗？</div>
+    <div class="emoji">🟣</div>
+    <h1>谢谢!</h1>
+    <p class="lead">键球是唯有齐心协力才能取胜的真正的协作运动。</p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" disabled aria-label="上一页">&#8592;</button>
+  <div class="dots"></div>
+  <button id="next" aria-label="下一页">&#8594;</button>
+</div>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

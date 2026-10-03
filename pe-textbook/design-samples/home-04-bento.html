@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>체육 플레이북 - 광평중학교</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;600;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #F2F2F7;
+  --card: #FFFFFF;
+  --text: #1C1C1E;
+  --text-secondary: #8E8E93;
+  --blue: #007AFF;
+  --green: #34C759;
+  --orange: #FF9500;
+  --purple: #AF52DE;
+  --pink: #FF2D55;
+  --teal: #5AC8FA;
+  --radius-sm: 16px;
+  --radius-lg: 24px;
+}
+
+body {
+  font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+/* Header */
+.header {
+  max-width: 1200px;
+  margin: 0 auto 32px;
+  padding: 0 8px;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.header-school {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.header-badge {
+  font-size: 12px;
+  background: var(--green);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.header h1 {
+  font-size: clamp(28px, 5vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+/* Bento Grid */
+.bento-section {
+  max-width: 1200px;
+  margin: 0 auto 48px;
+}
+
+.bento-label {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 140px;
+  gap: 12px;
+}
+
+/* Card Base */
+.bento-card {
+  background: var(--card);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease;
+}
+
+.bento-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+}
+
+/* Large cards (ready) */
+.bento-card.large {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.bento-card.large .bento-emoji {
+  font-size: 72px;
+}
+
+.bento-card.large .bento-name {
+  font-size: 24px;
+  font-weight: 800;
+}
+
+/* Medium cards */
+.bento-card.medium {
+  grid-column: span 2;
+  grid-row: span 1;
+}
+
+/* Small cards (default) */
+.bento-card.small {
+  grid-column: span 1;
+  grid-row: span 1;
+}
+
+.bento-emoji {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.bento-info {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.bento-name {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.bento-type {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Card backgrounds for ready items */
+.bento-card.bg-blue {
+  background: linear-gradient(145deg, #E3F0FF 0%, #F0F7FF 100%);
+}
+
+.bento-card.bg-orange {
+  background: linear-gradient(145deg, #FFF3E0 0%, #FFFAF5 100%);
+}
+
+.bento-card.bg-purple {
+  background: linear-gradient(145deg, #F3E8FF 0%, #FAF5FF 100%);
+}
+
+.bento-card.bg-green {
+  background: linear-gradient(145deg, #E8F8ED 0%, #F5FFF7 100%);
+}
+
+/* Ready indicator */
+.bento-card.ready::after {
+  content: 'OPEN';
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green);
+  background: rgba(52,199,89,0.1);
+  padding: 4px 10px;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+}
+
+/* Soon state */
+.bento-card.soon {
+  opacity: 0.5;
+}
+
+.bento-card.soon:hover {
+  transform: scale(1.01);
+  box-shadow: none;
+}
+
+.bento-card.soon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 10px,
+    rgba(0,0,0,0.01) 10px,
+    rgba(0,0,0,0.01) 20px
+  );
+  pointer-events: none;
+}
+
+/* Hero bento card */
+.bento-hero {
+  grid-column: span 4;
+  grid-row: span 2;
+  background: url('../assets/img/hero-bg.jpg') center/cover no-repeat;
+  border-radius: var(--radius-lg);
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  padding: 40px;
+  min-height: 280px;
+}
+
+.bento-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.7) 100%);
+  border-radius: var(--radius-lg);
+}
+
+.bento-hero-content {
+  position: relative;
+  color: white;
+}
+
+.bento-hero-content h2 {
+  font-size: clamp(24px, 4vw, 36px);
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+
+.bento-hero-content p {
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+/* Stats row */
+.bento-stats {
+  grid-column: span 4;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.stat-card {
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-card .stat-number {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--blue);
+}
+
+.stat-card .stat-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  body { padding: 16px; }
+  .bento-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 120px; }
+  .bento-hero { grid-column: span 2; min-height: 200px; }
+  .bento-card.large { grid-column: span 2; grid-row: span 2; }
+  .bento-card.medium { grid-column: span 2; }
+  .bento-stats { grid-column: span 2; grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 500px) {
+  .bento-grid { grid-template-columns: repeat(2, 1fr); grid-auto-rows: 100px; gap: 8px; }
+  .bento-card { padding: 16px; border-radius: var(--radius-sm); }
+  .bento-card.large .bento-emoji { font-size: 48px; }
+  .bento-card.large .bento-name { font-size: 18px; }
+  .bento-hero { padding: 24px; min-height: 160px; }
+  .stat-card .stat-number { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-top">
+    <span class="header-school">광평중학교 &middot; 김주현</span>
+    <span class="header-badge">3종목 오픈</span>
+  </div>
+  <h1>체육 플레이북</h1>
+</header>
+
+<!-- 구기 종목 -->
+<section class="bento-section">
+  <div class="bento-label">구기 종목</div>
+  <div class="bento-grid">
+    <!-- Hero -->
+    <div class="bento-hero">
+      <div class="bento-hero-content">
+        <h2>함께 뛰고, 함께 성장하자</h2>
+        <p>27개 종목 &middot; 체육 수업의 모든 것</p>
+      </div>
+    </div>
+
+    <!-- Ready: Basketball - Large -->
+    <a href="sports/basketball.html" class="bento-card large bg-blue ready">
+      <span class="bento-emoji">🏀</span>
+      <div class="bento-info">
+        <span class="bento-name">농구</span>
+        <span class="bento-type">영역형</span>
+      </div>
+    </a>
+
+    <!-- Ready: Soccer - Large -->
+    <a href="sports/soccer.html" class="bento-card large bg-green ready">
+      <span class="bento-emoji">⚽</span>
+      <div class="bento-info">
+        <span class="bento-name">축구</span>
+        <span class="bento-type">영역형</span>
+      </div>
+    </a>
+
+    <!-- Soon items - Small -->
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🤾</span>
+      <div class="bento-info"><span class="bento-name">핸드볼</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🥅</span>
+      <div class="bento-info"><span class="bento-name">풋살</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🏐</span>
+      <div class="bento-info"><span class="bento-name">배구</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🏸</span>
+      <div class="bento-info"><span class="bento-name">배드민턴</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🏓</span>
+      <div class="bento-info"><span class="bento-name">탁구</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🎾</span>
+      <div class="bento-info"><span class="bento-name">테니스</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 육상·체조 -->
+<section class="bento-section">
+  <div class="bento-label">육상 &middot; 체조</div>
+  <div class="bento-grid">
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🏃</span>
+      <div class="bento-info"><span class="bento-name">단거리</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🤝</span>
+      <div class="bento-info"><span class="bento-name">이어달리기</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🦘</span>
+      <div class="bento-info"><span class="bento-name">멀리뛰기</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">⬆️</span>
+      <div class="bento-info"><span class="bento-name">높이뛰기</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🤸</span>
+      <div class="bento-info"><span class="bento-name">뜀틀</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🤸‍♂️</span>
+      <div class="bento-info"><span class="bento-name">매트운동</span></div>
+    </div>
+    <div class="bento-card medium soon">
+      <span class="bento-emoji">📊</span>
+      <div class="bento-info">
+        <span class="bento-name">PAPS</span>
+        <span class="bento-type">건강체력</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 뉴스포츠 -->
+<section class="bento-section">
+  <div class="bento-label">뉴스포츠</div>
+  <div class="bento-grid">
+    <a href="sports/flying-disc.html" class="bento-card large bg-purple ready">
+      <span class="bento-emoji">🥏</span>
+      <div class="bento-info">
+        <span class="bento-name">플라잉디스크</span>
+        <span class="bento-type">뉴스포츠</span>
+      </div>
+    </a>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🏑</span>
+      <div class="bento-info"><span class="bento-name">플로어볼</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🎯</span>
+      <div class="bento-info"><span class="bento-name">츄크볼</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🏓</span>
+      <div class="bento-info"><span class="bento-name">피클볼</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🧺</span>
+      <div class="bento-info"><span class="bento-name">넷볼</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🟣</span>
+      <div class="bento-info"><span class="bento-name">킨볼</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 표현·기타 -->
+<section class="bento-section">
+  <div class="bento-label">표현 &middot; 기타</div>
+  <div class="bento-grid">
+    <div class="bento-card medium soon">
+      <span class="bento-emoji">💃</span>
+      <div class="bento-info">
+        <span class="bento-name">창작댄스</span>
+        <span class="bento-type">표현</span>
+      </div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🎵</span>
+      <div class="bento-info"><span class="bento-name">리듬운동</span></div>
+    </div>
+    <div class="bento-card small soon">
+      <span class="bento-emoji">🪢</span>
+      <div class="bento-info"><span class="bento-name">줄넘기</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats -->
+<section class="bento-section">
+  <div class="bento-grid">
+    <div class="bento-stats">
+      <div class="stat-card">
+        <div class="stat-number">27</div>
+        <div class="stat-label">전체 종목</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">3</div>
+        <div class="stat-label">오픈 종목</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">4</div>
+        <div class="stat-label">카테고리</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">11%</div>
+        <div class="stat-label">완성률</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

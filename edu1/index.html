@@ -1,0 +1,1731 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edu Prompt Studio V5.4 - 교사용 AI 프롬프트 빌더</title>
+  <meta name="description" content="수업 자료 제작을 위한 교사용 AI 프롬프트 빌더. 100여 개 교육학 기반 옵션을 클릭 조합해 ChatGPT/Claude/Gemini용 전문 프롬프트를 한 번에 생성합니다.">
+  <meta property="og:title" content="Edu Prompt Studio - 교사용 AI 프롬프트 빌더">
+  <meta property="og:description" content="웹게임·퀴즈·PPT·지도안·활동지… 클릭 몇 번으로 수업 자료 AI 프롬프트 완성! 2022 개정 교육과정 6대 핵심역량 반영.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kimju.kr/edu1/">
+  <meta property="og:image" content="https://kimju.kr/edu1/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Edu Prompt Studio - 교사용 AI 프롬프트 빌더">
+  <meta name="twitter:description" content="웹게임·퀴즈·PPT·지도안·활동지… 클릭 몇 번으로 수업 자료 AI 프롬프트 완성!">
+  <meta name="twitter:image" content="https://kimju.kr/edu1/og.png">
+  <meta name="theme-color" content="#2563eb">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { 
+      font-family: 'Pretendard', -apple-system, sans-serif; 
+      background-color: #f8f9fa; 
+      overflow: hidden; 
+      height: 100vh;
+      letter-spacing: -0.01em;
+    }
+    .custom-scroll::-webkit-scrollbar { width: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    
+    .chip { cursor: pointer; transition: all 0.15s ease-out; font-size: 0.75rem; border-width: 1px; user-select: none; display: inline-flex; align-items: center; gap: 0.25rem; }
+    .chip:hover { transform: translateY(-2px); box-shadow: 0 4px 8px -2px rgba(0, 0, 0, 0.1); }
+    .chip:active { transform: scale(0.96); }
+    .chip.chip-active {
+      background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+      color: white !important;
+      border-color: #2563eb !important;
+      box-shadow: 0 4px 8px -2px rgba(59, 130, 246, 0.4);
+    }
+    .chip.chip-active::before { content: "✓ "; font-weight: bold; }
+    
+    .tab-active { border-bottom: 3px solid #2563eb; color: #1e40af; font-weight: 700; }
+    .tab-inactive { color: #64748b; font-weight: 500; }
+    .template-card { transition: all 0.2s; border: 1px solid #e5e7eb; }
+    .template-card:hover { transform: translateY(-4px); box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.1); border-color: #9ca3af; }
+    
+    .scroll-container {
+      height: calc(100vh - 3.5rem - 3.5rem);
+      overflow: hidden;
+    }
+    .left-scroll-area, .right-scroll-area {
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    
+    .input-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 999px;
+      padding: 0.25rem 0.5rem 0.25rem 0.75rem;
+      font-size: 0.75rem;
+      margin: 0.15rem;
+      transition: all 0.15s;
+      max-width: 100%;
+    }
+    .input-chip:hover { border-color: #ef4444; background: #fef2f2; }
+    .input-chip-text { 
+      max-width: 240px; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+      white-space: nowrap;
+    }
+    .input-chip-remove {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #e5e7eb; color: #6b7280;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; cursor: pointer;
+      flex-shrink: 0;
+    }
+    .input-chip:hover .input-chip-remove { background: #ef4444; color: white; }
+    
+    .input-chip-area {
+      min-height: 3rem;
+      padding: 0.5rem;
+      border-radius: 0.75rem;
+      border: 1px solid;
+      transition: all 0.2s;
+    }
+    .input-chip-area:empty::before {
+      content: attr(data-placeholder);
+      color: #9ca3af;
+      font-size: 0.85rem;
+      padding: 0.5rem;
+    }
+    
+    .search-box {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+      width: 100%;
+      transition: all 0.15s;
+    }
+    .search-box:focus {
+      outline: none;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+    }
+    
+    .filter-pill {
+      cursor: pointer;
+      padding: 0.3rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      background: #f1f5f9;
+      color: #64748b;
+      transition: all 0.15s;
+      border: 1px solid transparent;
+    }
+    .filter-pill:hover { background: #e0e7ff; color: #4338ca; }
+    .filter-pill.active {
+      background: #2563eb;
+      color: white;
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+    }
+    
+    .save-slot {
+      cursor: pointer;
+      padding: 0.75rem;
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      transition: all 0.15s;
+    }
+    .save-slot:hover { border-color: #3b82f6; background: #eff6ff; }
+    .save-slot.empty { color: #9ca3af; font-style: italic; text-align: center; }
+    
+    .chip-hidden { display: none !important; }
+    
+    .mobile-subtab-bar { display: none; }
+    
+    @media (max-width: 767px) {
+      body {
+        overflow-y: auto;
+        overflow-x: hidden;
+        height: auto;
+        min-height: 100vh;
+      }
+      
+      /* 모바일에서도 상단 탭(빌더/추천/가이드) 접근 가능하게 유지 */
+      header h1 { display: none; }
+      header nav > * + * { margin-left: 0 !important; }
+      header nav button { padding-left: 0.4rem; padding-right: 0.4rem; }
+      
+      #view-builder {
+        flex-direction: column !important;
+        height: auto !important;
+        overflow: visible !important;
+      }
+      #view-builder > section {
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 1px solid #e5e7eb;
+        height: auto !important;
+      }
+      
+      .left-panel-mobile, .right-panel-mobile {
+        display: none;
+      }
+      .left-panel-mobile.active, .right-panel-mobile.active {
+        display: flex;
+      }
+      
+      .scroll-container {
+        height: auto !important;
+        overflow: visible !important;
+      }
+      .left-scroll-area, .right-scroll-area {
+        height: auto !important;
+        max-height: none !important;
+        overflow: visible !important;
+      }
+      
+      .mobile-subtab-bar {
+        display: flex;
+        position: sticky;
+        top: 3.5rem;
+        z-index: 25;
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      }
+      .mobile-subtab {
+        flex: 1;
+        padding: 0.75rem;
+        text-align: center;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: #64748b;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .mobile-subtab.active {
+        color: #2563eb;
+        border-bottom-color: #2563eb;
+        background: #eff6ff;
+      }
+      .mobile-subtab .count-badge {
+        display: inline-block;
+        background: #2563eb;
+        color: white;
+        border-radius: 999px;
+        padding: 1px 8px;
+        font-size: 0.7rem;
+        margin-left: 4px;
+        font-weight: 700;
+      }
+      
+      .chip {
+        font-size: 0.8rem !important;
+        padding: 0.5rem 0.75rem !important;
+        min-height: 2.25rem;
+      }
+      .filter-pill {
+        font-size: 0.75rem !important;
+        padding: 0.4rem 0.85rem !important;
+      }
+      .input-chip {
+        font-size: 0.78rem !important;
+        padding: 0.35rem 0.6rem 0.35rem 0.85rem !important;
+      }
+      .input-chip-text { max-width: 180px !important; }
+      .input-chip-remove {
+        width: 22px !important;
+        height: 22px !important;
+        font-size: 12px !important;
+      }
+      
+      /* 우측 저장/초기화 버튼만 아이콘으로 축약 (탭 라벨은 유지) */
+      header > div:last-child button span { display: none; }
+      
+      #view-templates .grid {
+        grid-template-columns: 1fr !important;
+      }
+      
+      #saveModal .max-w-md { max-width: 95vw; }
+      #copyModal .max-w-2xl { max-width: 95vw; }
+      #copyModal .p-6 { padding: 1rem !important; }
+      
+      footer { padding: 15px 0 !important; }
+    }
+    
+    @media (min-width: 768px) and (max-width: 1024px) {
+      .chip { font-size: 0.72rem; padding: 0.3rem 0.55rem; }
+      header h1 { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body class="flex flex-col text-gray-800">
+
+  <!-- ============ 헤더 ============ -->
+  <header class="h-14 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-6 shadow-sm z-30 shrink-0">
+    <div class="flex items-center gap-3 lg:gap-6 overflow-x-auto">
+      <div class="flex items-center gap-2 flex-shrink-0">
+        <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-white font-bold shadow-md">🎓</div>
+        <h1 class="text-base lg:text-lg font-bold text-gray-900 tracking-tight whitespace-nowrap">Edu Prompt Studio</h1>
+        <p class="hidden sm:block text-[10px] text-gray-500 font-medium">Enhanced V5.4</p>
+      </div>
+      <nav class="flex space-x-3 lg:space-x-6 h-14 flex-shrink-0">
+        <button onclick="switchTab('builder')" id="btn-builder" class="tab-active h-full flex items-center gap-1 lg:gap-2 text-xs lg:text-sm transition-colors whitespace-nowrap px-2"><i class="fas fa-edit"></i><span class="hidden sm:inline"> 콘텐츠 빌더</span><span class="sm:hidden">빌더</span></button>
+        <button onclick="switchTab('templates')" id="btn-templates" class="tab-inactive h-full flex items-center gap-1 lg:gap-2 text-xs lg:text-sm transition-colors whitespace-nowrap px-2"><i class="fas fa-lightbulb"></i><span class="hidden sm:inline"> 추천 프롬프트</span><span class="sm:hidden">추천</span></button>
+        <button onclick="switchTab('guide')" id="btn-guide" class="tab-inactive h-full flex items-center gap-1 lg:gap-2 text-xs lg:text-sm transition-colors whitespace-nowrap px-2"><i class="fas fa-book-open"></i><span class="hidden sm:inline"> 사용 설명서</span><span class="sm:hidden">가이드</span></button>
+      </nav>
+    </div>
+    <div class="flex items-center gap-2 flex-shrink-0">
+        <button onclick="shareCombo()" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs lg:text-sm font-bold px-2 lg:px-3 py-1.5 rounded-lg border border-emerald-200 transition-colors flex items-center gap-1 lg:gap-2" title="현재 조합을 링크로 공유">
+            <i class="fas fa-share-alt"></i><span class="hidden sm:inline"> 공유</span>
+        </button>
+        <button onclick="openSaveModal()" class="bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs lg:text-sm font-bold px-2 lg:px-3 py-1.5 rounded-lg border border-blue-200 transition-colors flex items-center gap-1 lg:gap-2">
+            <i class="fas fa-bookmark"></i><span class="hidden sm:inline"> 저장/불러오기</span>
+        </button>
+        <button onclick="resetAll()" class="bg-gray-100 hover:bg-red-50 text-gray-600 hover:text-red-600 text-xs lg:text-sm font-bold px-2 lg:px-3 py-1.5 rounded-lg border border-gray-200 transition-colors flex items-center gap-1 lg:gap-2">
+            <i class="fas fa-redo-alt"></i><span class="hidden sm:inline"> 초기화</span>
+        </button>
+    </div>
+  </header>
+
+  <!-- ============ 메인: 빌더 ============ -->
+  <main id="view-builder" class="scroll-container flex flex-row">
+    <!-- 📱 모바일 전용 서브 탭 바 -->
+    <div class="mobile-subtab-bar">
+      <div class="mobile-subtab active" id="mobile-tab-chips" onclick="switchMobileTab('chips')">
+        🏷️ 칩 선택
+      </div>
+      <div class="mobile-subtab" id="mobile-tab-input" onclick="switchMobileTab('input')">
+        📝 내 설정 <span id="mobile-input-count" class="count-badge" style="display:none;">0</span>
+      </div>
+    </div>
+    
+    <!-- ===== 좌측: 칩 선택 ===== -->
+    <section class="w-1/2 bg-slate-50 border-r border-gray-200 flex flex-col left-panel-mobile active">
+      <div class="bg-slate-50 border-b border-slate-200 px-4 lg:px-6 py-3 sticky top-0 z-20">
+        <div class="flex gap-2 items-center mb-2">
+          <div class="relative flex-1">
+            <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+            <input 
+              type="text" 
+              id="chip-search" 
+              class="search-box pl-8" 
+              placeholder="🔍 칩 검색 (예: 협동, 게임, 토스...)"
+              oninput="filterChips()"
+            >
+          </div>
+          <button onclick="clearSearch()" id="clear-search-btn" class="text-xs text-gray-500 hover:text-gray-700 px-2 hidden">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="flex flex-wrap gap-1">
+          <span class="filter-pill active" data-filter="all" onclick="setFilter('all')">전체</span>
+          <span class="filter-pill" data-filter="topic" onclick="setFilter('topic')">📌 주제</span>
+          <span class="filter-pill" data-filter="output" onclick="setFilter('output')">🎯 결과물</span>
+          <span class="filter-pill" data-filter="target" onclick="setFilter('target')">👥 대상/목표</span>
+          <span class="filter-pill" data-filter="pedagogy" onclick="setFilter('pedagogy')">📚 교수법</span>
+          <span class="filter-pill" data-filter="evaluation" onclick="setFilter('evaluation')">📝 평가</span>
+          <span class="filter-pill" data-filter="tone" onclick="setFilter('tone')">😊 톤/구성</span>
+          <span class="filter-pill" data-filter="design" onclick="setFilter('design')">🎨 디자인</span>
+          <span class="filter-pill" data-filter="format" onclick="setFilter('format')">📋 형식</span>
+        </div>
+      </div>
+      
+      <div class="left-scroll-area custom-scroll p-4 lg:p-6">
+        <div class="max-w-4xl mx-auto space-y-8 pb-20">
+        
+        <!-- 0. 주제 -->
+        <div class="chip-section" data-section="topic">
+            <h2 class="text-gray-700 font-bold text-sm mb-3 sticky top-0 bg-slate-50/95 backdrop-blur py-2 z-10 border-b border-slate-200 flex items-center">
+              <span class="w-6 h-6 rounded bg-gray-200 text-gray-700 flex items-center justify-center mr-2 text-xs">0</span> 주제 및 자료
+            </h2>
+            <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+               <p class="text-[10px] text-gray-400 font-bold mb-2 tracking-wider">예시 TOPIC (클릭 시 덮어쓰기)</p>
+               <div class="flex flex-wrap gap-2 mb-4">
+                   <div onclick="setText('in-source', '주제: 중학교 2학년 사회 - 세계의 기후 구분')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-3 py-1.5 rounded-lg" data-keywords="중학교 사회 기후">🏷️ 중2 사회 (기후)</div>
+                   <div onclick="setText('in-source', '주제: 초등학교 5학년 과학 - 태양계와 별')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-3 py-1.5 rounded-lg" data-keywords="초등 과학 태양계">🏷️ 초5 과학 (태양계)</div>
+                   <div onclick="setText('in-source', '주제: 고등학교 문학 - 윤동주의 시 세계')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-3 py-1.5 rounded-lg" data-keywords="고등 문학 윤동주">🏷️ 고등 문학 (시)</div>
+                   <div onclick="setText('in-source', '주제: 유치원 누리과정 - 봄의 변화 알아보기')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-3 py-1.5 rounded-lg" data-keywords="유치원 누리과정 봄">🏷️ 유치원 (봄)</div>
+                   <div onclick="setText('in-source', '주제: 초등학교 4학년 체육 - 플라잉디스크')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-3 py-1.5 rounded-lg" data-keywords="초등 체육 플라잉디스크">🏷️ 초4 체육 (디스크)</div>
+                   <div onclick="setText('in-source', '주제: 중학교 1학년 음악 - 사계 감상')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-3 py-1.5 rounded-lg" data-keywords="중학교 음악 사계">🏷️ 중1 음악 (사계)</div>
+                   <div onclick="setText('in-source', '주제: 초등학교 5학년 실과 - 안전한 인터넷 사용')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-3 py-1.5 rounded-lg" data-keywords="초등 실과 인터넷">🏷️ 초5 실과 (인터넷)</div>
+                   <div onclick="setText('in-source', '주제: 고등학교 정보 - 파이썬 기초 문법')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-3 py-1.5 rounded-lg" data-keywords="고등 정보 파이썬">🏷️ 고등 정보 (파이썬)</div>
+                   <div onclick="setText('in-source', '주제: 중학교 3학년 도덕 - AI 시대의 윤리')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-3 py-1.5 rounded-lg" data-keywords="중학교 도덕 AI">🏷️ 중3 도덕 (AI)</div>
+               </div>
+               <p class="text-[10px] text-gray-400 font-bold mb-2 tracking-wider">자료 추가 안내</p>
+               <div class="flex flex-wrap gap-2">
+                   <div onclick="addText('in-source', '다음 텍스트 내용을 바탕으로 만들어줘:\n\n[여기에 내용을 붙여넣으세요]')" class="chip bg-gray-50 border-gray-200 text-gray-800 px-3 py-1.5 rounded-lg" data-keywords="텍스트 자료">📝 텍스트 직접 입력</div>
+                   <div onclick="addText('in-source', '다음 웹사이트 링크의 내용을 참고해줘:\n\n[웹페이지 링크]')" class="chip bg-gray-50 border-gray-200 text-gray-800 px-3 py-1.5 rounded-lg" data-keywords="링크 url 웹">🔗 웹사이트 링크</div>
+                   <div onclick="addText('in-source', '첨부된 PDF/이미지 파일을 분석해서 내용을 추출해줘.')" class="chip bg-gray-50 border-gray-200 text-gray-800 px-3 py-1.5 rounded-lg" data-keywords="pdf 파일">📂 PDF/문서 파일</div>
+                   <div onclick="addText('in-source', '다음 유튜브 영상의 내용을 바탕으로 해줘:\n\n[유튜브 링크]')" class="chip bg-gray-50 border-gray-200 text-gray-800 px-3 py-1.5 rounded-lg" data-keywords="유튜브 영상">📺 유튜브 영상</div>
+               </div>
+            </div>
+        </div>
+
+        <!-- 1. 결과물 -->
+        <div class="chip-section" data-section="output">
+          <h2 class="text-blue-700 font-bold text-sm mb-3 sticky top-0 bg-slate-50/95 backdrop-blur py-2 z-10 border-b border-slate-200 flex items-center">
+            <span class="w-6 h-6 rounded bg-blue-100 text-blue-600 flex items-center justify-center mr-2 text-xs">1</span> 결과물 형태
+          </h2>
+          <div class="space-y-3">
+             <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                <p class="text-[10px] text-gray-400 font-bold mb-2 tracking-wider">🎮 웹앱 & 게임 (코드 자동 생성)</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-type', '학습용 웹 게임')" class="chip bg-blue-50 border-blue-100 text-blue-800 px-3 py-1.5 rounded-lg" data-keywords="게임 game">🎮 웹 게임</div>
+                    <div onclick="addChip('in-type', '인터랙티브 웹 퀴즈')" class="chip bg-blue-50 border-blue-100 text-blue-800 px-3 py-1.5 rounded-lg" data-keywords="퀴즈 quiz">❓ 웹 퀴즈</div>
+                    <div onclick="addChip('in-type', '웹 시뮬레이션 (현상 원리 이해)')" class="chip bg-blue-50 border-blue-100 text-blue-800 px-3 py-1.5 rounded-lg" data-keywords="시뮬레이션 simulation">🧪 시뮬레이션</div>
+                    <div onclick="addChip('in-type', '데이터 시각화 대시보드')" class="chip bg-blue-50 border-blue-100 text-blue-800 px-3 py-1.5 rounded-lg" data-keywords="대시보드 데이터">📊 대시보드</div>
+                    <div onclick="addChip('in-type', '인터랙티브 타임라인')" class="chip bg-blue-50 border-blue-100 text-blue-800 px-3 py-1.5 rounded-lg" data-keywords="타임라인 timeline">⏳ 타임라인</div>
+                    <div onclick="addChip('in-type', '드래그 앤 드롭 분류 활동')" class="chip bg-blue-50 border-blue-100 text-blue-800 px-3 py-1.5 rounded-lg" data-keywords="드래그 drag">👆 드래그 앤 드롭</div>
+                    <div onclick="addChip('in-type', '가상 채팅 시뮬레이터 (역사 인물, 캐릭터)')" class="chip bg-blue-50 border-blue-100 text-blue-800 px-3 py-1.5 rounded-lg" data-keywords="채팅 chat">💬 채팅 시뮬</div>
+                    <div onclick="addChip('in-type', 'Mermaid.js 마인드맵 웹앱')" class="chip bg-blue-50 border-blue-100 text-blue-800 px-3 py-1.5 rounded-lg" data-keywords="마인드맵 mindmap">🧠 마인드맵</div>
+                    <div onclick="addChip('in-type', 'AI 챗봇 튜터 (학습자 맞춤 대화)')" class="chip bg-blue-50 border-blue-100 text-blue-800 px-3 py-1.5 rounded-lg" data-keywords="챗봇 ai tutor">🤖 AI 튜터</div>
+                    <div onclick="addChip('in-type', '코딩 실습 웹 IDE')" class="chip bg-blue-50 border-blue-100 text-blue-800 px-3 py-1.5 rounded-lg" data-keywords="코딩 IDE 실습">💻 코딩 실습</div>
+                    <div onclick="addChip('in-type', '방탈출 게임 (단서·자물쇠 퍼즐·스토리 구성)')" class="chip bg-blue-50 border-blue-100 text-blue-800 px-3 py-1.5 rounded-lg" data-keywords="방탈출 escape 퍼즐">🔐 방탈출 게임</div>
+                    <div onclick="addChip('in-type', '구글 폼 자동 생성 퀴즈 (Google Apps Script 코드)')" class="chip bg-blue-50 border-blue-100 text-blue-800 px-3 py-1.5 rounded-lg" data-keywords="구글폼 google form 설문 apps script">📋 구글 폼 퀴즈</div>
+                </div>
+             </div>
+             <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                <p class="text-[10px] text-fuchsia-600 font-bold mb-2 tracking-wider">🎵 창의 콘텐츠 <span class="bg-fuchsia-100 text-fuchsia-700 px-1.5 py-0.5 rounded font-bold">🆕 V5.3</span></p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-type', '교육용 노래 가사 (Suno 등 AI 작곡용, 스타일 태그 포함)')" class="chip bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 px-3 py-1.5 rounded-lg" data-keywords="노래 가사 suno 작곡 음악 송">🎵 노래 가사 (AI작곡)</div>
+                    <div onclick="addChip('in-type', '그림책/스토리북 (페이지별 글 + 삽화 생성 프롬프트)')" class="chip bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 px-3 py-1.5 rounded-lg" data-keywords="그림책 스토리북 동화">📚 그림책</div>
+                    <div onclick="addChip('in-type', '숏폼 영상 대본 (유튜브 쇼츠/릴스용 장면별 스크립트)')" class="chip bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 px-3 py-1.5 rounded-lg" data-keywords="숏폼 쇼츠 릴스 영상 대본">🎬 숏폼 대본</div>
+                    <div onclick="addChip('in-type', '교육연극/역할극 대본 (배역·대사·지문 포함)')" class="chip bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 px-3 py-1.5 rounded-lg" data-keywords="역할극 연극 대본 드라마">🎭 역할극 대본</div>
+                </div>
+             </div>
+             <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                <p class="text-[10px] text-orange-600 font-bold mb-2 tracking-wider">📑 슬라이드 & 발표 자료</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-type', 'PowerPoint(.pptx) 자동 생성 - pptxgenjs 코드로 다운로드 가능한 PPT 파일 만들기')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1.5 rounded-lg" data-keywords="powerpoint ppt pptx 파워포인트">🟧 PowerPoint(.pptx) 생성</div>
+                    <div onclick="addChip('in-type', '구글 슬라이드(Google Slides) 호환 형식 - HTML/마크다운으로 작성 후 import')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1.5 rounded-lg" data-keywords="구글 슬라이드 google slides">📑 구글 슬라이드</div>
+                    <div onclick="addChip('in-type', 'Gamma AI 입력용 마크다운 슬라이드 - Gamma에 붙여넣어 한 번에 디자인된 슬라이드 생성')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1.5 rounded-lg" data-keywords="gamma 감마 ai slide">🎨 Gamma AI 슬라이드</div>
+                    <div onclick="addChip('in-type', 'HTML 웹 슬라이드 (Reveal.js 기반) - 화면 전환 효과 있는 발표용 웹 슬라이드')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1.5 rounded-lg" data-keywords="html 웹 슬라이드 reveal">🖥️ HTML 웹 슬라이드</div>
+                    <div onclick="addChip('in-type', 'Marp 마크다운 슬라이드 - 텍스트 기반으로 빠르게 만드는 발표 자료')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1.5 rounded-lg" data-keywords="marp 마크다운">📺 Marp 마크다운</div>
+                    <div onclick="addChip('in-type', '발표 스크립트 + 슬라이드 노트 (강의 영상 촬영용)')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1.5 rounded-lg" data-keywords="발표 스크립트 강의 영상">🎬 발표 스크립트</div>
+                </div>
+             </div>
+             <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                <p class="text-[10px] text-gray-400 font-bold mb-2 tracking-wider">📄 시각자료 & 문서</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-type', '교육용 카드뉴스 이미지 5장')" class="chip bg-indigo-50 border-indigo-100 text-indigo-800 px-3 py-1.5 rounded-lg" data-keywords="카드뉴스">🃏 카드뉴스</div>
+                    <div onclick="addChip('in-type', '핵심 개념 인포그래픽 이미지')" class="chip bg-indigo-50 border-indigo-100 text-indigo-800 px-3 py-1.5 rounded-lg" data-keywords="인포그래픽">🗺️ 인포그래픽</div>
+                    <div onclick="addChip('in-type', '수업 지도안 (도입-전개-정리)')" class="chip bg-indigo-50 border-indigo-100 text-indigo-800 px-3 py-1.5 rounded-lg" data-keywords="지도안 lesson">📜 수업 지도안</div>
+                    <div onclick="addChip('in-type', '학습 활동지 (학생용/교사용 분리)')" class="chip bg-indigo-50 border-indigo-100 text-indigo-800 px-3 py-1.5 rounded-lg" data-keywords="활동지 학습지">📄 활동지</div>
+                    <div onclick="addChip('in-type', '학급 안내문 / 학부모 통신문')" class="chip bg-indigo-50 border-indigo-100 text-indigo-800 px-3 py-1.5 rounded-lg" data-keywords="안내문 통신문">✉️ 학급 안내문</div>
+                    <div onclick="addChip('in-type', '발문 자료 (학생 사고 유도 질문 모음)')" class="chip bg-indigo-50 border-indigo-100 text-indigo-800 px-3 py-1.5 rounded-lg" data-keywords="발문 질문">💭 발문 자료</div>
+                    <div onclick="addChip('in-type', '단원 전체 차시별 교수학습 계획 (수업 시리즈 설계)')" class="chip bg-indigo-50 border-indigo-100 text-indigo-800 px-3 py-1.5 rounded-lg" data-keywords="차시 단원 시리즈 계획">🗓️ 단원 차시 설계</div>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- 2. 대상 및 목표 -->
+        <div class="chip-section" data-section="target">
+          <h2 class="text-indigo-700 font-bold text-sm mb-3 sticky top-0 bg-slate-50/95 backdrop-blur py-2 z-10 border-b border-slate-200 flex items-center">
+            <span class="w-6 h-6 rounded bg-indigo-100 text-indigo-600 flex items-center justify-center mr-2 text-xs">2</span> 대상 및 목표
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+             <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                <p class="text-[10px] text-gray-400 font-bold mb-2 tracking-wider">👥 학습 대상</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-target', '대상: 초등 저학년(1~2) - 쉬운 언어, 흥미 위주')" class="chip bg-gray-50 border-gray-200 text-gray-700 px-2 py-1 rounded" data-keywords="초등 저학년">👶 초등 저학년</div>
+                    <div onclick="addChip('in-target', '대상: 초등 중학년(3~4) - 호기심, 구체적 활동')" class="chip bg-gray-50 border-gray-200 text-gray-700 px-2 py-1 rounded" data-keywords="초등 중학년">🧒 초등 중학년</div>
+                    <div onclick="addChip('in-target', '대상: 초등 고학년(5~6) - 구체적 조작기, 탐구심')" class="chip bg-gray-50 border-gray-200 text-gray-700 px-2 py-1 rounded" data-keywords="초등 고학년">👦 초등 고학년</div>
+                    <div onclick="addChip('in-target', '대상: 중학생 - 형식적 조작기, 논리적 연결')" class="chip bg-gray-50 border-gray-200 text-gray-700 px-2 py-1 rounded" data-keywords="중학생">🧑‍🏫 중학생</div>
+                    <div onclick="addChip('in-target', '대상: 고등학생 - 심화 탐구, 입시 연계')" class="chip bg-gray-50 border-gray-200 text-gray-700 px-2 py-1 rounded" data-keywords="고등학생">🎓 고등학생</div>
+                    <div onclick="addChip('in-target', '대상: 교사/연수 - 전문성 신장')" class="chip bg-gray-50 border-gray-200 text-gray-700 px-2 py-1 rounded" data-keywords="교사 연수">💼 교사/연수</div>
+                    <div onclick="addChip('in-target', '대상: 느린 학습자 - 반복 학습, 단계별 분할')" class="chip bg-gray-50 border-gray-200 text-gray-700 px-2 py-1 rounded" data-keywords="느린 학습">🐢 느린 학습자</div>
+                    <div onclick="addChip('in-target', '대상: 특수교육 통합학급 - 개별화, 다감각')" class="chip bg-gray-50 border-gray-200 text-gray-700 px-2 py-1 rounded" data-keywords="특수교육">♿ 특수교육</div>
+                    <div onclick="addChip('in-target', '대상: 영재 학생 - 확산적 사고, 심화 도전')" class="chip bg-gray-50 border-gray-200 text-gray-700 px-2 py-1 rounded" data-keywords="영재">⭐ 영재교육</div>
+                    <div onclick="addChip('in-target', '대상: 다문화 학생 - 한국어 수준 고려, 시각자료 강화')" class="chip bg-gray-50 border-gray-200 text-gray-700 px-2 py-1 rounded" data-keywords="다문화">🌍 다문화</div>
+                </div>
+             </div>
+             <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm">
+                <p class="text-[10px] text-purple-600 font-bold mb-2 tracking-wider">🎯 학습 목표</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-target', '목표: 핵심 지식 습득 및 암기')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-2 py-1 rounded" data-keywords="지식 암기">🧠 지식 습득</div>
+                    <div onclick="addChip('in-target', '목표: 개념 이해 및 설명')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-2 py-1 rounded" data-keywords="이해 설명">💡 개념 이해</div>
+                    <div onclick="addChip('in-target', '목표: 적용 및 실습')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-2 py-1 rounded" data-keywords="적용 실습">🔧 적용/실습</div>
+                    <div onclick="addChip('in-target', '목표: 비판적 사고력 함양')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-2 py-1 rounded" data-keywords="비판적 사고">⚖️ 비판적 사고</div>
+                    <div onclick="addChip('in-target', '목표: 복합 문제 해결 능력')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-2 py-1 rounded" data-keywords="문제 해결">🧩 문제 해결</div>
+                    <div onclick="addChip('in-target', '목표: 협업 및 의사소통 능력')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-2 py-1 rounded" data-keywords="협업 소통">🤝 협력/소통</div>
+                    <div onclick="addChip('in-target', '목표: 창의적 아이디어 발산')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-2 py-1 rounded" data-keywords="창의성">🎨 창의성</div>
+                    <div onclick="addChip('in-target', '목표: 디지털 리터러시 및 정보 윤리')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-2 py-1 rounded" data-keywords="디지털">💻 디지털 리터러시</div>
+                </div>
+                <p class="text-[10px] text-purple-600 font-bold mb-2 mt-3 tracking-wider">🇰🇷 2022 개정 교육과정 6대 핵심역량</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-target', '핵심역량: 자기관리 역량 - 자아정체성과 자신감, 기초능력 바탕으로 자기주도적 삶 설계')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded" data-keywords="자기관리 역량 2022 개정">🎯 자기관리</div>
+                    <div onclick="addChip('in-target', '핵심역량: 지식정보처리 역량 - 다양한 정보와 자료 수집·분석·활용하여 문제 합리적 해결')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded" data-keywords="지식정보처리 역량 2022 개정">🧠 지식정보처리</div>
+                    <div onclick="addChip('in-target', '핵심역량: 창의적 사고 역량 - 폭넓은 기초 지식에 다양한 전문 분야 지식·기술·경험 융합')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded" data-keywords="창의적 사고 역량 2022 개정">💡 창의적 사고</div>
+                    <div onclick="addChip('in-target', '핵심역량: 심미적 감성 역량 - 인간에 대한 공감적 이해와 문화적 감수성 바탕으로 삶의 의미와 가치 발견')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded" data-keywords="심미적 감성 역량 2022 개정">🎨 심미적 감성</div>
+                    <div onclick="addChip('in-target', '핵심역량: 협력적 소통 역량 - 다른 사람의 관점 존중·경청하며 자신의 생각과 감정 효과적 표현, 상호협력')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded" data-keywords="협력적 소통 역량 2022 개정">🤝 협력적 소통</div>
+                    <div onclick="addChip('in-target', '핵심역량: 공동체 역량 - 지역·국가·세계 공동체 구성원으로서 요구되는 가치와 태도로 적극 참여')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded" data-keywords="공동체 역량 2022 개정">🌍 공동체</div>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- 3. 교수법 -->
+        <div class="chip-section" data-section="pedagogy">
+          <h2 class="text-pink-600 font-bold text-sm mb-3 sticky top-0 bg-slate-50/95 backdrop-blur py-2 z-10 border-b border-slate-200 flex items-center">
+            <span class="w-6 h-6 rounded bg-pink-100 text-pink-600 flex items-center justify-center mr-2 text-xs">3</span> 교수법 및 전략
+            <span class="ml-2 text-[10px] bg-pink-100 text-pink-700 px-2 py-0.5 rounded font-bold">⚡ 대폭 강화</span>
+          </h2>
+          <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm space-y-4">
+             <div>
+                 <p class="text-[10px] text-gray-500 font-bold mb-2 tracking-wider">📘 전통적 수업 모형</p>
+                 <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-pedagogy', '직접교수법(Direct Instruction): 명확한 설명→시범→안내된 연습→독립적 연습')" class="chip bg-blue-50 border-blue-200 text-blue-900 px-2 py-1.5 rounded" data-keywords="직접교수 direct">📖 직접교수법</div>
+                    <div onclick="addChip('in-pedagogy', '강의식 수업: 체계적 지식 전달, 핵심 정리 위주')" class="chip bg-blue-50 border-blue-200 text-blue-900 px-2 py-1.5 rounded" data-keywords="강의식">🎙️ 강의식 수업</div>
+                    <div onclick="addChip('in-pedagogy', '시범수업/모델링: 교사가 직접 보여주고 학생이 따라하기')" class="chip bg-blue-50 border-blue-200 text-blue-900 px-2 py-1.5 rounded" data-keywords="시범 모델링">👨‍🏫 시범수업</div>
+                    <div onclick="addChip('in-pedagogy', '문답식 수업: 발문-응답-피드백 반복 사이클')" class="chip bg-blue-50 border-blue-200 text-blue-900 px-2 py-1.5 rounded" data-keywords="문답">❓ 문답식</div>
+                    <div onclick="addChip('in-pedagogy', '개별화 학습: 학생 수준별 차별화된 과제 제공')" class="chip bg-blue-50 border-blue-200 text-blue-900 px-2 py-1.5 rounded" data-keywords="개별화">👤 개별화 학습</div>
+                 </div>
+             </div>
+             <div>
+                 <p class="text-[10px] text-gray-500 font-bold mb-2 tracking-wider">🤝 협동학습 모형</p>
+                 <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-pedagogy', '협동학습 - Jigsaw 모형: 전문가 그룹→원래 그룹 가르치기')" class="chip bg-emerald-50 border-emerald-200 text-emerald-900 px-2 py-1.5 rounded" data-keywords="직소 jigsaw 협동">🧩 직소(Jigsaw)</div>
+                    <div onclick="addChip('in-pedagogy', '협동학습 - STAD 모형: 모둠 학습→개별 평가→모둠 향상점수')" class="chip bg-emerald-50 border-emerald-200 text-emerald-900 px-2 py-1.5 rounded" data-keywords="STAD 협동">📊 STAD</div>
+                    <div onclick="addChip('in-pedagogy', '협동학습 - TGT 모형: 모둠 학습→토너먼트 게임 평가')" class="chip bg-emerald-50 border-emerald-200 text-emerald-900 px-2 py-1.5 rounded" data-keywords="TGT 토너먼트">🏆 TGT</div>
+                    <div onclick="addChip('in-pedagogy', '동료 멘토링(Peer Tutoring): 학생 간 가르치고 배우기')" class="chip bg-emerald-50 border-emerald-200 text-emerald-900 px-2 py-1.5 rounded" data-keywords="동료 멘토">👫 동료 멘토링</div>
+                    <div onclick="addChip('in-pedagogy', 'Think-Pair-Share: 개별 사고→짝과 공유→전체 발표')" class="chip bg-emerald-50 border-emerald-200 text-emerald-900 px-2 py-1.5 rounded" data-keywords="think pair share">💭 Think-Pair-Share</div>
+                    <div onclick="addChip('in-pedagogy', '월드카페(World Cafe): 모둠 순회하며 토의 누적')" class="chip bg-emerald-50 border-emerald-200 text-emerald-900 px-2 py-1.5 rounded" data-keywords="월드카페">☕ 월드카페</div>
+                 </div>
+             </div>
+             <div>
+                 <p class="text-[10px] text-gray-500 font-bold mb-2 tracking-wider">🚀 현대적 학습 모형</p>
+                 <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-pedagogy', 'PBL(Project Based Learning): 실생활 문제 해결 프로젝트')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1.5 rounded" data-keywords="PBL 프로젝트">📐 PBL</div>
+                    <div onclick="addChip('in-pedagogy', '역량중심 수업: 2022 개정 교육과정의 6대 핵심역량 함양 중심 - 지식 전달보다 수행과 실천 강조')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1.5 rounded" data-keywords="역량중심 2022 개정">🎯 역량중심 수업</div>
+                    <div onclick="addChip('in-pedagogy', '문제기반학습(Problem-Based): 비구조화된 문제 제시→해결 과정')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1.5 rounded" data-keywords="문제 기반">🎯 문제기반학습</div>
+                    <div onclick="addChip('in-pedagogy', '하브루타: 짝과 질문하고 토론하는 대화형 구조')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1.5 rounded" data-keywords="하브루타">💬 하브루타</div>
+                    <div onclick="addChip('in-pedagogy', '디자인 씽킹: 공감-정의-아이디어-프로토타입-테스트')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1.5 rounded" data-keywords="디자인 씽킹">💡 디자인 씽킹</div>
+                    <div onclick="addChip('in-pedagogy', '탐구 학습(Inquiry-Based): 가설 설정 및 검증 과정')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1.5 rounded" data-keywords="탐구">🔍 탐구 학습</div>
+                    <div onclick="addChip('in-pedagogy', '플립러닝: 사전 개념 학습 후 수업에서 심화 활동')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1.5 rounded" data-keywords="플립 거꾸로">🔄 플립러닝</div>
+                    <div onclick="addChip('in-pedagogy', '메이커교육: 직접 만들고 실험하며 배우기')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1.5 rounded" data-keywords="메이커">🔨 메이커교육</div>
+                    <div onclick="addChip('in-pedagogy', 'STEAM 융합교육: 과학/기술/공학/예술/수학 통합')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1.5 rounded" data-keywords="STEAM 융합">🧪 STEAM</div>
+                    <div onclick="addChip('in-pedagogy', '게이미피케이션: 레벨, 배지, 보상 시스템 적용')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1.5 rounded" data-keywords="게이미">🎮 게이미피케이션</div>
+                    <div onclick="addChip('in-pedagogy', '백워드 설계: 평가→학습활동→목표 역순 설계')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1.5 rounded" data-keywords="백워드">⏪ 백워드 설계</div>
+                 </div>
+             </div>
+             <div>
+                 <p class="text-[10px] text-gray-500 font-bold mb-2 tracking-wider">🗣️ 토의·토론 학습</p>
+                 <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-pedagogy', '찬반 토론: 입론-반론-최종변론 구조')" class="chip bg-orange-50 border-orange-200 text-orange-900 px-2 py-1.5 rounded" data-keywords="찬반 토론">⚖️ 찬반 토론</div>
+                    <div onclick="addChip('in-pedagogy', '브레인스토밍: 아이디어 자유 발산')" class="chip bg-orange-50 border-orange-200 text-orange-900 px-2 py-1.5 rounded" data-keywords="브레인스토밍">🧠 브레인스토밍</div>
+                    <div onclick="addChip('in-pedagogy', '6색 사고모자(De Bono): 6가지 관점에서 생각')" class="chip bg-orange-50 border-orange-200 text-orange-900 px-2 py-1.5 rounded" data-keywords="6색 모자">🎩 6색 사고모자</div>
+                    <div onclick="addChip('in-pedagogy', '피라미드 토의: 개인→짝→4명→8명 단계 확장')" class="chip bg-orange-50 border-orange-200 text-orange-900 px-2 py-1.5 rounded" data-keywords="피라미드">🔺 피라미드 토의</div>
+                    <div onclick="addChip('in-pedagogy', '교육연극/역할극(Role Play): 인물·상황 몰입으로 내용 이해와 공감 능력 함양')" class="chip bg-orange-50 border-orange-200 text-orange-900 px-2 py-1.5 rounded" data-keywords="역할극 연극 드라마">🎭 교육연극/역할극</div>
+                 </div>
+             </div>
+             <div>
+                <p class="text-[10px] text-gray-500 font-bold mb-2 tracking-wider">🪜 학습 전략</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-pedagogy', '스캐폴딩: 단계별 힌트와 도움말 (ZPD 고려)')" class="chip bg-gray-100 text-gray-700 border-gray-200 px-3 py-1.5 rounded-lg" data-keywords="스캐폴딩">🪜 스캐폴딩</div>
+                    <div onclick="addChip('in-pedagogy', '소크라테스식 발문: 끊임없는 질문으로 스스로 답 찾기')" class="chip bg-gray-100 text-gray-700 border-gray-200 px-3 py-1.5 rounded-lg" data-keywords="소크라테스 발문">🤔 소크라테스 발문</div>
+                    <div onclick="addChip('in-pedagogy', '비주얼 씽킹: 이미지/도식으로 개념 구조화')" class="chip bg-gray-100 text-gray-700 border-gray-200 px-3 py-1.5 rounded-lg" data-keywords="비주얼 씽킹">👁️ 비주얼 씽킹</div>
+                    <div onclick="addChip('in-pedagogy', '블룸의 택소노미: 기억>이해>적용>분석>평가>창조')" class="chip bg-gray-100 text-gray-700 border-gray-200 px-3 py-1.5 rounded-lg" data-keywords="블룸 택소노미">📈 블룸 택소노미</div>
+                    <div onclick="addChip('in-pedagogy', '메타인지 전략: 자신의 학습 과정 점검')" class="chip bg-gray-100 text-gray-700 border-gray-200 px-3 py-1.5 rounded-lg" data-keywords="메타인지">🪞 메타인지</div>
+                    <div onclick="addChip('in-pedagogy', '간격 반복(Spaced Repetition): 시간차 두고 복습')" class="chip bg-gray-100 text-gray-700 border-gray-200 px-3 py-1.5 rounded-lg" data-keywords="간격 반복">⏰ 간격 반복</div>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- 4. 평가 -->
+        <div class="chip-section" data-section="evaluation">
+          <h2 class="text-emerald-700 font-bold text-sm mb-3 sticky top-0 bg-slate-50/95 backdrop-blur py-2 z-10 border-b border-slate-200 flex items-center">
+            <span class="w-6 h-6 rounded bg-emerald-100 text-emerald-700 flex items-center justify-center mr-2 text-xs">4</span> 평가 방식
+            <span class="ml-2 text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded font-bold">🆕 신규</span>
+          </h2>
+          <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm space-y-3">
+             <div>
+                <p class="text-[10px] text-gray-500 font-bold mb-2 tracking-wider">평가 유형</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-evaluation', '진단평가: 학습 전 사전 지식 확인')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded" data-keywords="진단평가">🩺 진단평가</div>
+                    <div onclick="addChip('in-evaluation', '형성평가: 학습 중 즉각적 피드백')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded" data-keywords="형성평가">📝 형성평가</div>
+                    <div onclick="addChip('in-evaluation', '총괄평가: 단원/학기말 종합 평가')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded" data-keywords="총괄평가">🏁 총괄평가</div>
+                    <div onclick="addChip('in-evaluation', '수행평가: 과정 중심 산출물 평가')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded" data-keywords="수행평가">🎭 수행평가</div>
+                    <div onclick="addChip('in-evaluation', '동료평가(Peer Assessment): 학생 상호 평가')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded" data-keywords="동료평가">👥 동료평가</div>
+                    <div onclick="addChip('in-evaluation', '자기평가(Self Assessment): 학습 성찰지')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded" data-keywords="자기평가">🪞 자기평가</div>
+                    <div onclick="addChip('in-evaluation', '관찰평가: 체크리스트 기반 행동 관찰')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded" data-keywords="관찰평가">👀 관찰평가</div>
+                    <div onclick="addChip('in-evaluation', '포트폴리오: 학습 과정 산출물 모음')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded" data-keywords="포트폴리오">📁 포트폴리오</div>
+                </div>
+             </div>
+             <div>
+                <p class="text-[10px] text-gray-500 font-bold mb-2 tracking-wider">평가 도구/기준</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-evaluation', '평가 루브릭(Rubric): 4단계 척도 채점 기준')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded" data-keywords="루브릭">📏 루브릭 포함</div>
+                    <div onclick="addChip('in-evaluation', '체크리스트: 도달 여부 ✓ 표시')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded" data-keywords="체크리스트">☑️ 체크리스트</div>
+                    <div onclick="addChip('in-evaluation', '서술형 평가: 자유 응답 + 모범답안')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded" data-keywords="서술형">✍️ 서술형</div>
+                    <div onclick="addChip('in-evaluation', '선택형 평가: 객관식 + 정답 해설')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded" data-keywords="선택형 객관식">⭕ 선택형</div>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- 5. 톤 / 구성 -->
+        <div class="chip-section" data-section="tone">
+          <h2 class="text-orange-600 font-bold text-sm mb-3 sticky top-0 bg-slate-50/95 backdrop-blur py-2 z-10 border-b border-slate-200 flex items-center">
+            <span class="w-6 h-6 rounded bg-orange-100 text-orange-600 flex items-center justify-center mr-2 text-xs">5</span> 구성 및 톤
+          </h2>
+          <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm space-y-4">
+             <div>
+                <p class="text-[10px] text-gray-400 font-bold mb-2 tracking-wider">🗣️ 어조 (톤)</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-tone', '친근하고 격려하는 어조 (해요체, 이모지)')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1 rounded" data-keywords="친근 격려">🥰 친근/격려</div>
+                    <div onclick="addChip('in-tone', '논리적이고 분석적인 어조 (하십시오체)')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1 rounded" data-keywords="논리 분석">🧐 논리/분석</div>
+                    <div onclick="addChip('in-tone', '유머러스하고 위트 있는 문체')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1 rounded" data-keywords="유머">🤣 유머/위트</div>
+                    <div onclick="addChip('in-tone', '탐정/수사관 컨셉 (미스터리 해결)')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1 rounded" data-keywords="탐정">🕵️ 탐정 컨셉</div>
+                    <div onclick="addChip('in-tone', '스토리텔링: 흥미로운 이야기 형식')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1 rounded" data-keywords="스토리텔링">📖 스토리텔링</div>
+                </div>
+             </div>
+             <div>
+                <p class="text-[10px] text-gray-400 font-bold mb-2 tracking-wider">🧩 필수 구성 요소</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-tone', '도입(Hook): 흥미 유발 질문, 놀라운 사실')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1 rounded" data-keywords="도입 hook">🪝 도입(Hook)</div>
+                    <div onclick="addChip('in-tone', '전개: 구체적 사례, 비유, 반례')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1 rounded" data-keywords="예시 비유">🍎 예시/비유</div>
+                    <div onclick="addChip('in-tone', '정리: 핵심 3줄 요약, 마인드맵')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1 rounded" data-keywords="요약 정리">📝 요약 정리</div>
+                    <div onclick="addChip('in-tone', '성찰: 배운 점, 느낀 점, 더 알고 싶은 점')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1 rounded" data-keywords="성찰">💭 성찰 질문</div>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- 6. 디자인 -->
+        <div class="chip-section" data-section="design">
+          <h2 class="text-teal-600 font-bold text-sm mb-3 sticky top-0 bg-slate-50/95 backdrop-blur py-2 z-10 border-b border-slate-200 flex items-center">
+            <span class="w-6 h-6 rounded bg-teal-100 text-teal-600 flex items-center justify-center mr-2 text-xs">6</span> 디자인 & 스타일
+          </h2>
+          <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm space-y-4">
+             <div>
+                <p class="text-[10px] text-gray-400 font-bold mb-2 tracking-wider">📱 인기 앱 스타일</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-design', '카카오톡 스타일: 노란 배경, 말풍선 대화형 UI')" class="chip bg-yellow-50 border-yellow-200 text-yellow-800 px-3 py-1 rounded" data-keywords="카카오 카톡">💬 카카오톡</div>
+                    <div onclick="addChip('in-design', '네이버 스타일: 초록색 포인트, 직관적 검색창')" class="chip bg-green-50 border-green-200 text-green-800 px-3 py-1 rounded" data-keywords="네이버">🔍 네이버</div>
+                    <div onclick="addChip('in-design', '토스 스타일: 파란 포인트, 굵은 폰트, 미니멀')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-3 py-1 rounded" data-keywords="토스">💸 토스</div>
+                    <div onclick="addChip('in-design', '인스타그램 스타일: 그라데이션, 이미지 중심')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-3 py-1 rounded" data-keywords="인스타">📷 인스타그램</div>
+                    <div onclick="addChip('in-design', '유튜브 스타일: 화이트/레드, 썸네일 그리드')" class="chip bg-red-50 border-red-200 text-red-800 px-3 py-1 rounded" data-keywords="유튜브">▶️ 유튜브</div>
+                    <div onclick="addChip('in-design', '당근마켓 스타일: 주황색, 따뜻한 커뮤니티')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-3 py-1 rounded" data-keywords="당근">🥕 당근마켓</div>
+                </div>
+             </div>
+             <div>
+                <p class="text-[10px] text-gray-400 font-bold mb-2 tracking-wider">🎨 비주얼 테마</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-design', '파스텔 톤: 부드럽고 따뜻한 색감')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-3 py-1 rounded" data-keywords="파스텔">🎨 파스텔</div>
+                    <div onclick="addChip('in-design', '칠판/분필 테마: 학교 교실 분위기')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-3 py-1 rounded" data-keywords="칠판">🏫 칠판 테마</div>
+                    <div onclick="addChip('in-design', '픽셀 아트: 레트로 게임 감성')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-3 py-1 rounded" data-keywords="픽셀">👾 픽셀 아트</div>
+                    <div onclick="addChip('in-design', '다크 모드: 어두운 배경, 형광 강조')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-3 py-1 rounded" data-keywords="다크">🌑 다크 모드</div>
+                    <div onclick="addChip('in-design', '뉴모피즘: 부드러운 그림자, 입체감')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-3 py-1 rounded" data-keywords="뉴모피즘">✨ 뉴모피즘</div>
+                    <div onclick="addChip('in-design', '글래스모피즘: 반투명, 블러 효과')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-3 py-1 rounded" data-keywords="글래스">🪟 글래스모피즘</div>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- 7. 형식 / 옵션 -->
+        <div class="chip-section" data-section="format">
+          <h2 class="text-green-600 font-bold text-sm mb-3 sticky top-0 bg-slate-50/95 backdrop-blur py-2 z-10 border-b border-slate-200 flex items-center">
+            <span class="w-6 h-6 rounded bg-green-100 text-green-600 flex items-center justify-center mr-2 text-xs">7</span> 형식 및 옵션
+          </h2>
+          <div class="bg-white p-3 rounded-xl border border-gray-100 shadow-sm space-y-4">
+             <div class="bg-blue-50/50 p-3 rounded-lg border border-blue-100">
+                <p class="text-[10px] text-blue-700 font-bold mb-2 tracking-wider"><i class="fas fa-code mr-1"></i>💻 기술 & 코드</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-format', 'HTML/CSS/JS 단일 파일로 코드 생성')" class="chip bg-white border-blue-300 text-blue-800 px-3 py-1 rounded shadow-sm" data-keywords="단일 파일 html">💻 단일 파일 코드</div>
+                    <div onclick="addChip('in-format', 'Tailwind CSS CDN 활용한 디자인')" class="chip bg-white border-blue-300 text-blue-800 px-3 py-1 rounded shadow-sm" data-keywords="tailwind">🎨 Tailwind</div>
+                    <div onclick="addChip('in-format', 'Chart.js (차트), Three.js (3D) 활용')" class="chip bg-white border-blue-300 text-blue-800 px-3 py-1 rounded shadow-sm" data-keywords="차트 chart 3d">📊 차트/3D</div>
+                    <div onclick="addChip('in-format', 'SweetAlert2 팝업, Confetti 폭죽 효과')" class="chip bg-white border-blue-300 text-blue-800 px-3 py-1 rounded shadow-sm" data-keywords="팝업 폭죽">🎉 팝업/폭죽</div>
+                    <div onclick="addChip('in-format', 'Web Speech API: 음성 인식/합성')" class="chip bg-white border-blue-300 text-blue-800 px-3 py-1 rounded shadow-sm" data-keywords="음성 speech">🗣️ 음성 기능</div>
+                    <div onclick="addChip('in-format', 'localStorage: 데이터 저장 기능')" class="chip bg-white border-blue-300 text-blue-800 px-3 py-1 rounded shadow-sm" data-keywords="저장 storage">💾 데이터 저장</div>
+                </div>
+             </div>
+             <div class="bg-green-50/50 p-3 rounded-lg border border-green-100">
+                <p class="text-[10px] text-green-700 font-bold mb-2 tracking-wider"><i class="fas fa-file-alt mr-1"></i>📄 문서 형식</p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-format', '마크다운(Markdown) 형식')" class="chip bg-white border-green-300 text-green-800 px-3 py-1 rounded shadow-sm" data-keywords="마크다운 markdown">📝 마크다운</div>
+                    <div onclick="addChip('in-format', '표(Table) 형태로 비교/분석')" class="chip bg-white border-green-300 text-green-800 px-3 py-1 rounded shadow-sm" data-keywords="표 table">📅 도표</div>
+                    <div onclick="addChip('in-format', '학생용/교사용 분리 작성')" class="chip bg-white border-green-300 text-green-800 px-3 py-1 rounded shadow-sm" data-keywords="분리">📑 학생/교사 분리</div>
+                    <div onclick="addChip('in-format', 'A4 1장 분량으로 압축')" class="chip bg-white border-green-300 text-green-800 px-3 py-1 rounded shadow-sm" data-keywords="A4 분량">📄 A4 1장</div>
+                </div>
+             </div>
+             <div class="bg-red-50/50 p-3 rounded-lg border border-red-100">
+                <p class="text-[10px] text-red-700 font-bold mb-2 tracking-wider"><i class="fas fa-shield-alt mr-1"></i>🛡️ 품질 & 안전장치 <span class="bg-red-100 text-red-700 px-1.5 py-0.5 rounded font-bold">🆕 V5.3</span></p>
+                <div class="flex flex-wrap gap-2">
+                    <div onclick="addChip('in-format', '개인정보 보호: 학생 실명 대신 가명 사용, 민감정보 배제')" class="chip bg-white border-red-300 text-red-800 px-3 py-1 rounded shadow-sm" data-keywords="개인정보 보호 가명">🔒 개인정보 보호</div>
+                    <div onclick="addChip('in-format', '사실 정확성 검증: 불확실한 내용은 표시하고 출처/근거 함께 제시')" class="chip bg-white border-red-300 text-red-800 px-3 py-1 rounded shadow-sm" data-keywords="사실 검증 출처 팩트">✅ 사실 검증</div>
+                    <div onclick="addChip('in-format', '저작권 안전: 무료 폰트·라이선스 프리 자료만 사용')" class="chip bg-white border-red-300 text-red-800 px-3 py-1 rounded shadow-sm" data-keywords="저작권 라이선스">©️ 저작권 안전</div>
+                    <div onclick="addChip('in-format', '어휘 난이도 점검: 대상 학년 수준에 맞는 어휘인지 최종 확인 후 제시')" class="chip bg-white border-red-300 text-red-800 px-3 py-1 rounded shadow-sm" data-keywords="어휘 난이도 수준">📖 어휘 난이도</div>
+                    <div onclick="addChip('in-format', '2022 개정 교육과정 관련 성취기준 코드를 찾아 명시')" class="chip bg-white border-red-300 text-red-800 px-3 py-1 rounded shadow-sm" data-keywords="성취기준 교육과정 코드">🎯 성취기준 연계</div>
+                </div>
+             </div>
+          </div>
+        </div>
+
+        <!-- 검색 결과 없음 -->
+        <div id="no-search-result" class="hidden text-center py-12">
+          <div class="text-5xl mb-3">🔍</div>
+          <p class="text-gray-500 font-bold mb-1">검색 결과가 없습니다</p>
+          <p class="text-xs text-gray-400">다른 키워드로 시도해보세요</p>
+        </div>
+        
+      </div>
+      </div>
+    </section>
+
+    <!-- ===== 우측: 입력 영역 ===== -->
+    <section class="w-1/2 bg-white flex flex-col right-panel-mobile">
+      <div class="right-scroll-area custom-scroll p-6">
+        <div class="max-w-2xl mx-auto space-y-4">
+            
+          <div class="group">
+             <div class="flex justify-between items-center mb-1">
+                <label class="flex items-center text-sm font-bold text-gray-700"><i class="fas fa-paperclip mr-2"></i>0. 주제 및 자료</label>
+                <button onclick="showFileGuide()" class="bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs px-2 py-1 rounded border border-blue-300 flex items-center gap-1 transition shadow-sm">
+                    <i class="fas fa-info-circle"></i> 파일 첨부 방법
+                </button>
+             </div>
+             <textarea id="in-source" rows="3" class="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-gray-400 focus:outline-none resize-none transition text-sm" placeholder="주제(예: 중2 사회 기후) 또는 참고 자료를 적으세요" oninput="updateMobileInputCount()"></textarea>
+          </div>
+
+          <div class="group">
+            <div class="flex justify-between items-center mb-1">
+              <label class="flex items-center text-sm font-bold text-blue-700">
+                <i class="fas fa-cube mr-2"></i>1. 결과물 형태 <span class="text-red-500 ml-1">*</span>
+              </label>
+              <span class="text-xs text-gray-400" id="in-type-count">0개 선택</span>
+            </div>
+            <div id="in-type-chips" class="input-chip-area bg-blue-50 border-blue-100" data-placeholder="좌측 칩을 클릭하면 여기에 추가됩니다 (필수)"></div>
+          </div>
+
+          <div class="group">
+            <div class="flex justify-between items-center mb-1">
+              <label class="flex items-center text-sm font-bold text-indigo-700"><i class="fas fa-bullseye mr-2"></i>2. 대상 및 목표</label>
+              <span class="text-xs text-gray-400" id="in-target-count">0개 선택</span>
+            </div>
+            <div id="in-target-chips" class="input-chip-area bg-indigo-50 border-indigo-100" data-placeholder="학습 대상과 교육 목표를 선택하세요"></div>
+          </div>
+
+          <div class="group">
+            <div class="flex justify-between items-center mb-1">
+              <label class="flex items-center text-sm font-bold text-pink-700"><i class="fas fa-chalkboard-teacher mr-2"></i>3. 교수법</label>
+              <span class="text-xs text-gray-400" id="in-pedagogy-count">0개 선택</span>
+            </div>
+            <div id="in-pedagogy-chips" class="input-chip-area bg-pink-50 border-pink-100" data-placeholder="적용할 교육 모형 또는 전략을 선택하세요"></div>
+          </div>
+
+          <div class="group">
+            <div class="flex justify-between items-center mb-1">
+              <label class="flex items-center text-sm font-bold text-emerald-700"><i class="fas fa-clipboard-check mr-2"></i>4. 평가 방식</label>
+              <span class="text-xs text-gray-400" id="in-evaluation-count">0개 선택</span>
+            </div>
+            <div id="in-evaluation-chips" class="input-chip-area bg-emerald-50 border-emerald-100" data-placeholder="평가 유형 및 도구를 선택하세요"></div>
+          </div>
+
+          <div class="group">
+            <div class="flex justify-between items-center mb-1">
+              <label class="flex items-center text-sm font-bold text-orange-700"><i class="fas fa-smile mr-2"></i>5. 구성 및 톤</label>
+              <span class="text-xs text-gray-400" id="in-tone-count">0개 선택</span>
+            </div>
+            <div id="in-tone-chips" class="input-chip-area bg-orange-50 border-orange-100" data-placeholder="어조와 구성 요소를 선택하세요"></div>
+          </div>
+
+          <div class="group">
+            <div class="flex justify-between items-center mb-1">
+              <label class="flex items-center text-sm font-bold text-teal-700"><i class="fas fa-palette mr-2"></i>6. 디자인</label>
+              <span class="text-xs text-gray-400" id="in-design-count">0개 선택</span>
+            </div>
+            <div id="in-design-chips" class="input-chip-area bg-teal-50 border-teal-100" data-placeholder="원하는 앱 스타일이나 비주얼 테마"></div>
+          </div>
+
+          <div class="group">
+            <div class="flex justify-between items-center mb-1">
+              <label class="flex items-center text-sm font-bold text-green-700"><i class="fas fa-list-ul mr-2"></i>7. 형식 및 옵션</label>
+              <span class="text-xs text-gray-400" id="in-format-count">0개 선택</span>
+            </div>
+            <div id="in-format-chips" class="input-chip-area bg-green-50 border-green-100" data-placeholder="출력 형식 및 추가 요청"></div>
+          </div>
+
+          <div class="pt-4 pb-6 flex gap-3">
+            <button onclick="generateAndCopy()" class="flex-1 bg-gradient-to-r from-gray-900 to-black hover:from-black hover:to-black text-white text-base font-bold py-3.5 px-6 rounded-full shadow-lg transform hover:-translate-y-1 transition flex items-center justify-center gap-2">
+              <i class="fas fa-magic"></i>
+              <span>프롬프트 생성 & 복사</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ 추천 프롬프트 ============ -->
+  <main id="view-templates" class="hidden scroll-container overflow-y-auto custom-scroll bg-gray-50 p-6 md:p-10">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-8">
+            <h2 class="text-2xl font-black text-gray-800 mb-2">📚 바로 쓰는 추천 프롬프트</h2>
+            <p class="text-gray-500 text-sm">학교 현장에서 자주 쓰이는 <b>수업 자료 25선</b>입니다.<br>
+            <span class="text-blue-600 font-bold">⚡ 카드 클릭 시 빌더로 자동 입력되어 자유롭게 수정 가능!</span><br>
+            <span class="text-emerald-600 font-medium">✨ 2022 개정 교육과정 6대 핵심역량 및 평가 방식이 반영되어 있어요</span></p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 pb-20" id="templates-grid"></div>
+    </div>
+  </main>
+
+  <!-- ============ 사용 설명서 ============ -->
+  <main id="view-guide" class="hidden scroll-container overflow-y-auto custom-scroll bg-gray-50 p-6 md:p-10">
+    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8">
+      <h2 class="text-2xl font-black text-gray-800 mb-6 flex items-center">
+        <span class="w-10 h-10 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mr-3 text-xl">📖</span>
+        Edu Prompt Studio 사용 설명서
+      </h2>
+      <div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-5 mb-6 border border-indigo-200">
+        <h3 class="font-bold text-indigo-900 mb-2 text-base">💡 이 도구는 무엇인가요?</h3>
+        <p class="text-sm text-indigo-900 leading-relaxed">
+          학교 수업 자료 제작을 위한 <strong>AI 프롬프트 빌더</strong>입니다.<br>
+          100여 개의 교육학 기반 옵션(칩)을 조합해서, ChatGPT/Claude/Gemini가 잘 이해할 수 있는 
+          <strong>전문적인 프롬프트를 한 번에</strong> 만들어드려요.<br>
+          <span class="text-xs opacity-80">📌 교사 행정 업무(공문, 상담 등)는 지원하지 않습니다 — 수업 자료 전문 도구입니다.</span>
+        </p>
+      </div>
+      <h3 class="font-bold text-gray-900 text-lg mb-3 flex items-center gap-2">
+        <span class="w-7 h-7 bg-blue-500 text-white rounded-lg flex items-center justify-center text-sm">1</span>
+        기본 사용법 (4단계)
+      </h3>
+      <div class="space-y-4 mb-8">
+        <div class="flex gap-4 items-start">
+          <div class="flex-shrink-0 w-8 h-8 bg-gray-100 text-gray-600 rounded-full flex items-center justify-center font-bold">1</div>
+          <div><h4 class="font-bold text-gray-900 mb-1">주제 적기 (선택)</h4><p class="text-gray-600 leading-relaxed text-sm">"중2 사회 기후"처럼 주제만 적거나, 텍스트·PDF·유튜브 링크를 자료로 넣을 수 있어요. <span class="text-blue-600 font-medium">주제가 없어도 괜찮아요!</span></p></div>
+        </div>
+        <div class="flex gap-4 items-start">
+          <div class="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-bold">2</div>
+          <div><h4 class="font-bold text-gray-900 mb-1">결과물 형태 선택 (필수 ⭐)</h4><p class="text-gray-600 leading-relaxed text-sm">웹 게임, 퀴즈, PPT, 카드뉴스, 지도안 등에서 선택하세요. <span class="text-red-500 font-medium">이것만은 꼭 필수예요!</span></p></div>
+        </div>
+        <div class="flex gap-4 items-start">
+          <div class="flex-shrink-0 w-8 h-8 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center font-bold">3</div>
+          <div><h4 class="font-bold text-gray-900 mb-1">나머지는 클릭으로 누적</h4><p class="text-gray-600 leading-relaxed text-sm">대상·교수법·평가·디자인 등 원하는 칩을 클릭하면 우측에 추가됩니다. 잘못 눌렀으면 <b class="text-red-500">X 버튼</b>으로 즉시 삭제 가능!</p></div>
+        </div>
+        <div class="flex gap-4 items-start">
+          <div class="flex-shrink-0 w-8 h-8 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center font-bold">4</div>
+          <div><h4 class="font-bold text-gray-900 mb-1">생성 → AI에 붙여넣기</h4><p class="text-gray-600 leading-relaxed text-sm">[프롬프트 생성 & 복사] 버튼 클릭 → ChatGPT/Claude/Gemini에 <b>Ctrl+V</b>로 붙여넣기!</p></div>
+        </div>
+      </div>
+      <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-5 mt-8 border border-blue-200">
+        <h3 class="font-bold text-blue-900 mb-3 flex items-center gap-2"><i class="fas fa-wand-magic-sparkles"></i>V5.4 업데이트 내역</h3>
+        <ul class="text-xs text-blue-900 space-y-1.5 list-disc list-inside mb-4">
+          <li><strong>🔗 공유 링크 즉시 반영</strong>: 이미 사이트를 열어둔 상태에서 공유 링크를 눌러도 조합이 바로 불러와져요</li>
+          <li><strong>⌨️ 키보드로도 칩 선택</strong>: Tab으로 이동, Enter/Space로 선택 (마우스 없이도 사용 가능)</li>
+          <li><strong>🖼️ 카톡 공유 미리보기</strong>: 링크를 카톡·밴드에 붙이면 썸네일 카드가 표시돼요</li>
+          <li><strong>🛠️ 저장 슬롯 이름 처리 개선</strong>: 이름에 특수문자(&lt;, &gt;)를 써도 화면이 깨지지 않아요</li>
+        </ul>
+        <h3 class="font-bold text-blue-900 mb-3 flex items-center gap-2"><i class="fas fa-history"></i>V5.3 업데이트 내역</h3>
+        <ul class="text-xs text-blue-900 space-y-1.5 list-disc list-inside mb-4">
+          <li><strong>🔗 조합 공유 링크</strong>: 상단 [공유] 버튼으로 내 칩 조합을 링크로 만들어 동료 선생님께 카톡 전달 — 열면 그대로 로드!</li>
+          <li><strong>🆕 결과물 7종 추가</strong>: 🔐 방탈출 게임 · 🎵 노래 가사(Suno AI작곡용) · 📚 그림책 · 🎬 숏폼 대본 · 🎭 역할극 대본 · 📋 구글 폼 퀴즈(자동생성 코드) · 🗓️ 단원 차시 설계</li>
+          <li><strong>🛡️ 품질 & 안전장치 칩</strong>: 개인정보 보호 · 사실 검증 · 저작권 안전 · 어휘 난이도 · 성취기준 연계</li>
+          <li><strong>📚 추천 프롬프트 25선</strong>: 방탈출·암기송·구글폼 템플릿 추가</li>
+        </ul>
+        <h3 class="font-bold text-blue-900 mb-3 flex items-center gap-2"><i class="fas fa-history"></i>V5.2 업데이트 내역</h3>
+        <ul class="text-xs text-blue-900 space-y-1.5 list-disc list-inside mb-4">
+          <li><strong>♻️ 작업 자동 저장</strong>: 새로고침하거나 창을 닫아도 작성 중이던 내용이 자동 복원돼요</li>
+          <li><strong>✏️ 프롬프트 직접 수정</strong>: 생성된 프롬프트를 복사 창에서 바로 고쳐서 다시 복사 가능</li>
+          <li><strong>📱 모바일 탭 복구</strong>: 스마트폰에서도 추천 프롬프트·사용 설명서 탭 이용 가능</li>
+          <li><strong>💬 카카오톡 브라우저 대응</strong>: 인앱 브라우저에서도 저장/불러오기가 정상 작동</li>
+          <li><strong>⌨️ 편의성</strong>: ESC 키·배경 클릭으로 팝업 닫기</li>
+        </ul>
+        <h3 class="font-bold text-blue-900 mb-3 flex items-center gap-2"><i class="fas fa-history"></i>V5.1 업데이트 내역</h3>
+        <ul class="text-xs text-blue-900 space-y-1.5 list-disc list-inside">
+          <li><strong>🇰🇷 2022 개정 교육과정 6대 핵심역량</strong> 반영</li>
+          <li><strong>🎯 역량중심 수업</strong> + <strong>🎭 교육연극/역할극</strong> 교수법 추가</li>
+          <li><strong>📑 슬라이드 6종 분기</strong></li>
+          <li><strong>📚 교수법 대폭 보강</strong>: 30+ 모형</li>
+          <li><strong>📝 평가 카테고리 신규</strong></li>
+          <li><strong>🔍 검색/필터/삭제</strong></li>
+          <li><strong>💾 저장/불러오기</strong>: 3슬롯</li>
+          <li><strong>📱 모바일 최적화</strong></li>
+        </ul>
+      </div>
+      <div class="mt-8 p-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200 text-center">
+          <p class="text-sm text-purple-900 font-medium mb-2">💌 피드백이나 개선 아이디어가 있으신가요?</p>
+          <p class="text-xs text-purple-800">Developed by <strong>김주현(광평중)</strong><br>
+            <a href="https://instagram.com/kimju.zip" target="_blank" class="text-pink-600 font-bold">💟 Instagram @kimju.zip</a></p>
+      </div>
+    </div>
+  </main>
+
+  <footer style="text-align: center; padding: 20px 0; color: #888; font-size: 13px; line-height: 1.6;" class="shrink-0">
+    <div>Developed by <strong>김주현(광평중)</strong> &nbsp;|&nbsp; 
+      <a href="https://instagram.com/kimju.zip" target="_blank" style="text-decoration: none; color: #E1306C; font-weight: bold;">💟 @kimju.zip</a>
+    </div>
+    <div style="font-size: 11px; opacity: 0.8;">&copy; 2026. All Rights Reserved. · Enhanced V5.4</div>
+  </footer>
+
+  <!-- ============ 모달들 ============ -->
+  
+  <!-- 복사 모달 -->
+  <div id="copyModal" class="fixed inset-0 bg-black/60 z-50 hidden items-center justify-center p-4 backdrop-blur-sm transition-opacity opacity-0">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl transform scale-95 transition-transform duration-200 flex flex-col max-h-[85vh]">
+      <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-gray-50 rounded-t-3xl">
+        <h3 class="font-bold text-lg text-gray-800 flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> 프롬프트 준비 완료!</h3>
+        <button onclick="closeModal()" class="w-8 h-8 rounded-full hover:bg-gray-200 flex items-center justify-center text-gray-400 transition"><i class="fas fa-times"></i></button>
+      </div>
+      <textarea id="modalContent" spellcheck="false" class="flex-1 w-full p-6 overflow-y-auto custom-scroll bg-gray-900 text-gray-300 font-mono text-xs md:text-sm leading-relaxed resize-none focus:outline-none" style="min-height: 40vh;" oninput="__lastPrompt = this.value"></textarea>
+      <div class="p-4 bg-white border-t border-gray-100 rounded-b-3xl">
+          <p class="text-sm text-gray-500 mb-3 text-center">✏️ 위에서 직접 수정 가능 · AI(ChatGPT/Claude/Gemini)에 <b>Ctrl+V</b>로 붙여넣기 하세요</p>
+          <div class="flex gap-2">
+            <button onclick="copyAgain()" class="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition flex items-center justify-center gap-2">
+              <i class="fas fa-copy"></i> 다시 복사
+            </button>
+            <button onclick="closeModal()" class="flex-1 px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition shadow-lg">확인</button>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 알림 모달 -->
+  <div id="alertModal" class="fixed inset-0 bg-black/60 z-[60] hidden items-center justify-center p-4 backdrop-blur-sm transition-opacity opacity-0">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm transform scale-95 transition-transform duration-200 overflow-hidden">
+      <div class="p-6 pb-0 flex justify-center"><div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-2 animate-bounce"><span class="text-3xl">💡</span></div></div>
+      <div class="px-6 py-2 text-center"><h3 class="text-lg font-bold text-gray-900 mb-2" id="alertTitle">필수 항목 누락</h3><div class="text-sm text-gray-500 leading-relaxed" id="alertMessage"></div></div>
+      <div class="p-6 pt-4"><button onclick="closeAlert()" class="w-full py-3 bg-gray-900 hover:bg-black text-white font-bold rounded-xl transition shadow-lg">확인</button></div>
+    </div>
+  </div>
+
+  <!-- 초기화 확인 모달 -->
+  <div id="resetModal" class="fixed inset-0 bg-black/60 z-[70] hidden items-center justify-center p-4 backdrop-blur-sm transition-opacity opacity-0">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm transform scale-95 transition-transform duration-200 overflow-hidden">
+        <div class="p-6 pb-0 flex justify-center"><div class="w-16 h-16 bg-gray-100 text-gray-500 rounded-full flex items-center justify-center mb-2"><i class="fas fa-redo-alt text-2xl"></i></div></div>
+        <div class="px-6 py-2 text-center">
+            <h3 class="text-lg font-bold text-gray-900 mb-2">모두 지우고 새로 쓸까요?</h3>
+            <p class="text-sm text-gray-500 leading-relaxed">입력한 모든 칩이 사라집니다.</p>
+        </div>
+        <div class="p-6 pt-4 flex gap-3">
+            <button onclick="closeResetModal()" class="flex-1 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-xl transition">취소</button>
+            <button onclick="confirmReset()" class="flex-1 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition shadow-lg">초기화</button>
+        </div>
+    </div>
+  </div>
+
+  <!-- 범용 확인 모달 (인앱 브라우저에서 confirm() 미지원 대응) -->
+  <div id="confirmModal" class="fixed inset-0 bg-black/60 z-[90] hidden items-center justify-center p-4 backdrop-blur-sm transition-opacity opacity-0">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm transform scale-95 transition-transform duration-200 overflow-hidden">
+        <div class="px-6 pt-6 pb-2 text-center">
+            <h3 class="text-lg font-bold text-gray-900 mb-2" id="confirmTitle"></h3>
+            <p class="text-sm text-gray-500 leading-relaxed whitespace-pre-line" id="confirmMessage"></p>
+        </div>
+        <div class="p-6 pt-4 flex gap-3">
+            <button onclick="closeConfirmModal()" class="flex-1 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-xl transition">취소</button>
+            <button onclick="__confirmOk()" id="confirmOkBtn" class="flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition shadow-lg">확인</button>
+        </div>
+    </div>
+  </div>
+
+  <!-- 저장/불러오기 모달 -->
+  <div id="saveModal" class="fixed inset-0 bg-black/60 z-[80] hidden items-center justify-center p-4 backdrop-blur-sm transition-opacity opacity-0">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md transform scale-95 transition-transform duration-200 overflow-hidden">
+        <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-blue-50">
+          <h3 class="font-bold text-lg text-gray-800 flex items-center"><i class="fas fa-bookmark text-blue-600 mr-2"></i>저장 / 불러오기</h3>
+          <button onclick="closeSaveModal()" class="w-8 h-8 rounded-full hover:bg-blue-100 flex items-center justify-center text-gray-400 transition"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="p-5">
+          <div class="mb-4 text-xs text-gray-500">3개 슬롯에 자주 쓰는 조합을 저장할 수 있어요</div>
+          <div class="space-y-2" id="save-slots"></div>
+        </div>
+    </div>
+  </div>
+
+  <script>
+    // ============ 상태 관리 ============
+    const inputData = {
+      'in-type': [],
+      'in-target': [],
+      'in-pedagogy': [],
+      'in-evaluation': [],
+      'in-tone': [],
+      'in-design': [],
+      'in-format': []
+    };
+    
+    let activeFilter = 'all';
+    let searchQuery = '';
+
+    // ============ 탭 전환 ============
+    function switchTab(tabName) {
+      const views = ['view-builder', 'view-templates', 'view-guide'];
+      const buttons = ['btn-builder', 'btn-templates', 'btn-guide'];
+      views.forEach(v => document.getElementById(v).classList.add('hidden'));
+      buttons.forEach(b => document.getElementById(b).className = 'tab-inactive h-full flex items-center gap-1 lg:gap-2 text-xs lg:text-sm transition-colors whitespace-nowrap px-2');
+      document.getElementById('view-' + tabName).classList.remove('hidden');
+      document.getElementById('btn-' + tabName).className = 'tab-active h-full flex items-center gap-1 lg:gap-2 text-xs lg:text-sm transition-colors whitespace-nowrap px-2';
+    }
+    
+    // ============ 모바일 탭 전환 ============
+    function switchMobileTab(which) {
+      const leftPanel = document.querySelector('.left-panel-mobile');
+      const rightPanel = document.querySelector('.right-panel-mobile');
+      const chipTab = document.getElementById('mobile-tab-chips');
+      const inputTab = document.getElementById('mobile-tab-input');
+      if (which === 'chips') {
+        leftPanel.classList.add('active');
+        rightPanel.classList.remove('active');
+        chipTab.classList.add('active');
+        inputTab.classList.remove('active');
+      } else {
+        leftPanel.classList.remove('active');
+        rightPanel.classList.add('active');
+        chipTab.classList.remove('active');
+        inputTab.classList.add('active');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    function updateMobileInputCount() {
+      const total = Object.values(inputData).reduce((sum, arr) => sum + arr.length, 0);
+      const hasSource = document.getElementById('in-source').value.trim().length > 0;
+      const count = total + (hasSource ? 1 : 0);
+      const badge = document.getElementById('mobile-input-count');
+      if (badge) {
+        if (count > 0) { badge.textContent = count; badge.style.display = 'inline-block'; }
+        else { badge.style.display = 'none'; }
+      }
+      saveDraft();
+    }
+
+    // ============ 조합 공유 링크 ============
+    async function shareCombo() {
+      const source = document.getElementById('in-source').value;
+      const hasContent = source.trim() || Object.values(inputData).some(arr => arr.length);
+      if (!hasContent) { showToast('공유할 내용이 없어요. 칩을 먼저 선택하세요', '⚠️'); return; }
+      const payload = { s: source, d: inputData };
+      const encoded = btoa(encodeURIComponent(JSON.stringify(payload)));
+      const url = location.origin + location.pathname + '#share=' + encoded;
+      try {
+        await navigator.clipboard.writeText(url);
+        showToast('공유 링크 복사됨! 카톡 등으로 전달하세요', '🔗');
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        ta.style.position = 'fixed'; ta.style.left = '-9999px';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); showToast('공유 링크 복사됨!', '🔗'); }
+        catch(e) { showAlert('링크를 직접 복사하세요:<br><input class="w-full border rounded p-2 mt-2 text-xs" value="' + url.replace(/"/g, '&quot;') + '" onclick="this.select()">', '공유 링크'); }
+        document.body.removeChild(ta);
+      }
+    }
+    function loadSharedCombo() {
+      if (!location.hash.startsWith('#share=')) return false;
+      try {
+        const payload = JSON.parse(decodeURIComponent(atob(location.hash.slice(7))));
+        document.getElementById('in-source').value = String(payload.s || '').slice(0, 5000);
+        Object.keys(inputData).forEach(k => {
+          const arr = Array.isArray(payload.d?.[k]) ? payload.d[k] : [];
+          inputData[k] = arr.filter(v => typeof v === 'string').map(v => v.slice(0, 300)).slice(0, 30);
+        });
+        history.replaceState(null, '', location.pathname + location.search);
+        return true;
+      } catch (e) { return false; }
+    }
+
+    // ============ 작업 자동 저장 (새로고침해도 복원) ============
+    const DRAFT_KEY = 'edu-prompt-studio-draft';
+    function saveDraft() {
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({
+          source: document.getElementById('in-source').value,
+          data: inputData
+        }));
+      } catch (e) { /* localStorage 미지원/용량초과 시 무시 */ }
+    }
+    function restoreDraft() {
+      try {
+        const draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null');
+        if (!draft) return false;
+        const hasContent = (draft.source || '').trim() || Object.values(draft.data || {}).some(arr => arr && arr.length);
+        if (!hasContent) return false;
+        document.getElementById('in-source').value = draft.source || '';
+        Object.keys(inputData).forEach(k => { inputData[k] = Array.isArray(draft.data?.[k]) ? [...draft.data[k]] : []; });
+        return true;
+      } catch (e) { return false; }
+    }
+
+    // ============ 칩 추가/삭제 ============
+    function addChip(targetId, text) {
+      if (inputData[targetId].includes(text)) { showToast('이미 추가된 항목입니다', '⚠️'); return; }
+      inputData[targetId].push(text);
+      renderInputChips(targetId);
+      flashContainer(targetId);
+      updateChipActiveStates();
+      updateMobileInputCount();
+    }
+    
+    function removeChip(targetId, index) {
+      inputData[targetId].splice(index, 1);
+      renderInputChips(targetId);
+      updateChipActiveStates();
+      updateMobileInputCount();
+    }
+    
+    function renderInputChips(targetId) {
+      const container = document.getElementById(targetId + '-chips');
+      const counter = document.getElementById(targetId + '-count');
+      const items = inputData[targetId];
+      container.innerHTML = items.map((text, idx) => {
+        const safe = escapeHtml(text);
+        const display = escapeHtml(text.length > 35 ? text.substring(0, 35) + '...' : text);
+        return `<span class="input-chip" title="${safe}">
+          <span class="input-chip-text">${display}</span>
+          <span class="input-chip-remove" onclick="removeChip('${targetId}', ${idx})" title="삭제">×</span>
+        </span>`;
+      }).join('');
+      if (counter) counter.textContent = items.length + '개 선택';
+    }
+    
+    function flashContainer(targetId) {
+      const container = document.getElementById(targetId + '-chips');
+      container.style.transition = 'all 0.2s';
+      container.style.transform = 'scale(1.02)';
+      container.style.boxShadow = '0 0 0 3px rgba(59, 130, 246, 0.2)';
+      setTimeout(() => { container.style.transform = ''; container.style.boxShadow = ''; }, 300);
+    }
+    
+    function updateChipActiveStates() {
+      document.querySelectorAll('.chip').forEach(chip => chip.classList.remove('chip-active'));
+      Object.keys(inputData).forEach(targetId => {
+        inputData[targetId].forEach(text => {
+          document.querySelectorAll(`[onclick*="addChip('${targetId}'"]`).forEach(chip => {
+            const onclickStr = chip.getAttribute('onclick');
+            const match = onclickStr.match(/addChip\(['"][^'"]+['"],\s*['"]([^'"]+)['"]\)/);
+            if (match && match[1] === text.replace(/'/g, "\\'")) chip.classList.add('chip-active');
+          });
+        });
+      });
+    }
+
+    function setText(id, text) {
+      const input = document.getElementById(id);
+      input.value = text;
+      highlightInput(input);
+      updateMobileInputCount();
+    }
+    function addText(id, text) {
+      const input = document.getElementById(id);
+      if (input.value && !input.value.endsWith('\n')) input.value += '\n';
+      input.value += text;
+      input.scrollTop = input.scrollHeight;
+      highlightInput(input);
+      updateMobileInputCount();
+    }
+    function highlightInput(input) {
+      input.classList.add('ring-2', 'ring-blue-400');
+      setTimeout(() => input.classList.remove('ring-2', 'ring-blue-400'), 300);
+    }
+
+    // ============ 검색 & 필터 ============
+    function filterChips() {
+      searchQuery = document.getElementById('chip-search').value.trim().toLowerCase();
+      document.getElementById('clear-search-btn').classList.toggle('hidden', !searchQuery);
+      applyFilters();
+    }
+    function clearSearch() {
+      document.getElementById('chip-search').value = '';
+      searchQuery = '';
+      document.getElementById('clear-search-btn').classList.add('hidden');
+      applyFilters();
+    }
+    function setFilter(filterName) {
+      activeFilter = filterName;
+      document.querySelectorAll('.filter-pill').forEach(pill => {
+        pill.classList.toggle('active', pill.dataset.filter === filterName);
+      });
+      applyFilters();
+    }
+    function applyFilters() {
+      const sections = document.querySelectorAll('.chip-section');
+      let totalVisible = 0;
+      sections.forEach(section => {
+        const sectionType = section.dataset.section;
+        const categoryMatch = (activeFilter === 'all' || activeFilter === sectionType);
+        if (!categoryMatch) { section.style.display = 'none'; return; }
+        const chips = section.querySelectorAll('.chip');
+        let visibleCount = 0;
+        chips.forEach(chip => {
+          if (!searchQuery) { chip.classList.remove('chip-hidden'); visibleCount++; }
+          else {
+            const text = (chip.textContent + ' ' + (chip.dataset.keywords || '')).toLowerCase();
+            const match = text.includes(searchQuery);
+            chip.classList.toggle('chip-hidden', !match);
+            if (match) visibleCount++;
+          }
+        });
+        section.style.display = visibleCount > 0 ? '' : 'none';
+        totalVisible += visibleCount;
+      });
+      document.getElementById('no-search-result').classList.toggle('hidden', totalVisible > 0);
+    }
+
+    function showFileGuide() {
+      const message = `<div style="text-align: left;">
+        <p style="font-weight: bold; margin-bottom: 12px;">📎 파일 첨부 방법</p>
+        <p style="margin: 8px 0;">1️⃣ 아래 [프롬프트 생성 & 복사] 버튼을 먼저 누르세요</p>
+        <p style="margin: 8px 0;">2️⃣ AI 채팅창(ChatGPT/Claude/Gemini)을 여세요</p>
+        <p style="margin: 8px 0;">3️⃣ 파일 첨부 버튼(📎)으로 PDF/이미지 업로드</p>
+        <p style="margin: 8px 0;">4️⃣ 복사한 프롬프트를 Ctrl+V로 붙여넣기!</p>
+        <p style="margin-top: 12px; color: #d97706;">💡 <b>순서가 중요!</b> 파일 먼저, 프롬프트 나중에.</p>
+      </div>`;
+      showAlert(message, '파일 첨부 안내');
+    }
+
+    // ============ 초기화 ============
+    function resetAll() {
+      const m = document.getElementById('resetModal');
+      m.classList.remove('hidden');
+      m.style.display = 'flex'; // ← 핵심 수정
+      setTimeout(() => {
+        m.classList.remove('opacity-0');
+        m.firstElementChild.classList.remove('scale-95');
+      }, 10);
+    }
+    function confirmReset() {
+      Object.keys(inputData).forEach(k => inputData[k] = []);
+      Object.keys(inputData).forEach(k => renderInputChips(k));
+      document.getElementById('in-source').value = '';
+      updateChipActiveStates();
+      updateMobileInputCount();
+      closeResetModal();
+      showToast('초기화 완료', '🔄');
+    }
+    function closeResetModal() {
+      const m = document.getElementById('resetModal');
+      m.classList.add('opacity-0');
+      m.firstElementChild.classList.add('scale-95');
+      setTimeout(() => { m.classList.add('hidden'); m.style.display = ''; }, 200); // ← 핵심 수정
+    }
+
+    // ============ 범용 확인 모달 (confirm() 대체 — 인앱 브라우저 대응) ============
+    let __confirmCallback = null;
+    function showConfirm(title, message, okLabel, callback, danger = false) {
+      document.getElementById('confirmTitle').textContent = title;
+      document.getElementById('confirmMessage').textContent = message;
+      const okBtn = document.getElementById('confirmOkBtn');
+      okBtn.textContent = okLabel;
+      okBtn.className = danger
+        ? 'flex-1 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition shadow-lg'
+        : 'flex-1 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl transition shadow-lg';
+      __confirmCallback = callback;
+      const m = document.getElementById('confirmModal');
+      m.classList.remove('hidden');
+      m.style.display = 'flex';
+      setTimeout(() => {
+        m.classList.remove('opacity-0');
+        m.firstElementChild.classList.remove('scale-95');
+      }, 10);
+    }
+    function __confirmOk() {
+      const cb = __confirmCallback;
+      closeConfirmModal();
+      if (cb) cb();
+    }
+    function closeConfirmModal() {
+      __confirmCallback = null;
+      const m = document.getElementById('confirmModal');
+      m.classList.add('opacity-0');
+      m.firstElementChild.classList.add('scale-95');
+      setTimeout(() => { m.classList.add('hidden'); m.style.display = ''; }, 200);
+    }
+
+    // ============ HTML 이스케이프 (공유 링크·슬롯 이름 등 외부 문자열 대비) ============
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    // ============ 저장/불러오기 ============
+    const STORAGE_KEY = 'edu-prompt-studio-v51-slots';
+    function getSavedSlots() {
+      try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[null, null, null]'); }
+      catch { return [null, null, null]; }
+    }
+    function saveSlots(slots) { localStorage.setItem(STORAGE_KEY, JSON.stringify(slots)); }
+    
+    function openSaveModal() {
+      __namingSlotIdx = null;
+      renderSaveSlots();
+      const m = document.getElementById('saveModal');
+      m.classList.remove('hidden');
+      m.style.display = 'flex'; // ← 핵심 수정
+      setTimeout(() => {
+        m.classList.remove('opacity-0');
+        m.firstElementChild.classList.remove('scale-95');
+      }, 10);
+    }
+    function closeSaveModal() {
+      const m = document.getElementById('saveModal');
+      m.classList.add('opacity-0');
+      m.firstElementChild.classList.add('scale-95');
+      setTimeout(() => { m.classList.add('hidden'); m.style.display = ''; }, 200); // ← 핵심 수정
+    }
+    
+    let __namingSlotIdx = null;
+    function renderSaveSlots() {
+      const slots = getSavedSlots();
+      const container = document.getElementById('save-slots');
+      container.innerHTML = slots.map((slot, idx) => {
+        if (__namingSlotIdx === idx) {
+          const defaultName = slot ? slot.name : `조합 ${idx + 1}`;
+          const safeName = defaultName.replace(/"/g, '&quot;');
+          return `<div class="save-slot" style="border-color:#3b82f6;">
+            <div class="text-xs text-gray-500 font-bold mb-2">이 조합의 이름을 입력하세요</div>
+            <div class="flex gap-2">
+              <input type="text" id="slot-name-input" value="${safeName}" maxlength="30"
+                class="flex-1 border border-blue-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                onkeydown="if(event.key==='Enter')confirmSaveSlot(${idx});if(event.key==='Escape')cancelNaming();">
+              <button onclick="confirmSaveSlot(${idx})" class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-lg">저장</button>
+              <button onclick="cancelNaming()" class="px-3 py-2 bg-gray-200 hover:bg-gray-300 text-gray-600 text-xs font-bold rounded-lg">취소</button>
+            </div>
+          </div>`;
+        }
+        if (slot) {
+          const itemCount = Object.values(slot.data || {}).reduce((sum, arr) => sum + (arr?.length || 0), 0);
+          return `<div class="save-slot">
+            <div class="flex justify-between items-center">
+              <div onclick="loadSlot(${idx})" class="flex-1 cursor-pointer">
+                <div class="font-bold text-sm text-gray-800">${escapeHtml(slot.name)}</div>
+                <div class="text-xs text-gray-500 mt-0.5">${itemCount}개 칩 · ${slot.timestamp}</div>
+              </div>
+              <div class="flex gap-1 ml-2">
+                <button onclick="startNaming(${idx})" title="현재 상태로 덮어쓰기" class="w-7 h-7 rounded bg-blue-100 text-blue-700 hover:bg-blue-200 text-xs"><i class="fas fa-save"></i></button>
+                <button onclick="deleteSlot(${idx})" title="삭제" class="w-7 h-7 rounded bg-red-100 text-red-700 hover:bg-red-200 text-xs"><i class="fas fa-trash"></i></button>
+              </div>
+            </div>
+          </div>`;
+        }
+        return `<div class="save-slot empty" onclick="startNaming(${idx})">
+          <i class="fas fa-plus-circle mr-1"></i> 슬롯 ${idx + 1} (비어있음 - 클릭해 저장)
+        </div>`;
+      }).join('');
+      const input = document.getElementById('slot-name-input');
+      if (input) { input.focus(); input.select(); }
+    }
+
+    function startNaming(idx) {
+      __namingSlotIdx = idx;
+      renderSaveSlots();
+    }
+    function cancelNaming() {
+      __namingSlotIdx = null;
+      renderSaveSlots();
+    }
+    function confirmSaveSlot(idx) {
+      const name = (document.getElementById('slot-name-input')?.value || '').trim();
+      if (!name) { showToast('이름을 입력해주세요', '⚠️'); return; }
+      const slots = getSavedSlots();
+      const now = new Date();
+      const ts = `${now.getMonth() + 1}/${now.getDate()} ${now.getHours()}:${String(now.getMinutes()).padStart(2, '0')}`;
+      slots[idx] = { name: name.substring(0, 30), timestamp: ts, source: document.getElementById('in-source').value, data: JSON.parse(JSON.stringify(inputData)) };
+      saveSlots(slots);
+      __namingSlotIdx = null;
+      renderSaveSlots();
+      showToast('저장 완료!', '💾');
+    }
+    function loadSlot(idx) {
+      const slots = getSavedSlots();
+      const slot = slots[idx];
+      if (!slot) return;
+      showConfirm('조합 불러오기', `"${slot.name}" 조합을 불러올까요?\n현재 입력은 사라집니다.`, '불러오기', () => {
+        document.getElementById('in-source').value = slot.source || '';
+        Object.keys(inputData).forEach(k => { inputData[k] = slot.data[k] ? [...slot.data[k]] : []; renderInputChips(k); });
+        updateChipActiveStates();
+        updateMobileInputCount();
+        closeSaveModal();
+        showToast(`"${slot.name}" 불러옴`, '📂');
+      });
+    }
+    function deleteSlot(idx) {
+      showConfirm('슬롯 삭제', '이 슬롯을 삭제할까요?', '삭제', () => {
+        const slots = getSavedSlots();
+        slots[idx] = null;
+        saveSlots(slots);
+        __namingSlotIdx = null;
+        renderSaveSlots();
+        showToast('삭제됨', '🗑️');
+      }, true);
+    }
+
+    // ============ 토스트 ============
+    function showToast(msg, emoji = '✅') {
+      let toast = document.getElementById('toast-box');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'toast-box';
+        toast.className = 'fixed top-4 right-4 bg-gray-900 text-white px-5 py-3 rounded-full shadow-2xl z-[200] flex items-center gap-2 text-sm font-bold transition-all';
+        document.body.appendChild(toast);
+      }
+      toast.innerHTML = `<span class="text-base">${emoji}</span><span>${msg}</span>`;
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(-10px)'; }, 2000);
+    }
+
+    // ============ 복사 모달 ============
+    let __lastPrompt = '';
+    
+    async function showModal(txt) {
+      const modal = document.getElementById('copyModal');
+      const content = document.getElementById('modalContent');
+      const cleanText = txt.trim();
+      __lastPrompt = cleanText;
+      try {
+        await navigator.clipboard.writeText(cleanText);
+        showToast('클립보드에 복사됨!', '📋');
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = cleanText;
+        ta.style.position = 'fixed'; ta.style.left = '-9999px';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); showToast('복사됨!', '📋'); } catch(e) {}
+        document.body.removeChild(ta);
+      }
+      content.value = cleanText;
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex'; // ← 핵심 수정
+      setTimeout(() => {
+        modal.classList.remove('opacity-0');
+        modal.firstElementChild.classList.remove('scale-95');
+      }, 10);
+    }
+    async function copyAgain() {
+      if (!__lastPrompt) return;
+      try { await navigator.clipboard.writeText(__lastPrompt); showToast('다시 복사됨!', '📋'); }
+      catch {
+        const ta = document.createElement('textarea');
+        ta.value = __lastPrompt;
+        ta.style.position = 'fixed'; ta.style.left = '-9999px';
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand('copy'); showToast('다시 복사됨!', '📋'); } catch(e) {}
+        document.body.removeChild(ta);
+      }
+    }
+    function closeModal() {
+      const m = document.getElementById('copyModal');
+      m.classList.add('opacity-0');
+      m.firstElementChild.classList.add('scale-95');
+      setTimeout(() => { m.classList.add('hidden'); m.style.display = ''; }, 200); // ← 핵심 수정
+    }
+
+    // ============ 알림 모달 ============
+    function showAlert(msg, title = '안내') {
+      document.getElementById('alertTitle').textContent = title;
+      document.getElementById('alertMessage').innerHTML = msg;
+      const m = document.getElementById('alertModal');
+      m.classList.remove('hidden');
+      m.style.display = 'flex'; // ← 핵심 수정
+      setTimeout(() => {
+        m.classList.remove('opacity-0');
+        m.firstElementChild.classList.remove('scale-95');
+      }, 10);
+    }
+    function closeAlert() {
+      const m = document.getElementById('alertModal');
+      m.classList.add('opacity-0');
+      m.firstElementChild.classList.add('scale-95');
+      setTimeout(() => { m.classList.add('hidden'); m.style.display = ''; }, 200); // ← 핵심 수정
+    }
+
+    // ============ 프롬프트 생성 ============
+    function generateAndCopy() {
+      const v = {
+        source: document.getElementById('in-source').value.trim(),
+        type: inputData['in-type'].join(', '),
+        target: inputData['in-target'].join('\n'),
+        pedagogy: inputData['in-pedagogy'].join('\n'),
+        evaluation: inputData['in-evaluation'].join('\n'),
+        tone: inputData['in-tone'].join('\n'),
+        design: inputData['in-design'].join('\n'),
+        format: inputData['in-format'].join('\n')
+      };
+      if (!v.type) { showAlert('😅 <b>결과물 형태(1번)</b>를 먼저 선택해주세요!<br><br>좌측에서 만들고 싶은 콘텐츠 종류 칩을 클릭하세요.'); return; }
+
+      const combined = (v.type + ' ' + v.format).toLowerCase();
+      const isPptx = combined.match(/powerpoint|pptx|파워포인트/) || combined.includes('pptxgenjs');
+      const isGoogleSlides = combined.includes('구글 슬라이드') || combined.includes('google slides');
+      const isGamma = combined.includes('gamma') || combined.includes('감마');
+      const isHtmlSlide = combined.match(/html 웹 슬라이드|reveal\.js|reveal/);
+      const isMarp = combined.includes('marp');
+      const isScript = combined.includes('발표 스크립트');
+      const isSong = combined.includes('노래 가사');
+      const isStorybook = combined.includes('그림책') || combined.includes('스토리북');
+      const isShorts = combined.includes('숏폼');
+      const isDrama = combined.includes('역할극 대본');
+      const isGForm = combined.includes('구글 폼');
+      const isSeries = combined.includes('차시별 교수학습');
+      const isAnySlide = isPptx || isGoogleSlides || isGamma || isHtmlSlide || isMarp || isScript;
+      const isCreative = isSong || isStorybook || isShorts || isDrama;
+      const isWebApp = !isAnySlide && !isCreative && !isGForm && !!combined.match(/게임|퀴즈|시뮬|대시보드|타임라인|드래그|채팅|마인드맵|튜터|코딩 실습|방탈출/);
+      const isImage = combined.includes("카드뉴스") || combined.includes("인포그래픽");
+      const isLessonPlan = combined.includes("지도안");
+      const isWorksheet = combined.includes("활동지");
+      const isNotice = combined.includes("안내문") || combined.includes("통신문");
+      const isQuestion = combined.includes("발문");
+
+      let intro, workInstructions;
+      if (isPptx) {
+        intro = `당신은 PowerPoint 파일을 코드로 자동 생성하는 전문가입니다. 학교 수업/발표에 바로 사용할 수 있는 고품질 .pptx 파일을 만들어주세요.`;
+        workInstructions = `📋 PowerPoint 생성 방식\n- **pptxgenjs 라이브러리**를 사용한 단일 HTML 파일을 작성해주세요\n- HTML 파일 안에 pptxgenjs CDN을 포함시키고, 페이지 로드 시 또는 버튼 클릭 시 .pptx 파일을 다운로드하도록 구현\n- 슬라이드 8~12장 분량 (제목 → 목차 → 본문 → 정리 → Q&A 구조)\n- 각 슬라이드: 제목, 본문 텍스트, 시각 요소(차트/도형/색상 박스) 포함\n- 한글 폰트 명시 (맑은 고딕 또는 Pretendard)\n- 결과물: 사용자가 HTML 파일을 열면 즉시 .pptx 파일이 다운로드되어야 함`;
+      } else if (isGoogleSlides) {
+        intro = `당신은 구글 슬라이드(Google Slides) 콘텐츠 작성 전문가입니다.`;
+        workInstructions = `📋 구글 슬라이드 작성 방식\n- 마크다운 형식 (슬라이드별 \`---\` 구분) + HTML 형식 두 가지 제공\n- 슬라이드 8~10장 분량\n- 슬라이드 디자인 가이드도 함께 안내`;
+      } else if (isGamma) {
+        intro = `당신은 Gamma AI 프롬프트 작성 전문가입니다. Gamma(gamma.app)에 입력하면 한 번에 멋진 슬라이드가 나오도록 최적화된 마크다운을 만들어주세요.`;
+        workInstructions = `📋 Gamma AI용 마크다운 작성 방식\n- 형식: # 제목 / --- / ## 슬라이드 제목 / 본문 / --- 반복\n- 슬라이드 8~10장\n- 각 슬라이드는 핵심 메시지 1~2개로 간결하게\n- 마지막에 Gamma 추천 테마 안내`;
+      } else if (isHtmlSlide) {
+        intro = `당신은 HTML 기반 발표용 슬라이드 개발 전문가입니다. Reveal.js를 활용한 화려한 발표 슬라이드를 만들어주세요.`;
+        workInstructions = `📋 HTML 웹 슬라이드 (Reveal.js) 작성 방식\n- 단일 HTML 파일로 완성 (Reveal.js CDN 포함)\n- 슬라이드 8~12장, 화면 전환 효과 포함\n- 모바일/태블릿/PC 모두 대응\n- 즉시 브라우저에서 열어 발표 가능한 production-ready 결과물`;
+      } else if (isMarp) {
+        intro = `당신은 Marp 마크다운 슬라이드 작성 전문가입니다.`;
+        workInstructions = `📋 Marp 슬라이드 작성 방식\n- marp: true / theme: default / paginate: true / size: 16:9 헤더 포함\n- 슬라이드 8~12장, \`---\` 로 구분\n- 발표자 노트는 \`<!-- 노트 -->\` 형식`;
+      } else if (isScript) {
+        intro = `당신은 강의 영상 제작용 발표 스크립트 작가입니다.`;
+        workInstructions = `📋 발표 스크립트 작성 방식\n- 슬라이드별 분리 (총 8~10장)\n- 각 슬라이드: [슬라이드 N] 제목 / 🎙️ 발화 스크립트 / ⏱️ 예상 시간 / 💡 시각 요소\n- 전체 강의 시간 예상 포함`;
+      } else if (isSong) {
+        intro = `당신은 교육용 노래 가사를 쓰는 작사가입니다. 학생들이 흥얼거리며 핵심 개념을 저절로 외우게 되는 노래를 만들어주세요.`;
+        workInstructions = `📋 노래 가사 작성 방식 (Suno 등 AI 작곡 서비스 입력용)\n- [Style] 태그: 장르·분위기·템포를 영어로 명시 (예: K-pop, upbeat, catchy chorus, children's song)\n- 가사 구조: [Verse 1] → [Chorus] → [Verse 2] → [Chorus] → [Bridge] → [Chorus]\n- 핵심 개념/암기 포인트는 반드시 후렴(Chorus)에 배치해 반복\n- 대상 학년 수준의 어휘, 한 소절 7~10자 내외로 부르기 쉽게\n- 마지막에 Suno에 붙여넣는 방법 1줄 안내`;
+      } else if (isStorybook) {
+        intro = `당신은 교육용 그림책 작가입니다. 학습 개념을 이야기 속에 자연스럽게 녹인 그림책을 만들어주세요.`;
+        workInstructions = `📋 그림책 구성 방식\n- 총 10~12페이지, 기승전결 구조 (주인공의 문제 → 탐험/발견 → 깨달음)\n- 각 페이지: [페이지 N] ① 본문 텍스트(대상 학년 수준, 2~4문장) ② 삽화 생성 프롬프트(영어, 이미지 AI 입력용, 캐릭터 외형 일관성 유지)\n- 표지 제목 + 표지 삽화 프롬프트 포함\n- 마지막 페이지에 학습 정리 질문 1~2개`;
+      } else if (isShorts) {
+        intro = `당신은 교육 콘텐츠 전문 숏폼 PD입니다. 학생들의 시선을 3초 안에 붙잡는 영상 대본을 만들어주세요.`;
+        workInstructions = `📋 숏폼 대본 작성 방식 (유튜브 쇼츠/릴스)\n- 총 45~60초 분량, 도입 3초 훅(Hook)이 가장 중요\n- 장면별 표: ⏱️ 시간 | 🎬 화면 연출 | 🎙️ 내레이션 | 📝 자막\n- 핵심 개념은 1개만, 마지막에 다음 영상 유도 멘트\n- 촬영 없이 이미지+자막만으로 만들 수 있는 버전도 함께 제안`;
+      } else if (isDrama) {
+        intro = `당신은 교육연극 전문 극작가입니다. 교실에서 바로 공연할 수 있는 역할극 대본을 만들어주세요.`;
+        workInstructions = `📋 역할극 대본 작성 방식\n- 공연 시간 10~15분, 등장인물 4~6명 (학급 전체가 참여하도록 배역 조절 팁 포함)\n- 형식: 등장인물 소개 → 막/장 구분 → 대사 + (지문)\n- 학습 개념이 대사 속에 자연스럽게 드러나도록 구성\n- 필요한 소품 목록(교실에 있는 물건으로 대체 가능하게) + 공연 후 성찰 질문 3개`;
+      } else if (isGForm) {
+        intro = `당신은 Google Apps Script로 구글 폼을 자동 생성하는 전문가입니다. 교사가 코드 한 번 실행으로 완성된 퀴즈 폼을 얻도록 해주세요.`;
+        workInstructions = `📋 구글 폼 자동 생성 방식\n- Google Apps Script 코드(Code.gs) 완성본 제공 — FormApp 사용\n- 퀴즈 모드 설정(setIsQuiz), 문항 8~10개(객관식 위주 + 서술형 1~2개), 각 문항 정답·배점·오답 피드백 포함\n- 실행 방법을 초보자용으로 안내: script.google.com → 새 프로젝트 → 코드 붙여넣기 → 실행 → 권한 승인 → 로그의 폼 URL 열기\n- 문항은 난이도 순 배치 (쉬운 문항부터)`;
+      } else if (isSeries) {
+        intro = `당신은 교육과정 설계 전문가입니다. 단원 전체를 관통하는 차시별 교수학습 계획을 설계해주세요.`;
+        workInstructions = `📋 단원 차시 설계 방식\n- 총 6~8차시, 마크다운 표: 차시 | 학습주제 | 학습목표 | 주요 활동(도입-전개-정리) | 평가/과제\n- 차시 간 연계성(전 차시 복습 → 새 개념 → 다음 차시 예고)이 드러나게\n- 단원 도입 차시(흥미 유발)와 마무리 차시(총정리+평가) 포함\n- 각 차시에 필요한 준비물/자료 명시`;
+      } else if (isWebApp) {
+        intro = `당신은 학교 현장에 특화된 교육용 웹 개발 전문가입니다. 학생들이 바로 사용할 수 있는 완성도 높은 인터랙티브 학습 콘텐츠를 만들어주세요.`;
+        workInstructions = `📋 코드 작성 방식\n- 단일 HTML 파일로 완성해주세요 (HTML + CSS + JavaScript를 한 파일에 통합)\n- 외부 파일 의존성 없이 self-contained 구조 (CDN 라이브러리는 사용 가능)\n- 즉시 브라우저에서 실행 가능한 production-ready 결과물\n- placeholder, TODO 없이 한 번에 완성된 코드를 작성\n- 모바일 반응형 디자인 (스마트폰/태블릿/PC 모두 대응)\n- 한글 폰트(Pretendard 또는 Noto Sans KR) 사용 권장`;
+      } else if (isImage) {
+        intro = `당신은 교육용 비주얼 콘텐츠 디자이너입니다.`;
+        workInstructions = `📋 이미지 작업 방식\n- 이미지 생성 기능을 직접 사용해서 시각 자료를 생성해주세요\n- 각 이미지마다 핵심 메시지가 한눈에 들어오는 레이아웃`;
+      } else if (isLessonPlan) {
+        intro = `당신은 학교 교육과정과 수업 설계에 정통한 교수설계 전문가입니다. 실제 교실에서 바로 활용 가능한 수업 지도안을 작성해주세요.`;
+        workInstructions = `📋 지도안 구성 방식\n- 도입-전개-정리 단계별 시간 배분 명시\n- 교사(T) 발문과 학생(S) 예상 응답 시나리오 형식\n- 마크다운 표 형식으로 정리`;
+      } else if (isWorksheet) {
+        intro = `당신은 학생 활동지 설계 전문가입니다.`;
+        workInstructions = `📋 활동지 구성 방식\n1. [학생용] - 빈칸, 활동 문제, 사고 유도 질문\n2. [교사용 가이드] - 정답 + 해설 + 지도 포인트\n- 마크다운 형식, A4 인쇄 대응 구조`;
+      } else if (isNotice) {
+        intro = `당신은 학교 행정 문서 작성 전문가입니다.`;
+        workInstructions = `📋 안내문 작성 방식\n- 정중한 어조, 핵심 정보는 표로 강조\n- 마크다운 형식, A4 1장 분량`;
+      } else if (isQuestion) {
+        intro = `당신은 학생 사고력 자극에 능숙한 발문 전문가입니다.`;
+        workInstructions = `📋 발문 자료 구성 방식\n- 블룸의 택소노미 단계별 발문 분류\n- 각 발문 옆에 예상 답변과 후속 발문 제시\n- 마크다운 표 형식`;
+      } else {
+        intro = `당신은 학교 현장에 정통한 교육 콘텐츠 전문가입니다.`;
+        workInstructions = `📋 작성 방식\n- 명확한 구조와 단계적 설명\n- 학생 수준에 맞는 어휘와 예시 사용\n- 마크다운 형식으로 정리`;
+      }
+
+      const sections = [];
+      if (v.source) sections.push(`## 📌 주제 및 자료\n${v.source}`);
+      else sections.push(`## 📌 주제\n(특정 자료 없이 일반 지식 기반으로 작성해주세요)`);
+      sections.push(`## 🎯 만들 결과물\n${v.type}`);
+      if (v.target) sections.push(`## 👥 학습 대상 및 목표\n${v.target}`);
+      if (v.pedagogy) sections.push(`## 📚 적용할 교수법\n${v.pedagogy}`);
+      if (v.evaluation) sections.push(`## 📝 평가 방식\n${v.evaluation}`);
+      if (v.tone) sections.push(`## 😊 어조 및 구성\n${v.tone}`);
+      if (v.design) sections.push(`## 🎨 디자인 / 스타일\n${v.design}`);
+      if (v.format && !isWebApp && !isAnySlide) sections.push(`## 📋 추가 형식 옵션\n${v.format}`);
+      else if (v.format && (isWebApp || isAnySlide)) sections.push(`## 📋 기술 요구사항\n${v.format}`);
+
+      const prompt = `${intro}\n\n${sections.join('\n\n')}\n\n${workInstructions}\n\n⚠️ 중요한 안내\n- 위 명세 중 비어있는 항목은 가장 적절하다고 판단되는 방향으로 자연스럽게 처리해주세요\n- 한 번에 완성된 결과물을 만들어주세요 (단계별 설명이나 확인 질문 없이 바로 결과물부터)\n- 정확한 정보를 기반으로 작성하되, 교사가 검토 후 수업에 활용한다는 점을 고려해주세요
+- 예시나 데이터에 학생 실명 등 개인정보가 포함되지 않도록 해주세요`;
+      showModal(prompt.trim());
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.key === 'Enter') { e.preventDefault(); generateAndCopy(); }
+    });
+
+    // ============ 모달 공통 UX: ESC 키 & 배경 클릭으로 닫기 ============
+    const __modalClosers = {
+      confirmModal: closeConfirmModal,
+      saveModal: closeSaveModal,
+      resetModal: closeResetModal,
+      alertModal: closeAlert,
+      copyModal: closeModal
+    };
+    document.addEventListener('keydown', (e) => {
+      if (e.key !== 'Escape') return;
+      for (const [id, closer] of Object.entries(__modalClosers)) {
+        const m = document.getElementById(id);
+        if (m && !m.classList.contains('hidden')) { closer(); return; }
+      }
+    });
+    Object.entries(__modalClosers).forEach(([id, closer]) => {
+      const m = document.getElementById(id);
+      m.addEventListener('click', (e) => { if (e.target === m) closer(); });
+    });
+
+    // ============ 추천 프롬프트 ============
+    const templates = [
+      { icon: 'history', color: 'indigo', title: '역사 타임라인 웹앱', desc: '특정 사건의 전개 과정을 스크롤로 보여주는 반응형 타임라인', tag: '#역사 #시각화 #6대역량',
+        builder: { source: '주제: 한국사 근현대사 - 주요 사건 흐름', type: ['인터랙티브 타임라인'], target: ['대상: 중학생 - 형식적 조작기, 논리적 연결', '핵심역량: 지식정보처리 역량 - 다양한 정보와 자료 수집·분석·활용하여 문제 합리적 해결'], pedagogy: ['시범수업/모델링: 교사가 직접 보여주고 학생이 따라하기'], evaluation: ['형성평가: 학습 중 즉각적 피드백'], format: ['HTML/CSS/JS 단일 파일로 코드 생성', 'Tailwind CSS CDN 활용한 디자인'] }
+      },
+      { icon: 'flask', color: 'yellow', title: '과학 실험 시뮬레이션', desc: '중력 가속도, 화학 반응 등 변수를 조절하며 결과 관찰', tag: '#과학 #실험 #탐구',
+        builder: { source: '주제: 고등학교 1학년 통합과학 - 자유 낙하 운동', type: ['웹 시뮬레이션 (현상 원리 이해)'], target: ['대상: 고등학생 - 심화 탐구, 입시 연계', '핵심역량: 창의적 사고 역량 - 폭넓은 기초 지식에 다양한 전문 분야 지식·기술·경험 융합', '목표: 적용 및 실습'], pedagogy: ['탐구 학습(Inquiry-Based): 가설 설정 및 검증 과정'], evaluation: ['수행평가: 과정 중심 산출물 평가', '관찰평가: 체크리스트 기반 행동 관찰'], format: ['HTML/CSS/JS 단일 파일로 코드 생성', 'Chart.js (차트), Three.js (3D) 활용'] }
+      },
+      { icon: 'comments', color: 'blue', title: '문학 캐릭터 챗봇', desc: '소설 속 등장인물이 되어 학생과 대화하는 롤플레잉', tag: '#국어 #AI채팅 #역할극',
+        builder: { source: '주제: 중학교 1학년 국어 - 황순원의 "소나기"', type: ['AI 챗봇 튜터 (학습자 맞춤 대화)', '가상 채팅 시뮬레이터 (역사 인물, 캐릭터)'], target: ['대상: 중학생 - 형식적 조작기, 논리적 연결', '핵심역량: 심미적 감성 역량 - 인간에 대한 공감적 이해와 문화적 감수성 바탕으로 삶의 의미와 가치 발견'], pedagogy: ['교육연극/역할극(Role Play): 인물·상황 몰입으로 내용 이해와 공감 능력 함양', '하브루타: 짝과 질문하고 토론하는 대화형 구조'], tone: ['스토리텔링: 흥미로운 이야기 형식'] }
+      },
+      { icon: 'images', color: 'green', title: '교육용 카드뉴스', desc: '복잡한 개념을 5장의 이미지로 요약하는 스토리텔링', tag: '#시각자료 #요약',
+        builder: { source: '주제: 기후 변화의 심각성', type: ['교육용 카드뉴스 이미지 5장'], target: ['대상: 초등 고학년(5~6) - 구체적 조작기, 탐구심'], tone: ['도입(Hook): 흥미 유발 질문, 놀라운 사실', '정리: 핵심 3줄 요약, 마인드맵'] }
+      },
+      { icon: 'file-powerpoint', color: 'orange', title: '수업용 PPT 자동 생성', desc: 'pptxgenjs로 다운로드 가능한 .pptx 파일 만들기', tag: '#PPT #발표',
+        builder: { source: '주제: (원하는 수업 주제로 변경하세요)', type: ['PowerPoint(.pptx) 자동 생성 - pptxgenjs 코드로 다운로드 가능한 PPT 파일 만들기'], target: ['대상: 중학생 - 형식적 조작기, 논리적 연결'], tone: ['도입(Hook): 흥미 유발 질문, 놀라운 사실', '정리: 핵심 3줄 요약, 마인드맵'], design: ['토스 스타일: 파란 포인트, 굵은 폰트, 미니멀'] }
+      },
+      { icon: 'magic', color: 'purple', title: 'Gamma AI 슬라이드 프롬프트', desc: 'Gamma에 붙여넣어 한 번에 슬라이드 생성', tag: '#PPT #AI슬라이드',
+        builder: { source: '주제: (원하는 발표 주제로 변경하세요)', type: ['Gamma AI 입력용 마크다운 슬라이드 - Gamma에 붙여넣어 한 번에 디자인된 슬라이드 생성'], target: ['대상: 교사/연수 - 전문성 신장'], tone: ['논리적이고 분석적인 어조 (하십시오체)', '정리: 핵심 3줄 요약, 마인드맵'] }
+      },
+      { icon: 'question-circle', color: 'orange', title: '게이미피케이션 퀴즈', desc: '방탈출 게임 스타일의 문제 풀이와 힌트 제공', tag: '#게임 #퀴즈',
+        builder: { source: '주제: 독도 지킴이 - 한국사 퀴즈', type: ['인터랙티브 웹 퀴즈', '학습용 웹 게임'], target: ['대상: 초등 고학년(5~6) - 구체적 조작기, 탐구심'], pedagogy: ['게이미피케이션: 레벨, 배지, 보상 시스템 적용'], format: ['HTML/CSS/JS 단일 파일로 코드 생성', 'SweetAlert2 팝업, Confetti 폭죽 효과'] }
+      },
+      { icon: 'gavel', color: 'purple', title: '찬반 토론 가이드', desc: '사회 이슈에 대한 입론-반론-최종변론 구조', tag: '#사회 #토론 #역량중심',
+        builder: { source: '주제: AI의 창작물 저작권을 인정해야 하는가?', type: ['수업 지도안 (도입-전개-정리)'], target: ['대상: 고등학생 - 심화 탐구, 입시 연계', '핵심역량: 협력적 소통 역량 - 다른 사람의 관점 존중·경청하며 자신의 생각과 감정 효과적 표현, 상호협력', '목표: 비판적 사고력 함양'], pedagogy: ['역량중심 수업: 2022 개정 교육과정의 6대 핵심역량 함양 중심 - 지식 전달보다 수행과 실천 강조', '찬반 토론: 입론-반론-최종변론 구조'], evaluation: ['수행평가: 과정 중심 산출물 평가', '동료평가(Peer Assessment): 학생 상호 평가'], format: ['마크다운(Markdown) 형식'] }
+      },
+      { icon: 'exclamation-triangle', color: 'red', title: '안전 교육 인포그래픽', desc: '지진, 화재 대피 요령을 아이콘 위주로 설명', tag: '#안전 #디자인',
+        builder: { source: '주제: 지진 발생 시 행동 요령 (상황별)', type: ['핵심 개념 인포그래픽 이미지'], target: ['대상: 초등 중학년(3~4) - 호기심, 구체적 활동'], tone: ['도입(Hook): 흥미 유발 질문, 놀라운 사실'] }
+      },
+      { icon: 'map-marked-alt', color: 'teal', title: '지리 데이터 대시보드', desc: '각 나라의 기후, 인구 데이터를 차트와 지도로', tag: '#지리 #데이터',
+        builder: { source: '주제: 세계 기후 및 인구 데이터', type: ['데이터 시각화 대시보드'], target: ['대상: 중학생 - 형식적 조작기, 논리적 연결'], pedagogy: ['탐구 학습(Inquiry-Based): 가설 설정 및 검증 과정'], format: ['HTML/CSS/JS 단일 파일로 코드 생성', 'Chart.js (차트), Three.js (3D) 활용'] }
+      },
+      { icon: 'language', color: 'pink', title: '영단어 매칭 게임', desc: '그림과 단어를 선으로 잇거나 드래그 앤 드롭', tag: '#영어 #단어',
+        builder: { source: '주제: 초등 필수 영단어 - 일상 사물', type: ['드래그 앤 드롭 분류 활동', '학습용 웹 게임'], target: ['대상: 초등 중학년(3~4) - 호기심, 구체적 활동'], pedagogy: ['간격 반복(Spaced Repetition): 시간차 두고 복습', '게이미피케이션: 레벨, 배지, 보상 시스템 적용'], format: ['HTML/CSS/JS 단일 파일로 코드 생성'] }
+      },
+      { icon: 'laptop-code', color: 'gray', title: '알고리즘 순서도', desc: '라면 끓이기 등 일상 소재로 코딩 논리 설명', tag: '#정보 #SW #직접교수',
+        builder: { source: '주제: 라면 끓이기로 배우는 알고리즘과 순서도', type: ['Mermaid.js 마인드맵 웹앱'], target: ['대상: 초등 고학년(5~6) - 구체적 조작기, 탐구심', '핵심역량: 지식정보처리 역량 - 다양한 정보와 자료 수집·분석·활용하여 문제 합리적 해결'], pedagogy: ['직접교수법(Direct Instruction): 명확한 설명→시범→안내된 연습→독립적 연습'], evaluation: ['형성평가: 학습 중 즉각적 피드백'], format: ['HTML/CSS/JS 단일 파일로 코드 생성'] }
+      },
+      { icon: 'poll', color: 'cyan', title: '학급 규칙 만들기', desc: '학생들이 직접 규칙을 제안하고 투표', tag: '#자치 #학급운영 #공동체',
+        builder: { source: '주제: 우리 반 규칙 만들기 - 민주적 학급회의', type: ['인터랙티브 웹 퀴즈'], target: ['대상: 초등 고학년(5~6) - 구체적 조작기, 탐구심', '핵심역량: 공동체 역량 - 지역·국가·세계 공동체 구성원으로서 요구되는 가치와 태도로 적극 참여', '목표: 협업 및 의사소통 능력'], pedagogy: ['협동학습 - STAD 모형: 모둠 학습→개별 평가→모둠 향상점수'], evaluation: ['자기평가(Self Assessment): 학습 성찰지', '동료평가(Peer Assessment): 학생 상호 평가'], format: ['HTML/CSS/JS 단일 파일로 코드 생성', 'localStorage: 데이터 저장 기능'] }
+      },
+      { icon: 'calculator', color: 'rose', title: '수학 원리 계산기', desc: '피타고라스 정리, 근의 공식 과정 시각화', tag: '#수학 #도구',
+        builder: { source: '주제: 중학교 2학년 수학 - 피타고라스 정리', type: ['웹 시뮬레이션 (현상 원리 이해)'], target: ['대상: 중학생 - 형식적 조작기, 논리적 연결', '목표: 개념 이해 및 설명'], pedagogy: ['시범수업/모델링: 교사가 직접 보여주고 학생이 따라하기', '비주얼 씽킹: 이미지/도식으로 개념 구조화'], format: ['HTML/CSS/JS 단일 파일로 코드 생성'] }
+      },
+      { icon: 'running', color: 'violet', title: '체육 기록 측정 앱', desc: '스톱워치, 달리기/점프 기록 자동 측정 및 순위표', tag: '#체육 #기록 #자기관리',
+        builder: { source: '주제: 체력장 기록 관리 - PAPS 종목별', type: ['데이터 시각화 대시보드'], target: ['대상: 중학생 - 형식적 조작기, 논리적 연결', '핵심역량: 자기관리 역량 - 자아정체성과 자신감, 기초능력 바탕으로 자기주도적 삶 설계'], pedagogy: ['개별화 학습: 학생 수준별 차별화된 과제 제공'], evaluation: ['수행평가: 과정 중심 산출물 평가', '자기평가(Self Assessment): 학습 성찰지', '포트폴리오: 학습 과정 산출물 모음'], format: ['HTML/CSS/JS 단일 파일로 코드 생성', 'localStorage: 데이터 저장 기능', 'Chart.js (차트), Three.js (3D) 활용'] }
+      },
+      { icon: 'music', color: 'lime', title: '음악 리듬 게임', desc: '리듬에 맞춰 버튼 누르기, 음표 읽기 연습', tag: '#음악 #리듬',
+        builder: { source: '주제: 초등 음악 - 리듬과 박자', type: ['학습용 웹 게임'], target: ['대상: 초등 중학년(3~4) - 호기심, 구체적 활동'], pedagogy: ['게이미피케이션: 레벨, 배지, 보상 시스템 적용'], format: ['HTML/CSS/JS 단일 파일로 코드 생성', 'Web Speech API: 음성 인식/합성'] }
+      },
+      { icon: 'palette', color: 'amber', title: '미술 색채 믹서', desc: 'RGB/HSL 컬러 믹싱과 색상환 학습', tag: '#미술 #색채 #심미적감성',
+        builder: { source: '주제: 중학교 미술 - 색채의 원리 (RGB/HSL)', type: ['웹 시뮬레이션 (현상 원리 이해)'], target: ['대상: 중학생 - 형식적 조작기, 논리적 연결', '핵심역량: 심미적 감성 역량 - 인간에 대한 공감적 이해와 문화적 감수성 바탕으로 삶의 의미와 가치 발견'], pedagogy: ['탐구 학습(Inquiry-Based): 가설 설정 및 검증 과정'], evaluation: ['자기평가(Self Assessment): 학습 성찰지'], format: ['HTML/CSS/JS 단일 파일로 코드 생성'] }
+      },
+      { icon: 'seedling', color: 'emerald', title: '환경 보호 캠페인', desc: '탄소발자국 계산기, 재활용 분류 퀴즈', tag: '#환경 #캠페인 #공동체',
+        builder: { source: '주제: 환경 보호 - 탄소발자국과 재활용', type: ['인터랙티브 웹 퀴즈', '데이터 시각화 대시보드'], target: ['대상: 초등 고학년(5~6) - 구체적 조작기, 탐구심', '핵심역량: 공동체 역량 - 지역·국가·세계 공동체 구성원으로서 요구되는 가치와 태도로 적극 참여', '목표: 디지털 리터러시 및 정보 윤리'], pedagogy: ['PBL(Project Based Learning): 실생활 문제 해결 프로젝트', '역량중심 수업: 2022 개정 교육과정의 6대 핵심역량 함양 중심 - 지식 전달보다 수행과 실천 강조'], evaluation: ['수행평가: 과정 중심 산출물 평가', '포트폴리오: 학습 과정 산출물 모음'], format: ['HTML/CSS/JS 단일 파일로 코드 생성'] }
+      },
+      { icon: 'robot', color: 'sky', title: 'AI 윤리 시나리오', desc: 'AI 윤리 딜레마 상황별 선택 시뮬레이션', tag: '#AI #윤리 #비판적사고',
+        builder: { source: '주제: AI 시대의 윤리 - 자율주행, AI 채용 딜레마', type: ['웹 시뮬레이션 (현상 원리 이해)', '인터랙티브 웹 퀴즈'], target: ['대상: 고등학생 - 심화 탐구, 입시 연계', '핵심역량: 지식정보처리 역량 - 다양한 정보와 자료 수집·분석·활용하여 문제 합리적 해결', '목표: 비판적 사고력 함양'], pedagogy: ['역량중심 수업: 2022 개정 교육과정의 6대 핵심역량 함양 중심 - 지식 전달보다 수행과 실천 강조', '6색 사고모자(De Bono): 6가지 관점에서 생각', '찬반 토론: 입론-반론-최종변론 구조'], evaluation: ['수행평가: 과정 중심 산출물 평가', '자기평가(Self Assessment): 학습 성찰지'] }
+      },
+      { icon: 'brain', color: 'fuchsia', title: '기억력 훈련 게임', desc: '숫자/이미지/패턴 기억 미니게임 모음', tag: '#두뇌 #기억',
+        builder: { source: '주제: 단기 기억력 향상 미니게임', type: ['학습용 웹 게임'], target: ['대상: 초등 저학년(1~2) - 쉬운 언어, 흥미 위주'], pedagogy: ['간격 반복(Spaced Repetition): 시간차 두고 복습', '게이미피케이션: 레벨, 배지, 보상 시스템 적용'], format: ['HTML/CSS/JS 단일 파일로 코드 생성'] }
+      },
+      { icon: 'book-reader', color: 'slate', title: '독서 기록장', desc: '읽은 책 기록, 별점, 한줄평, 통계 그래프', tag: '#독서 #기록 #포트폴리오',
+        builder: { source: '주제: 학생용 독서 기록 관리', type: ['데이터 시각화 대시보드'], target: ['대상: 초등 고학년(5~6) - 구체적 조작기, 탐구심', '핵심역량: 자기관리 역량 - 자아정체성과 자신감, 기초능력 바탕으로 자기주도적 삶 설계'], evaluation: ['포트폴리오: 학습 과정 산출물 모음', '자기평가(Self Assessment): 학습 성찰지'], format: ['HTML/CSS/JS 단일 파일로 코드 생성', 'localStorage: 데이터 저장 기능'] }
+      },
+      { icon: 'globe-asia', color: 'orange', title: '세계 문화 탐험', desc: '국가별 문화·언어·음식 인터랙티브 세계지도', tag: '#문화 #세계 #공동체',
+        builder: { source: '주제: 세계 문화 탐험 - 국가별 특징', type: ['데이터 시각화 대시보드', '드래그 앤 드롭 분류 활동'], target: ['대상: 초등 중학년(3~4) - 호기심, 구체적 활동', '핵심역량: 공동체 역량 - 지역·국가·세계 공동체 구성원으로서 요구되는 가치와 태도로 적극 참여'], pedagogy: ['게이미피케이션: 레벨, 배지, 보상 시스템 적용', '탐구 학습(Inquiry-Based): 가설 설정 및 검증 과정'], evaluation: ['형성평가: 학습 중 즉각적 피드백'], format: ['HTML/CSS/JS 단일 파일로 코드 생성'] }
+      },
+      { icon: 'door-open', color: 'red', title: '단원 복습 방탈출', desc: '자물쇠 퍼즐을 풀며 단원 지식을 복습하는 방탈출 게임', tag: '#게임 #방탈출 #복습 🆕',
+        builder: { source: '주제: (복습할 단원으로 변경하세요) 예: 중1 과학 - 물질의 상태 변화', type: ['방탈출 게임 (단서·자물쇠 퍼즐·스토리 구성)', '학습용 웹 게임'], target: ['대상: 중학생 - 형식적 조작기, 논리적 연결'], pedagogy: ['게이미피케이션: 레벨, 배지, 보상 시스템 적용', '협동학습 - STAD 모형: 모둠 학습→개별 평가→모둠 향상점수'], evaluation: ['형성평가: 학습 중 즉각적 피드백'], tone: ['탐정/수사관 컨셉 (미스터리 해결)'], format: ['HTML/CSS/JS 단일 파일로 코드 생성', 'SweetAlert2 팝업, Confetti 폭죽 효과'] }
+      },
+      { icon: 'music', color: 'fuchsia', title: '개념 암기송 만들기', desc: 'Suno에 붙여넣으면 노래가 되는 교과 암기송 가사', tag: '#노래 #암기 #AI작곡 🆕',
+        builder: { source: '주제: (암기할 개념으로 변경하세요) 예: 조선 왕 순서, 원소 기호, 구구단', type: ['교육용 노래 가사 (Suno 등 AI 작곡용, 스타일 태그 포함)'], target: ['대상: 초등 고학년(5~6) - 구체적 조작기, 탐구심', '목표: 핵심 지식 습득 및 암기'], pedagogy: ['간격 반복(Spaced Repetition): 시간차 두고 복습'], tone: ['친근하고 격려하는 어조 (해요체, 이모지)'], format: ['어휘 난이도 점검: 대상 학년 수준에 맞는 어휘인지 최종 확인 후 제시'] }
+      },
+      { icon: 'clipboard-list', color: 'green', title: '구글 폼 형성평가', desc: '코드 한 번 실행으로 정답·피드백 설정된 퀴즈 폼 완성', tag: '#구글폼 #형성평가 🆕',
+        builder: { source: '주제: (평가할 단원으로 변경하세요)', type: ['구글 폼 자동 생성 퀴즈 (Google Apps Script 코드)'], target: ['대상: 중학생 - 형식적 조작기, 논리적 연결'], evaluation: ['형성평가: 학습 중 즉각적 피드백', '선택형 평가: 객관식 + 정답 해설'], format: ['사실 정확성 검증: 불확실한 내용은 표시하고 출처/근거 함께 제시'] }
+      }
+    ];
+    
+    function renderTemplates() {
+      const grid = document.getElementById('templates-grid');
+      grid.innerHTML = templates.map((t, i) => `
+        <div onclick="loadTemplateToBuilder(${i})" class="template-card bg-white p-5 rounded-2xl cursor-pointer group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-full bg-${t.color}-100 text-${t.color}-600 flex items-center justify-center"><i class="fas fa-${t.icon}"></i></div>
+            <h3 class="font-bold text-gray-800">${t.title}</h3>
+          </div>
+          <p class="text-xs text-gray-500 mb-3 leading-relaxed">${t.desc}</p>
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] bg-${t.color}-50 text-${t.color}-600 px-2 py-1 rounded font-bold">${t.tag}</span>
+            <span class="text-[10px] text-gray-400 group-hover:text-blue-500 transition">빌더로 이동 →</span>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    function loadTemplateToBuilder(idx) {
+      const t = templates[idx];
+      Object.keys(inputData).forEach(k => inputData[k] = []);
+      document.getElementById('in-source').value = t.builder.source || '';
+      if (t.builder.type) inputData['in-type'] = [...t.builder.type];
+      if (t.builder.target) inputData['in-target'] = [...t.builder.target];
+      if (t.builder.pedagogy) inputData['in-pedagogy'] = [...t.builder.pedagogy];
+      if (t.builder.evaluation) inputData['in-evaluation'] = [...t.builder.evaluation];
+      if (t.builder.tone) inputData['in-tone'] = [...t.builder.tone];
+      if (t.builder.design) inputData['in-design'] = [...t.builder.design];
+      if (t.builder.format) inputData['in-format'] = [...t.builder.format];
+      Object.keys(inputData).forEach(k => renderInputChips(k));
+      updateChipActiveStates();
+      updateMobileInputCount();
+      switchTab('builder');
+      showToast(`"${t.title}" 빌더에 로드됨! 자유롭게 수정하세요`, '✨');
+    }
+
+    // ============ 초기 렌더 ============
+    renderTemplates();
+    const __shared = loadSharedCombo();
+    const __restored = !__shared && restoreDraft();
+    Object.keys(inputData).forEach(k => renderInputChips(k));
+    updateChipActiveStates();
+    updateMobileInputCount();
+    if (__shared) showToast('공유받은 조합을 불러왔어요!', '🔗');
+    else if (__restored) showToast('이전 작업 내용을 복원했어요', '♻️');
+
+    // 이미 페이지를 열어둔 상태에서 공유 링크를 눌러도 조합이 로드되도록
+    window.addEventListener('hashchange', () => {
+      if (!loadSharedCombo()) return;
+      Object.keys(inputData).forEach(k => renderInputChips(k));
+      updateChipActiveStates();
+      updateMobileInputCount();
+      switchTab('builder');
+      showToast('공유받은 조합을 불러왔어요!', '🔗');
+    });
+
+    // 칩을 키보드로도 선택할 수 있게 (Tab 이동 → Enter/Space 선택)
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.setAttribute('role', 'button');
+      chip.setAttribute('tabindex', '0');
+      chip.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        e.preventDefault();
+        chip.click();
+      });
+    });
+  </script>
+</body>
+</html>

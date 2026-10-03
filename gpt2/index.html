@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>GPTeacher | @kimju.zip</title>
+<meta name="description" content="교사용 학교 행사 이미지 프롬프트 빌더. 행사명·학교급·용도만 고르면 포스터·현수막·가정통신문용 AI 이미지 프롬프트가 완성됩니다. 화풍 84종, 레이아웃 35종, 예시 100개.">
+<meta property="og:title" content="GPTeacher - 교사용 학교 행사 이미지 프롬프트 빌더">
+<meta property="og:description" content="클릭 몇 번으로 행사 포스터 프롬프트 완성! 체육대회·졸업식·독서주간·가정통신문·학교 SNS까지, 화풍 84종과 예시 100개.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kimju.kr/gpt2/">
+<meta property="og:site_name" content="kimju.zip">
+<meta property="og:image" content="https://kimju.kr/gpt2/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="GPTeacher - 교사용 학교 행사 이미지 프롬프트 빌더">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="GPTeacher - 교사용 학교 행사 이미지 프롬프트 빌더">
+<meta name="twitter:description" content="클릭 몇 번으로 행사 포스터 프롬프트 완성! 화풍 84종, 예시 100개.">
+<meta name="twitter:image" content="https://kimju.kr/gpt2/og.png">
+<meta name="theme-color" content="#7c3aed">
+<style>
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+:root{--bg:#faf7ff;--surface:#ffffff;--surface2:#f5f3ff;--surface3:#ede9fe;--border:rgba(139,92,246,0.12);--border2:rgba(139,92,246,0.25);--accent:#7c3aed;--accent-mid:#8b5cf6;--accent-dim:rgba(139,92,246,0.10);--accent-glow:rgba(139,92,246,0.18);--pink:#ec4899;--text:#0a0514;--text-muted:#374151;--text-dim:#6d3faa;--green:#059669;--red:#e11d48;--yellow:#d97706;--r:12px;--r-sm:8px;--r-lg:16px;--shadow:0 1px 3px rgba(139,92,246,0.08),0 4px 16px rgba(139,92,246,0.06);}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Pretendard',-apple-system,'Apple SD Gothic Neo',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;font-size:14px;-webkit-text-size-adjust:100%;}
+::selection{background:var(--accent-dim);color:var(--accent)}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:99px}
+.app-header{background:linear-gradient(120deg,#4f46e5 0%,#7c3aed 50%,#a855f7 100%);padding:14px 22px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;}
+.app-header::before{content:'';position:absolute;top:-40px;right:-60px;width:220px;height:220px;background:radial-gradient(circle,rgba(255,255,255,.1) 0%,transparent 65%);pointer-events:none;}
+.app-header::after{content:'';position:absolute;bottom:-30px;left:20%;width:160px;height:160px;background:radial-gradient(circle,rgba(236,72,153,.25) 0%,transparent 65%);pointer-events:none;}
+.app-header-text{position:relative;z-index:1}
+.app-header h1{font-size:24px;font-weight:800;color:#fff;letter-spacing:-.5px;line-height:1.2;margin-bottom:3px;}
+.app-header p{font-size:10px;color:rgba(255,255,255,.65);line-height:1.4;}
+.header-badge{flex-shrink:0;display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:rgba(255,255,255,.9);background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);padding:6px 13px 6px 10px;border-radius:99px;letter-spacing:.3px;text-decoration:none;transition:background .15s;cursor:pointer;}
+.header-badge:hover{background:rgba(255,255,255,.25)}.header-badge svg{width:14px;height:14px;fill:rgba(255,255,255,.9)}
+.tabs{background:var(--surface);border-bottom:1px solid var(--border);display:flex;position:sticky;top:0;z-index:100;padding:0 6px;box-shadow:0 1px 0 var(--border);}
+.tab-btn{flex:1;padding:12px 8px;border:none;background:transparent;font-size:13px;font-weight:500;cursor:pointer;color:var(--text-muted);border-bottom:2px solid transparent;transition:all .2s;font-family:inherit;min-height:44px;}
+.tab-btn:hover{color:var(--accent);background:var(--accent-dim)}.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
+.copied-msg{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#1e1535;color:#fff;border:2px solid var(--accent-mid);padding:16px 36px;border-radius:var(--r-lg);font-size:16px;font-weight:700;z-index:9999;box-shadow:0 8px 40px rgba(0,0,0,.5);text-align:center;letter-spacing:.3px;}
+.tab-content{display:none}.tab-content.active{display:block}
+#tab-builder{height:calc(100vh - 101px)}
+.builder-layout{display:flex;height:100%;overflow:hidden}
+.builder-left{flex:0 0 50%;min-width:300px;max-width:560px;background:var(--surface2);border-right:1px solid var(--border);overflow-y:auto;padding:16px 16px 32px;}
+.formula-bar{background:var(--surface);border:1.5px solid var(--border2);border-radius:var(--r-lg);padding:16px;margin-bottom:14px;box-shadow:var(--shadow);}
+.formula-bar-title{font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.8px;margin-bottom:12px;display:flex;align-items:center;gap:6px;}
+.formula-bar-title::before{content:'';display:inline-block;width:3px;height:12px;border-radius:99px;background:linear-gradient(180deg,#8b5cf6,#ec4899);flex-shrink:0;}
+.formula-bar-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.formula-bar-step{background:var(--surface2);border:1.5px solid var(--border);border-radius:10px;padding:10px 10px 9px;display:flex;flex-direction:column;gap:5px;transition:border-color .15s,background .15s;position:relative;overflow:hidden;}
+.formula-bar-step::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:10px 10px 0 0;}
+.formula-bar-step:nth-child(1)::before{background:#8b5cf6}.formula-bar-step:nth-child(2)::before{background:#9d70f5}.formula-bar-step:nth-child(3)::before{background:#b05af4}.formula-bar-step:nth-child(4)::before{background:#c24cf2}.formula-bar-step:nth-child(5)::before{background:#d43ef0}.formula-bar-step:nth-child(6)::before{background:#e030ed}.formula-bar-step:nth-child(7)::before{background:#ec4899}.formula-bar-step:nth-child(8)::before{background:#f06292}.formula-bar-step:nth-child(9)::before{background:#e879a8}
+.formula-bar-step:hover{border-color:var(--border2);background:var(--surface3)}
+.formula-step-num{font-size:9px;font-weight:800;color:var(--text-dim);letter-spacing:.3px;}
+.formula-step-label{font-size:12px;font-weight:700;color:var(--text);letter-spacing:-.2px;line-height:1.2;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:15px 16px;margin-bottom:10px;box-shadow:var(--shadow);}
+.card h3{font-size:11px;font-weight:700;color:var(--text-dim);margin-bottom:11px;text-transform:uppercase;letter-spacing:.8px;}
+.form-group{margin-bottom:10px}.form-group label{display:block;font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:4px;}
+.form-group input,.form-group textarea{width:100%;padding:9px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-size:14px;font-family:inherit;outline:none;transition:border-color .2s,box-shadow .2s;}
+.form-group input::placeholder,.form-group textarea::placeholder{color:#c4b5fd;font-size:13px}
+.form-group input:focus,.form-group textarea:focus{border-color:var(--accent-mid);box-shadow:0 0 0 3px var(--accent-dim);}
+.form-group textarea{resize:vertical;min-height:68px}
+.chip-group{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.chip{padding:6px 12px;background:var(--surface);border:1.5px solid var(--border2);border-radius:99px;font-size:12px;cursor:pointer;transition:all .15s;color:var(--text-muted);font-family:inherit;min-height:32px;display:flex;align-items:center;}
+.chip:hover{border-color:var(--accent-mid);color:var(--accent);background:var(--accent-dim)}.chip.selected{background:var(--accent-mid);border-color:var(--accent-mid);color:#fff;box-shadow:0 2px 8px var(--accent-glow)}
+/* 스타일 섹션 서브카테고리 */
+.style-subcat{font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.6px;margin:10px 0 5px;display:flex;align-items:center;gap:5px;}
+.style-subcat::before{content:'';width:3px;height:10px;border-radius:99px;background:linear-gradient(180deg,var(--accent-mid),var(--pink));flex-shrink:0;}
+.generate-btn{width:100%;padding:13px;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;border:none;border-radius:99px;font-size:14px;font-weight:700;cursor:pointer;margin:12px 0 0;transition:all .2s;font-family:inherit;min-height:46px;box-shadow:0 4px 18px rgba(139,92,246,.28);letter-spacing:.2px;}
+.generate-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(139,92,246,.38)}.generate-btn:active{transform:translateY(0)}
+.builder-right{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.builder-right-inner{flex:1;overflow-y:auto;padding:20px 22px}
+.result-header{font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;gap:7px;text-transform:uppercase;letter-spacing:.6px;}
+.result-header::before{content:'';width:7px;height:7px;border-radius:99px;background:linear-gradient(135deg,var(--accent-mid),var(--pink));flex-shrink:0;}
+.result-box{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--r-lg);padding:16px 18px 12px;font-size:14px;line-height:1.85;min-height:130px;margin-bottom:20px;color:var(--text);word-break:keep-all;box-shadow:var(--shadow);}
+.result-box-text{display:block;width:100%;min-height:90px;outline:none;word-break:keep-all;font-size:15px;line-height:1.85;color:var(--text);margin-bottom:10px;font-weight:500;}
+.result-box-text:empty::before{content:attr(data-placeholder);color:#c4b5fd}
+.result-placeholder{color:#c4b5fd;font-size:13px;flex:1}
+.result-copy-btn{align-self:flex-end;background:var(--accent-dim);color:var(--accent);border:1.5px solid var(--border2);border-radius:var(--r-sm);padding:7px 18px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;flex-shrink:0;}
+.result-copy-btn:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+.cmd-header{font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+.cmd-desc{font-size:11px;color:#c4b5fd;margin-bottom:10px}
+.cmd-chips-wrap{display:flex;flex-wrap:wrap;gap:7px}
+.cmd-chip{padding:7px 14px;background:var(--surface);border:1.5px solid var(--border2);border-radius:99px;font-size:12px;cursor:pointer;transition:all .15s;color:var(--text-muted);font-family:inherit;min-height:34px;display:flex;align-items:center;box-shadow:var(--shadow);}
+.cmd-chip:hover{background:var(--accent-dim);border-color:var(--accent-mid);color:var(--accent)}.cmd-chip:active{transform:scale(0.97)}
+.section-divider{height:1px;background:var(--border);margin:20px 0}
+#tab-library{height:calc(100vh - 101px)}
+.lib-layout{display:flex;height:100%;background:var(--bg);overflow:hidden}
+.lib-left{flex:0 0 36%;min-width:230px;max-width:400px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.lib-left-search{padding:12px 12px 10px;border-bottom:1px solid var(--border)}
+.lib-left-search input{width:100%;padding:8px 12px;background:var(--surface2);border:1.5px solid var(--border);border-radius:99px;color:var(--text);font-size:13px;font-family:inherit;outline:none;transition:border-color .2s;}
+.lib-left-search input::placeholder{color:#c4b5fd}.lib-left-search input:focus{border-color:var(--accent-mid)}
+.lib-cat-list{overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.lib-cat-header{padding:9px 14px 7px;font-size:10px;font-weight:700;color:var(--text-dim);text-transform:uppercase;letter-spacing:.8px;background:var(--surface2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:2;cursor:pointer;display:flex;align-items:center;justify-content:space-between;min-height:34px;transition:background .15s;}
+.lib-cat-header:hover{background:var(--surface3)}.cat-toggle{opacity:.5;font-size:9px}.lib-cat-items.collapsed{display:none}
+.lib-prompt-item{padding:9px 14px;font-size:12px;cursor:pointer;border-bottom:1px solid var(--border);color:var(--text-muted);line-height:1.4;transition:all .12s;display:flex;align-items:flex-start;gap:8px;min-height:40px;}
+.lib-prompt-item:hover{background:var(--surface2);color:var(--text)}.lib-prompt-item.active{background:var(--accent-dim);color:var(--accent);font-weight:700;border-left:2.5px solid var(--accent-mid);}
+.lib-prompt-item .item-num{font-size:10px;color:#c4b5fd;min-width:22px;margin-top:1px;flex-shrink:0}.lib-prompt-item.active .item-num{color:var(--accent);opacity:.7}
+.lib-right{flex:1;display:flex;flex-direction:column;overflow-y:auto;background:var(--bg)}
+.lib-right-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#c4b5fd;font-size:14px;gap:10px}
+.lib-right-empty .empty-icon{font-size:36px;opacity:.4}
+.lib-detail{flex:1;overflow:hidden;display:none;min-height:0;flex-direction:row;height:100%;}
+.lib-detail-header{margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.lib-detail-badge{display:inline-block;background:var(--accent-dim);color:var(--accent);font-size:10px;font-weight:700;padding:3px 11px;border-radius:99px;margin-bottom:8px;}
+.lib-detail-title{font-size:20px;font-weight:800;color:var(--text);line-height:1.35;letter-spacing:-.3px}
+.lib-section{margin-bottom:13px}.lib-section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px}
+.lib-good{background:var(--surface);border:1.5px solid var(--border2);border-left:3px solid var(--accent-mid);border-radius:var(--r);padding:14px 16px;font-size:13px;color:var(--text);line-height:1.7;word-break:keep-all;box-shadow:var(--shadow);}
+#promptText{display:block;word-break:keep-all;white-space:normal}.lib-good .lib-section-label{color:var(--accent)}
+.lib-tip{background:#fffbeb;border:1.5px solid #fde68a;border-radius:var(--r);padding:12px 14px;font-size:13px;color:#92400e;line-height:1.7;}
+.lib-tip .lib-section-label{color:var(--yellow)}
+.lib-copy-btn{display:block;width:100%;padding:13px;background:linear-gradient(135deg,#8b5cf6,#ec4899);color:#fff;border:none;border-radius:99px;font-size:14px;font-weight:700;cursor:pointer;margin-top:18px;transition:all .2s;font-family:inherit;box-shadow:0 4px 18px rgba(139,92,246,.25);}
+.lib-copy-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(139,92,246,.35)}
+#tab-guide{padding:20px;max-width:860px;margin:0 auto;overflow-y:auto;height:calc(100vh - 101px)}
+.guide-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px 20px;margin-bottom:11px;box-shadow:var(--shadow);}
+.guide-section h3{font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--surface2);color:var(--text-muted);padding:9px 12px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.7px;font-weight:700}
+td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top}
+td strong{color:var(--accent);font-weight:700}tr:last-child td{border-bottom:none}tr:hover td{background:var(--surface2)}
+.warning-box{background:#fffbeb;border:1.5px solid #fde68a;border-left:3px solid #f59e0b;border-radius:var(--r);padding:11px 13px;margin-bottom:8px;font-size:13px;color:#78350f;line-height:1.6;}
+.warning-box strong{color:var(--yellow);display:block;margin-bottom:2px;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+.checklist-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);font-size:13px}.checklist-item:last-child{border-bottom:none}
+.check-icon{font-size:14px;flex-shrink:0;margin-top:1px;color:#c4b5fd}.checklist-item strong{color:var(--accent)}
+.app-footer{text-align:center;padding:12px;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);background:var(--surface)}
+.app-footer a{color:var(--accent);text-decoration:none;font-weight:700}
+.tip-card{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 18px;margin-bottom:10px}.tip-card:last-child{margin-bottom:0}
+.tip-card-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tip-card-title .tip-num{background:var(--accent-dim);color:var(--accent);font-size:11px;font-weight:800;padding:2px 9px;border-radius:99px;flex-shrink:0}
+.tip-card-body{color:var(--text-muted);font-size:13px;line-height:1.8}.tip-card-body em{color:var(--accent);font-style:normal;font-weight:600}
+.builder-tip{background:var(--surface2);border:1.5px solid var(--border2);border-left:3px solid var(--accent-mid);border-radius:var(--r);padding:13px 15px;font-size:12px;line-height:1.75;color:var(--text-muted);margin-top:4px;}
+.builder-tip strong{color:var(--accent);font-weight:700;display:block;margin-bottom:4px;font-size:12px}.builder-tip em{color:var(--accent);font-style:normal;font-weight:600}
+.lib-detail-layout{display:flex;height:100%;gap:0}
+.lib-detail-img-panel{flex:0 0 55%;max-width:55%;background:var(--surface2);display:flex;align-items:center;justify-content:center;overflow:hidden;border-right:1px solid var(--border);}
+.lib-detail-img-panel img{width:100%;height:100%;object-fit:contain;display:block;}
+.lib-detail-img-placeholder{color:var(--text-dim);font-size:13px;text-align:center;opacity:.5;}
+.lib-detail-info-panel{flex:1;overflow-y:auto;padding:20px 22px;display:flex;flex-direction:column;gap:12px;-webkit-overflow-scrolling:touch;}
+.result-actions{display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:4px}
+.result-reset-btn{background:transparent;color:var(--text-dim);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;}
+.result-reset-btn:hover{color:var(--red);border-color:var(--red);background:rgba(225,29,72,.06)}
+.lib-to-builder-btn{display:block;width:100%;padding:13px;background:var(--surface2);color:var(--accent);border:1.5px solid var(--border2);border-radius:99px;font-size:14px;font-weight:700;cursor:pointer;margin-top:10px;transition:all .2s;font-family:inherit;}
+.lib-to-builder-btn:hover{background:var(--accent-dim);transform:translateY(-1px)}
+@media(max-width:768px){
+  .app-header{padding:10px 14px}.app-header h1{font-size:20px}.formula-bar{padding:13px 14px 11px}.formula-bar-grid{grid-template-columns:repeat(3,1fr);gap:5px}.formula-bar-step{padding:8px 8px 7px}.formula-step-num{font-size:8px}.formula-step-label{font-size:11px}
+  .tab-btn{font-size:11px;padding:10px 5px}
+  #tab-builder{height:auto;min-height:calc(100vh - 95px);overflow-y:auto}.builder-layout{flex-direction:column;height:auto;overflow:visible}.builder-left{flex:none;width:100%;min-width:unset;max-width:100%;border-right:none;border-bottom:1px solid var(--border);overflow-y:visible}.builder-right{flex:none;min-height:380px}.builder-right-inner{padding:14px}
+  #tab-library{height:auto;overflow:visible}.lib-layout{flex-direction:column;height:auto;overflow:visible}.lib-left{flex:none;width:100%;min-width:unset;max-width:100%;border-right:none;border-bottom:1px solid var(--border);max-height:260px}.lib-right{flex:none;overflow:visible}
+  .lib-detail-img-panel{flex:none;width:100%;max-width:100%;height:220px;border-right:none;border-bottom:1px solid var(--border)}
+  #tab-guide{height:auto;overflow:visible;padding:12px}
+  .form-group input,.form-group textarea,.lib-left-search input{font-size:16px}
+  .chip{min-height:36px}.cmd-chip{min-height:38px}.lib-prompt-item{min-height:44px}
+  table{display:block;overflow-x:auto}.lib-detail{padding:16px}
+  .lib-detail-layout{flex-direction:column;height:auto}.lib-detail{flex-direction:column;height:auto;}.lib-detail-img-panel{flex:none;width:100%;max-width:100%;height:240px;border-right:none;border-bottom:1px solid var(--border)}.lib-detail-info-panel{flex:none;padding:14px 16px}
+}
+@media(max-width:480px){.app-header{padding:8px 12px}.app-header h1{font-size:18px}.formula-bar-grid{grid-template-columns:repeat(3,1fr)}.tab-btn{padding:10px 3px}.builder-right-inner,.lib-detail{padding:12px}.guide-section{padding:13px}}
+</style>
+</head>
+<body>
+<div class="copied-msg" id="copiedMsg">📋 복사됨!</div>
+<div class="app-header">
+  <div class="app-header-text">
+    <h1>GPTeacher <span style="font-size:20px;font-weight:400;opacity:.8">🖼️</span></h1>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">
+      <span style="background:rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:600;padding:4px 11px;border-radius:99px">🖼️ 이미지 프롬프트</span>
+      <span style="background:rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:600;padding:4px 11px;border-radius:99px">📚 100개 예시</span>
+      <span style="background:rgba(255,255,255,.18);color:#fff;font-size:11px;font-weight:600;padding:4px 11px;border-radius:99px">🏫 초·중·고</span>
+    </div>
+  </div>
+  <a class="header-badge" href="https://www.instagram.com/kimju.zip/" target="_blank" rel="noopener noreferrer">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    @kimju.zip
+  </a>
+</div>
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('builder',this)">🛠️ 프롬프트 빌더</button>
+  <button class="tab-btn" onclick="showTab('library',this)">📚 예시 라이브러리</button>
+  <button class="tab-btn" onclick="showTab('guide',this)">📖 사용 가이드</button>
+</div>
+
+<div id="tab-builder" class="tab-content active">
+  <div class="builder-layout">
+    <div class="builder-left">
+      <div class="formula-bar">
+        <div class="formula-bar-title">✏️ 작성 전 이것만 알면 됩니다</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:flex-start;gap:10px;background:var(--surface2);border:1.5px solid var(--border);border-left:3px solid #8b5cf6;border-radius:10px;padding:10px 12px">
+            <span style="font-size:15px;flex-shrink:0">✅</span>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px">행사명은 구체적일수록 좋아요</div>
+              <div style="font-size:11px;color:var(--text-muted)">"행사" ❌ &nbsp;→&nbsp; "전교 체육대회" ✅ &nbsp;→&nbsp; "2025 봄 전교 체육대회" 🔥</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;background:var(--surface2);border:1.5px solid var(--border);border-left:3px solid #9d70f5;border-radius:10px;padding:10px 12px">
+            <span style="font-size:15px;flex-shrink:0">🎨</span>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px">스타일은 선택 안 해도 됩니다</div>
+              <div style="font-size:11px;color:var(--text-muted)">지정하면 분위기가 확 달라져요. 처음엔 비워두고 결과 보면서 추가해보세요.</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;background:var(--surface2);border:1.5px solid var(--border);border-left:3px solid #b05af4;border-radius:10px;padding:10px 12px">
+            <span style="font-size:15px;flex-shrink:0">📐</span>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px">비율 빠르게 고르는 법</div>
+              <div style="font-size:11px;color:var(--text-muted)">포스터·SNS → <b>4:5</b> &nbsp;|&nbsp; PPT·현수막 → <b>16:9</b> &nbsp;|&nbsp; 인스타 정방형 → <b>1:1</b></div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:10px;background:var(--surface2);border:1.5px solid var(--border);border-left:3px solid #ec4899;border-radius:10px;padding:10px 12px">
+            <span style="font-size:15px;flex-shrink:0">✍️</span>
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px">학교명·행사명·일정은 프롬프트에 직접 텍스트로 적으세요</div>
+              <div style="font-size:11px;color:var(--text-muted)">예: "광평중학교", "2025 봄 체육대회", "5월 10일(토)" 등을 그대로 써주면 더 정확한 이미지가 만들어져요.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 기본 정보 -->
+      <div class="card">
+        <h3>📌 기본 정보</h3>
+        <div class="form-group"><label>행사명 / 주제</label><input type="text" id="event" placeholder="예: 전교 체육대회, 졸업식, 도서관 주간"></div>
+        <div class="form-group"><label>학교급</label><div class="chip-group">
+          <button class="chip" onclick="toggleChip(this,'school')">초등학교</button>
+          <button class="chip" onclick="toggleChip(this,'school')">중학교</button>
+          <button class="chip" onclick="toggleChip(this,'school')">고등학교</button>
+        </div></div>
+        <div class="form-group"><label>대상</label><div class="chip-group">
+          <button class="chip" onclick="toggleChip(this,'target')">전교생</button>
+          <button class="chip" onclick="toggleChip(this,'target')">1학년</button>
+          <button class="chip" onclick="toggleChip(this,'target')">2학년</button>
+          <button class="chip" onclick="toggleChip(this,'target')">3학년</button>
+          <button class="chip" onclick="toggleChip(this,'target')">학부모</button>
+          <button class="chip" onclick="toggleChip(this,'target')">교직원</button>
+        </div></div>
+        <div class="form-group"><label>이미지 용도</label><div class="chip-group">
+          <button class="chip" onclick="toggleChip(this,'usage')">홍보 포스터</button>
+          <button class="chip" onclick="toggleChip(this,'usage')">현수막</button>
+          <button class="chip" onclick="toggleChip(this,'usage')">가정통신문</button>
+          <button class="chip" onclick="toggleChip(this,'usage')">SNS 게시물</button>
+          <button class="chip" onclick="toggleChip(this,'usage')">학급 게시판</button>
+          <button class="chip" onclick="toggleChip(this,'usage')">발표 자료</button>
+          <button class="chip" onclick="toggleChip(this,'usage')">안내문 배경</button>
+        </div></div>
+        <div class="form-group"><label>분위기</label><div class="chip-group">
+          <button class="chip" onclick="toggleChip(this,'mood')">밝고 활기찬</button>
+          <button class="chip" onclick="toggleChip(this,'mood')">따뜻하고 친근한</button>
+          <button class="chip" onclick="toggleChip(this,'mood')">차분하고 정중한</button>
+          <button class="chip" onclick="toggleChip(this,'mood')">귀엽고 캐릭터풍</button>
+          <button class="chip" onclick="toggleChip(this,'mood')">세련된 모던</button>
+        </div></div>
+      </div>
+
+      <!-- 🎨 스타일 -->
+      <div class="card">
+        <h3>🎨 스타일 (Style)</h3>
+
+        <!-- 기존: Toy & Craft -->
+        <div class="form-group">
+          <div class="style-subcat">🧸 Toy &amp; Craft</div>
+          <div class="chip-group">
+            <button class="chip" onclick="toggleChip(this,'style')">레고 블록</button>
+            <button class="chip" onclick="toggleChip(this,'style')">뜨개질/니트</button>
+            <button class="chip" onclick="toggleChip(this,'style')">종이접기</button>
+            <button class="chip" onclick="toggleChip(this,'style')">양모 펠트</button>
+            <button class="chip" onclick="toggleChip(this,'style')">클레이/점토</button>
+            <button class="chip" onclick="toggleChip(this,'style')">디오라마</button>
+            <button class="chip" onclick="toggleChip(this,'style')">풍선 아트</button>
+            <button class="chip" onclick="toggleChip(this,'style')">자수 패치</button>
+            <button class="chip" onclick="toggleChip(this,'style')">스노우볼</button>
+            <button class="chip" onclick="toggleChip(this,'style')">마블링</button>
+            <button class="chip" onclick="toggleChip(this,'style')">클레이 3D</button><!-- ➕ 추가 -->
+            <button class="chip" onclick="toggleChip(this,'style')">페이퍼 컷</button><!-- ➕ 추가 -->
+          </div>
+        </div>
+
+        <!-- 기존: Art & Graphic + 추가 -->
+        <div class="form-group">
+          <div class="style-subcat">🎨 Art &amp; Graphic</div>
+          <div class="chip-group">
+            <button class="chip" onclick="toggleChip(this,'style')">픽셀 아트</button>
+            <button class="chip" onclick="toggleChip(this,'style')">팝아트</button>
+            <button class="chip" onclick="toggleChip(this,'style')">스테인드글라스</button>
+            <button class="chip" onclick="toggleChip(this,'style')">크레파스 낙서</button>
+            <button class="chip" onclick="toggleChip(this,'style')">칠판 분필</button>
+            <button class="chip" onclick="toggleChip(this,'style')">플랫 일러스트</button>
+            <button class="chip" onclick="toggleChip(this,'style')">네온 사인</button>
+            <button class="chip" onclick="toggleChip(this,'style')">Y2K 레트로</button>
+            <button class="chip" onclick="toggleChip(this,'style')">그래피티</button>
+            <button class="chip" onclick="toggleChip(this,'style')">펜화</button>
+            <button class="chip" onclick="toggleChip(this,'style')">모자이크</button>
+            <button class="chip" onclick="toggleChip(this,'style')">스티커</button>
+            <button class="chip" onclick="toggleChip(this,'style')">베이퍼웨이브</button><!-- ➕ 추가 -->
+            <button class="chip" onclick="toggleChip(this,'style')">인스타 감성</button><!-- ➕ 추가 -->
+            <button class="chip" onclick="toggleChip(this,'style')">콜라주</button><!-- ➕ 추가 -->
+          </div>
+        </div>
+
+        <!-- 기존: Tech & Concept -->
+        <div class="form-group">
+          <div class="style-subcat">⚙️ Tech &amp; Concept</div>
+          <div class="chip-group">
+            <button class="chip" onclick="toggleChip(this,'style')">사이버펑크</button>
+            <button class="chip" onclick="toggleChip(this,'style')">스팀펑크</button>
+            <button class="chip" onclick="toggleChip(this,'style')">이소메트릭 3D</button>
+            <button class="chip" onclick="toggleChip(this,'style')">글리치 아트</button>
+            <button class="chip" onclick="toggleChip(this,'style')">홀로그램</button>
+            <button class="chip" onclick="toggleChip(this,'style')">설계 도면(블루프린트)</button>
+            <button class="chip" onclick="toggleChip(this,'style')">엑스레이</button>
+            <button class="chip" onclick="toggleChip(this,'style')">VHS 아날로그</button>
+          </div>
+        </div>
+
+        <!-- 기존: Photo & Realistic -->
+        <div class="form-group">
+          <div class="style-subcat">📸 Photo &amp; Realistic</div>
+          <div class="chip-group">
+            <button class="chip" onclick="toggleChip(this,'style')">실사 사진</button>
+            <button class="chip" onclick="toggleChip(this,'style')">영화 스틸컷</button>
+            <button class="chip" onclick="toggleChip(this,'style')">폴라로이드</button>
+            <button class="chip" onclick="toggleChip(this,'style')">필름 카메라</button>
+            <button class="chip" onclick="toggleChip(this,'style')">흑백 사진</button>
+            <button class="chip" onclick="toggleChip(this,'style')">인생네컷</button>
+          </div>
+        </div>
+
+        <!-- 기존: Painting & Illustration + 추가 -->
+        <div class="form-group">
+          <div class="style-subcat">🖌️ Painting &amp; Illustration</div>
+          <div class="chip-group">
+            <button class="chip" onclick="toggleChip(this,'style')">지브리</button>
+            <button class="chip" onclick="toggleChip(this,'style')">디즈니/픽사 3D</button>
+            <button class="chip" onclick="toggleChip(this,'style')">수채화</button>
+            <button class="chip" onclick="toggleChip(this,'style')">유화</button>
+            <button class="chip" onclick="toggleChip(this,'style')">연필 스케치</button>
+            <button class="chip" onclick="toggleChip(this,'style')">동화책 삽화</button>
+            <button class="chip" onclick="toggleChip(this,'style')">이모티콘</button>
+            <button class="chip" onclick="toggleChip(this,'style')">치비/SD</button>
+            <button class="chip" onclick="toggleChip(this,'style')">색연필화</button>
+            <button class="chip" onclick="toggleChip(this,'style')">파스텔화</button>
+            <button class="chip" onclick="toggleChip(this,'style')">동양화/수묵화</button>
+            <button class="chip" onclick="toggleChip(this,'style')">한국 웹툰</button>
+            <button class="chip" onclick="toggleChip(this,'style')">게임 일러스트</button>
+            <button class="chip" onclick="toggleChip(this,'style')">라인 아트</button>
+            <button class="chip" onclick="toggleChip(this,'style')">아르누보</button><!-- ➕ 추가 -->
+            <button class="chip" onclick="toggleChip(this,'style')">아르데코</button><!-- ➕ 추가 -->
+          </div>
+        </div>
+
+        <!-- 기존: Fine Art -->
+        <div class="form-group">
+          <div class="style-subcat">🏛️ Fine Art</div>
+          <div class="chip-group">
+            <button class="chip" onclick="toggleChip(this,'style')">인상주의(모네)</button>
+            <button class="chip" onclick="toggleChip(this,'style')">반 고흐</button>
+            <button class="chip" onclick="toggleChip(this,'style')">초현실주의</button>
+            <button class="chip" onclick="toggleChip(this,'style')">추상화</button>
+            <button class="chip" onclick="toggleChip(this,'style')">큐비즘</button>
+            <button class="chip" onclick="toggleChip(this,'style')">르네상스</button>
+          </div>
+        </div>
+
+        <!-- ➕ 신규: 만화/웹툰 -->
+        <div class="form-group">
+          <div class="style-subcat">🎭 만화/웹툰 (Manga &amp; Webtoon)</div>
+          <div class="chip-group">
+            <button class="chip" onclick="toggleChip(this,'style')">학습만화</button>
+            <button class="chip" onclick="toggleChip(this,'style')">K-일상툰</button>
+            <button class="chip" onclick="toggleChip(this,'style')">90s 레트로 애니</button>
+            <button class="chip" onclick="toggleChip(this,'style')">미국 코믹북</button>
+            <button class="chip" onclick="toggleChip(this,'style')">소년만화</button>
+            <button class="chip" onclick="toggleChip(this,'style')">흑백 만화</button>
+            <button class="chip" onclick="toggleChip(this,'style')">낙서/인스타툰</button>
+            <button class="chip" onclick="toggleChip(this,'style')">로맨스 웹툰</button>
+          </div>
+        </div>
+
+        <!-- ➕ 신규: Minimal & Modern -->
+        <div class="form-group">
+          <div class="style-subcat">⬜ Minimal &amp; Modern</div>
+          <div class="chip-group">
+            <button class="chip" onclick="toggleChip(this,'style')">미니멀</button>
+            <button class="chip" onclick="toggleChip(this,'style')">뉴모피즘</button>
+            <button class="chip" onclick="toggleChip(this,'style')">글라스모피즘</button>
+            <button class="chip" onclick="toggleChip(this,'style')">기하학적 패턴</button>
+            <button class="chip" onclick="toggleChip(this,'style')">스위스 스타일</button>
+            <button class="chip" onclick="toggleChip(this,'style')">바우하우스</button>
+            <button class="chip" onclick="toggleChip(this,'style')">모노톤</button>
+          </div>
+        </div>
+
+        <!-- ➕ 신규: Typography -->
+        <div class="form-group">
+          <div class="style-subcat">🔤 Typography (텍스트 스타일)</div>
+          <div class="chip-group">
+            <button class="chip" onclick="toggleChip(this,'style')">굵은 고딕</button>
+            <button class="chip" onclick="toggleChip(this,'style')">세리프/명조</button>
+            <button class="chip" onclick="toggleChip(this,'style')">손글씨</button>
+            <button class="chip" onclick="toggleChip(this,'style')">캘리그라피</button>
+            <button class="chip" onclick="toggleChip(this,'style')">타이포 아트</button>
+            <button class="chip" onclick="toggleChip(this,'style')">레트로 픽셀 폰트</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ➕ 신규 카드: 레이아웃 구조 (스타일↔상세설정 사이) -->
+      <div class="card">
+        <h3>📐 레이아웃 구조 (Layout Structure)</h3>
+
+        <!-- 카드뉴스 레이아웃 -->
+        <div class="form-group">
+          <div class="style-subcat">📱 카드뉴스 레이아웃</div>
+          <div class="chip-group">
+            <button class="chip" onclick="toggleChip(this,'layout')">표지형</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">캐러셀/파노라마</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">단계별</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">타임라인</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">전후 비교</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">VS 대결 구도</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">리스트형</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">퀴즈형</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">Q&amp;A</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">스토리텔링</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">인용구</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">랭킹형</button>
+          </div>
+        </div>
+
+        <!-- 인포그래픽 레이아웃 -->
+        <div class="form-group">
+          <div class="style-subcat">📊 인포그래픽 레이아웃</div>
+          <div class="chip-group">
+            <button class="chip" onclick="toggleChip(this,'layout')">플로우차트</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">파이/도넛 차트</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">막대 그래프</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">SWOT 분석</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">벤 다이어그램</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">피라미드</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">깔때기(퍼널)</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">지도형</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">로드맵</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">마인드맵</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">사이클/순환</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">매트릭스</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">비교표</button>
+          </div>
+        </div>
+
+        <!-- 학교 행사 특화 레이아웃 -->
+        <div class="form-group">
+          <div class="style-subcat">🏫 학교 행사 특화</div>
+          <div class="chip-group">
+            <button class="chip" onclick="toggleChip(this,'layout')">안내/공지형</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">초청장형</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">시상/수상형</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">캠페인 슬로건형</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">일정표형</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">체크리스트형</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">QR코드 포함형</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">좌우 분할형</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">상하 분할형</button>
+            <button class="chip" onclick="toggleChip(this,'layout')">원형 배치형</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 상세 설정 -->
+      <div class="card">
+        <h3>🎯 상세 설정</h3>
+        <div class="form-group"><label>핵심 장면 / 주요 소품</label><input type="text" id="scene" placeholder="예: 학생들이 달리기 경주하는 모습, 응원 현수막"></div>
+        <div class="form-group"><label>포함할 요소</label><textarea id="elements" placeholder="예: 학교 운동장 배경, 반별 응원 피켓, 트로피, 봄날 하늘"></textarea></div>
+        <div class="form-group"><label>카피 여백 위치</label><div class="chip-group">
+          <button class="chip" onclick="toggleChip(this,'copy')">상단 30%</button>
+          <button class="chip" onclick="toggleChip(this,'copy')">하단 20%</button>
+          <button class="chip" onclick="toggleChip(this,'copy')">좌측 30%</button>
+          <button class="chip" onclick="toggleChip(this,'copy')">여백 없음</button>
+        </div></div>
+        <div class="form-group"><label>화면 비율</label><div class="chip-group">
+          <button class="chip" onclick="toggleChip(this,'ratio')">4:5 (포스터)</button>
+          <button class="chip" onclick="toggleChip(this,'ratio')">3:4</button>
+          <button class="chip" onclick="toggleChip(this,'ratio')">2:3</button>
+          <button class="chip" onclick="toggleChip(this,'ratio')">1:1 (정방형)</button>
+          <button class="chip" onclick="toggleChip(this,'ratio')">16:9 (발표·현수막)</button>
+          <button class="chip" onclick="toggleChip(this,'ratio')">9:16 (세로형)</button>
+          <button class="chip" onclick="toggleChip(this,'ratio')">3:2 (카메라)</button>
+          <button class="chip" onclick="toggleChip(this,'ratio')">2:1 (배너)</button>
+          <button class="chip" onclick="toggleChip(this,'ratio')">21:9 (영화)</button>
+          <button class="chip" onclick="toggleChip(this,'ratio')">A4 세로</button>
+        </div></div>
+        <div class="form-group"><label>절대 금지사항</label><textarea id="forbidden" placeholder="예: 밤하늘 배경 금지, 특정 소품 제외 등"></textarea></div>
+      </div>
+      <button class="generate-btn" onclick="generatePrompt()">✨ 프롬프트 생성하기</button>
+    </div>
+
+    <div class="builder-right">
+      <div class="builder-right-inner">
+        <div class="result-header">🚀 생성된 프롬프트</div>
+        <div class="result-box" id="result">
+          <div class="result-box-text" id="promptContent" contenteditable="true" data-placeholder="왼쪽 폼을 채우고 생성 버튼을 누르세요."></div>
+          <div class="result-actions">
+            <button class="result-reset-btn" onclick="resetPrompt()">↺ 초기화</button>
+            <button class="result-copy-btn" onclick="copyResult()">📋 복사하기</button>
+          </div>
+        </div>
+        <div class="section-divider"></div>
+        <div class="builder-tip">
+          <strong>💡 예시 라이브러리에서 시작하면 훨씬 쉬워요</strong>
+          처음부터 작성하기 어렵다면 상단 <em>예시 라이브러리</em> 탭에서 비슷한 행사 예시를 찾아 복사한 뒤 행사명·학교급·분위기만 바꿔 사용해보세요. 🎯
+        </div>
+        <div class="section-divider"></div>
+        <div class="cmd-header">✏️ 수정 명령어</div>
+        <div class="cmd-desc">클릭하면 위 프롬프트에 수정 요청이 추가됩니다</div>
+        <div class="cmd-chips-wrap" id="cmd-chips"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-library" class="tab-content">
+  <div class="lib-layout">
+    <div class="lib-left">
+      <div class="lib-left-search"><input type="text" id="libSearch2" placeholder="🔍 예시 검색..." oninput="libSearch2()"></div>
+      <div class="lib-cat-list" id="libCatList"></div>
+    </div>
+    <div class="lib-right">
+      <div class="lib-right-empty" id="libEmpty">
+        <div class="empty-icon">👈</div>
+        <div>왼쪽에서 예시를 선택하세요</div>
+        <div style="font-size:12px;color:#c4b5fd">10개 카테고리 × 각 10개 예시</div>
+      </div>
+      <div class="lib-detail" id="libDetail"></div>
+    </div>
+  </div>
+</div>
+
+<div id="tab-guide" class="tab-content">
+  <div class="guide-section">
+    <h3>🎯 프롬프트 구성 요소 설명</h3>
+    <table>
+      <tr><th>구성 요소</th><th>하는 일</th><th>입력 예시</th></tr>
+      <tr><td><strong>행사명</strong></td><td>어떤 행사 이미지인지 알려준다</td><td>전교 체육대회, 졸업식, 도서관 주간</td></tr>
+      <tr><td><strong>학교급</strong></td><td>초·중·고 분위기와 학생 연령대를 설정한다</td><td>중학교, 고등학교</td></tr>
+      <tr><td><strong>대상</strong></td><td>이미지를 보는 사람이 누구인지 알려준다</td><td>전교생, 학부모, 3학년</td></tr>
+      <tr><td><strong>용도</strong></td><td>어디에 쓸 이미지인지 지정한다</td><td>홍보 포스터, 가정통신문, SNS 게시물</td></tr>
+      <tr><td><strong>핵심 장면</strong></td><td>이미지에서 첫눈에 보여야 할 장면을 지정한다</td><td>학생들이 달리기 경주하는 역동적인 모습</td></tr>
+      <tr><td><strong>분위기</strong></td><td>전체적인 톤과 감정을 설정한다</td><td>밝고 활기찬, 차분하고 정중한</td></tr>
+      <tr><td><strong>🎨 스타일</strong></td><td>그림체·화풍을 지정한다 (선택)</td><td>지브리, 수채화, 픽셀 아트, 레고 블록</td></tr>
+      <tr><td><strong>📐 레이아웃</strong></td><td>구성 방식과 정보 배치를 지정한다 (선택)</td><td>단계별, 타임라인, 시상/수상형, 안내/공지형</td></tr>
+      <tr><td><strong>비율</strong></td><td>출력 사이즈를 지정한다</td><td>AR 4:5 (포스터), AR 16:9 (현수막·발표)</td></tr>
+      <tr><td><strong>금지사항</strong></td><td>원하지 않는 요소를 제외한다</td><td>얼굴 식별 금지, 특정 소품 제외</td></tr>
+    </table>
+  </div>
+  <div class="guide-section">
+    <h3>✅ 생성 전 셀프 체크</h3>
+    <div class="checklist-item"><span class="check-icon">☐</span><div><strong>행사명 명시</strong> — 구체적인 행사명이 들어갈수록 프롬프트 품질이 높아집니다</div></div>
+    <div class="checklist-item"><span class="check-icon">☐</span><div><strong>학교급 선택</strong> — 초등·중등·고등에 따라 분위기와 학생 표현이 달라집니다</div></div>
+    <div class="checklist-item"><span class="check-icon">☐</span><div><strong>스타일 선택</strong> — 지브리·수채화 등 스타일을 지정하면 이미지 분위기가 확 달라집니다</div></div>
+    <div class="checklist-item"><span class="check-icon">☐</span><div><strong>레이아웃 선택</strong> — 안내/공지형, 시상형 등 용도에 맞는 레이아웃을 고르면 구성이 더 명확해집니다</div></div>
+    <div class="checklist-item"><span class="check-icon">☐</span><div><strong>얼굴 처리 명시</strong> — "얼굴 식별 불가" 또는 "뒷모습·손만"을 금지사항에 포함하세요</div></div>
+    <div class="checklist-item"><span class="check-icon">☐</span><div><strong>텍스트 여백 지정</strong> — 제목·날짜를 넣을 위치를 카피 여백으로 미리 확보하세요</div></div>
+    <div class="checklist-item"><span class="check-icon">☐</span><div><strong>비율 결정</strong> — 포스터 4:5 / 현수막·PPT 16:9 / SNS 1:1로 용도에 맞게 선택하세요</div></div>
+  </div>
+  <div class="guide-section">
+    <h3>📚 예시 라이브러리를 활용하는 가장 쉬운 방법</h3>
+    <div class="tip-card">
+      <div class="tip-card-title"><span class="tip-num">추천</span> 🔥 처음부터 만들지 말고 예시에서 시작하세요</div>
+      <div class="tip-card-body">상단 <em>예시 라이브러리</em> 탭에 100개의 실전 프롬프트가 준비되어 있어요.<br>내 상황과 비슷한 예시를 찾아서 복사한 뒤, 행사명·날짜·분위기만 바꾸면 끝입니다.<br><br><em>① 예시 라이브러리</em> 탭 → 카테고리 선택 → 비슷한 예시 클릭<br><em>② 복사용 프롬프트</em> 복사 → ChatGPT에 붙여넣기<br><em>③ 행사명·학교급·분위기</em> 등 내 상황에 맞게 수정</div>
+    </div>
+    <div class="tip-card">
+      <div class="tip-card-title"><span class="tip-num">TIP</span> 🎨 스타일 칩으로 분위기를 확 바꿔보세요</div>
+      <div class="tip-card-body">같은 행사라도 스타일에 따라 완전히 다른 이미지가 나와요.<br><br><em>지브리</em> — 따뜻하고 아날로그한 감성<br><em>픽셀 아트</em> — 레트로·게임 느낌<br><em>플랫 일러스트</em> — 깔끔하고 모던한 느낌<br><em>수채화</em> — 부드럽고 예술적인 느낌<br><br>스타일을 지정하지 않으면 AI가 자동으로 선택합니다.</div>
+    </div>
+  </div>
+  <div class="guide-section">
+    <h3>💡 선생님을 위한 실전 팁</h3>
+    <div class="tip-card"><div class="tip-card-title"><span class="tip-num">①</span> 🙈 학생 표현은 뒷모습 또는 손·소품 중심으로</div><div class="tip-card-body">얼굴이 없는 구도가 초상권 문제를 원천 차단합니다.<br>오히려 더 <em>세련된 이미지</em>가 나오는 경우가 많아요.</div></div>
+    <div class="tip-card"><div class="tip-card-title"><span class="tip-num">②</span> 🌸 계절과 날씨를 소품으로 표현하세요</div><div class="tip-card-body"><em>"봄 운동장, 벚꽃 날리는"</em> / <em>"눈 내리는 겨울 교정"</em><br>이런 표현 하나로 계절감이 자연스럽게 살아납니다.</div></div>
+    <div class="tip-card"><div class="tip-card-title"><span class="tip-num">③</span> 📐 비율 가이드</div><div class="tip-card-body"><em>3:4 / 4:5</em> — A4 출력·SNS 포스터<br><em>16:9</em> — 현수막·PPT·발표자료<br><em>1:1</em> — SNS 정방형<br><em>2:1</em> — 와이드 배너·현수막<br><br>AR 비율을 프롬프트 <em>맨 끝</em>에 붙이면 구도가 더 안정적으로 잡힙니다.</div></div>
+    <div class="tip-card"><div class="tip-card-title"><span class="tip-num">④</span> 🏫 학교 마크나 참고 이미지를 함께 업로드하세요</div><div class="tip-card-body">프롬프트 입력 전에 학교 로고·마스코트·색상 샘플을 ChatGPT에 함께 올리면 학교 정체성이 반영된 이미지가 나옵니다.<br><br><em>"이 로고의 컬러 톤을 유지해줘"</em><br><em>"이 마스코트 캐릭터 스타일로 만들어줘"</em></div></div>
+    <div class="tip-card"><div class="tip-card-title"><span class="tip-num">⑤</span> 🔧 결과가 아쉬우면 수정 명령어를 활용하세요</div><div class="tip-card-body">처음부터 다시 만들기보다<br><em>"배경을 운동장으로 바꿔줘"</em> 같은 수정 명령 한 줄이 훨씬 빠릅니다.</div></div>
+    <div class="tip-card"><div class="tip-card-title"><span class="tip-num">⑥</span> ✂️ 생성된 이미지는 ChatGPT 안에서 바로 편집할 수 있어요</div><div class="tip-card-body">이미지 생성 후 <em>이미지 클릭 → '선택'</em> 버튼을 누르면 특정 부분만 골라서 수정할 수 있어요.<br><em>'종횡비'</em> 버튼을 누르면 비율을 4:5 → 16:9 등으로 바꿀 수 있고, 마음에 드는 이미지를 기반으로 조금씩 다듬는 게 처음부터 다시 만드는 것보다 훨씬 빠릅니다.</div></div>
+  </div>
+  <div class="app-footer">made with ❤️ by <a href="https://instagram.com/kimju.zip" target="_blank">@kimju.zip</a></div>
+</div>
+<script type="application/json" id="cats-data">
+[{"id":"01","name":"체육행사","items":[{"num":"01","title":"전교 체육대회 홍보 포스터","bad":"체육대회 포스터 이미지 만들어줘.","good":"체육대회 홍보 포스터, 봄 운동장, 달리는 학생들 뒷모습, 응원 피켓이 흩날리는 역동적인 장면. AR 4:5.","tip":"역동감을 높이려면 '로우앵글에서 달리는 발과 트랙만 클로즈업'을 추가하세요."},{"num":"02","title":"운동회 응원 현수막 이미지","bad":"운동회 응원 현수막 배경 이미지.","good":"운동회 응원 현수막, 색색의 응원 도구들이 가득한 가을 운동회 배경, 활기차고 밝은 분위기. AR 16:9.","tip":"초등 운동회는 귀여운 캐릭터 응원단 스타일도 잘 어울립니다."},{"num":"03","title":"체육의 날 학년 행사 안내","bad":"체육의 날 학교 이미지 만들어줘.","good":"체육의 날 안내 이미지, 체육관 바닥에 정돈된 스포츠 용품들, 따뜻한 조명. AR 4:5.","tip":"소품만으로 구성하면 초상권 문제 없이 깔끔한 안내 이미지가 됩니다."},{"num":"04","title":"스포츠클럽 모집 홍보 포스터","bad":"스포츠 동아리 모집 이미지.","good":"스포츠클럽 모집 포스터, 다양한 스포츠 볼과 용품들이 역동적으로 배치된 에너지 넘치는 구성. AR 4:5.","tip":"특정 종목 클럽이면 해당 용구를 전면에 크게 배치하면 더 눈에 띕니다."},{"num":"05","title":"학교스포츠클럽대회 출전 응원","bad":"학교 스포츠 대회 응원 이미지.","good":"대회 출전 응원 SNS 이미지, 어두운 체육관 조명 아래 농구골대와 손, 강렬하고 긴장된 경기 분위기. AR 1:1.","tip":"팀 컬러를 반영한 유니폼 색상을 프롬프트에 추가하면 학교 색상과 맞출 수 있어요."},{"num":"06","title":"줄넘기·체력장 안내 이미지","bad":"줄넘기 대회 학교 이미지.","good":"줄넘기 대회 안내 포스터, 운동장 위 줄넘기 줄과 뛰는 발, 밝은 봄 햇살, 생동감 넘치는 장면. AR 4:5.","tip":"PAPS 체력검사 안내에도 같은 스타일로 활용할 수 있습니다."},{"num":"07","title":"수영·물놀이 안전교육 이미지","bad":"수영 안전교육 이미지 만들어줘.","good":"수영 안전교육 안내 포스터, 수영장 레인을 위에서 바라본 파란 물결과 안전 용품들. AR 4:5.","tip":"안전교육 이미지는 사람 없이 소품과 배경만으로 구성하는 것이 가장 안전합니다."},{"num":"08","title":"마라톤·달리기 대회 포스터","bad":"학교 마라톤 대회 포스터.","good":"마라톤 대회 홍보 포스터, 아침 거리 위의 러닝화와 출발선, 도전적이고 역동적인 마라톤 대회 분위기. AR 4:5.","tip":"새벽·아침 빛을 배경으로 하면 도전감이 더 잘 표현됩니다."},{"num":"09","title":"학급 대항 배드민턴 대회","bad":"배드민턴 대회 학교 이미지.","good":"배드민턴 대회 안내 이미지, 체육관 코트 위에 교차된 라켓과 공중의 셔틀콕, 스포티하고 경쾌한 분위기. AR 1:1.","tip":"라켓 색상을 학교 상징색으로 지정하면 학교 정체성이 드러납니다."},{"num":"10","title":"체육특기자 선발 안내","bad":"체육 특기자 선발 홍보.","good":"체육특기자 선발 안내 포스터, 다크 배경에 스포츠 용품들이 고급스럽게 놓인 전문적이고 차분한 이미지. AR 4:5.","tip":"특기자 선발은 차분하고 전문적인 톤이 신뢰감을 줍니다."}]},{"id":"02","name":"학사행사","items":[{"num":"11","title":"입학식 환영 이미지","bad":"입학식 학교 이미지 만들어줘.","good":"입학식 환영 포스터, 봄 교문 앞 새 교복 입은 학생 뒷모습, 벚꽃 흩날리는 설레는 입학식 장면. AR 4:5.","tip":"벚꽃 꽃잎이 날리는 연출이 입학식 분위기를 가장 잘 표현합니다."},{"num":"12","title":"졸업식 기념 이미지","bad":"졸업식 학교 이미지.","good":"졸업식 기념 SNS 이미지, 나무 테이블 위의 학사모와 꽃다발, 따뜻한 빛, 감동적인 졸업 분위기. AR 1:1.","tip":"학사모와 꽃다발 조합이 졸업 분위기를 가장 직관적으로 전달합니다."},{"num":"13","title":"졸업식 축하 현수막","bad":"졸업 축하 현수막 이미지.","good":"졸업식 축하 현수막, 황금빛 꽃잎이 날리는 화려하고 격조 있는 졸업 축하 배경. AR 16:9.","tip":"현수막은 텍스트 여백을 중앙 60% 이상 확보하도록 명시하세요."},{"num":"14","title":"종업식·방학식 안내","bad":"종업식 안내 이미지.","good":"종업식 안내 가정통신문, 알록달록한 책가방과 필통, 여름 방학 느낌의 밝고 신나는 종업식 이미지. AR 4:5.","tip":"방학 기분을 내려면 아이스크림·해변 소품을 배경에 살짝 넣으세요."},{"num":"15","title":"새 학기 학교생활 안내","bad":"새 학기 안내 이미지.","good":"새 학기 안내 포스터, 새 교과서와 연필이 정돈된 봄 창가 책상, 설레는 새 학기 분위기. AR 4:5.","tip":"교과서 색깔이 다양할수록 시각적으로 풍부한 이미지가 됩니다."},{"num":"16","title":"전입생 환영 이미지","bad":"전학생 환영 이미지.","good":"전입생 환영 SNS 이미지, 환영 꽃가루와 화환이 날리는 따뜻하고 친근한 전입생 환영 이미지. AR 1:1.","tip":"일러스트 스타일을 요청하면 저작권 없이 귀엽게 만들 수 있어요."},{"num":"17","title":"학기 초 학급 임원 선출","bad":"학급 임원 선거 이미지.","good":"학급 임원 선출 안내 이미지, 투표함과 연필이 있는 깔끔하고 신뢰감 있는 민주적인 선거 장면. AR 1:1.","tip":"투표함 이미지는 민주시민 교육 자료에도 활용할 수 있습니다."},{"num":"18","title":"방학 생활 안내 가정통신문","bad":"방학 생활 안내 이미지.","good":"방학 생활 안내 가정통신문, 선글라스·모자·물놀이 튜브가 가득한 밝은 여름 방학 생활 이미지. AR 4:5.","tip":"겨울방학 버전은 따뜻한 머그컵·목도리·책 소품으로 변환하세요."},{"num":"19","title":"수상식·시상식 배경 이미지","bad":"학교 시상식 배경 이미지.","good":"수상식 배경 이미지, 황금빛 트로피와 리본, 따뜻한 조명의 격조 있는 시상식 배경. AR 16:9.","tip":"트로피 크기를 크게 배치할수록 시상식 느낌이 강해집니다."},{"num":"20","title":"개학 맞이 학교 안내","bad":"개학식 이미지.","good":"개학 안내 SNS 이미지, 가을 단풍잎과 책, 황금·주황 색감의 설레는 개학 분위기. AR 1:1.","tip":"계절에 맞는 색감을 먼저 정하면 이미지 분위기가 자연스럽게 잡힙니다."}]},{"id":"03","name":"독서·도서관","items":[{"num":"21","title":"독서의 달 행사 포스터","bad":"독서의 달 포스터 이미지.","good":"독서의 달 행사 포스터, 따뜻한 조명 아래 서가와 펼쳐진 책, 아늑한 분위기. AR 4:5.","tip":"책 표지에 텍스트가 나오면 깨질 수 있으니 '책 표지 여백 처리'를 명시하세요."},{"num":"22","title":"도서관 이용 안내 이미지","bad":"도서관 이용 안내 이미지.","good":"도서관 이용 안내 이미지, 색깔별로 정리된 도서관 서가, 조용하고 차분한 도서관 이용 안내. AR 1:1.","tip":"도서관 이용 규칙은 이미지와 별도 텍스트로 캔바에서 작업하는 게 깔끔합니다."},{"num":"23","title":"추천 도서 북큐레이션 카드","bad":"추천 도서 이미지.","good":"추천 도서 북큐레이션 SNS 카드, 나무 테이블 위 책들과 잎사귀·커피잔, 따뜻하고 감성적인 분위기. AR 1:1.","tip":"책 표지를 비워두면 실제 책 표지 이미지를 캔바에서 나중에 넣을 수 있어요."},{"num":"24","title":"독서퀴즈대회 홍보 포스터","bad":"독서 퀴즈 대회 이미지.","good":"독서퀴즈대회 홍보 포스터, 책 위에서 빛나는 전구, 지적이고 호기심 넘치는 분위기. AR 4:5.","tip":"일러스트 스타일로 요청하면 더 창의적이고 흥미로운 이미지가 나옵니다."},{"num":"25","title":"1학생 1책 읽기 캠페인","bad":"독서 캠페인 이미지.","good":"독서 캠페인 포스터, 책을 꼭 쥔 작은 손, 알록달록한 서가 배경, 따뜻한 독서 캠페인. AR 4:5.","tip":"초등학교 캠페인은 손·소품 클로즈업이 얼굴 없이도 따뜻하게 표현됩니다."},{"num":"26","title":"독후감 대회 안내 포스터","bad":"독후감 대회 이미지.","good":"독후감 대회 안내 포스터, 펼쳐진 노트 위에 만년필로 쓰는 손, 진지하고 차분한 독후감 대회. AR 4:5.","tip":"만년필 대신 태블릿 스타일로 요청하면 현대적인 느낌이 납니다."},{"num":"27","title":"저자 강연회·작가 방문 홍보","bad":"작가 강연회 이미지.","good":"저자 강연회 홍보 포스터, 강연장 마이크와 열린 책, 지적이고 설레는 작가 강연회 분위기. AR 4:5.","tip":"강연자 이름과 얼굴은 텍스트·사진으로 후편집하세요."},{"num":"28","title":"도서관 주간 행사 포스터","bad":"도서관 주간 행사 이미지.","good":"도서관 주간 행사 포스터, 서가 사이에서 책을 읽는 뒷모습, 신비롭고 따뜻한 분위기. AR 4:5.","tip":"책에서 세계가 펼쳐지는 판타지 스타일이 학생들에게 인기가 많습니다."},{"num":"29","title":"북아트·독서체험 활동 안내","bad":"북아트 활동 이미지.","good":"북아트 활동 안내 이미지, 색종이·가위·리본으로 책을 꾸미는 손, 밝고 창의적인 북아트 활동. AR 1:1.","tip":"활동 사진 분위기로 요청하면 실제 수업 느낌이 납니다."},{"num":"30","title":"전교생 독서량 달성 축하","bad":"독서 목표 달성 이미지.","good":"독서 목표 달성 축하 SNS 이미지, 트로피와 별, 골드·퍼플의 고급스러운 독서 목표 달성 축하 이미지. AR 1:1.","tip":"달성 권수는 이미지에 넣지 말고 텍스트로 따로 추가하세요."}]},{"id":"04","name":"진학·입시","items":[{"num":"31","title":"고입 입시설명회 안내 포스터","bad":"고입 설명회 포스터 이미지.","good":"고입 입시설명회 안내 포스터, 정돈된 책상 위 노트북과 서류, 신뢰감 있는 네이비·화이트. AR 4:5.","tip":"입시 이미지는 신뢰감 있는 네이비·그레이 계열이 학부모 대상에 효과적입니다."},{"num":"32","title":"대입 수시설명회 홍보","bad":"대입 설명회 이미지.","good":"대입 수시설명회 홍보 포스터, 졸업장과 합격 봉투, 희망차고 진지한 분위기. AR 4:5.","tip":"특정 대학 로고는 절대 생성하지 마세요. 저작권·상표권 문제가 됩니다."},{"num":"33","title":"진로탐색의 날 행사 이미지","bad":"진로탐색 행사 이미지.","good":"진로탐색의 날 행사 포스터, 다양한 직업 소품들이 창의적으로 배치된 밝고 가능성 가득한 진로탐색. AR 4:5.","tip":"직업 소품을 학생들이 관심 있는 분야로 맞추면 반응이 좋습니다."},{"num":"34","title":"진학상담 주간 안내","bad":"진학 상담 안내 이미지.","good":"진학상담 주간 안내 가정통신문, 상담 테이블 위 자료와 커피잔, 차분하고 신뢰감 있는 분위기. AR 4:5.","tip":"상담 이미지는 편안하고 안심감 있는 따뜻한 톤이 좋습니다."},{"num":"35","title":"직업체험 프로그램 홍보","bad":"직업체험 활동 이미지.","good":"직업체험 프로그램 홍보 포스터, 직업 유니폼들이 걸린 행어, 가능성 가득하고 밝은 분위기. AR 4:5.","tip":"유니폼 소품만으로 구성하면 얼굴 없이도 직업 다양성이 잘 표현됩니다."},{"num":"36","title":"수능 D-Day 카운트다운 이미지","bad":"수능 응원 이미지.","good":"수능 D-Day 카운트다운 SNS 이미지, 책상 위 연필·시계, 집중하는 수험생의 손, 진지하고 긴장된 분위기. AR 1:1.","tip":"D-Day 숫자는 카피 여백에 텍스트로 추가하세요."},{"num":"37","title":"고3 수험생 응원 이미지","bad":"수험생 응원 이미지.","good":"고3 수험생 응원 SNS 이미지, 밤 독서등 빛과 펼쳐진 교재, 따뜻하고 격려하는 수험생 응원 이미지. AR 1:1.","tip":"합격 메시지 등 한글은 깨지니까 카피 여백에 직접 입력하세요."},{"num":"38","title":"학과 소개·직업 강연 포스터","bad":"학과 소개 강연 이미지.","good":"직업 강연 홍보 포스터, 강연 마이크와 학과 소품, 전문적이고 세련된 분위기. AR 4:5.","tip":"특정 학과를 정해 그에 맞는 소품을 요청하면 더 구체적인 이미지가 나옵니다."},{"num":"39","title":"진로 포트폴리오 안내","bad":"진로 포트폴리오 이미지.","good":"진로 포트폴리오 안내 이미지, 바인더와 서류 파일이 정돈된 책상, 체계적이고 전문적인 분위기. AR 4:5.","tip":"포트폴리오 표지는 파워포인트에서 따로 디자인하세요."},{"num":"40","title":"졸업생 진학 현황 홍보","bad":"졸업생 진학 현황 이미지.","good":"졸업생 진학 현황 SNS 이미지, 학사모와 꽃가루, 골드·퍼플의 희망차고 축제 같은 분위기. AR 1:1.","tip":"진학 수치는 텍스트 오버레이로 추가하세요."}]},{"id":"05","name":"생활교육·캠페인","items":[{"num":"41","title":"학교폭력 예방 캠페인 포스터","bad":"학교폭력 예방 이미지.","good":"학교폭력 예방 캠페인 포스터, 여러 손이 하나로 모이는 따뜻하고 연대감 있는 장면. AR 4:5.","tip":"손이 모이는 이미지가 연대와 보호를 가장 직관적으로 표현합니다."},{"num":"42","title":"사이버폭력 예방 SNS 카드","bad":"사이버폭력 예방 이미지.","good":"사이버폭력 예방 SNS 카드, 스마트폰 화면에서 하트가 나오는 따뜻하고 긍정적인 분위기. AR 1:1.","tip":"부정적 장면보다 긍정적 대안을 보여주는 이미지가 더 효과적입니다."},{"num":"43","title":"교통안전 교육 안내 이미지","bad":"교통안전 교육 이미지.","good":"교통안전 교육 안내 포스터, 횡단보도 앞에서 손을 드는 어린이의 팔, 밝고 안전한 분위기. AR 4:5.","tip":"교통안전은 손을 드는 동작 클로즈업이 메시지를 가장 직관적으로 전달합니다."},{"num":"44","title":"금연·금주 예방교육 포스터","bad":"금연 교육 이미지.","good":"금연·금주 예방교육 포스터, 건강한 과일과 운동화가 담배보다 크고 밝게, 건강한 라이프스타일 강조. AR 4:5.","tip":"부정적 소품보다 건강한 대안 소품을 더 크게 배치하는 것이 효과적입니다."},{"num":"45","title":"스마트폰 바른 사용 캠페인","bad":"스마트폰 사용 예절 이미지.","good":"스마트폰 바른 사용 캠페인 포스터, 스마트폰을 내려놓고 음료를 든 손들, 따뜻한 오프라인 소통 분위기. AR 4:5.","tip":"스마트폰을 내려놓는 행동이 자연스럽게 담긴 구성이 설득력 있습니다."},{"num":"46","title":"급식 예절·식사 지도 안내","bad":"급식 안내 이미지.","good":"급식 예절 안내 이미지, 급식 트레이 위 균형 잡힌 식단, 건강하고 깔끔한 분위기. AR 1:1.","tip":"급식 식단은 실제 식단 사진과 조합해서 사용하면 더 현실감 있습니다."},{"num":"47","title":"환경·분리수거 캠페인","bad":"환경 캠페인 학교 이미지.","good":"환경·분리수거 캠페인 포스터, 재활용품과 초록 식물, 지구 일러스트, 밝고 희망찬 분위기. AR 4:5.","tip":"일러스트 스타일을 요청하면 저작권 문제 없이 깔끔합니다."},{"num":"48","title":"에너지 절약 캠페인 포스터","bad":"에너지 절약 이미지.","good":"에너지 절약 캠페인 포스터, 전등 스위치를 끄는 손과 켜진·꺼진 조명 대비. AR 4:5.","tip":"전등 스위치 클로즈업이 에너지 절약 메시지를 가장 직접적으로 전달합니다."},{"num":"49","title":"두발·복장 안내 가정통신문","bad":"두발 복장 규정 이미지.","good":"두발·복장 안내 가정통신문, 행어에 걸린 깔끔한 교복 상의, 단정하고 차분한 분위기. AR 4:5.","tip":"교복은 일반 남색으로 요청하되 로고나 마크는 명시적으로 금지하세요."},{"num":"50","title":"인성교육 공감 캠페인","bad":"인성교육 캠페인 이미지.","good":"인성교육 캠페인 포스터, 우산을 씌워주는 두 사람의 손, 따뜻하고 공감이 느껴지는 분위기. AR 4:5.","tip":"손과 소품으로만 구성해도 공감과 배려의 메시지가 충분히 전달됩니다."}]},{"id":"06","name":"문화·예술행사","items":[{"num":"51","title":"학예발표회 홍보 포스터","bad":"학예발표회 포스터 이미지.","good":"학예발표회 홍보 포스터, 무대 조명 아래 마이크와 악기, 화려하고 설레는 분위기. AR 4:5.","tip":"무대 커튼과 조명만으로도 공연 분위기를 충분히 전달할 수 있습니다."},{"num":"52","title":"교내 음악 발표회 포스터","bad":"음악 발표회 학교 이미지.","good":"음악 발표회 홍보 포스터, 피아노 건반과 바이올린, 따뜻한 공연장 조명. AR 4:5.","tip":"악기 클로즈업과 따뜻한 조명 조합이 음악회 분위기를 고급스럽게 만들어줍니다."},{"num":"53","title":"미술 작품 전시회 안내","bad":"학교 미술 전시회 이미지.","good":"미술 전시회 안내 포스터, 흰 전시장 벽에 걸린 빈 액자들, 따뜻한 스폿 조명의 세련된 미술 전시회. AR 4:5.","tip":"빈 액자로 구성하면 실제 학생 작품 사진을 나중에 삽입할 수 있어요."},{"num":"54","title":"합창 대회 참가 안내","bad":"합창 대회 이미지.","good":"합창대회 참가 안내 포스터, 악보와 지휘봉, 음표 배경, 따뜻한 하모니 분위기. AR 4:5.","tip":"악보를 배경 텍스처로 사용하되 '읽히는 악보 텍스트 생성 금지'를 명시하세요."},{"num":"55","title":"학교 축제(학교제) 포스터","bad":"학교 축제 포스터 이미지.","good":"학교 축제 홍보 포스터, 풍선과 꽃가루가 쏟아지는 화려하고 설레는 학교 축제 배경. AR 4:5.","tip":"축제 포스터는 여백을 적게 하고 배경을 화려하게 채우는 것이 인기 있습니다."},{"num":"56","title":"교내 사진 콘테스트 안내","bad":"사진 콘테스트 안내 이미지.","good":"사진 콘테스트 안내 포스터, DSLR 카메라와 필름롤, 감성적이고 창의적인 분위기. AR 4:5.","tip":"카메라 소품 클로즈업이 콘테스트의 창의성을 잘 표현합니다."},{"num":"57","title":"연극부·뮤지컬 공연 홍보","bad":"학교 연극 공연 이미지.","good":"연극 공연 홍보 포스터, 붉은 커튼과 황금빛 조명, 연극 마스크, 드라마틱하고 신비로운 분위기. AR 4:5.","tip":"연극 마스크(희극·비극)는 공연의 상징적인 소품으로 잘 활용됩니다."},{"num":"58","title":"댄스부·K-POP 공연 홍보","bad":"댄스 공연 홍보 이미지.","good":"댄스 공연 홍보 포스터, 네온 조명 아래 무대 실루엣, 화려하고 에너지 넘치는 댄스 공연 배경. AR 4:5.","tip":"실루엣 처리만으로도 에너지 넘치는 댄스 공연 느낌을 낼 수 있습니다."},{"num":"59","title":"밴드부·기타 공연 안내","bad":"밴드 공연 이미지.","good":"밴드 공연 홍보 포스터, 기타와 마이크·앰프, 인디 감성의 블랙·골드 밴드 공연 분위기. AR 4:5.","tip":"악기 클로즈업이 밴드 공연의 분위기를 가장 잘 전달합니다."},{"num":"60","title":"영상·미디어 작품 발표회","bad":"영상 작품 발표회 이미지.","good":"영상 발표회 홍보 포스터, 필름 롤과 클래퍼보드, 따뜻한 필름 톤의 시네마틱 영상 발표회. AR 4:5.","tip":"클래퍼보드는 영상 작품 발표회의 상징적 소품으로 잘 어울립니다."}]},{"id":"07","name":"계절·특별행사","items":[{"num":"61","title":"수학여행 사전 안내 포스터","bad":"수학여행 안내 이미지.","good":"수학여행 안내 포스터, 여행 가방과 카메라·지도, 설레고 기대감 넘치는 분위기. AR 4:5.","tip":"여행지에 맞는 소품(제주면 귤·돌하르방, 경주면 불국사)을 추가하면 더 구체적입니다."},{"num":"62","title":"현장학습 안내 가정통신문","bad":"현장학습 안내 이미지.","good":"현장학습 안내 가정통신문, 배낭·도시락·물통이 놓인 밝고 신나는 소풍 분위기. AR 4:5.","tip":"목적지에 맞는 소품을 구체적으로 명시하면 퀄리티가 높아집니다."},{"num":"63","title":"스승의 날 감사 이미지","bad":"스승의 날 이미지.","good":"스승의 날 감사 SNS 이미지, 나무 테이블 위 카네이션과 감사 편지, 따뜻하고 감사한 스승의 날. AR 1:1.","tip":"카네이션 클로즈업이 스승의 날을 가장 직관적으로 표현합니다."},{"num":"64","title":"여름 캠프 안내 포스터","bad":"여름 캠프 이미지.","good":"여름 캠프 안내 포스터, 텐트·캠프파이어·별하늘, 모험적이고 설레는 여름 캠프 야경. AR 4:5.","tip":"별하늘 배경 야경 캠프 이미지가 학생들에게 가장 인기 있습니다."},{"num":"65","title":"학교 창립기념일 이미지","bad":"학교 창립기념일 이미지.","good":"창립기념일 기념 SNS 이미지, 축하 케이크와 불꽃·색종이, 격조 있고 따뜻한 분위기. AR 1:1.","tip":"학교 상징 컬러를 명시하면 학교 정체성을 살릴 수 있어요."},{"num":"66","title":"학생의 날 기념 이미지","bad":"학생의 날 이미지.","good":"학생의 날 기념 SNS 이미지, 책·연필·학생증과 빛나는 별, 희망차고 활기찬 학생의 날 기념. AR 1:1.","tip":"학생 소품과 축하 요소를 조합하면 기념일 분위기가 자연스럽게 납니다."},{"num":"67","title":"생태 체험 학습 안내","bad":"생태 체험 학습 이미지.","good":"생태 체험 학습 안내 포스터, 숲 속 돋보기와 자연 소품, 호기심 있고 생동감 넘치는 분위기. AR 4:5.","tip":"계절에 맞는 자연 소품(봄 꽃·여름 곤충·가을 낙엽)을 지정하세요."},{"num":"68","title":"문화 예술 공연 관람 안내","bad":"공연 관람 안내 이미지.","good":"공연 관람 안내 가정통신문, 무대 조명과 붉은 커튼, 격조 있고 설레는 공연 관람 안내 이미지. AR 4:5.","tip":"실제 공연 제목이나 로고는 생성하지 말고 텍스트로 추가하세요."},{"num":"69","title":"00의 날 행사 기념 포스터","bad":"환경의 날 이미지 만들어줘.","good":"환경의 날 기념 포스터, 지구와 초록 잎사귀, 일러스트 스타일의 밝고 희망찬 환경의 날 포스터. AR 4:5.","tip":"해당하는 날에 맞는 상징 소품으로 교체하면 독도의 날·과학의 날 등에도 활용 가능합니다."},{"num":"70","title":"수련회·MT 안내 이미지","bad":"수련회 안내 이미지.","good":"수련회 안내 포스터, 캠핑 텐트·캠프파이어·로프, 에너지 넘치고 도전적인 수련회 이미지. AR 4:5.","tip":"수련 프로그램에 맞는 소품(래프팅·암벽)을 구체적으로 요청하세요."}]},{"id":"08","name":"학급 운영","items":[{"num":"71","title":"학급 규칙 게시판 배경","bad":"학급 규칙 게시판 이미지.","good":"학급 규칙 게시판 배경, 코르크보드와 포스트잇이 정돈된 따뜻하고 체계적인 분위기. AR 16:9.","tip":"텍스트는 배경 이미지만 만든 후 파워포인트에서 추가하세요."},{"num":"72","title":"모둠 활동 안내 이미지","bad":"모둠 활동 이미지.","good":"모둠 활동 안내 이미지, 원형 책상 위에 모이는 여러 손, 협력적이고 밝은 모둠 활동 이미지. AR 1:1.","tip":"손 모임 구도가 팀워크를 가장 간결하게 표현합니다."},{"num":"73","title":"학급 신문 표지 배경","bad":"학급 신문 이미지.","good":"학급 신문 표지 배경, 신문·잡지 느낌의 빈 컬럼 레이아웃, 깔끔하고 정갈한 분위기. AR 4:5.","tip":"신문 느낌의 컬럼 레이아웃을 배경으로만 만들고 텍스트는 파워포인트에서 작업하세요."},{"num":"74","title":"자기 소개 카드 배경","bad":"자기 소개 카드 이미지.","good":"자기소개 카드 배경, 귀여운 일러스트 테두리와 빈 공간, 알록달록한 파스텔 분위기. AR 1:1.","tip":"일러스트 스타일로 요청하면 인쇄해서 바로 사용하기 좋습니다."},{"num":"75","title":"학급 목표 시각화 포스터","bad":"학급 목표 포스터 이미지.","good":"학급 목표 포스터, 산 정상을 향해 오르는 실루엣, 희망차고 도전적인 학급 목표 포스터. AR 4:5.","tip":"성장·도전을 상징하는 시각 메타포가 목표 시각화에 효과적입니다."},{"num":"76","title":"1인 1역 역할 게시판","bad":"1인1역 게시판 이미지.","good":"1인1역 게시판 배경, 청소 도구·화분·지우개 아이콘, 귀엽고 알록달록한 분위기. AR 16:9.","tip":"역할 소품을 아이콘 스타일로 요청하면 인쇄 품질이 좋습니다."},{"num":"77","title":"학급 상담 주간 안내","bad":"학급 상담 이미지.","good":"상담 주간 안내 이미지, 티컵 두 개와 메모장·화분, 편안하고 신뢰감 있는 분위기. AR 1:1.","tip":"따뜻한 색감의 실내 공간 구성이 상담의 안심 분위기를 만들어줍니다."},{"num":"78","title":"독서 기록장·독서 일지 표지","bad":"독서 기록장 표지 이미지.","good":"독서 기록장 표지, 책·연필·북마크·식물, 아늑하고 따뜻한 독서 기록장 표지. AR 4:5.","tip":"인쇄 후 바로 배부할 수 있도록 텍스트 여백을 크게 잡으세요."},{"num":"79","title":"학급 청소 구역 안내판","bad":"청소 구역 안내 이미지.","good":"청소 구역 안내판, 청소 도구 아이콘들, 밝고 청결한 파스텔 분위기. AR 1:1.","tip":"청소 도구 아이콘 일러스트로 요청하면 인쇄해서 바로 붙일 수 있습니다."},{"num":"80","title":"학급 타임캡슐 이미지","bad":"학급 타임캡슐 이미지.","good":"타임캡슐 안내 이미지, 나무 상자와 편지 봉투, 세피아·브라운의 따뜻하고 추억 어린 분위기. AR 1:1.","tip":"세피아·브라운 빈티지 감성이 타임캡슐의 추억 분위기를 잘 표현합니다."}]},{"id":"09","name":"가정통신문·공지","items":[{"num":"81","title":"학부모 총회 안내 이미지","bad":"학부모 총회 안내 이미지.","good":"학부모 총회 안내 가정통신문, 회의실 책상 위 서류와 볼펜, 신뢰감 있는 네이비·화이트. AR 4:5.","tip":"공식 행사는 신뢰감 있는 네이비·그레이 계열이 학부모 신뢰를 높입니다."},{"num":"82","title":"학부모 상담 주간 안내","bad":"학부모 상담 이미지.","good":"학부모 상담 주간 안내 가정통신문, 티컵 두 개와 화분·메모장, 따뜻하고 편안한 분위기. AR 4:5.","tip":"티컵 두 개 구성이 1:1 상담의 따뜻한 분위기를 자연스럽게 표현합니다."},{"num":"83","title":"방과후 수업 모집 안내","bad":"방과후 수업 안내 이미지.","good":"방과후 수업 모집 안내 포스터, 악보·축구공·붓·로봇 부품, 밝고 다채로운 방과후 수업 모집 이미지. AR 4:5.","tip":"방과후 종목에 맞는 소품을 구체적으로 나열하면 더 명확합니다."},{"num":"84","title":"급식 메뉴 안내 이미지","bad":"학교 급식 안내 이미지.","good":"급식 메뉴 안내 이미지, 급식 트레이 위 균형 잡힌 식단, 건강하고 식욕 돋는 분위기. AR 1:1.","tip":"식단은 실제 사진으로 교체하거나 메뉴 텍스트를 캔바에서 추가하세요."},{"num":"85","title":"건강검진 안내 이미지","bad":"학교 건강검진 안내 이미지.","good":"건강검진 안내 가정통신문, 청진기와 체온계, 신뢰감 있고 청결한 흰색·파랑. AR 4:5.","tip":"의료 소품만으로 구성하면 학생·학부모 모두에게 안심감을 줍니다."},{"num":"86","title":"학교폭력 신고 안내 이미지","bad":"학교폭력 신고 안내 이미지.","good":"학교폭력 신고 안내 포스터, 전화기와 손길·하트, 따뜻하고 안심감 있는 분위기. AR 4:5.","tip":"신고 번호(117)는 이미지에 생성하지 말고 큰 텍스트로 직접 추가하세요."},{"num":"87","title":"개인정보 보호 안내","bad":"개인정보 보호 이미지.","good":"개인정보 보호 안내 포스터, 자물쇠와 방패, 신뢰감 있고 안전한 분위기. AR 4:5.","tip":"디지털 보안 이미지는 자물쇠·방패 소품이 메시지를 직관적으로 전달합니다."},{"num":"88","title":"봉사활동 안내 이미지","bad":"봉사활동 안내 이미지.","good":"봉사활동 안내 포스터, 봉사 장갑과 나눔의 손, 따뜻하고 이타적인 분위기. AR 4:5.","tip":"봉사 유형(환경·복지·지역사회)에 맞는 소품으로 변경해서 사용하세요."},{"num":"89","title":"원격 수업·온라인 학습 안내","bad":"온라인 수업 안내 이미지.","good":"원격 수업 안내 가정통신문, 노트북·태블릿·이어폰, 아늑한 홈스쿨링 책상의 원격 수업 안내. AR 4:5.","tip":"원격 수업 플랫폼 로고는 저작권 문제로 생성하지 마세요."},{"num":"90","title":"교복 구입·착용 안내","bad":"교복 안내 이미지.","good":"교복 구입 안내 가정통신문, 깔끔하게 개어진 교복 상의, 단정하고 신뢰감 있는 교복 구입 안내. AR 4:5.","tip":"교복 로고와 마크는 반드시 금지사항에 명시하세요."}]},{"id":"10","name":"학교 홍보·SNS","items":[{"num":"91","title":"학교 SNS 인스타그램 게시물","bad":"학교 인스타그램 이미지.","good":"학교 SNS 게시물, 봄 교정의 벚꽃과 학교 건물 실루엣, 감성적이고 따뜻한 분위기. AR 1:1.","tip":"계절별로 4장 시리즈로 제작하면 SNS 피드가 통일감 있게 꾸며집니다."},{"num":"92","title":"신입생 모집 홍보 포스터","bad":"신입생 모집 홍보 이미지.","good":"신입생 모집 홍보 포스터, 새 교복과 책가방, 봄 벚꽃 교문 배경, 설레는 신입생 모집 이미지. AR 4:5.","tip":"입학식 시즌(2~3월)에 맞춰 벚꽃 소품을 활용하면 계절감이 살아납니다."},{"num":"93","title":"학교 소개 브로슈어 커버","bad":"학교 소개 이미지.","good":"학교 소개 브로슈어 커버, 학교 건물과 학생 실루엣, 세련되고 모던한 분위기. AR 4:5.","tip":"학교명은 이미지에 생성하지 말고 나중에 직접 텍스트를 얹어주세요."},{"num":"94","title":"우수 학생 시상 SNS 이미지","bad":"우수 학생 시상 이미지.","good":"우수 학생 시상 SNS 이미지, 트로피와 메달·꽃다발, 골드·크림의 고급스러운 우수 학생 시상 이미지. AR 1:1.","tip":"시상 이미지에서 수상자 이름은 반드시 텍스트로 따로 추가하세요."},{"num":"95","title":"학교 환경 개선 공사 안내","bad":"학교 공사 안내 이미지.","good":"학교 공사 안내 이미지, 공사 헬멧과 설계 도면, 신뢰감 있고 전문적인 분위기. AR 4:5.","tip":"공사 기간과 대상 구역은 텍스트로 크게 추가해야 학부모에게 명확히 전달됩니다."},{"num":"96","title":"방과후 프로그램 홍보 이미지","bad":"방과후 프로그램 이미지.","good":"방과후 프로그램 홍보 SNS 이미지, 악보·운동화·로봇 키트·붓, 밝고 다채로운 분위기. AR 1:1.","tip":"운영 중인 방과후 종목 소품을 구체적으로 나열하면 더 맞춤형 이미지가 됩니다."},{"num":"97","title":"교직원 연수 안내 이미지","bad":"교직원 연수 이미지.","good":"교직원 연수 안내 포스터, 노트북과 연수 자료·커피, 전문적이고 차분한 교직원 연수 이미지. AR 4:5.","tip":"연수 주제에 맞는 소품(AI 교육이면 태블릿·로봇)을 추가하면 더 구체적입니다."},{"num":"98","title":"학부모 독서 교실 안내","bad":"학부모 독서 프로그램 이미지.","good":"학부모 독서 교실 안내 포스터, 책·독서등·차·안경, 따뜻하고 지적인 학부모 독서 교실 포스터. AR 4:5.","tip":"학부모 대상은 어른스럽고 고급스러운 톤이 참여율을 높입니다."},{"num":"99","title":"학교 성과 보고서 커버","bad":"학교 성과 보고서 이미지.","good":"학교 성과 보고서 커버, 성장하는 그래프와 트로피, 전문적이고 신뢰감 있는 분위기. AR 4:5.","tip":"학교 상징 컬러를 명시하면 학교 정체성이 자연스럽게 표현됩니다."},{"num":"100","title":"학교 슬로건 시각화 이미지","bad":"학교 슬로건 이미지.","good":"학교 슬로건 시각화 포스터, 성장하는 나무 또는 날아오르는 새, 희망적인 일러스트의 학교 슬로건 이미지. AR 4:5.","tip":"학교 슬로건은 텍스트 가독성이 핵심이니 여백을 최대한 크게 잡으세요."}]}]
+</script>
+<script>window._IMGS={"img_01_01":"https://raw.githubusercontent.com/kimju1416/school-images/main/01.png","img_01_02":"https://raw.githubusercontent.com/kimju1416/school-images/main/02.png","img_01_03":"https://raw.githubusercontent.com/kimju1416/school-images/main/03.png","img_01_04":"https://raw.githubusercontent.com/kimju1416/school-images/main/04.png","img_01_05":"https://raw.githubusercontent.com/kimju1416/school-images/main/05.png","img_01_06":"https://raw.githubusercontent.com/kimju1416/school-images/main/06.png","img_01_07":"https://raw.githubusercontent.com/kimju1416/school-images/main/07.png","img_01_08":"https://raw.githubusercontent.com/kimju1416/school-images/main/08.png","img_01_09":"https://raw.githubusercontent.com/kimju1416/school-images/main/09.png","img_01_10":"https://raw.githubusercontent.com/kimju1416/school-images/main/10.png","img_02_11":"https://raw.githubusercontent.com/kimju1416/school-images/main/11.png","img_02_12":"https://raw.githubusercontent.com/kimju1416/school-images/main/12.png","img_02_13":"https://raw.githubusercontent.com/kimju1416/school-images/main/13.png","img_02_14":"https://raw.githubusercontent.com/kimju1416/school-images/main/14.png","img_02_15":"https://raw.githubusercontent.com/kimju1416/school-images/main/15.png","img_02_16":"https://raw.githubusercontent.com/kimju1416/school-images/main/16.png","img_02_17":"https://raw.githubusercontent.com/kimju1416/school-images/main/17.png","img_02_18":"https://raw.githubusercontent.com/kimju1416/school-images/main/18.png","img_02_19":"https://raw.githubusercontent.com/kimju1416/school-images/main/19.png","img_02_20":"https://raw.githubusercontent.com/kimju1416/school-images/main/20.png","img_03_21":"https://raw.githubusercontent.com/kimju1416/school-images/main/21.png","img_03_22":"https://raw.githubusercontent.com/kimju1416/school-images/main/22.png","img_03_23":"https://raw.githubusercontent.com/kimju1416/school-images/main/23.png","img_03_24":"https://raw.githubusercontent.com/kimju1416/school-images/main/24.png","img_03_25":"https://raw.githubusercontent.com/kimju1416/school-images/main/25.png","img_03_26":"https://raw.githubusercontent.com/kimju1416/school-images/main/26.png","img_03_27":"https://raw.githubusercontent.com/kimju1416/school-images/main/27.png","img_03_28":"https://raw.githubusercontent.com/kimju1416/school-images/main/28.png","img_03_29":"https://raw.githubusercontent.com/kimju1416/school-images/main/29.png","img_03_30":"https://raw.githubusercontent.com/kimju1416/school-images/main/30.png","img_04_31":"https://raw.githubusercontent.com/kimju1416/school-images/main/31.png","img_04_32":"https://raw.githubusercontent.com/kimju1416/school-images/main/32.png","img_04_33":"https://raw.githubusercontent.com/kimju1416/school-images/main/33.png","img_04_34":"https://raw.githubusercontent.com/kimju1416/school-images/main/34.png","img_04_35":"https://raw.githubusercontent.com/kimju1416/school-images/main/35.png","img_04_36":"https://raw.githubusercontent.com/kimju1416/school-images/main/36.png","img_04_37":"https://raw.githubusercontent.com/kimju1416/school-images/main/37.png","img_04_38":"https://raw.githubusercontent.com/kimju1416/school-images/main/38.png","img_04_39":"https://raw.githubusercontent.com/kimju1416/school-images/main/39.png","img_04_40":"https://raw.githubusercontent.com/kimju1416/school-images/main/40.png","img_05_41":"https://raw.githubusercontent.com/kimju1416/school-images/main/41.png","img_05_42":"https://raw.githubusercontent.com/kimju1416/school-images/main/42.png","img_05_43":"https://raw.githubusercontent.com/kimju1416/school-images/main/43.png","img_05_44":"https://raw.githubusercontent.com/kimju1416/school-images/main/44.png","img_05_45":"https://raw.githubusercontent.com/kimju1416/school-images/main/45.png","img_05_46":"https://raw.githubusercontent.com/kimju1416/school-images/main/46.png","img_05_47":"https://raw.githubusercontent.com/kimju1416/school-images/main/47.png","img_05_48":"https://raw.githubusercontent.com/kimju1416/school-images/main/48.png","img_05_49":"https://raw.githubusercontent.com/kimju1416/school-images/main/49.png","img_05_50":"https://raw.githubusercontent.com/kimju1416/school-images/main/50.png","img_06_51":"https://raw.githubusercontent.com/kimju1416/school-images/main/51.png","img_06_52":"https://raw.githubusercontent.com/kimju1416/school-images/main/52.png","img_06_53":"https://raw.githubusercontent.com/kimju1416/school-images/main/53.png","img_06_54":"https://raw.githubusercontent.com/kimju1416/school-images/main/54.png","img_06_55":"https://raw.githubusercontent.com/kimju1416/school-images/main/55.png","img_06_56":"https://raw.githubusercontent.com/kimju1416/school-images/main/56.png","img_06_57":"https://raw.githubusercontent.com/kimju1416/school-images/main/57.png","img_06_58":"https://raw.githubusercontent.com/kimju1416/school-images/main/58.png","img_06_59":"https://raw.githubusercontent.com/kimju1416/school-images/main/59.png","img_06_60":"https://raw.githubusercontent.com/kimju1416/school-images/main/60.png","img_07_61":"https://raw.githubusercontent.com/kimju1416/school-images/main/61.png","img_07_62":"https://raw.githubusercontent.com/kimju1416/school-images/main/62.png","img_07_63":"https://raw.githubusercontent.com/kimju1416/school-images/main/63.png","img_07_64":"https://raw.githubusercontent.com/kimju1416/school-images/main/64.png","img_07_65":"https://raw.githubusercontent.com/kimju1416/school-images/main/65.png","img_07_66":"https://raw.githubusercontent.com/kimju1416/school-images/main/66.png","img_07_67":"https://raw.githubusercontent.com/kimju1416/school-images/main/67.png","img_07_68":"https://raw.githubusercontent.com/kimju1416/school-images/main/68.png","img_07_69":"https://raw.githubusercontent.com/kimju1416/school-images/main/69.png","img_07_70":"https://raw.githubusercontent.com/kimju1416/school-images/main/70.png","img_08_71":"https://raw.githubusercontent.com/kimju1416/school-images/main/71.png","img_08_72":"https://raw.githubusercontent.com/kimju1416/school-images/main/72.png","img_08_73":"https://raw.githubusercontent.com/kimju1416/school-images/main/73.png","img_08_74":"https://raw.githubusercontent.com/kimju1416/school-images/main/74.png","img_08_75":"https://raw.githubusercontent.com/kimju1416/school-images/main/75.png","img_08_76":"https://raw.githubusercontent.com/kimju1416/school-images/main/76.png","img_08_77":"https://raw.githubusercontent.com/kimju1416/school-images/main/77.png","img_08_78":"https://raw.githubusercontent.com/kimju1416/school-images/main/78.png","img_08_79":"https://raw.githubusercontent.com/kimju1416/school-images/main/79.png","img_08_80":"https://raw.githubusercontent.com/kimju1416/school-images/main/80.png","img_09_81":"https://raw.githubusercontent.com/kimju1416/school-images/main/81.png","img_09_82":"https://raw.githubusercontent.com/kimju1416/school-images/main/82.png","img_09_83":"https://raw.githubusercontent.com/kimju1416/school-images/main/83.png","img_09_84":"https://raw.githubusercontent.com/kimju1416/school-images/main/84.png","img_09_85":"https://raw.githubusercontent.com/kimju1416/school-images/main/85.png","img_09_86":"https://raw.githubusercontent.com/kimju1416/school-images/main/86.png","img_09_87":"https://raw.githubusercontent.com/kimju1416/school-images/main/87.png","img_09_88":"https://raw.githubusercontent.com/kimju1416/school-images/main/88.png","img_09_89":"https://raw.githubusercontent.com/kimju1416/school-images/main/89.png","img_09_90":"https://raw.githubusercontent.com/kimju1416/school-images/main/90.png","img_10_91":"https://raw.githubusercontent.com/kimju1416/school-images/main/91.png","img_10_92":"https://raw.githubusercontent.com/kimju1416/school-images/main/92.png","img_10_93":"https://raw.githubusercontent.com/kimju1416/school-images/main/93.png","img_10_94":"https://raw.githubusercontent.com/kimju1416/school-images/main/94.png","img_10_95":"https://raw.githubusercontent.com/kimju1416/school-images/main/95.png","img_10_96":"https://raw.githubusercontent.com/kimju1416/school-images/main/96.png","img_10_97":"https://raw.githubusercontent.com/kimju1416/school-images/main/97.png","img_10_98":"https://raw.githubusercontent.com/kimju1416/school-images/main/98.png","img_10_99":"https://raw.githubusercontent.com/kimju1416/school-images/main/99.png","img_10_100":"https://raw.githubusercontent.com/kimju1416/school-images/main/100.png"};</script>
+<script>
+var CATS=JSON.parse(document.getElementById('cats-data').textContent);
+var CMDS=['학생 얼굴 없이 뒷모습·실루엣으로만 바꿔줘','텍스트 생성 절대 금지, 여백만 확보해줘','배경을 학교 운동장으로 바꿔줘','배경을 교실 내부로 바꿔줘','배경을 체육관으로 바꿔줘','분위기를 더 밝고 활기차게 바꿔줘','분위기를 차분하고 정중하게 바꿔줘','카피 여백을 상단 30%로 넓혀줘','소품을 2개 이하로 줄여줘','비율을 16:9로 바꿔줘','비율을 1:1로 바꿔줘','봄 벚꽃 계절감으로 바꿔줘','가을 단풍 계절감으로 바꿔줘','일러스트 스타일로 바꿔줘','지브리 스타일로 바꿔줘','수채화 스타일로 바꿔줘','포스터 구도로 더 임팩트 있게 바꿔줘','학부모 대상 느낌으로 더 신뢰감 있게 바꿔줘','조명을 더 밝고 따뜻하게 바꿔줘','교복은 일반 남색으로, 로고 없이 해줘','손·소품 클로즈업 구도로만 바꿔줘','학교 건물 실루엣을 배경에 추가해줘'];
+var chipSelections={};var libSelectedNum=null;
+
+function showTab(tab,el){
+  document.querySelectorAll('.tab-content').forEach(function(t){t.classList.remove('active')});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active')});
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(el)el.classList.add('active');
+}
+
+function toggleChip(el,group){
+  var singleGroups=['school','ratio','usage','mood','copy'];
+  if(singleGroups.indexOf(group)!==-1){
+    document.querySelectorAll('.chip').forEach(function(c){
+      if(c.getAttribute('onclick')&&c.getAttribute('onclick').includes("'"+group+"'"))c.classList.remove('selected')
+    });
+    chipSelections[group]=[];
+  }
+  if(!chipSelections[group])chipSelections[group]=[];
+  var txt=el.textContent;
+  if(el.classList.contains('selected')&&singleGroups.indexOf(group)===-1){
+    el.classList.remove('selected');
+    chipSelections[group]=chipSelections[group].filter(function(v){return v!==txt});
+  } else {
+    el.classList.add('selected');
+    if(chipSelections[group].indexOf(txt)===-1)chipSelections[group].push(txt);
+  }
+}
+
+function generatePrompt(){
+  var event=document.getElementById('event').value.trim();
+  var school=(chipSelections['school']||[]).join(', ');
+  var target=(chipSelections['target']||[]).join(', ');
+  var usage=(chipSelections['usage']||[]).join(', ');
+  var ratio=(chipSelections['ratio']||[])[0]||'';
+  var mood=(chipSelections['mood']||[]).join(', ');
+  var style=(chipSelections['style']||[]).join(', ');
+  var layout=(chipSelections['layout']||[]).join(', ');
+  var scene=document.getElementById('scene').value.trim();
+  var elements=document.getElementById('elements').value.trim();
+  var copyPos=(chipSelections['copy']||[]).join(', ');
+  var forbidden=document.getElementById('forbidden').value.trim();
+  var prompt='';
+  if(usage)prompt+=usage+'용 이미지. ';
+  if(school)prompt+=school+' ';
+  if(target)prompt+=target+' 대상 ';
+  if(event)prompt+=event+'. ';
+  if(scene)prompt+='주요 장면: '+scene+'. ';
+  if(elements)prompt+='포함 요소: '+elements+'. ';
+  if(layout)prompt+='레이아웃: '+layout+'. ';
+  if(copyPos)prompt+=copyPos+'에 카피 여백 확보. ';
+  if(mood)prompt+='분위기: '+mood+'. ';
+  if(style)prompt+='스타일: '+style+'. ';
+  if(ratio)prompt+='AR '+ratio.replace(/[^0-9:]/g,'')+'. ';
+  if(forbidden)prompt+='금지사항: '+forbidden+'. ';
+  var el=document.getElementById('promptContent');
+  if(el){
+    var existing=el.textContent.trim();
+    var placeholder='왼쪽 폼을 채우고 생성 버튼을 누르세요.';
+    if(existing&&existing!==placeholder){
+      el.textContent=existing+' '+prompt;
+    } else {
+      el.textContent=prompt;
+    }
+  }
+}
+
+function applyCmd(cmd){
+  var contentEl=document.getElementById('promptContent');
+  if(!contentEl)return;
+  var current=contentEl.innerText.trim();
+  var placeholder='왼쪽 폼을 채우고 생성 버튼을 누르세요.';
+  if(!current||current===placeholder)return;
+  var base=current.replace(/\s*\[수정\].*$/,'').trim();
+  contentEl.textContent=base+' [수정] '+cmd;
+}
+
+function copyResult(){
+  var el=document.getElementById('promptContent');
+  var txt=el?el.innerText.trim():'';
+  if(txt)navigator.clipboard.writeText(txt).then(showCopied);
+}
+
+function showCopied(){
+  var msg=document.getElementById('copiedMsg');
+  msg.style.display='block';
+  setTimeout(function(){msg.style.display='none'},2000);
+}
+
+function toggleCat(catId){
+  var el=document.getElementById('citems-'+catId);
+  var tog=document.getElementById('ctog-'+catId);
+  if(!el)return;
+  var collapsed=el.classList.toggle('collapsed');
+  if(tog)tog.textContent=collapsed?'▼':'▲';
+}
+
+function selectPrompt(catId,num){
+  if(libSelectedNum){var prev=document.getElementById('pi-'+libSelectedNum);if(prev)prev.classList.remove('active')}
+  libSelectedNum=num;
+  var curr=document.getElementById('pi-'+num);if(curr)curr.classList.add('active');
+  var cat=CATS.find(function(c){return c.id===catId});if(!cat)return;
+  var item=cat.items.find(function(i){return i.num===num});if(!item)return;
+  var emptyEl=document.getElementById('libEmpty');var detailEl=document.getElementById('libDetail');
+  if(emptyEl)emptyEl.style.display='none';
+  if(detailEl){
+    detailEl.style.display='flex';detailEl.style.padding='0';detailEl.innerHTML='';
+    var imgPanel=document.createElement('div');imgPanel.className='lib-detail-img-panel';
+    var imgUrl=getImg(catId,num);
+    if(imgUrl){
+      var img=document.createElement('img');img.src=imgUrl;img.alt=item.title;
+      img.onerror=function(){imgPanel.innerHTML='<div class="lib-detail-img-placeholder">🖼️<br>이미지를<br>불러올 수 없어요</div>';};
+      imgPanel.appendChild(img);
+    } else {
+      imgPanel.innerHTML='<div class="lib-detail-img-placeholder">🖼️<br>이미지 없음</div>';
+    }
+    var infoPanel=document.createElement('div');infoPanel.className='lib-detail-info-panel';
+    infoPanel.innerHTML='<div class="lib-detail-header" style="margin-bottom:0;padding-bottom:12px;border-bottom:1px solid var(--border)"><div class="lib-detail-badge">'+cat.id+' '+cat.name+'</div><div class="lib-detail-title">'+item.num+'. '+item.title+'</div></div>'
+      +'<div class="lib-section" style="margin-bottom:0"><div class="lib-good"><div class="lib-section-label">✅ 복사용 프롬프트</div><span id="promptText">'+item.good+'</span></div></div>'
+      +'<div class="lib-section" style="margin-bottom:0"><div class="lib-tip"><div class="lib-section-label">💡 응용 팁</div>'+item.tip+'</div></div>'
+      +'<button class="lib-copy-btn" onclick="libCopyPrompt()">📋 이 프롬프트 복사하기</button>'
+      +'<button class="lib-to-builder-btn" onclick="sendToBuilder()">🛠️ 빌더에서 수정하기</button>';
+    detailEl.appendChild(imgPanel);detailEl.appendChild(infoPanel);
+  }
+}
+
+function libCopyPrompt(){
+  var el=document.getElementById('promptText');
+  if(el)navigator.clipboard.writeText(el.textContent).then(showCopied);
+}
+
+function libSearch2(){
+  var q=document.getElementById('libSearch2').value.toLowerCase().trim();
+  document.querySelectorAll('.lib-prompt-item').forEach(function(el){
+    el.style.display=(!q||el.textContent.toLowerCase().includes(q))?'':'none';
+  });
+  document.querySelectorAll('.lib-cat-group').forEach(function(grp){
+    var v=Array.from(grp.querySelectorAll('.lib-prompt-item')).filter(function(e){return e.style.display!=='none'}).length;
+    grp.style.display=v>0?'':'none';
+  });
+}
+
+function getImg(catId,num){
+  var key='img_'+catId+'_'+num;
+  if(window._IMGS&&window._IMGS[key])return window._IMGS[key];
+  try{return localStorage.getItem(key)||'';}catch(e){return '';}
+}
+
+function buildLibrarySidebar(){
+  var catList=document.getElementById('libCatList');if(!catList)return;catList.innerHTML='';
+  CATS.forEach(function(cat){
+    var grp=document.createElement('div');grp.className='lib-cat-group';
+    var hdr=document.createElement('div');hdr.className='lib-cat-header';
+    hdr.onclick=(function(id){return function(){toggleCat(id)}})(cat.id);
+    hdr.innerHTML='<span>'+cat.id+' '+cat.name+'</span><span class="cat-toggle" id="ctog-'+cat.id+'">▲</span>';
+    var items=document.createElement('div');items.className='lib-cat-items';items.id='citems-'+cat.id;
+    cat.items.forEach(function(item){
+      var d=document.createElement('div');d.className='lib-prompt-item';d.id='pi-'+item.num;
+      var cid=cat.id,inum=item.num;
+      d.onclick=function(){selectPrompt(cid,inum);};
+      d.innerHTML='<span class="item-num">'+item.num+'</span><span>'+item.title+'</span>';
+      items.appendChild(d);
+    });
+    grp.appendChild(hdr);grp.appendChild(items);catList.appendChild(grp);
+  });
+}
+
+function resetPrompt(){
+  var contentEl=document.getElementById('promptContent');
+  if(contentEl){contentEl.textContent='';}
+  document.querySelectorAll('.chip.selected').forEach(function(c){c.classList.remove('selected')});
+  chipSelections={};
+  document.getElementById('event').value='';
+  document.getElementById('scene').value='';
+  document.getElementById('elements').value='';
+  document.getElementById('forbidden').value='';
+}
+
+function sendToBuilder(){
+  var el=document.getElementById('promptText');
+  if(!el)return;
+  var txt=el.textContent.trim();
+  if(!txt)return;
+  showTab('builder',document.querySelector('.tab-btn'));
+  setTimeout(function(){
+    var contentEl=document.getElementById('promptContent');
+    if(contentEl){contentEl.textContent=txt;}
+  },50);
+}
+
+function initCmdChips(){
+  var c=document.getElementById('cmd-chips');
+  if(c&&c.children.length===0){
+    CMDS.forEach(function(cmd){
+      var btn=document.createElement('button');btn.className='cmd-chip';btn.textContent=cmd;
+      btn.addEventListener('click',function(){applyCmd(cmd)});
+      c.appendChild(btn);
+    });
+  }
+}
+
+function preloadImages(){
+  setTimeout(function(){
+    Object.values(window._IMGS).forEach(function(url){
+      var img=new Image();img.src=url;
+    });
+  },1000);
+}
+
+window.onload=function(){initCmdChips();buildLibrarySidebar();preloadImages();};
+</script>
+</body>
+</html>

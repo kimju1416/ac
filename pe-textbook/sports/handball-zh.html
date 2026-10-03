@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>手球 · PE Playbook</title>
+<meta name="description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body style="--accent:var(--c-gugi);--accent-ink:#c2410c">
+
+<div class="topbar">
+  <a class="home" href="../index.html">📖 目录</a>
+  <span class="title">🤾 手球</span>
+  <span class="counter"></span>
+</div>
+<div class="progress"></div>
+
+<div class="deck">
+
+  <!-- 1. 封面 -->
+  <section class="slide cover active">
+    <img class="cover-bg" src="../assets/img/hb-cover.jpg" alt="手球比赛场面">
+    <div class="cover-shade"></div>
+    <div class="kicker">侵入型竞技 · 球类运动</div>
+    <div class="emoji">🤾</div>
+    <h1>手球</h1>
+    <p class="lead">用手投掷，用身体阻挡 — 最富动感的球类运动</p>
+  </section>
+
+  <!-- 2. 什么是手球？ -->
+  <section class="slide">
+    <div class="content" data-num="02">
+      <span class="tag">项目介绍</span>
+      <h2>什么是手球？</h2>
+      <p class="desc">7人制侵入型竞技运动 — 用手将球投入对方球门以争夺得分的比赛</p>
+      <ul>
+        <li><span class="n">1</span><div><b>目标</b> — 用手传球、运球，将球投入对方球门（3m×2m）以获得更多得分</div></li>
+        <li><span class="n">2</span><div><b>人数</b> — 包括1名守门员在内，每队7人上场比赛（最多可替补7人）</div></li>
+        <li><span class="n">3</span><div><b>特点</b> — 结合了足球的攻门、篮球的快速传球以及水球的投掷要素的复合型球类运动</div></li>
+        <li><span class="n">4</span><div><b>舞台</b> — 在欧洲尤其受欢迎，是奥运会正式项目，全球180多个国家和地区都在开展</div></li>
+      </ul>
+      <div class="chips">
+        <span class="chip"><b>奥运会</b> 正式项目</span>
+        <span class="chip"><b>7人制</b> 室内比赛</span>
+        <span class="chip">足球 + 篮球 + 水球的结合</span>
+        <span class="chip">欧洲人气运动前5名</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 历史 -->
+  <section class="slide">
+    <div class="content" data-num="03">
+      <span class="tag">历史</span>
+      <h2>手球的历史</h2>
+      <p class="desc">诞生于德国，风靡世界的动感运动</p>
+      <ul>
+        <li><span class="n">1917</span><div><b>手球诞生</b> — 德国体育教师马克斯·海泽（Max Heiser）将其设计为女子运动项目。当时是11人制的室外场地手球。</div></li>
+        <li><span class="n">1936</span><div><b>首次登上奥运会</b> — 在柏林奥运会上，11人制室外手球被列为正式项目。东道主德国获得金牌。</div></li>
+        <li><span class="n">1972</span><div><b>室内手球时代</b> — 在慕尼黑奥运会上，如今这种7人制室内手球作为正式项目复出。比赛演变得更快、更具动感！</div></li>
+        <li><span class="n">1988</span><div><b>韩国女子手球夺金</b> — 在首尔奥运会上，韩国女子代表队获得金牌！韩国成为手球强国的开端。</div></li>
+        <li><span class="n">1992</span><div><b>实现二连冠</b> — 在巴塞罗那奥运会上，女子代表队再次夺得金牌！创造了奥运会二连冠的伟大纪录，引领韩国手球的全盛时期。</div></li>
+      </ul>
+      <p class="note"><b>你知道吗？</b> 韩国女子手球队是在奥运会上获得2金2银的世界级强队。她们以娇小的身躯战胜欧洲强队的拼搏精神，是韩国体育史上的骄傲！</p>
+    </div>
+  </section>
+
+  <!-- 4. 场地结构 (SVG) -->
+  <section class="slide">
+    <div class="content" data-num="04">
+      <span class="tag">规则 · 场地</span>
+      <h2>场地结构</h2>
+      <p class="desc">让我们了解一下手球场地的主要线和区域</p>
+      <div class="figure">
+        <svg viewBox="0 0 640 360" role="img" aria-label="手球场地示意图">
+          <!-- 场地外框 -->
+          <rect x="20" y="30" width="600" height="300" fill="#e8f0e2" stroke="#4a7c3f" stroke-width="3"/>
+          <!-- 中线 -->
+          <line x1="320" y1="30" x2="320" y2="330" stroke="#4a7c3f" stroke-width="2.5"/>
+          <!-- 中点标记 -->
+          <circle cx="320" cy="180" r="4" fill="#4a7c3f"/>
+          <!-- 左侧球门 -->
+          <line x1="20" y1="150" x2="20" y2="210" stroke="var(--accent)" stroke-width="6"/>
+          <!-- 左侧球门区(6m半圆) -->
+          <path d="M20,105 Q120,180 20,255" fill="rgba(232,89,12,.12)" stroke="#4a7c3f" stroke-width="2.5"/>
+          <!-- 左侧任意球线(9m虚线) -->
+          <path d="M20,75 Q155,180 20,285" fill="none" stroke="#4a7c3f" stroke-width="2" stroke-dasharray="8,6"/>
+          <!-- 左侧7m标记 -->
+          <line x1="88" y1="176" x2="88" y2="184" stroke="var(--accent)" stroke-width="3"/>
+          <!-- 右侧球门 -->
+          <line x1="620" y1="150" x2="620" y2="210" stroke="var(--accent)" stroke-width="6"/>
+          <!-- 右侧球门区 -->
+          <path d="M620,105 Q520,180 620,255" fill="rgba(232,89,12,.12)" stroke="#4a7c3f" stroke-width="2.5"/>
+          <!-- 右侧任意球线 -->
+          <path d="M620,75 Q485,180 620,285" fill="none" stroke="#4a7c3f" stroke-width="2" stroke-dasharray="8,6"/>
+          <!-- 右侧7m标记 -->
+          <line x1="552" y1="176" x2="552" y2="184" stroke="var(--accent)" stroke-width="3"/>
+          <!-- 换人区 -->
+          <line x1="270" y1="330" x2="320" y2="330" stroke="#1d4ed8" stroke-width="4"/>
+          <line x1="320" y1="330" x2="370" y2="330" stroke="#c2410c" stroke-width="4"/>
+          <!-- 标签 -->
+          <text x="326" y="48" font-size="12" fill="#4a7c3f" font-weight="600">中线</text>
+          <text x="65" y="185" font-size="11" fill="#c2410c" font-weight="700">球门区</text>
+          <text x="42" y="85" font-size="10" fill="#4a7c3f" font-weight="600">自由球线(9m)</text>
+          <text x="78" y="172" font-size="9" fill="#c2410c" font-weight="700">7m</text>
+          <text x="22" y="145" font-size="10" fill="var(--accent)" font-weight="700">球门</text>
+          <text x="275" y="352" font-size="10" fill="#1d4ed8" font-weight="600">换人区</text>
+          <!-- 尺寸标注 -->
+          <text x="310" y="22" font-size="11" fill="#666" text-anchor="middle" font-weight="600">40m</text>
+          <text x="8" y="185" font-size="11" fill="#666" text-anchor="middle" font-weight="600" transform="rotate(-90,8,185)">20m</text>
+        </svg>
+        <figcaption>手球场地（40m × 20m）· 球门区（6m半圆）· 自由球线（9m虚线）· 球门（3m × 2m）</figcaption>
+      </div>
+      <div class="chips">
+        <span class="chip"><b>球门区</b> 仅守门员可进入 (6m)</span>
+        <span class="chip"><b>自由球线</b> 犯规时的投篮位置 (9m)</span>
+        <span class="chip"><b>点球标记</b> 7m投篮位置</span>
+        <span class="chip"><b>球门</b> 宽3m × 高2m</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 比赛规则 -->
+  <section class="slide">
+    <div class="content" data-num="05">
+      <span class="tag">规则 · 比赛进行</span>
+      <h2>比赛进行规则</h2>
+      <p class="desc">手球比赛是这样进行的</p>
+      <div class="two">
+        <div class="box"><h3>⏱️ 上下半场各30分钟</h3><p>正规比赛为上半场30分钟+下半场30分钟（共60分钟）。学校课堂上通常缩短为上下半场各15分钟。中场休息10分钟。</p></div>
+        <div class="box"><h3>🏁 中场开球开始</h3><p>比赛开始及得分后重新开始时，均在中场开球！一只脚踩在中线上，随哨声传球开始。</p></div>
+        <div class="box"><h3>🚶 三步规则</h3><p>接球后最多只能移动三步！必须在此之内完成传球、投篮或运球。超过四步即为越步犯规。</p></div>
+        <div class="box"><h3>⏳ 三秒规则</h3><p>接球后必须在3秒内完成传球、投篮或运球。拖延时间即为超时犯规！</p></div>
+        <div class="box"><h3>🏀 允许运球</h3><p>可以将球拍地移动（与篮球运球类似）。但只要再次接球，就要重新适用三步·三秒规则！</p></div>
+        <div class="box"><h3>🚫 禁止进入球门区</h3><p>场上球员不得进入球门区（6m半圆）内。只有守门员可以在该区域内活动！</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. 主要犯规 -->
+  <section class="slide">
+    <div class="content" data-num="06">
+      <span class="tag">规则 · 犯规与处罚</span>
+      <h2>主要犯规</h2>
+      <p class="desc">为了公平和安全的比赛而制定的规则</p>
+      <div class="two">
+        <div class="box warn"><h3>🚶 越步</h3><p>持球移动超过四步即为犯规。必须在三步以内完成传球、投篮或运球！</p></div>
+        <div class="box warn"><h3>⏳ 超时</h3><p>持球超过3秒即为犯规。快速判断和衔接配合是关键。</p></div>
+        <div class="box warn"><h3>💥 身体犯规</h3><p>推、抓、打等粗暴的身体接触属于犯规。防守时可用身体阻挡，但要用正当方式！</p></div>
+        <div class="box warn"><h3>🚫 侵入球门区</h3><p>场上球员进入球门区即为犯规。空中投篮后落地在区域内也属于侵入！</p></div>
+        <div class="box"><h3>⚽ 自由球</h3><p>一般犯规时，在犯规地点或9m线上执行自由球。防守方必须退到3m以外。</p></div>
+        <div class="box"><h3>🎯 7m投篮（点球）</h3><p>明显得分机会被犯规破坏时判7m投篮！与守门员一对一对决，得分率很高。</p></div>
+        <div class="box warn"><h3>🟡 警告（黄牌）</h3><p>对反复或粗暴犯规的警告。每名球员限1次，每队最多3次。</p></div>
+        <div class="box warn"><h3>🔴 罚下与2分钟罚下</h3><p>严重犯规判2分钟罚下（人数处于劣势），暴力行为则直接红牌罚下！球队须以少打多进行比赛。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. 核心技术①：射门 -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/hb-throw.jpg" alt="手球投篮技术">
+        <figcaption>跳投 — 在空中以强力的手腕甩动向球门投篮</figcaption>
+      </figure>
+      <div>
+        <span class="tag">核心技术 ①</span>
+        <h2>投篮</h2>
+        <p class="desc">得分最重要的技术，手腕甩动是关键！</p>
+        <ul>
+          <li><span class="n">1</span><div><b>站立投篮</b> — 双脚着地投篮的基本动作。是掌握正确姿势和手腕甩动的起点。</div></li>
+          <li><span class="n">2</span><div><b>跳投</b> — 跃入空中投篮的最具代表性的投篮方式。从高处越过防守阻挡进行投篮。</div></li>
+          <li><span class="n">3</span><div><b>旋转投篮</b> — 边转体边投篮的高级技术。可以晃过防守队员并制造角度。</div></li>
+          <li><span class="n">4</span><div><b>倒地投篮</b> — 身体向前倒地的同时投篮。可在球门区边缘尽可能靠近球门。</div></li>
+        </ul>
+        <p class="note"><b>核心要点：</b> 所有投篮的收尾动作都是手腕甩动！不是靠整条手臂的力量，而是靠手腕的快速甩动为球注入旋转和速度，让守门员更难反应。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. 核心技术②：传球 -->
+  <section class="slide">
+    <div class="media flip">
+      <div>
+        <span class="tag">核心技术 ②</span>
+        <h2>传球</h2>
+        <p class="desc">快速而准确的连接是手球的生命！</p>
+        <ul>
+          <li><span class="n">1</span><div><b>过顶传球</b> — 在头顶单手投出的最基本传球方式。可以传得又远又准，使用频率最高。</div></li>
+          <li><span class="n">2</span><div><b>击地传球</b> — 让球在地面弹跳后送出的传球。在需要穿过防守队员手臂下方时有效，常用于传给中锋球员。</div></li>
+          <li><span class="n">3</span><div><b>侧臂传球</b> — 手臂向侧面伸展投出的传球。可以从防守队员身边快速而犀利地传出。</div></li>
+          <li><span class="n">4</span><div><b>背后传球</b> — 不看后方直接向后传球的高级传球。以出人意料的方向转换使防守陷入混乱。</div></li>
+        </ul>
+        <p class="note"><b>核心要点：</b> 由于手球规定必须在3秒内传球，快速的衔接传球是进攻的核心。接球的瞬间就要决定下一步动作！</p>
+      </div>
+      <figure class="photo">
+        <img src="../assets/img/hb-pass.jpg" alt="手球传球技术">
+        <figcaption>过顶传球 — 单手从头顶准确地传给队友</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 9. 核心技术③：防守 -->
+  <section class="slide">
+    <div class="media">
+      <figure class="photo">
+        <img src="../assets/img/hb-defend.jpg" alt="手球防守技术">
+        <figcaption>拦截 — 高举双臂阻挡投篮，是防守的基本功</figcaption>
+      </figure>
+      <div>
+        <span class="tag">核心技术 ③</span>
+        <h2>防守</h2>
+        <p class="desc">强力的防守成就胜利！</p>
+        <ul>
+          <li><span class="n">1</span><div><b>6-0防守阵型</b> — 6名球员在球门区前一字排开的最基本防守阵型。密集封锁球门前方，减少投篮角度。</div></li>
+          <li><span class="n">2</span><div><b>5-1防守阵型</b> — 5人在后、1人前压的防守方式。压迫对方中卫，妨碍其传球。</div></li>
+          <li><span class="n">3</span><div><b>拦截</b> — 高举双臂用身体阻挡对方投篮！这是需要勇气和时机把握的防守技术。</div></li>
+          <li><span class="n">4</span><div><b>断球</b> — 在中途截获对方传球的技术。一旦成功即可直接转化为快攻机会！</div></li>
+        </ul>
+        <p class="note"><b>守门员：</b> 手球的最后一道防线！需要出色的反应能力和勇气，全身扑救以阻挡投篮。守门员的一次精彩扑救能改变整场比赛的走势。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. 位置 -->
+  <section class="slide">
+    <div class="content" data-num="10">
+      <span class="tag">战术 · 位置</span>
+      <h2>位置</h2>
+      <p class="desc">7名球员各司其职，共同组成球队</p>
+      <div class="split">
+        <div class="figure">
+          <svg viewBox="0 0 360 320" role="img" aria-label="手球位置分布图">
+            <!-- 半场 -->
+            <rect x="10" y="10" width="340" height="300" rx="4" fill="#e8f0e2" stroke="#4a7c3f" stroke-width="3"/>
+            <!-- 球门区 -->
+            <path d="M10,100 Q130,160 10,220" fill="rgba(232,89,12,.10)" stroke="#4a7c3f" stroke-width="2.5"/>
+            <!-- 9m线 -->
+            <path d="M10,65 Q170,160 10,255" fill="none" stroke="#4a7c3f" stroke-width="1.5" stroke-dasharray="6,5"/>
+            <!-- 球门 -->
+            <line x1="10" y1="130" x2="10" y2="190" stroke="var(--accent)" stroke-width="5"/>
+            <!-- 位置标记 -->
+            <g font-size="13" font-weight="800" fill="#fff" text-anchor="middle">
+              <!-- 守门员 -->
+              <circle cx="40" cy="160" r="18" fill="#c2410c"/><text x="40" y="166" fill="#fff">GK</text>
+              <!-- 左边锋 -->
+              <circle cx="120" cy="50" r="17" fill="#2f6df0"/><text x="120" y="56" fill="#fff">LW</text>
+              <!-- 右边锋 -->
+              <circle cx="120" cy="270" r="17" fill="#2f6df0"/><text x="120" y="276" fill="#fff">RW</text>
+              <!-- 左后卫 -->
+              <circle cx="210" cy="80" r="18" fill="#1d4ed8"/><text x="210" y="86" fill="#fff">LB</text>
+              <!-- 中后卫 -->
+              <circle cx="260" cy="160" r="18" fill="#1d4ed8"/><text x="260" y="166" fill="#fff">CB</text>
+              <!-- 右后卫 -->
+              <circle cx="210" cy="240" r="18" fill="#1d4ed8"/><text x="210" y="246" fill="#fff">RB</text>
+              <!-- 中锋(枢纽) -->
+              <circle cx="80" cy="160" r="18" fill="#15803d"/><text x="80" y="166" fill="#fff">PV</text>
+            </g>
+          </svg>
+          <figcaption>进攻时基本站位（向左侧球门进攻方向）</figcaption>
+        </div>
+        <ul>
+          <li><span class="n">CB</span><div><b>中卫（组织者）</b> — 球队的指挥官！指挥进攻展开并协调传球。需要出色的视野和判断力。</div></li>
+          <li><span class="n">LB·RB</span><div><b>左后卫 · 右后卫</b> — 两翼进攻手。具备强力远投和突破能力，是球队的主要得分手。</div></li>
+          <li><span class="n">PV</span><div><b>中锋（线上球员）</b> — 活动于对方防线之间，负责掩护和中路突破。强壮的身体是必备条件！</div></li>
+          <li><span class="n">LW·RW</span><div><b>左边锋 · 右边锋</b> — 在球场两端负责快速突破和刁钻角度的投篮。速度和敏捷性是关键。</div></li>
+          <li><span class="n">GK</span><div><b>守门员</b> — 守卫球门的最后一道防线。需要反应能力、勇气以及精准的站位判断。</div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11. 战术 -->
+  <section class="slide">
+    <div class="content" data-num="11">
+      <span class="tag">战术</span>
+      <h2>基本战术</h2>
+      <p class="desc">个人技术+团队战术决定胜负</p>
+      <div class="two">
+        <div class="box"><h3>⚡ 快攻（快速反击）</h3><p>一旦从防守中断球，就要在对方防守回防之前迅速进攻！守门员准确的第一传球是快攻的开始。是最有效的得分方式。</p></div>
+        <div class="box"><h3>🔄 阵地进攻（传球转移）</h3><p>如果无法快攻，则转为阵地战！通过快速转移传球制造防守空当。耐心和团队配合是关键。</p></div>
+        <div class="box"><h3>✂️ 交叉（位置交换）</h3><p>两名球员互相交换位置以扰乱防守的战术。伺机在防守队员盯人松动的瞬间发起进攻。</p></div>
+        <div class="box"><h3>🧱 掩护（筑墙）</h3><p>中锋像墙一样站在防守队员前方，为队友创造投篮空间的战术。与篮球的掩护类似。</p></div>
+        <div class="box"><h3>🏃 利用人数优势</h3><p>当对方球员被罚下2分钟时便形成人数优势！利用宽阔的空间转移传球，攻击空当。是绝佳的得分机会！</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. 安全守则 -->
+  <section class="slide">
+    <div class="content" data-num="12">
+      <span class="tag">安全守则</span>
+      <h2>安全地运动</h2>
+      <p class="desc">无伤病地享受运动才是最重要的！</p>
+      <div class="two">
+        <div class="box warn"><h3>💪 注意肩部损伤</h3><p>强力的投篮动作会给肩部带来很大负荷。充分的肩部拉伸和循序渐进的投篮练习必不可少！感到疼痛时应立即停止。</p></div>
+        <div class="box warn"><h3>🖐️ 保护手指与手腕</h3><p>接球或拦截时手指和手腕容易受伤。接球时应张开手指，建议佩戴护腕。</p></div>
+        <div class="box warn"><h3>💥 注意碰撞</h3><p>在密集空间内快速移动，球员之间发生碰撞的风险较高。应避免过度的身体对抗，随时留意周围情况。</p></div>
+        <div class="box warn"><h3>🦵 保护膝盖</h3><p>反复的跳投和落地会给膝盖带来较大负担。落地时应稍微弯曲膝盖以缓冲冲击力，建议使用护膝。</p></div>
+        <div class="box"><h3>✅ 必须做好准备活动！</h3><p>至少进行10分钟以上的准备活动后再开始！通过转肩、活动手腕、屈膝、轻松慢跑等方式充分热身。</p></div>
+        <div class="box"><h3>🧤 检查装备</h3><p>系紧室内鞋鞋带、剪短指甲、准备充足水分，必要时佩戴护膝、护腕。安全第一！</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13. 练习活动 -->
+  <section class="slide">
+    <div class="content" data-num="13">
+      <span class="tag">练习活动</span>
+      <h2>在课堂上尝试一下</h2>
+      <p class="desc">通过分阶段练习提升手球实力</p>
+      <ul>
+        <li><span class="n">1</span><div><b>接球接力</b> — 两队相对站立，互相练习过顶传球。练习准确接球和快速出手。掉球就要从头开始！</div></li>
+        <li><span class="n">2</span><div><b>投篮练习</b> — 在9m线上按站立投篮→跳投的顺序分阶段练习。轮流瞄准球门的四个角以提高准确度。</div></li>
+        <li><span class="n">3</span><div><b>3对3迷你比赛</b> — 将球场对半分开进行3对3比赛。可以在狭小空间内自然而然地掌握快速判断力和传球衔接。</div></li>
+        <li><span class="n">4</span><div><b>进攻-防守训练</b> — 3名进攻球员对2名防守球员+守门员，练习人数优势情况。转移传球寻找空档进行投篮！</div></li>
+        <li><span class="n">5</span><div><b>实战7对7比赛</b> — 应用规则的实战比赛。轮流体验各个位置，亲自尝试战术。</div></li>
+      </ul>
+      <p class="note"><b>课堂小贴士：</b> 最初使用柔软的软式球开始练习可以减少对球的恐惧感。将球门区域设置得大一些，初学者也能安全地享受比赛！</p>
+    </div>
+  </section>
+
+  <!-- 判断对错测验 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">测验</span>
+      <h2>对/错测验</h2>
+      <p class="desc">让我们来确认一下所学的内容！</p>
+      <ul>
+        <li><span class="n">Q1</span><div><b>在手球比赛中，接球后最多可以移动5步。</b> — 错。最多只能移动3步，超过4步即为越步犯规。</div></li>
+        <li><span class="n">Q2</span><div><b>韩国女子手球队在奥运会上实现了二连冠（1988年、1992年）。</b> — 对。在首尔奥运会和巴塞罗那奥运会上连续获得金牌。</div></li>
+        <li><span class="n">Q3</span><div><b>在手球比赛中，场上球员也可以进入球门区（6m）。</b> — 错。球门区只有守门员可以进入，场上球员进入即为犯规。</div></li>
+        <li><span class="n">Q4</span><div><b>手球比赛为上半场30分钟+下半场30分钟，共60分钟。</b> — 对。正规比赛上下半场各30分钟，共60分钟。</div></li>
+        <li><span class="n">Q5</span><div><b>手球的7m投篮（点球）在一般犯规时也会判罚。</b> — 错。7m投篮只有在明显得分机会被犯规破坏时才会判罚。一般犯规判罚自由球。</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 核心总结 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">核心总结</span>
+      <h2>这些一定要记住！</h2>
+      <p class="desc">整理今天学到的核心内容</p>
+      <div class="two">
+        <div class="box"><h3>📌 核心规则</h3><p>• 7人制（含守门员），上下半场各30分钟<br>• 三步·三秒规则：接球后须在3步、3秒内处理<br>• 禁止场上球员进入球门区（6m）<br>• 2分钟罚下制度可能导致人数处于劣势</p></div>
+        <div class="box"><h3>⭐ 核心技术</h3><p>• 投篮：站立投篮、跳投、旋转投篮 — 手腕甩动是关键<br>• 传球：过顶传球·击地传球·侧臂传球<br>• 防守：6-0/5-1阵型、拦截、断球<br>• 快攻：以守门员的第一传球开始的快速反击</p></div>
+        <div class="box"><h3>🏆 值得了解的小知识</h3><p>• 手球是足球+篮球+水球结合的复合型运动<br>• 1917年在德国首次被设计为女子运动<br>• 韩国女子手球是获得奥运会2金2银的世界级强队</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 探究问题 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">探究问题</span>
+      <h2>让我们一起思考</h2>
+      <p class="desc">在结束本课时，让我们一起讨论</p>
+      <ul>
+        <li><span class="n">1</span><div><b>有人说手球同时具备足球和篮球的要素，具体体现在哪些方面呢？</b></div></li>
+        <li><span class="n">2</span><div><b>手球在韩国成为奥运优势项目的原因是什么？</b></div></li>
+        <li><span class="n">3</span><div><b>在以快速攻防转换为核心的手球运动中，应该如何进行体能管理？</b></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 14. 结尾 -->
+  <section class="slide cover">
+    <img class="cover-bg" src="../assets/img/hb-team.jpg" alt="手球团队精神">
+    <div class="cover-shade"></div>
+    <div class="kicker">ANY QUESTIONS?</div>
+    <div class="emoji">🤾</div>
+    <h1>谢谢!</h1>
+    <p class="lead">手球是由速度、力量和团队合作共同谱写的一项扣人心弦的运动。</p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" aria-label="上一页">&#8249;</button>
+  <div class="dots"></div>
+  <button id="next" aria-label="下一页">&#8250;</button>
+</div>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>

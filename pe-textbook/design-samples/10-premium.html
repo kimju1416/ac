@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>플라잉디스크 - 프리미엄 다크</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Noto Sans KR',sans-serif; overflow:hidden; height:100vh; background:#121212; color:#fff; }
+
+.slides { position:relative; height:100vh; }
+.slide {
+  display:none; position:absolute; inset:0; background:#121212;
+  flex-direction:column; align-items:center; justify-content:center;
+}
+.slide.active { display:flex; animation:fadeIn 0.6s ease; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+/* Slide 1 */
+.slide1 { position:relative; }
+.slide1 .bg-img {
+  position:absolute; inset:0; background:url('../flying-disc-images/01_title.jpg') center/cover;
+  opacity:0.3;
+}
+.slide1 .overlay { position:absolute; inset:0; background:linear-gradient(to bottom,rgba(18,18,18,0.3),rgba(18,18,18,0.9)); }
+.slide1 .frame {
+  position:relative; z-index:1; border:1px solid #C9A84C; padding:60px 80px; text-align:center;
+}
+.slide1 h1 {
+  font-family:'Playfair Display',serif; font-size:3.5rem; font-weight:700;
+  color:#C9A84C; letter-spacing:6px; margin-bottom:12px;
+}
+.slide1 h2 { font-size:1rem; color:rgba(255,255,255,0.6); font-weight:300; letter-spacing:3px; }
+.slide1 .line { width:60px; height:1px; background:#C9A84C; margin:20px auto; }
+
+/* Slide 2 */
+.slide2 { padding:60px 40px; }
+.slide2 .section-title {
+  font-family:'Playfair Display'; font-size:1.8rem; color:#C9A84C; text-align:center; margin-bottom:40px;
+}
+.slide2 .columns { display:flex; gap:0; max-width:800px; width:100%; }
+.slide2 .col {
+  flex:1; padding:30px 24px; text-align:center;
+  border-right:1px solid rgba(201,168,76,0.3);
+}
+.slide2 .col:last-child { border-right:none; }
+.slide2 .col-icon { font-size:2rem; margin-bottom:16px; display:block; color:#C9A84C; }
+.slide2 .col h3 { font-size:0.95rem; color:#C9A84C; margin-bottom:10px; font-weight:700; }
+.slide2 .col p { font-size:0.8rem; color:rgba(255,255,255,0.7); line-height:1.7; }
+
+/* Slide 3 */
+.slide3 { position:relative; }
+.slide3 .bg-img {
+  position:absolute; inset:0; background:url('../flying-disc-images/02_backhand.jpg') center/cover;
+  opacity:0.25;
+}
+.slide3 .overlay { position:absolute; inset:0; background:linear-gradient(to right,rgba(18,18,18,0.95),rgba(18,18,18,0.6)); }
+.slide3 .content { position:relative; z-index:1; padding:40px; max-width:700px; }
+.slide3 .section-title {
+  font-family:'Playfair Display'; font-size:1.6rem; color:#C9A84C; margin-bottom:30px;
+}
+.slide3 .steps { display:flex; flex-direction:column; gap:20px; }
+.slide3 .step { display:flex; gap:16px; align-items:flex-start; }
+.slide3 .step-num {
+  font-family:'Playfair Display'; font-size:2rem; font-weight:700; color:#C9A84C;
+  min-width:40px; line-height:1;
+}
+.slide3 .step-content { border-left:1px solid rgba(201,168,76,0.4); padding-left:16px; }
+.slide3 .step-content h4 { font-size:0.95rem; color:#fff; margin-bottom:4px; }
+.slide3 .step-content p { font-size:0.8rem; color:rgba(255,255,255,0.6); line-height:1.5; }
+
+/* Nav */
+.nav {
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:10;
+  display:flex; gap:14px; align-items:center;
+  border:1px solid rgba(201,168,76,0.3); padding:10px 20px; border-radius:0;
+  background:rgba(18,18,18,0.9);
+}
+.nav button {
+  background:transparent; border:1px solid #C9A84C; color:#C9A84C;
+  width:36px; height:36px; border-radius:0; cursor:pointer;
+  font-size:1rem; transition:all 0.3s;
+}
+.nav button:hover { background:#C9A84C; color:#121212; }
+.dots { display:flex; gap:10px; }
+.dot { width:8px; height:8px; border-radius:0; background:rgba(201,168,76,0.3); cursor:pointer; transition:all 0.3s; }
+.dot.active { background:#C9A84C; }
+</style>
+</head>
+<body>
+
+<div class="slides">
+  <div class="slide slide1 active">
+    <div class="bg-img"></div>
+    <div class="overlay"></div>
+    <div class="frame">
+      <h1>FLYING DISC</h1>
+      <div class="line"></div>
+      <h2>플라잉디스크 얼티밋</h2>
+    </div>
+  </div>
+
+  <div class="slide slide2">
+    <p class="section-title">The Essentials</p>
+    <div class="columns">
+      <div class="col">
+        <span class="col-icon">&#9823;</span>
+        <h3>팀 스포츠 7명</h3>
+        <p>한 팀 7명이 원반을 패스하여 엔드존에서 득점하는 팀 경기</p>
+      </div>
+      <div class="col">
+        <span class="col-icon">&#9878;</span>
+        <h3>자율심판 SOTG</h3>
+        <p>Spirit of the Game 심판 없이 선수가 스스로 공정하게 판정</p>
+      </div>
+      <div class="col">
+        <span class="col-icon">&#9740;</span>
+        <h3>비접촉 원칙</h3>
+        <p>상대 선수와 신체 접촉 없이 안전하게 플레이하는 스포츠</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide slide3">
+    <div class="bg-img"></div>
+    <div class="overlay"></div>
+    <div class="content">
+      <p class="section-title">Backhand Throw</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>그립 (Grip)</h4>
+            <p>엄지는 디스크 위, 나머지 4손가락은 림 안쪽을 감싸 잡는다</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>자세 (Stance)</h4>
+            <p>몸을 회전하며 팔을 가슴 앞으로 가져온다</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>릴리스 (Release)</h4>
+            <p>손목 스냅을 이용하여 수평 방향으로 릴리스한다</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>팔로스루 (Follow-through)</h4>
+            <p>릴리스 후 끝까지 목표 방향으로 팔을 뻗는다</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <button id="prev">&#8592;</button>
+  <div class="dots">
+    <div class="dot active" data-i="0"></div>
+    <div class="dot" data-i="1"></div>
+    <div class="dot" data-i="2"></div>
+  </div>
+  <button id="next">&#8594;</button>
+</div>
+
+<script>
+let cur=0; const slides=document.querySelectorAll('.slide'), dots=document.querySelectorAll('.dot'), total=slides.length;
+function go(n){ cur=(n+total)%total; slides.forEach((s,i)=>{s.classList.toggle('active',i===cur)}); dots.forEach((d,i)=>{d.classList.toggle('active',i===cur)}); }
+document.getElementById('prev').onclick=()=>go(cur-1);
+document.getElementById('next').onclick=()=>go(cur+1);
+dots.forEach(d=>d.onclick=()=>go(+d.dataset.i));
+document.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')go(cur-1);if(e.key==='ArrowRight')go(cur+1);});
+</script>
+</body>
+</html>

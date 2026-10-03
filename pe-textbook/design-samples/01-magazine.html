@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>플라잉디스크 - 매거진 에디토리얼</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&family=Noto+Serif+KR:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Noto Sans KR', sans-serif; background: #f5f5f5; overflow: hidden; height: 100vh; }
+.slider { width: 100vw; height: 100vh; position: relative; }
+.slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 0.6s ease, transform 0.6s ease; transform: translateX(30px); pointer-events: none; }
+.slide.active { opacity: 1; transform: translateX(0); pointer-events: all; }
+
+/* Navigation */
+.nav-arrows { position: fixed; bottom: 40px; right: 40px; z-index: 100; display: flex; gap: 8px; }
+.nav-arrows button { width: 48px; height: 48px; border: 2px solid #222; background: #fff; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.nav-arrows button:hover { background: #222; color: #fff; }
+.slide-counter { position: fixed; bottom: 44px; left: 40px; font-family: 'Noto Serif KR', serif; font-size: 14px; color: #999; z-index: 100; letter-spacing: 2px; }
+
+/* Slide 1 - Cover */
+.slide-1 { background: #000; display: flex; align-items: center; justify-content: center; }
+.slide-1 .bg-image { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: url('../flying-disc-images/01_title.jpg') center/cover no-repeat; opacity: 0.55; }
+.slide-1 .content { position: relative; z-index: 2; text-align: left; padding: 60px; width: 100%; }
+.slide-1 .slide-num { font-family: 'Noto Serif KR', serif; font-size: 120px; font-weight: 900; color: rgba(255,255,255,0.08); position: absolute; top: 40px; right: 60px; line-height: 1; }
+.slide-1 .title { font-family: 'Noto Serif KR', serif; font-size: clamp(48px, 8vw, 96px); font-weight: 900; color: #fff; line-height: 1.1; margin-bottom: 20px; }
+.slide-1 .title span { color: #E8590C; }
+.slide-1 .subtitle { font-size: clamp(14px, 2vw, 20px); color: rgba(255,255,255,0.75); font-weight: 300; letter-spacing: 1px; border-left: 3px solid #E8590C; padding-left: 16px; }
+
+/* Slide 2 - What is */
+.slide-2 { background: #fff; display: grid; grid-template-columns: 55% 45%; height: 100%; }
+.slide-2 .image-section { position: relative; overflow: hidden; }
+.slide-2 .image-section img { width: 100%; height: 100%; object-fit: cover; }
+.slide-2 .image-section .overlay { position: absolute; bottom: 0; left: 0; right: 0; height: 40%; background: linear-gradient(to top, rgba(0,0,0,0.4), transparent); }
+.slide-2 .text-section { padding: 60px 50px; display: flex; flex-direction: column; justify-content: center; position: relative; }
+.slide-2 .slide-num { font-family: 'Noto Serif KR', serif; font-size: 160px; font-weight: 900; color: rgba(0,0,0,0.04); position: absolute; top: -20px; right: 20px; line-height: 1; }
+.slide-2 .tag { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #E8590C; margin-bottom: 16px; font-weight: 700; }
+.slide-2 h2 { font-family: 'Noto Serif KR', serif; font-size: clamp(28px, 3.5vw, 42px); font-weight: 900; margin-bottom: 24px; line-height: 1.2; color: #111; }
+.slide-2 .definition { font-size: 15px; line-height: 1.8; color: #444; margin-bottom: 32px; border-left: 3px solid #E8590C; padding-left: 16px; }
+.slide-2 .points { list-style: none; }
+.slide-2 .points li { padding: 14px 0; border-bottom: 1px solid #eee; display: flex; align-items: flex-start; gap: 12px; }
+.slide-2 .points li:last-child { border-bottom: none; }
+.slide-2 .points .num { font-family: 'Noto Serif KR', serif; font-weight: 900; color: #E8590C; font-size: 20px; min-width: 28px; }
+.slide-2 .points .text { font-size: 14px; line-height: 1.6; color: #333; }
+.slide-2 .points .text strong { display: block; font-size: 15px; margin-bottom: 2px; }
+.slide-2 .history { margin-top: 24px; font-size: 12px; color: #999; padding: 12px 16px; background: #fafafa; border-radius: 4px; }
+
+/* Slide 3 - Backhand */
+.slide-3 { background: #fff; display: grid; grid-template-columns: 45% 55%; height: 100%; }
+.slide-3 .text-section { padding: 60px 50px; display: flex; flex-direction: column; justify-content: center; position: relative; order: 1; }
+.slide-3 .image-section { position: relative; overflow: hidden; order: 2; }
+.slide-3 .image-section img { width: 100%; height: 100%; object-fit: cover; }
+.slide-3 .slide-num { font-family: 'Noto Serif KR', serif; font-size: 160px; font-weight: 900; color: rgba(0,0,0,0.04); position: absolute; top: -20px; left: 20px; line-height: 1; }
+.slide-3 .tag { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #E8590C; margin-bottom: 16px; font-weight: 700; }
+.slide-3 h2 { font-family: 'Noto Serif KR', serif; font-size: clamp(28px, 3.5vw, 42px); font-weight: 900; margin-bottom: 32px; line-height: 1.2; color: #111; }
+.slide-3 .steps { list-style: none; }
+.slide-3 .steps li { padding: 18px 0; border-bottom: 1px solid #eee; display: flex; align-items: flex-start; gap: 16px; }
+.slide-3 .steps li:last-child { border-bottom: none; }
+.slide-3 .step-num { width: 36px; height: 36px; background: #111; color: #fff; font-family: 'Noto Serif KR', serif; font-weight: 900; font-size: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.slide-3 .step-content { }
+.slide-3 .step-content strong { display: block; font-size: 15px; margin-bottom: 4px; color: #111; }
+.slide-3 .step-content p { font-size: 13px; color: #666; line-height: 1.5; }
+
+@media (max-width: 768px) {
+  .slide-2, .slide-3 { grid-template-columns: 1fr; grid-template-rows: 40% 60%; }
+  .slide-2 .text-section, .slide-3 .text-section { padding: 30px 24px; }
+  .slide-3 .text-section { order: 2; }
+  .slide-3 .image-section { order: 1; }
+  .nav-arrows { bottom: 20px; right: 20px; }
+  .slide-counter { bottom: 24px; left: 20px; }
+}
+</style>
+</head>
+<body>
+<div class="slider">
+  <div class="slide slide-1 active">
+    <div class="bg-image"></div>
+    <div class="slide-num">01</div>
+    <div class="content">
+      <h1 class="title">플라잉<span>디스크</span></h1>
+      <p class="subtitle">던지고, 받고, 달리는 팀 스포츠</p>
+    </div>
+  </div>
+
+  <div class="slide slide-2">
+    <div class="image-section">
+      <img src="../flying-disc-images/04_team_spirit.jpg" alt="팀 스피릿">
+      <div class="overlay"></div>
+    </div>
+    <div class="text-section">
+      <div class="slide-num">02</div>
+      <span class="tag">Introduction</span>
+      <h2>플라잉디스크란?</h2>
+      <p class="definition">원반형 디스크를 팀원 간 패스하며 상대편 엔드존에서 캐치하여 득점하는 비접촉 팀 스포츠입니다.</p>
+      <ul class="points">
+        <li><span class="num">1</span><span class="text"><strong>7인제 팀 스포츠</strong>한 팀 7명이 출전하며, 패스만으로 디스크를 전진시킵니다.</span></li>
+        <li><span class="num">2</span><span class="text"><strong>자율 심판 (Spirit of the Game)</strong>심판 없이 선수 스스로 파울을 판정합니다. 페어플레이가 경기의 핵심입니다.</span></li>
+        <li><span class="num">3</span><span class="text"><strong>비접촉 원칙</strong>상대 선수와의 신체 접촉이 금지되어 안전하게 경기할 수 있습니다.</span></li>
+      </ul>
+      <p class="history">1968년 미국 뉴저지주 고등학생들이 고안한 경기에서 시작되었습니다.</p>
+    </div>
+  </div>
+
+  <div class="slide slide-3">
+    <div class="text-section">
+      <div class="slide-num">03</div>
+      <span class="tag">Technique</span>
+      <h2>백핸드 스로우</h2>
+      <ul class="steps">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-content"><strong>그립 (Grip)</strong><p>엄지를 디스크 위에, 나머지 네 손가락은 림 안쪽에 넣어 단단히 잡습니다.</p></div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-content"><strong>자세 (Stance)</strong><p>목표 방향으로 어깨를 돌리고, 팔을 가슴 앞으로 당겨 몸의 회전력을 준비합니다.</p></div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-content"><strong>릴리스 (Release)</strong><p>손목 스냅을 주며 디스크를 수평으로 던집니다. 디스크가 기울지 않도록 주의합니다.</p></div>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <div class="step-content"><strong>팔로스루 (Follow-through)</strong><p>던진 후 팔을 목표 방향으로 끝까지 뻗어 정확도를 높입니다.</p></div>
+        </li>
+      </ul>
+    </div>
+    <div class="image-section">
+      <img src="../flying-disc-images/02_backhand.jpg" alt="백핸드 스로우">
+    </div>
+  </div>
+</div>
+
+<div class="slide-counter"><span id="current">01</span> / 03</div>
+<div class="nav-arrows">
+  <button onclick="prevSlide()">&larr;</button>
+  <button onclick="nextSlide()">&rarr;</button>
+</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+
+function showSlide(index) {
+  slides.forEach(s => s.classList.remove('active'));
+  slides[index].classList.add('active');
+  document.getElementById('current').textContent = String(index + 1).padStart(2, '0');
+}
+
+function nextSlide() { current = (current + 1) % total; showSlide(current); }
+function prevSlide() { current = (current - 1 + total) % total; showSlide(current); }
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+});
+
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  const diff = e.changedTouches[0].clientX - touchStartX;
+  if (diff < -50) nextSlide();
+  if (diff > 50) prevSlide();
+});
+</script>
+</body>
+</html>

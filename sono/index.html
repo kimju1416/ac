@@ -1,0 +1,1491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Composer Studio V2.2 (Pro)</title>
+  <meta name="description" content="Suno용 AI 작곡 프롬프트를 클릭 몇 번으로 완성하는 빌더. 장르·분위기·악기·보컬·곡 구조 태그까지 한 번에.">
+  <meta name="theme-color" content="#121212">
+  <meta property="og:title" content="AI Composer Studio - Suno 프롬프트 빌더">
+  <meta property="og:description" content="장르·분위기·악기·보컬을 클릭으로 조합해 AI 작곡 프롬프트를 완성하세요.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kimju.kr/sono/">
+  <meta property="og:image" content="https://kimju.kr/sono/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23121212'/%3E%3Cpath d='M40 22h30v10H50v36a14 14 0 1 1-10-13.4V22z' fill='%2300ff7f'/%3E%3C/svg%3E">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Pretendard Variable', 'Pretendard', sans-serif;
+      background-color: #121212;
+      color: #e0e0e0;
+      overflow: hidden;
+      height: 100vh;
+      height: 100dvh;
+    }
+    .custom-scroll::-webkit-scrollbar { width: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #555; }
+    
+    .chip { cursor: pointer; transition: all 0.15s ease-out; font-size: 0.75rem; border-width: 1px; user-select: none; display: inline-flex; align-items: center; gap: 0.25rem; background-color: #1e1e1e; border-color: #333; color: #ccc; margin-bottom: 0.25rem; padding: 0.375rem 0.75rem; border-radius: 0.5rem; }
+    .chip:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0, 255, 127, 0.2); border-color: #00ff7f; color: #fff; }
+    .chip:active { transform: scale(0.96); }
+    
+    .tab-active { border-bottom: 3px solid #00ff7f; color: #00ff7f; font-weight: 700; }
+    .tab-inactive { color: #888; font-weight: 500; }
+    
+    .template-card { transition: all 0.2s; border: 1px solid #333; background-color: #1e1e1e; }
+    .template-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5); border-color: #00ff7f; }
+    
+    .section-title { position: sticky; top: 0; background: rgba(18, 18, 18, 0.95); backdrop-filter: blur(4px); padding-top: 0.5rem; padding-bottom: 0.5rem; z-index: 10; border-bottom: 1px solid #333; margin-bottom: 0.75rem; display: flex; align-items: center; color: #fff; justify-content: space-between; }
+    
+    .category-label { font-size: 0.65rem; font-weight: 700; color: #666; letter-spacing: 0.05em; margin-bottom: 0.5rem; display: block; margin-top: 0.75rem; }
+    .category-label:first-child { margin-top: 0; }
+
+    .accordion-header { cursor: pointer; transition: all 0.2s; background-color: #1e1e1e; }
+    .accordion-header:hover { background-color: #2a2a2a; }
+    .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background-color: #181818; }
+    .accordion-open .accordion-content { max-height: 2000px; transition: max-height 0.5s ease-in; }
+    .accordion-icon { transition: transform 0.3s; }
+    .accordion-open .accordion-icon { transform: rotate(180deg); }
+    
+    .term-item { padding-bottom: 0.5rem; border-bottom: 1px dashed #333; margin-bottom: 0.5rem; }
+    .term-item:last-child { border-bottom: none; margin-bottom: 0; }
+    .term-title { font-weight: 700; color: #00ff7f; margin-right: 0.5rem; }
+
+    textarea, input[type="text"] { background-color: #1e1e1e; border-color: #333; color: #fff; }
+    textarea:focus, input[type="text"]:focus { ring-color: #00ff7f; border-color: #00ff7f; outline: none; }
+    
+    .required-mark { color: #ff4d4d; margin-left: 4px; font-size: 0.8em; }
+    
+    .scroll-container {
+      flex: 1 1 0%;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .left-scroll-area,
+    .right-scroll-area {
+      flex: 1 1 0%;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    /* 모바일: 좌우 2단 -> 세로 1단 스택, 빌더 전체 스크롤 */
+    @media (max-width: 767px) {
+      #view-builder { overflow-y: auto; }
+      .left-scroll-area,
+      .right-scroll-area {
+        flex: none;
+        min-height: auto;
+        overflow: visible;
+      }
+    }
+  </style>
+</head>
+<body class="flex flex-col">
+
+  <header class="h-14 bg-[#1e1e1e] border-b border-[#333] flex items-center justify-between px-2 sm:px-4 lg:px-6 shadow-md z-30 shrink-0">
+    <div class="flex items-center gap-2 sm:gap-4 lg:gap-6">
+      <div class="flex items-center gap-1 sm:gap-2">
+        <div class="w-7 h-7 sm:w-8 sm:h-8 bg-green-900/30 rounded-lg flex items-center justify-center text-[#00ff7f] font-bold shadow-sm border border-green-800 text-sm sm:text-base">🎵</div>
+        <h1 class="text-sm sm:text-base lg:text-lg font-bold text-white tracking-tight hidden sm:block">AI Composer Studio</h1>
+        <h1 class="text-sm font-bold text-white tracking-tight sm:hidden">AI Studio</h1>
+        <p class="text-[9px] sm:text-[10px] text-gray-400 font-medium hidden lg:block">Suno Prompt Builder V2.2</p>
+      </div>
+      <nav class="flex space-x-2 sm:space-x-4 lg:space-x-6 h-14">
+        <button onclick="switchTab('builder')" id="btn-builder" class="tab-active h-full flex items-center gap-1 sm:gap-2 text-xs sm:text-sm transition-colors px-2 sm:px-3">
+          <i class="fas fa-sliders-h"></i> <span class="hidden md:inline">작곡 빌더</span>
+        </button>
+        <button onclick="switchTab('templates')" id="btn-templates" class="tab-inactive h-full flex items-center gap-1 sm:gap-2 text-xs sm:text-sm transition-colors px-2 sm:px-3">
+          <i class="fas fa-compact-disc"></i> <span class="hidden md:inline">명예의 전당</span>
+        </button>
+        <button onclick="switchTab('glossary')" id="btn-glossary" class="tab-inactive h-full flex items-center gap-1 sm:gap-2 text-xs sm:text-sm transition-colors px-2 sm:px-3">
+          <i class="fas fa-book"></i> <span class="hidden md:inline">음악 용어</span>
+        </button>
+        <button onclick="switchTab('guide')" id="btn-guide" class="tab-inactive h-full flex items-center gap-1 sm:gap-2 text-xs sm:text-sm transition-colors px-2 sm:px-3">
+          <i class="fas fa-info-circle"></i> <span class="hidden md:inline">사용 가이드</span>
+        </button>
+      </nav>
+    </div>
+    <div class="flex items-center gap-2 sm:gap-3">
+        <button onclick="resetAll()" class="bg-[#2a2a2a] hover:bg-red-900/50 text-gray-400 hover:text-red-400 text-xs sm:text-sm font-bold px-2 sm:px-3 py-1.5 rounded-lg border border-[#333] transition-colors flex items-center gap-1 sm:gap-2">
+            <i class="fas fa-redo-alt text-xs sm:text-sm"></i> <span class="hidden sm:inline">초기화</span>
+        </button>
+    </div>
+  </header>
+
+  <main id="view-builder" class="scroll-container flex flex-col md:flex-row">
+    <section class="w-full md:w-1/2 bg-[#121212] md:border-r border-[#333] flex flex-col">
+      <div class="left-scroll-area custom-scroll p-4 lg:p-6">
+        <div class="max-w-4xl mx-auto space-y-6 lg:space-y-8 pb-20">
+        
+        <div>
+            <h2 class="text-gray-300 font-bold text-sm section-title">
+              <div><span class="w-6 h-6 rounded bg-[#333] text-gray-200 flex items-center justify-center mr-2 text-xs inline-flex">0</span> 곡 주제 (Topic)</div>
+            </h2>
+            <div class="bg-[#1e1e1e] p-3 rounded-xl border border-[#333] shadow-sm">
+               <p class="category-label">DAILY & EMOTION</p>
+               <div class="flex flex-wrap gap-2 mb-3">
+                   <div onclick="setText('in-topic', 'A hopeful song about overcoming failure')" class="chip">🌱 희망/극복</div>
+                   <div onclick="setText('in-topic', 'A heartbreaking breakup song in the rain')" class="chip">🌧️ 이별/슬픔</div>
+                   <div onclick="setText('in-topic', 'Energetic workout motivation music')" class="chip">💪 운동/동기부여</div>
+                   <div onclick="setText('in-topic', 'Late night coding session focus music')" class="chip">💻 코딩/집중</div>
+                   <div onclick="setText('in-topic', 'Happy birthday song for a best friend')" class="chip">🎂 생일 축하</div>
+               </div>
+               <p class="category-label">STORY & FANTASY</p>
+               <div class="flex flex-wrap gap-2 mb-3">
+                   <div onclick="setText('in-topic', 'Cyberpunk city adventure')" class="chip">🌃 사이버펑크 모험</div>
+                   <div onclick="setText('in-topic', 'Epic battle music for a fantasy game')" class="chip">⚔️ 판타지 전투</div>
+                   <div onclick="setText('in-topic', 'Relaxing cafe ambience in Paris')" class="chip">☕ 파리 카페</div>
+                   <div onclick="setText('in-topic', 'A lullaby for a sleeping baby')" class="chip">👶 자장가</div>
+               </div>
+               <p class="category-label">TIME & PLACE</p>
+               <div class="flex flex-wrap gap-2 mb-3">
+                   <div onclick="setText('in-topic', 'Early morning sunrise meditation')" class="chip">🌅 새벽 명상</div>
+                   <div onclick="setText('in-topic', 'Midnight drive on empty highway')" class="chip">🌙 심야 드라이브</div>
+                   <div onclick="setText('in-topic', 'Rainy afternoon nostalgia')" class="chip">🌧️ 비오는 오후</div>
+                   <div onclick="setText('in-topic', 'Desert wanderer journey')" class="chip">🏜️ 사막 여행자</div>
+                   <div onclick="setText('in-topic', 'Deep ocean exploration')" class="chip">🌊 심해 탐험</div>
+               </div>
+               <p class="category-label">WORK & ACTIVITY</p>
+               <div class="flex flex-wrap gap-2 mb-3">
+                   <div onclick="setText('in-topic', 'Chef cooking in busy kitchen')" class="chip">👨‍🍳 주방장의 하루</div>
+                   <div onclick="setText('in-topic', 'Astronaut floating in space')" class="chip">🚀 우주비행사</div>
+                   <div onclick="setText('in-topic', 'Artist painting masterpiece')" class="chip">🎨 화가의 작업실</div>
+                   <div onclick="setText('in-topic', 'Fisherman at dawn')" class="chip">🎣 어부의 아침</div>
+                   <div onclick="setText('in-topic', 'Marathon runner final sprint')" class="chip">🏃 마라톤 결승선</div>
+               </div>
+               <p class="category-label">SCHOOL & CELEBRATION</p>
+               <div class="flex flex-wrap gap-2">
+                   <div onclick="setText('in-topic', 'A touching graduation song about friends and precious memories')" class="chip">🎓 졸업식 노래</div>
+                   <div onclick="setText('in-topic', 'An energetic cheer anthem for our class, team spirit')" class="chip">📣 학급 응원가</div>
+                   <div onclick="setText('in-topic', 'A bright welcome song for new students on the first day of school')" class="chip">🏫 입학 환영송</div>
+                   <div onclick="setText('in-topic', 'Exciting sports day fight song with stadium chants')" class="chip">🏅 운동회 응원가</div>
+                   <div onclick="setText('in-topic', 'A romantic congratulation song for a wedding ceremony')" class="chip">💒 결혼식 축가</div>
+                   <div onclick="setText('in-topic', 'A warm thank-you song for teachers')" class="chip">🌸 스승의 날</div>
+                   <div onclick="setText('in-topic', 'A proud school anthem about our school and friends')" class="chip">🏫 교가풍</div>
+                   <div onclick="setText('in-topic', 'A cheerful celebration song for kids day')" class="chip">🎈 어린이날</div>
+                   <div onclick="setText('in-topic', 'A grateful song for mom and dad')" class="chip">🌷 어버이날</div>
+                   <div onclick="setText('in-topic', 'A warm Christmas song with sleigh bells')" class="chip">🎄 크리스마스</div>
+                   <div onclick="setText('in-topic', 'A bright song about the first day of a new school year')" class="chip">🌱 새 학기 첫날</div>
+                   <div onclick="setText('in-topic', 'A fun song for a school talent show')" class="chip">🎪 학예회</div>
+                   <div onclick="setText('in-topic', 'An exciting song about a school field trip')" class="chip">🚌 체험학습</div>
+                   <div onclick="setText('in-topic', 'A joyful song about vacation starting tomorrow')" class="chip">🏖️ 방학</div>
+               </div>
+               <p class="category-label">CLASS &amp; VALUES</p>
+               <div class="flex flex-wrap gap-2 mb-3">
+                   <div onclick="setText('in-topic', 'A cozy song about reading books')" class="chip">📚 독서</div>
+                   <div onclick="setText('in-topic', 'A hopeful song about protecting the earth')" class="chip">🌏 환경/지구</div>
+                   <div onclick="setText('in-topic', 'An inspiring song about finding my dream')" class="chip">🚀 진로/꿈</div>
+                   <div onclick="setText('in-topic', 'A warm song about true friendship')" class="chip">🤝 우정</div>
+                   <div onclick="setText('in-topic', 'A heartfelt song about my family')" class="chip">🏠 가족</div>
+                   <div onclick="setText('in-topic', 'A cute song about my pet dog')" class="chip">🐶 반려동물</div>
+               </div>
+               <p class="category-label">SEASON</p>
+               <div class="flex flex-wrap gap-2">
+                   <div onclick="setText('in-topic', 'A gentle song about spring blossoms')" class="chip">🌸 봄</div>
+                   <div onclick="setText('in-topic', 'A refreshing song about the summer sea')" class="chip">🌊 여름</div>
+                   <div onclick="setText('in-topic', 'A calm song about autumn leaves')" class="chip">🍁 가을</div>
+                   <div onclick="setText('in-topic', 'A cozy song about the first snow of winter')" class="chip">❄️ 겨울</div>
+               </div>
+            </div>
+        </div>
+
+        <div>
+          <h2 class="text-[#00ff7f] font-bold text-sm section-title">
+            <div><span class="w-6 h-6 rounded bg-green-900/50 text-[#00ff7f] flex items-center justify-center mr-2 text-xs inline-flex">1</span> 장르 & 스타일 (Genre)</div>
+            <span class="text-xs text-red-400 font-normal">*주제/장르 중 1개 필수</span>
+          </h2>
+          <div class="bg-[#1e1e1e] p-3 rounded-xl border border-[#333] shadow-sm">
+             <p class="category-label">POP / IDOL</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-genre', 'K-Pop')" class="chip">🇰🇷 K-Pop</div>
+                <div onclick="addText('in-genre', 'J-Pop')" class="chip">🇯🇵 J-Pop</div>
+                <div onclick="addText('in-genre', 'Pop Rock')" class="chip">🎸 팝 락</div>
+                <div onclick="addText('in-genre', 'Synth-pop')" class="chip">🎹 신스팝</div>
+                <div onclick="addText('in-genre', 'Ballad')" class="chip">🎤 발라드</div>
+                <div onclick="addText('in-genre', 'Korean Trot')" class="chip">🎤 트로트</div>
+             </div>
+             
+             <p class="category-label">EDM / CLUB / HIPHOP</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-genre', 'EDM')" class="chip">🎧 EDM</div>
+                <div onclick="addText('in-genre', 'House')" class="chip">🏠 하우스</div>
+                <div onclick="addText('in-genre', 'Tropical House')" class="chip">🏝️ 트로피칼</div>
+                <div onclick="addText('in-genre', 'Hip Hop')" class="chip">🧢 힙합</div>
+                <div onclick="addText('in-genre', 'Trap')" class="chip">⛓️ 트랩</div>
+                <div onclick="addText('in-genre', 'R&B')" class="chip">🍷 R&B</div>
+                <div onclick="addText('in-genre', 'Techno')" class="chip">🔊 테크노</div>
+                <div onclick="addText('in-genre', 'Disco')" class="chip">🪩 디스코</div>
+                <div onclick="addText('in-genre', 'Synthwave')" class="chip">🌇 신스웨이브</div>
+             </div>
+
+             <p class="category-label">CLASSICAL / CEREMONY</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-genre', 'Classical')" class="chip">🎼 클래식</div>
+                <div onclick="addText('in-genre', 'Waltz')" class="chip">💃 왈츠</div>
+                <div onclick="addText('in-genre', 'March')" class="chip">🥁 행진곡</div>
+                <div onclick="addText('in-genre', 'Musical Theatre')" class="chip">🎭 뮤지컬</div>
+                <div onclick="addText('in-genre', 'Hymn')" class="chip">⛪ 성가/찬송</div>
+                <div onclick="addText('in-genre', 'Christmas Carol')" class="chip">🎄 캐럴</div>
+             </div>
+
+             <p class="category-label">SOUL / RETRO</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-genre', 'Blues')" class="chip">🎸 블루스</div>
+                <div onclick="addText('in-genre', 'Soul')" class="chip">💛 소울</div>
+                <div onclick="addText('in-genre', 'Funk')" class="chip">🕺 펑크(Funk)</div>
+                <div onclick="addText('in-genre', 'Swing Big Band')" class="chip">🎺 스윙 빅밴드</div>
+                <div onclick="addText('in-genre', 'Country')" class="chip">🤠 컨트리</div>
+                <div onclick="addText('in-genre', 'City Pop')" class="chip">🌆 시티팝</div>
+             </div>
+
+             <p class="category-label">ROCK / METAL</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-genre', 'Hard Rock')" class="chip">🤘 하드락</div>
+                <div onclick="addText('in-genre', 'Punk Rock')" class="chip">💥 펑크락</div>
+                <div onclick="addText('in-genre', 'Heavy Metal')" class="chip">⚡ 헤비메탈</div>
+                <div onclick="addText('in-genre', 'Grunge')" class="chip">🎸 그런지</div>
+                <div onclick="addText('in-genre', 'Indie Rock')" class="chip">🎭 인디락</div>
+             </div>
+
+             <p class="category-label">WORLD MUSIC</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-genre', 'Reggae')" class="chip">🌴 레게</div>
+                <div onclick="addText('in-genre', 'Bossa Nova')" class="chip">🇧🇷 보사노바</div>
+                <div onclick="addText('in-genre', 'Flamenco')" class="chip">💃 플라멩코</div>
+                <div onclick="addText('in-genre', 'Celtic')" class="chip">🍀 켈틱</div>
+                <div onclick="addText('in-genre', 'Afrobeat')" class="chip">🥁 아프로비트</div>
+                <div onclick="addText('in-genre', 'K-Traditional Fusion')" class="chip">🇰🇷 국악퓨전</div>
+                <div onclick="addText('in-genre', 'Salsa')" class="chip">🇨🇺 살사</div>
+             </div>
+
+             <p class="category-label">ATMOSPHERIC / BGM</p>
+             <div class="flex flex-wrap gap-2">
+                <div onclick="addText('in-genre', 'Lo-Fi Hip Hop')" class="chip">☕ Lo-Fi</div>
+                <div onclick="addText('in-genre', 'Jazz')" class="chip">🎷 재즈</div>
+                <div onclick="addText('in-genre', 'Cinematic Orchestral')" class="chip">🎻 오케스트라</div>
+                <div onclick="addText('in-genre', 'Acoustic Folk')" class="chip">⛺ 어쿠스틱</div>
+                <div onclick="addText('in-genre', 'New Age')" class="chip">🧘 뉴에이지</div>
+                <div onclick="addText('in-genre', 'Children\'s Song')" class="chip">🐥 동요</div>
+                <div onclick="addText('in-genre', 'Ambient')" class="chip">☁️ 앰비언트</div>
+                <div onclick="addText('in-genre', 'Meditation Music')" class="chip">🕉️ 명상음악</div>
+             </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-indigo-400 font-bold text-sm section-title">
+            <span class="w-6 h-6 rounded bg-indigo-900/50 text-indigo-400 flex items-center justify-center mr-2 text-xs">2</span> 분위기 (Mood)
+          </h2>
+          <div class="bg-[#1e1e1e] p-3 rounded-xl border border-[#333] shadow-sm">
+             <p class="category-label">POSITIVE ENERGY</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-mood', 'Uplifting, Energetic')" class="chip">⚡ 활기찬</div>
+                <div onclick="addText('in-mood', 'Joyful, Cheerful')" class="chip">😄 즐거운</div>
+                <div onclick="addText('in-mood', 'Triumphant, Victorious')" class="chip">🏆 승리감</div>
+                <div onclick="addText('in-mood', 'Playful, Bouncy')" class="chip">🎈 장난스러운</div>
+                <div onclick="addText('in-mood', 'Confident, Bold')" class="chip">💪 자신감</div>
+                <div onclick="addText('in-mood', 'Bright, Sunny')" class="chip">🌞 명랑한</div>
+                <div onclick="addText('in-mood', 'Festive')" class="chip">🎉 축제 분위기</div>
+                <div onclick="addText('in-mood', 'Humorous, Quirky')" class="chip">🤪 익살스러운</div>
+             </div>
+             <p class="category-label">EMOTIONAL DEPTH</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-mood', 'Melancholic, Sad')" class="chip">💧 슬픈/우울한</div>
+                <div onclick="addText('in-mood', 'Nostalgic, Wistful')" class="chip">🍂 향수어린</div>
+                <div onclick="addText('in-mood', 'Longing, Yearning')" class="chip">💔 그리운</div>
+                <div onclick="addText('in-mood', 'Bittersweet')" class="chip">🌗 씁쓸달콤한</div>
+                <div onclick="addText('in-mood', 'Heartfelt, Sincere')" class="chip">❤️ 진심어린</div>
+                <div onclick="addText('in-mood', 'Moving, Touching')" class="chip">🥹 감동적인</div>
+                <div onclick="addText('in-mood', 'Lyrical')" class="chip">🍃 서정적인</div>
+                <div onclick="addText('in-mood', 'Warm')" class="chip">🧣 따뜻한</div>
+             </div>
+             <p class="category-label">CALM & MYSTERY</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-mood', 'Chill, Relaxing')" class="chip">🍃 편안한</div>
+                <div onclick="addText('in-mood', 'Dreamy, Ethereal')" class="chip">☁️ 몽환적인</div>
+                <div onclick="addText('in-mood', 'Mysterious, Enigmatic')" class="chip">🔮 신비로운</div>
+                <div onclick="addText('in-mood', 'Serene, Peaceful')" class="chip">🕊️ 고요한</div>
+                <div onclick="addText('in-mood', 'Refreshing, Crisp')" class="chip">💧 청량한</div>
+                <div onclick="addText('in-mood', 'Elegant, Graceful')" class="chip">🦢 우아한</div>
+                <div onclick="addText('in-mood', 'Hypnotic, Trance-like')" class="chip">🌀 최면적인</div>
+             </div>
+             <p class="category-label">INTENSITY & DRAMA</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-mood', 'Epic, Heroic')" class="chip">⚔️ 웅장한</div>
+                <div onclick="addText('in-mood', 'Majestic')" class="chip">👑 장엄한</div>
+                <div onclick="addText('in-mood', 'Solemn, Resolute')" class="chip">🎗️ 비장한</div>
+                <div onclick="addText('in-mood', 'Dark, Ominous')" class="chip">💀 어두운</div>
+                <div onclick="addText('in-mood', 'Tense, Suspenseful')" class="chip">😰 긴장감</div>
+                <div onclick="addText('in-mood', 'Aggressive, Fierce')" class="chip">🔥 공격적인</div>
+                <div onclick="addText('in-mood', 'Chaotic, Frantic')" class="chip">⚡ 혼란스러운</div>
+             </div>
+             <p class="category-label">ROMANCE & GROOVE</p>
+             <div class="flex flex-wrap gap-2">
+                <div onclick="addText('in-mood', 'Romantic, Sweet')" class="chip">💖 로맨틱한</div>
+                <div onclick="addText('in-mood', 'Sensual, Sultry')" class="chip">🌹 관능적인</div>
+                <div onclick="addText('in-mood', 'Groovy, Funky')" class="chip">🕺 그루브한</div>
+                <div onclick="addText('in-mood', 'Cute, Perky')" class="chip">🧸 귀엽고 통통튀는</div>
+                <div onclick="addText('in-mood', 'Sassy, Cheeky')" class="chip">😎 발랄한</div>
+             </div>
+          </div>
+        </div>
+        <div>
+          <h2 class="text-pink-400 font-bold text-sm section-title">
+            <span class="w-6 h-6 rounded bg-pink-900/50 text-pink-400 flex items-center justify-center mr-2 text-xs">3</span> 악기 (Instruments)
+          </h2>
+          <div class="bg-[#1e1e1e] p-3 rounded-xl border border-[#333] shadow-sm">
+             <p class="category-label">CLASSROOM · 교실 악기</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-instruments', 'Recorder')" class="chip">🪈 리코더</div>
+                <div onclick="addText('in-instruments', 'Melodica')" class="chip">🎹 멜로디언</div>
+                <div onclick="addText('in-instruments', 'Handbells')" class="chip">🔔 핸드벨</div>
+                <div onclick="addText('in-instruments', 'Boomwhackers')" class="chip">🌈 붐웨커</div>
+                <div onclick="addText('in-instruments', 'Triangle')" class="chip">📐 트라이앵글</div>
+                <div onclick="addText('in-instruments', 'Castanets')" class="chip">🐚 캐스터네츠</div>
+                <div onclick="addText('in-instruments', 'Ocarina')" class="chip">🥚 오카리나</div>
+             </div>
+             <p class="category-label">KEYBOARDS</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-instruments', 'Piano')" class="chip">🎹 피아노</div>
+                <div onclick="addText('in-instruments', 'Electric Piano')" class="chip">⚡ 일렉 피아노</div>
+                <div onclick="addText('in-instruments', 'Organ')" class="chip">🎹 오르간</div>
+                <div onclick="addText('in-instruments', 'Synthesizer')" class="chip">🎛️ 신디사이저</div>
+                <div onclick="addText('in-instruments', 'Harpsichord')" class="chip">🎵 하프시코드</div>
+                <div onclick="addText('in-instruments', 'Accordion')" class="chip">🪗 아코디언</div>
+             </div>
+             <p class="category-label">STRINGS</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-instruments', 'Acoustic Guitar')" class="chip">🎸 통기타</div>
+                <div onclick="addText('in-instruments', 'Electric Guitar')" class="chip">🎸 일렉기타</div>
+                <div onclick="addText('in-instruments', 'Violin')" class="chip">🎻 바이올린</div>
+                <div onclick="addText('in-instruments', 'Cello')" class="chip">🎻 첼로</div>
+                <div onclick="addText('in-instruments', 'Harp')" class="chip">🎼 하프</div>
+                <div onclick="addText('in-instruments', 'Ukulele')" class="chip">🎸 우쿨렐레</div>
+                <div onclick="addText('in-instruments', 'Mandolin')" class="chip">🎸 만돌린</div>
+                <div onclick="addText('in-instruments', 'Viola')" class="chip">🎻 비올라</div>
+                <div onclick="addText('in-instruments', 'Double Bass')" class="chip">🎻 콘트라베이스</div>
+             </div>
+             <p class="category-label">BRASS & WINDS</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-instruments', 'Saxophone')" class="chip">🎷 색소폰</div>
+                <div onclick="addText('in-instruments', 'Trumpet')" class="chip">🎺 트럼펫</div>
+                <div onclick="addText('in-instruments', 'Trombone')" class="chip">🎺 트롬본</div>
+                <div onclick="addText('in-instruments', 'Flute')" class="chip">🪈 플루트</div>
+                <div onclick="addText('in-instruments', 'Clarinet')" class="chip">🎵 클라리넷</div>
+                <div onclick="addText('in-instruments', 'Harmonica')" class="chip">🎵 하모니카</div>
+                <div onclick="addText('in-instruments', 'French Horn')" class="chip">📯 프렌치호른</div>
+                <div onclick="addText('in-instruments', 'Tuba')" class="chip">🎺 튜바</div>
+                <div onclick="addText('in-instruments', 'Oboe')" class="chip">🎵 오보에</div>
+             </div>
+             <p class="category-label">PERCUSSION & RHYTHM</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-instruments', 'Drums')" class="chip">🥁 드럼</div>
+                <div onclick="addText('in-instruments', 'Bongos')" class="chip">🥁 봉고</div>
+                <div onclick="addText('in-instruments', 'Congas')" class="chip">🥁 콩가</div>
+                <div onclick="addText('in-instruments', 'Tambourine')" class="chip">🎵 탬버린</div>
+                <div onclick="addText('in-instruments', 'Maracas')" class="chip">🥁 마라카스</div>
+                <div onclick="addText('in-instruments', 'Xylophone')" class="chip">🎵 실로폰</div>
+                <div onclick="addText('in-instruments', 'Timpani')" class="chip">🥁 팀파니</div>
+                <div onclick="addText('in-instruments', 'Marimba')" class="chip">🎵 마림바</div>
+                <div onclick="addText('in-instruments', 'Kalimba')" class="chip">🎵 칼림바</div>
+             </div>
+             <p class="category-label">ELECTRONIC & BASS</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-instruments', '808 Bass')" class="chip">🔊 808 베이스</div>
+                <div onclick="addText('in-instruments', 'Sub Bass')" class="chip">🔉 서브 베이스</div>
+                <div onclick="addText('in-instruments', 'Arpeggiator')" class="chip">🎛️ 아르페지에이터</div>
+                <div onclick="addText('in-instruments', 'Vocoder')" class="chip">🤖 보코더</div>
+                <div onclick="addText('in-instruments', 'Theremin')" class="chip">👋 테레민</div>
+             </div>
+             <p class="category-label">TRADITIONAL & ETHNIC</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-instruments', 'Gayageum (Korean Zither)')" class="chip">🇰🇷 가야금</div>
+                <div onclick="addText('in-instruments', 'Daegeum (Korean Flute)')" class="chip">🇰🇷 대금</div>
+                <div onclick="addText('in-instruments', 'Janggu (Korean Drum)')" class="chip">🇰🇷 장구</div>
+                <div onclick="addText('in-instruments', 'Sogo (Korean Hand Drum)')" class="chip">🇰🇷 소고</div>
+                <div onclick="addText('in-instruments', 'Danso (Korean Bamboo Flute)')" class="chip">🇰🇷 단소</div>
+                <div onclick="addText('in-instruments', 'Sitar')" class="chip">🇮🇳 시타르</div>
+                <div onclick="addText('in-instruments', 'Djembe')" class="chip">🌍 젬베</div>
+                <div onclick="addText('in-instruments', 'Bagpipes')" class="chip">🏴 백파이프</div>
+             </div>
+             <p class="category-label">SPECIAL SOUNDS</p>
+             <div class="flex flex-wrap gap-2">
+                <div onclick="addText('in-instruments', 'Full Orchestra')" class="chip">🎻 오케스트라</div>
+                <div onclick="addText('in-instruments', '8-bit Sound')" class="chip">👾 8비트 사운드</div>
+                <div onclick="addText('in-instruments', 'Music Box')" class="chip">🎁 오르골</div>
+                <div onclick="addText('in-instruments', 'Wind Chimes')" class="chip">🎐 윈드차임</div>
+                <div onclick="addText('in-instruments', 'Glass Armonica')" class="chip">🥂 글라스 하모니카</div>
+             </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-yellow-400 font-bold text-sm section-title">
+            <span class="w-6 h-6 rounded bg-yellow-900/50 text-yellow-400 flex items-center justify-center mr-2 text-xs">4</span> 보컬 (Vocals)
+          </h2>
+          <div class="bg-[#1e1e1e] p-3 rounded-xl border border-[#333] shadow-sm">
+             <p class="category-label">VOCAL TYPE</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-vocals', 'Female Vocals')" class="chip">👩 여성 보컬</div>
+                <div onclick="addText('in-vocals', 'Male Vocals')" class="chip">👨 남성 보컬</div>
+                <div onclick="addText('in-vocals', 'Duet')" class="chip">👫 듀엣</div>
+                <div onclick="addText('in-vocals', 'Children Choir')" class="chip">👶 어린이 합창</div>
+                <div onclick="addText('in-vocals', 'Gospel Choir')" class="chip">🎤 가스펠 콰이어</div>
+                <div onclick="addText('in-vocals', 'A Cappella')" class="chip">🎵 아카펠라</div>
+             </div>
+             <p class="category-label">VOCAL STYLE</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-vocals', 'Powerful High Notes')" class="chip">🎤 파워풀 고음</div>
+                <div onclick="addText('in-vocals', 'Falsetto')" class="chip">🎵 가성</div>
+                <div onclick="addText('in-vocals', 'Whistle Register')" class="chip">🐦 휘슬 음역</div>
+                <div onclick="addText('in-vocals', 'Whispering')" class="chip">🤫 속삭이는</div>
+                <div onclick="addText('in-vocals', 'Breathy')" class="chip">💨 숨소리 섞인</div>
+                <div onclick="addText('in-vocals', 'Husky, Raspy')" class="chip">🎸 허스키한</div>
+                <div onclick="addText('in-vocals', 'Operatic')" class="chip">🎭 오페라틱</div>
+             </div>
+             <p class="category-label">VOCAL EFFECTS</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-vocals', 'Auto-tune')" class="chip">🤖 오토튠</div>
+                <div onclick="addText('in-vocals', 'Vocoder')" class="chip">🎛️ 보코더</div>
+                <div onclick="addText('in-vocals', 'Harmonies')" class="chip">🎵 하모니</div>
+                <div onclick="addText('in-vocals', 'Ad-libs')" class="chip">🎤 애드립</div>
+                <div onclick="addText('in-vocals', 'Vocal Chops')" class="chip">✂️ 보컬 찹</div>
+                <div onclick="addText('in-vocals', 'Melisma')" class="chip">🎶 멜리스마</div>
+             </div>
+             <p class="category-label">RAP & SPOKEN</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-vocals', 'Rapping')" class="chip">🧢 랩</div>
+                <div onclick="addText('in-vocals', 'Fast Rap')" class="chip">💨 빠른 랩</div>
+                <div onclick="addText('in-vocals', 'Spoken Word')" class="chip">📢 스포큰 워드</div>
+                <div onclick="addText('in-vocals', 'Storytelling')" class="chip">📖 스토리텔링</div>
+             </div>
+             <p class="category-label">NO VOCALS</p>
+             <div class="flex flex-wrap gap-2">
+                <div onclick="addText('in-vocals', 'Instrumental Only')" class="chip border-red-900 text-red-300">🚫 보컬 없음 (BGM)</div>
+             </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-orange-400 font-bold text-sm section-title">
+            <span class="w-6 h-6 rounded bg-orange-900/50 text-orange-400 flex items-center justify-center mr-2 text-xs">5</span> 템포 & 프로덕션 (Tempo & Production)
+          </h2>
+          <div class="bg-[#1e1e1e] p-3 rounded-xl border border-[#333] shadow-sm">
+             <p class="category-label">TEMPO (빠르기)</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-tempo', 'Very slow tempo, 60-70 BPM')" class="chip">🐢 아주 느리게 (60-70)</div>
+                <div onclick="addText('in-tempo', 'Downtempo, 80-90 BPM')" class="chip">🚶 느긋하게 (80-90)</div>
+                <div onclick="addText('in-tempo', 'Mid-tempo, 100-110 BPM')" class="chip">🚴 미디엄 (100-110)</div>
+                <div onclick="addText('in-tempo', 'Upbeat, 120-128 BPM')" class="chip">🏃 신나게 (120-128)</div>
+                <div onclick="addText('in-tempo', 'Fast and driving, 140-160 BPM')" class="chip">⚡ 아주 빠르게 (140+)</div>
+             </div>
+             <p class="category-label">ERA (시대 감성)</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-tempo', '70s retro soul vibe')" class="chip">📻 70s 레트로</div>
+                <div onclick="addText('in-tempo', '80s retro synth style')" class="chip">🕺 80s 신스</div>
+                <div onclick="addText('in-tempo', '90s nostalgic style')" class="chip">📼 90s 감성</div>
+                <div onclick="addText('in-tempo', 'Y2K 2000s pop style')" class="chip">📱 2000s Y2K</div>
+                <div onclick="addText('in-tempo', 'Modern polished 2020s production')" class="chip">✨ 최신 트렌드</div>
+             </div>
+             <p class="category-label">PRODUCTION (사운드 질감)</p>
+             <div class="flex flex-wrap gap-2">
+                <div onclick="addText('in-tempo', 'Live band recording feel')" class="chip">🎚️ 라이브 느낌</div>
+                <div onclick="addText('in-tempo', 'Vinyl crackle, analog warmth')" class="chip">💿 LP 아날로그 질감</div>
+                <div onclick="addText('in-tempo', 'Stadium reverb, anthemic')" class="chip">🏟️ 스타디움 울림</div>
+                <div onclick="addText('in-tempo', 'Dreamy reverb, spacious atmosphere')" class="chip">☁️ 몽롱한 공간감</div>
+                <div onclick="addText('in-tempo', 'Punchy drums, heavy bass')" class="chip">🔊 강한 비트</div>
+                <div onclick="addText('in-tempo', 'Minimal, stripped-down arrangement')" class="chip">🎼 미니멀 편곡</div>
+                <div onclick="addText('in-tempo', 'Lush layered harmonies')" class="chip">🌈 풍성한 레이어</div>
+             </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="text-cyan-400 font-bold text-sm section-title">
+            <span class="w-6 h-6 rounded bg-cyan-900/50 text-cyan-400 flex items-center justify-center mr-2 text-xs">6</span> 곡 구조 & 태그 (Metatags)
+          </h2>
+          <div class="bg-[#1e1e1e] p-3 rounded-xl border border-[#333] shadow-sm">
+             <p class="text-[10px] text-gray-500 font-bold mb-2 tracking-wider">BASIC STRUCTURE TAGS</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-structure', '[Intro]')" class="chip bg-cyan-900/30 border-cyan-700 text-cyan-200">▶️ [Intro] 시작</div>
+                <div onclick="addText('in-structure', '[Verse]')" class="chip bg-cyan-900/30 border-cyan-700 text-cyan-200">🎤 [Verse] 절</div>
+                <div onclick="addText('in-structure', '[Pre-Chorus]')" class="chip bg-cyan-900/30 border-cyan-700 text-cyan-200">📈 [Pre-Chorus] 빌드업</div>
+                <div onclick="addText('in-structure', '[Chorus]')" class="chip bg-cyan-900/30 border-cyan-700 text-cyan-200 font-bold border-2">💥 [Chorus] 후렴(하이라이트)</div>
+                <div onclick="addText('in-structure', '[Post-Chorus]')" class="chip bg-cyan-900/30 border-cyan-700 text-cyan-200">🎵 [Post-Chorus] 후렴 연장</div>
+                <div onclick="addText('in-structure', '[Bridge]')" class="chip bg-cyan-900/30 border-cyan-700 text-cyan-200">🌉 [Bridge] 전환</div>
+                <div onclick="addText('in-structure', '[Outro]')" class="chip bg-cyan-900/30 border-cyan-700 text-cyan-200">⏹️ [Outro] 끝맺음</div>
+                <div onclick="addText('in-structure', '[End]')" class="chip bg-cyan-900/30 border-cyan-700 text-cyan-200">🏁 [End] 곡 종료</div>
+             </div>
+             <p class="text-[10px] text-gray-500 font-bold mb-2 tracking-wider">SPECIAL SECTION TAGS</p>
+             <div class="flex flex-wrap gap-2 mb-3">
+                <div onclick="addText('in-structure', '[Instrumental Break]')" class="chip bg-purple-900/30 border-purple-700 text-purple-200">🎹 [Instrumental Break] 악기 간주</div>
+                <div onclick="addText('in-structure', '[Guitar Solo]')" class="chip bg-purple-900/30 border-purple-700 text-purple-200">🎸 [Guitar Solo] 기타 솔로</div>
+                <div onclick="addText('in-structure', '[Rap Section]')" class="chip bg-purple-900/30 border-purple-700 text-purple-200">🧢 [Rap Section] 랩 구간</div>
+                <div onclick="addText('in-structure', '[Drop]')" class="chip bg-purple-900/30 border-purple-700 text-purple-200">⚡ [Drop] 베이스 드롭</div>
+                <div onclick="addText('in-structure', '[Build-up]')" class="chip bg-purple-900/30 border-purple-700 text-purple-200">📊 [Build-up] 상승 구간</div>
+                <div onclick="addText('in-structure', '[Breakdown]')" class="chip bg-purple-900/30 border-purple-700 text-purple-200">💔 [Breakdown] 확 비우기</div>
+             </div>
+             <p class="text-[10px] text-gray-500 font-bold mb-2 tracking-wider">TRANSITION & EFFECT TAGS</p>
+             <div class="flex flex-wrap gap-2">
+                <div onclick="addText('in-structure', '[Hook]')" class="chip bg-orange-900/30 border-orange-700 text-orange-200">🪝 [Hook] 훅/중독구간</div>
+                <div onclick="addText('in-structure', '[Interlude]')" class="chip bg-orange-900/30 border-orange-700 text-orange-200">🎼 [Interlude] 막간</div>
+                <div onclick="addText('in-structure', '[Refrain]')" class="chip bg-orange-900/30 border-orange-700 text-orange-200">🔁 [Refrain] 반복구</div>
+                <div onclick="addText('in-structure', '[Ad-lib]')" class="chip bg-orange-900/30 border-orange-700 text-orange-200">🎤 [Ad-lib] 애드립</div>
+                <div onclick="addText('in-structure', '[Fade Out]')" class="chip bg-orange-900/30 border-orange-700 text-orange-200">🌫️ [Fade Out] 페이드아웃</div>
+             </div>
+          </div>
+        </div>
+
+      </div>
+      </div>
+    </section>
+
+    <section class="w-full md:w-1/2 bg-[#181818] flex flex-col">
+  <div class="right-scroll-area custom-scroll p-4 lg:p-6">
+    <div class="max-w-2xl mx-auto space-y-4 lg:space-y-5">
+            
+          <div class="group">
+             <label class="flex items-center text-sm font-bold text-gray-300 mb-1"><i class="fas fa-quote-left mr-2"></i>0. 곡 주제 (Topic)</label>
+             <textarea id="in-topic" rows="2" class="w-full p-3 rounded-xl focus:ring-2 focus:ring-[#00ff7f] transition text-sm" placeholder="어떤 노래를 만들고 싶으신가요? (예: 비 오는 날 듣기 좋은 감성 발라드)"></textarea>
+          </div>
+
+          <div class="group">
+            <label class="flex items-center text-sm font-bold text-[#00ff7f] mb-1"><i class="fas fa-music mr-2"></i>1. 장르 & 스타일 <span class="required-mark">*주제 또는 장르 필수</span></label>
+            <textarea id="in-genre" rows="2" class="w-full p-3 rounded-xl focus:ring-2 focus:ring-[#00ff7f] transition text-sm" placeholder="K-Pop, Jazz, EDM 등 (칩을 눌러 선택)"></textarea>
+          </div>
+          
+          <div class="flex gap-4">
+            <div class="w-1/2 group">
+                <label class="flex items-center text-sm font-bold text-indigo-400 mb-1"><i class="fas fa-smile mr-2"></i>2. 분위기</label>
+                <textarea id="in-mood" rows="3" class="w-full p-3 rounded-xl focus:ring-2 focus:ring-indigo-500 transition text-sm" placeholder="신나는, 슬픈, 몽환적인"></textarea>
+            </div>
+            <div class="w-1/2 group">
+                <label class="flex items-center text-sm font-bold text-pink-400 mb-1"><i class="fas fa-guitar mr-2"></i>3. 악기</label>
+                <textarea id="in-instruments" rows="3" class="w-full p-3 rounded-xl focus:ring-2 focus:ring-pink-500 transition text-sm" placeholder="피아노, 기타, 808베이스"></textarea>
+            </div>
+          </div>
+
+          <div class="group">
+            <label class="flex items-center text-sm font-bold text-yellow-400 mb-1"><i class="fas fa-microphone-alt mr-2"></i>4. 보컬 스타일</label>
+            <textarea id="in-vocals" rows="2" class="w-full p-3 rounded-xl focus:ring-2 focus:ring-yellow-500 transition text-sm" placeholder="여성 보컬, 듀엣, 오토튠 등"></textarea>
+          </div>
+
+          <div class="group">
+            <label class="flex items-center text-sm font-bold text-orange-400 mb-1"><i class="fas fa-tachometer-alt mr-2"></i>5. 템포 & 프로덕션</label>
+            <textarea id="in-tempo" rows="2" class="w-full p-3 rounded-xl focus:ring-2 focus:ring-orange-500 transition text-sm" placeholder="120 BPM, 80s 레트로, LP 질감 등 (칩을 눌러 선택)"></textarea>
+          </div>
+
+          <div class="group">
+            <div class="flex items-center justify-between mb-1">
+              <label class="flex items-center text-sm font-bold text-cyan-400"><i class="fas fa-layer-group mr-2"></i>6. 곡 구조 (Lyrics Tags)</label>
+              <button onclick="undoStructure()" class="text-[10px] px-2 py-1 rounded bg-[#2a2a2a] hover:bg-[#333] text-gray-400 hover:text-cyan-300 border border-[#444] transition shrink-0"><i class="fas fa-undo mr-1"></i>마지막 태그 지우기</button>
+            </div>
+            <p class="text-xs text-gray-500 mb-2">* 이 태그들은 복사 후 Suno의 <b>가사(Lyrics) 창</b>에 붙여넣으세요.</p>
+            <textarea id="in-structure" rows="4" class="w-full p-3 rounded-xl focus:ring-2 focus:ring-cyan-500 transition text-sm font-mono text-cyan-300" placeholder="[Intro], [Verse], [Chorus]..."></textarea>
+          </div>
+
+        </div>
+      </div>
+      <div class="hidden md:block shrink-0 px-4 lg:px-6 py-3 border-t border-[#333] bg-[#181818]">
+        <p id="countDesktop" class="text-[11px] text-center text-gray-500 mb-2"></p>
+        <button onclick="generateAndCopy()" class="w-full max-w-2xl mx-auto bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white text-sm lg:text-base font-bold py-3 lg:py-3.5 px-6 lg:px-8 rounded-full shadow-lg transform hover:-translate-y-1 transition flex items-center justify-center gap-2">
+          <i class="fas fa-magic"></i>
+          프롬프트 생성 &amp; 복사
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <main id="view-templates" class="hidden scroll-container overflow-y-auto custom-scroll bg-[#121212] p-6 md:p-10">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-10">
+            <h2 class="text-2xl font-black text-white mb-2">💿 Hall of Fame (Best 20)</h2>
+            <p class="text-gray-400 text-sm">실패 없는 <b>검증된 음악 스타일 프롬프트</b>입니다. 클릭하면 복사됩니다.</p>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 pb-20">
+            <div onclick="copyTemplate(0)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-pink-900/50 text-pink-400 flex items-center justify-center"><i class="fas fa-heart"></i></div><h3 class="font-bold text-gray-200">K-Pop 걸그룹 히트송</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">신나는 댄스 비트, 중독성 있는 후크, 청량한 여성 보컬.</p><span class="text-[10px] bg-pink-900/30 text-pink-300 px-2 py-1 rounded font-bold border border-pink-800">#K-Pop #Dance</span></div>
+            <div onclick="copyTemplate(1)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-purple-900/50 text-purple-400 flex items-center justify-center"><i class="fas fa-coffee"></i></div><h3 class="font-bold text-gray-200">Lo-Fi Study Beats</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">공부할 때 듣기 좋은 편안한 비트, 빗소리 효과음, 재즈 피아노.</p><span class="text-[10px] bg-purple-900/30 text-purple-300 px-2 py-1 rounded font-bold border border-purple-800">#Lo-Fi #Relax</span></div>
+            <div onclick="copyTemplate(2)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-yellow-900/50 text-yellow-400 flex items-center justify-center"><i class="fas fa-film"></i></div><h3 class="font-bold text-gray-200">영화 예고편 (Epic)</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">웅장한 오케스트라, 거대한 북소리, 긴장감 넘치는 분위기.</p><span class="text-[10px] bg-yellow-900/30 text-yellow-300 px-2 py-1 rounded font-bold border border-yellow-800">#Cinematic #Epic</span></div>
+            <div onclick="copyTemplate(3)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-blue-900/50 text-blue-400 flex items-center justify-center"><i class="fas fa-cloud-rain"></i></div><h3 class="font-bold text-gray-200">감성 이별 발라드</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">슬픈 피아노 선율, 호소력 짙은 남성 보컬, 비 오는 날 감성.</p><span class="text-[10px] bg-blue-900/30 text-blue-300 px-2 py-1 rounded font-bold border border-blue-800">#Ballad #Sad</span></div>
+            <div onclick="copyTemplate(4)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-green-900/50 text-green-400 flex items-center justify-center"><i class="fas fa-bolt"></i></div><h3 class="font-bold text-gray-200">EDM 페스티벌</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">강렬한 베이스 드롭, 신나는 신디사이저, 파티 분위기.</p><span class="text-[10px] bg-green-900/30 text-green-300 px-2 py-1 rounded font-bold border border-green-800">#EDM #Party</span></div>
+            <div onclick="copyTemplate(5)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-indigo-900/50 text-indigo-400 flex items-center justify-center"><i class="fas fa-glass-martini-alt"></i></div><h3 class="font-bold text-gray-200">재즈 라운지 바</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">부드러운 색소폰, 더블 베이스, 칵테일 바 분위기, 고급스러움.</p><span class="text-[10px] bg-indigo-900/30 text-indigo-300 px-2 py-1 rounded font-bold border border-indigo-800">#Jazz #Mood</span></div>
+            <div onclick="copyTemplate(6)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-red-900/50 text-red-400 flex items-center justify-center"><i class="fas fa-fire"></i></div><h3 class="font-bold text-gray-200">파워풀 락 (Rock)</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">왜곡된 일렉기타, 파워풀한 드럼, 샤우팅 보컬, 에너지.</p><span class="text-[10px] bg-red-900/30 text-red-300 px-2 py-1 rounded font-bold border border-red-800">#Rock #Energy</span></div>
+            <div onclick="copyTemplate(7)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-cyan-900/50 text-cyan-400 flex items-center justify-center"><i class="fas fa-gamepad"></i></div><h3 class="font-bold text-gray-200">8비트 레트로 게임</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">고전 게임 사운드, 칩튠(Chiptune), 귀엽고 통통 튀는 느낌.</p><span class="text-[10px] bg-cyan-900/30 text-cyan-300 px-2 py-1 rounded font-bold border border-cyan-800">#8bit #Game</span></div>
+            <div onclick="copyTemplate(8)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-orange-900/50 text-orange-400 flex items-center justify-center"><i class="fas fa-sun"></i></div><h3 class="font-bold text-gray-200">트로피칼 썸머</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">해변가 드라이브, 트로피칼 하우스, 시원한 플럭 사운드.</p><span class="text-[10px] bg-orange-900/30 text-orange-300 px-2 py-1 rounded font-bold border border-orange-800">#Summer #Tropical</span></div>
+            <div onclick="copyTemplate(9)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-gray-700/50 text-gray-300 flex items-center justify-center"><i class="fas fa-microphone"></i></div><h3 class="font-bold text-gray-200">올드스쿨 힙합</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">90년대 붐뱁 스타일, 묵직한 드럼 비트, 스크래치 효과.</p><span class="text-[10px] bg-gray-700/30 text-gray-300 px-2 py-1 rounded font-bold border border-gray-600">#HipHop #BoomBap</span></div>
+            <div onclick="copyTemplate(10)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-teal-900/50 text-teal-400 flex items-center justify-center"><i class="fas fa-church"></i></div><h3 class="font-bold text-gray-200">웅장한 가스펠</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">소울풀한 콰이어(합창), 박수 소리, 희망차고 벅찬 느낌.</p><span class="text-[10px] bg-teal-900/30 text-teal-300 px-2 py-1 rounded font-bold border border-teal-800">#Gospel #Soul</span></div>
+            <div onclick="copyTemplate(11)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-rose-900/50 text-rose-400 flex items-center justify-center"><i class="fas fa-wine-glass"></i></div><h3 class="font-bold text-gray-200">R&B 슬로우 잼</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">섹시하고 부드러운 분위기, 그루브한 베이스, 속삭이는 보컬.</p><span class="text-[10px] bg-rose-900/30 text-rose-300 px-2 py-1 rounded font-bold border border-rose-800">#RnB #SlowJam</span></div>
+            <div onclick="copyTemplate(12)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-amber-900/50 text-amber-400 flex items-center justify-center"><i class="fas fa-star"></i></div><h3 class="font-bold text-gray-200">신나는 트로트</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">흥겨운 리듬, 중독성 있는 후렴, 브라스와 전자 오르간, 잔치 분위기.</p><span class="text-[10px] bg-amber-900/30 text-amber-300 px-2 py-1 rounded font-bold border border-amber-800">#Trot #Party</span></div>
+            <div onclick="copyTemplate(13)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-emerald-900/50 text-emerald-400 flex items-center justify-center"><i class="fas fa-fan"></i></div><h3 class="font-bold text-gray-200">국악 퓨전</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">가야금·대금·장구에 현대적 비트를 얹은 웅장한 한국풍 사운드.</p><span class="text-[10px] bg-emerald-900/30 text-emerald-300 px-2 py-1 rounded font-bold border border-emerald-800">#Gugak #Fusion</span></div>
+            <div onclick="copyTemplate(14)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-lime-900/50 text-lime-400 flex items-center justify-center"><i class="fas fa-child"></i></div><h3 class="font-bold text-gray-200">귀여운 동요</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">따라 부르기 쉬운 단순한 멜로디, 실로폰과 우쿨렐레, 어린이 합창.</p><span class="text-[10px] bg-lime-900/30 text-lime-300 px-2 py-1 rounded font-bold border border-lime-800">#Nursery #Kids</span></div>
+            <div onclick="copyTemplate(15)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-sky-900/50 text-sky-400 flex items-center justify-center"><i class="fas fa-bullhorn"></i></div><h3 class="font-bold text-gray-200">스타디움 응원가</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">떼창 유도 챈트, 박수와 큰 북, 승리의 함성. 학급·팀 응원가로 좋음.</p><span class="text-[10px] bg-sky-900/30 text-sky-300 px-2 py-1 rounded font-bold border border-sky-800">#Cheer #Anthem</span></div>
+            <div onclick="copyTemplate(16)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-red-900/50 text-red-300 flex items-center justify-center"><i class="fas fa-gifts"></i></div><h3 class="font-bold text-gray-200">크리스마스 캐럴</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">슬레이벨과 합창 화음, 따뜻하고 포근한 연말 분위기.</p><span class="text-[10px] bg-red-900/30 text-red-300 px-2 py-1 rounded font-bold border border-red-800">#Carol #Winter</span></div>
+            <div onclick="copyTemplate(17)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-violet-900/50 text-violet-400 flex items-center justify-center"><i class="fas fa-city"></i></div><h3 class="font-bold text-gray-200">시티팝</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">80년대 일본 레트로 감성, 그루비한 베이스, 야경 드라이브 무드.</p><span class="text-[10px] bg-violet-900/30 text-violet-300 px-2 py-1 rounded font-bold border border-violet-800">#CityPop #Retro</span></div>
+            <div onclick="copyTemplate(18)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-fuchsia-900/50 text-fuchsia-400 flex items-center justify-center"><i class="fas fa-robot"></i></div><h3 class="font-bold text-gray-200">신스웨이브</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">80년대 아날로그 신스, 네온 불빛의 미래도시, 노스탤지어.</p><span class="text-[10px] bg-fuchsia-900/30 text-fuchsia-300 px-2 py-1 rounded font-bold border border-fuchsia-800">#Synthwave #Neon</span></div>
+            <div onclick="copyTemplate(19)" class="template-card p-5 rounded-2xl cursor-pointer group"><div class="flex items-center gap-3 mb-3"><div class="w-10 h-10 rounded-full bg-slate-700/50 text-slate-300 flex items-center justify-center"><i class="fas fa-moon"></i></div><h3 class="font-bold text-gray-200">수면·명상 음악</h3></div><p class="text-xs text-gray-500 mb-3 leading-relaxed">부드러운 신스 패드와 잔잔한 피아노, 아주 느리고 고요한 BGM.</p><span class="text-[10px] bg-slate-700/30 text-slate-300 px-2 py-1 rounded font-bold border border-slate-600">#Sleep #Healing</span></div>
+        </div>
+    </div>
+  </main>
+  <main id="view-glossary" class="hidden scroll-container overflow-y-auto custom-scroll bg-[#121212] p-6 md:p-10">
+    <div class="max-w-3xl mx-auto">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl font-black text-white mb-2">🎓 음악 용어 사전 (Glossary)</h2>
+        <p class="text-gray-400 text-sm">AI 작곡에 필요한 핵심 용어들을 모았습니다.</p>
+      </div>
+      
+      <div class="space-y-4">
+        <div class="bg-[#1e1e1e] rounded-xl border border-[#333] overflow-hidden shadow-sm">
+            <div class="accordion-header p-5 flex justify-between items-center" onclick="toggleAccordion('acc-genre')">
+                <h3 class="font-bold text-[#00ff7f] text-lg flex items-center"><span class="w-8 h-8 rounded bg-green-900/50 flex items-center justify-center mr-3 text-sm">1</span> 장르 (Genre)</h3>
+                <i class="fas fa-chevron-down text-gray-400 accordion-icon" id="icon-acc-genre"></i>
+            </div>
+            <div id="acc-genre" class="accordion-content">
+                <div class="p-5 pt-0 text-sm text-gray-300">
+                    <div class="term-item"><span class="term-title">☕ Lo-Fi (로파이):</span> 'Low Fidelity'의 약자로, 일부러 약간 지지직거리는 잡음을 넣어 아날로그 감성을 낸 편안한 음악입니다. 공부할 때 딱이며, 빗소리나 빈티지 레코드 노이즈가 특징입니다.</div>
+                    <div class="term-item"><span class="term-title">👾 Synthwave (신스웨이브):</span> 80년대 레트로 감성의 전자 음악입니다. 네온 사인, 오락실, 사이버펑크 분위기에 어울리며, 영화 '드라이브'나 '블레이드 러너' 같은 분위기를 연상시킵니다.</div>
+                    <div class="term-item"><span class="term-title">🌆 City Pop (시티팝):</span> 1980년대 일본 도시 감성의 세련된 팝입니다. 그루비한 베이스와 부드러운 보컬, 야경 드라이브 무드가 특징이며 최근 다시 크게 유행하고 있습니다.</div>
+                    <div class="term-item"><span class="term-title">🏝️ Tropical House (트로피칼 하우스):</span> 밝고 경쾌한 리듬에 플루트나 마림바 소리를 써서 휴양지에 온 듯한 청량감을 주는 장르입니다. 여름 페스티벌이나 해변 파티에 완벽합니다.</div>
+                    <div class="term-item"><span class="term-title">🎻 Orchestral (오케스트라):</span> 영화 음악처럼 웅장하고 거대한 스케일의 클래식 악기 연주곡입니다. 현악기, 관악기, 타악기가 모두 어우러져 드라마틱한 감동을 선사합니다.</div>
+                    <div class="term-item"><span class="term-title">🇰🇷 K-Pop (케이팝):</span> 한국 아이돌 음악으로, 중독성 있는 후렴구, 화려한 안무, 완벽한 비주얼이 특징입니다. EDM, 힙합, R&B 등 다양한 장르를 융합한 하이브리드 스타일입니다.</div>
+                    <div class="term-item"><span class="term-title">⛓️ Trap (트랩):</span> 힙합의 하위 장르로, 808 베이스, 빠른 하이햇, 무거운 드럼이 특징입니다. 어둡고 강렬한 분위기로 클럽 음악으로도 인기가 많습니다.</div>
+                    <div class="term-item"><span class="term-title">🌴 Reggae (레게):</span> 자메이카에서 시작된 장르로, 느긋한 리듬과 오프비트 기타가 특징입니다. 밥 말리가 대표적이며, 평화와 자유의 메시지를 담고 있습니다.</div>
+                    <div class="term-item"><span class="term-title">🇧🇷 Bossa Nova (보사노바):</span> 브라질의 재즈 스타일로, 부드러운 기타 리듬과 나른한 보컬이 특징입니다. 카페나 라운지에서 듣기 좋은 세련된 분위기를 만듭니다.</div>
+                    <div class="term-item"><span class="term-title">💃 Flamenco (플라멩코):</span> 스페인 안달루시아 지방의 열정적인 음악으로, 강렬한 기타 연주와 손뼉(팔마스), 발 구르기(사파테아도)가 어우러집니다. 정열적이고 극적인 감정 표현이 특징입니다.</div>
+                    <div class="term-item"><span class="term-title">🍀 Celtic (켈틱):</span> 아일랜드와 스코틀랜드의 전통 음악으로, 백파이프, 피들, 틴 휘슬 등이 사용됩니다. 판타지 영화나 게임 배경음악으로 자주 쓰입니다.</div>
+                    <div class="term-item"><span class="term-title">🥁 Afrobeat (아프로비트):</span> 서아프리카의 리듬과 재즈, 펑크가 결합된 장르입니다. 복잡한 타악기 리듬과 그루브가 특징이며, 춤추기 좋은 에너지가 넘칩니다.</div>
+                    <div class="term-item"><span class="term-title">🤘 Hard Rock (하드락):</span> 강력한 일렉기타 리프와 드럼 비트가 특징인 락 음악입니다. AC/DC, Led Zeppelin 같은 밴드가 대표적이며, 에너지 넘치는 사운드가 매력입니다.</div>
+                    <div class="term-item"><span class="term-title">💥 Punk Rock (펑크락):</span> 빠르고 공격적이며 반항적인 에너지가 특징입니다. 짧고 간결한 곡 구조, 왜곡된 기타, 샤우팅 보컬이 핵심입니다.</div>
+                    <div class="term-item"><span class="term-title">☁️ Ambient (앰비언트):</span> 분위기와 질감에 집중한 실험적 전자음악입니다. 멜로디보다는 사운드 풍경을 만들어내며, 명상이나 배경음악으로 완벽합니다.</div>
+                    <div class="term-item"><span class="term-title">🕉️ Meditation Music (명상음악):</span> 마음을 진정시키고 집중력을 높이기 위한 음악입니다. 자연 소리, 싱잉볼, 부드러운 신디사이저가 자주 사용됩니다.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-[#1e1e1e] rounded-xl border border-[#333] overflow-hidden shadow-sm">
+            <div class="accordion-header p-5 flex justify-between items-center" onclick="toggleAccordion('acc-inst')">
+                <h3 class="font-bold text-pink-400 text-lg flex items-center"><span class="w-8 h-8 rounded bg-pink-900/50 flex items-center justify-center mr-3 text-sm">2</span> 악기 & 소리 (Sound)</h3>
+                <i class="fas fa-chevron-down text-gray-400 accordion-icon" id="icon-acc-inst"></i>
+            </div>
+            <div id="acc-inst" class="accordion-content">
+                <div class="p-5 pt-0 text-sm text-gray-300">
+                    <div class="term-item"><span class="term-title">🔊 808 Bass:</span> 힙합이나 EDM에서 "둥~ 둥~" 하고 울리는 깊고 무거운 저음 베이스 소리입니다. Roland TR-808 드럼머신에서 유래했으며, 현대 힙합의 필수 요소입니다.</div>
+                    <div class="term-item"><span class="term-title">🎹 Synthesizer (신디사이저):</span> 전자적인 소리를 만드는 악기입니다. 몽환적, 미래지향적, 레트로 등 다양한 소리를 내며, EDM과 팝 음악의 핵심입니다.</div>
+                    <div class="term-item"><span class="term-title">🎻 Strings (스트링):</span> 바이올린, 첼로 같은 현악기들을 말합니다. 곡을 감성적이고 풍성하게 만들어주며, 영화음악에서 감정을 극대화하는 역할을 합니다.</div>
+                    <div class="term-item"><span class="term-title">🥁 Percussion (퍼커션):</span> 드럼을 포함해 리듬을 만드는 모든 타악기(탬버린, 콩가 등)를 말합니다. 곡에 생동감과 그루브를 더해줍니다.</div>
+                    <div class="term-item"><span class="term-title">🎷 Saxophone (색소폰):</span> 재즈의 대표 악기로, 부드럽고 섹시한 음색이 특징입니다. 재즈 뿐만 아니라 팝, R&B, 펑크에서도 자주 사용됩니다.</div>
+                    <div class="term-item"><span class="term-title">🎸 Electric Guitar (일렉기타):</span> 전기적으로 증폭되는 기타로, 왜곡(Distortion)을 통해 강렬한 사운드를 만듭니다. 락, 메탈, 블루스의 핵심 악기입니다.</div>
+                    <div class="term-item"><span class="term-title">🎼 Harp (하프):</span> 천사의 악기라 불리는 현악기로, 아름답고 몽환적인 소리를 냅니다. 판타지나 클래식 음악에서 자주 등장합니다.</div>
+                    <div class="term-item"><span class="term-title">🎺 Trumpet (트럼펫):</span> 금관악기의 꽃으로, 밝고 화려한 음색이 특징입니다. 재즈, 오케스트라, 팡파레 등에서 주로 사용됩니다.</div>
+                    <div class="term-item"><span class="term-title">🪈 Flute (플루트):</span> 맑고 청명한 소리를 내는 관악기입니다. 클래식은 물론 켈틱, 인디언 음악 등 다양한 장르에서 사용됩니다.</div>
+                    <div class="term-item"><span class="term-title">🎹 Organ (오르간):</span> 교회음악의 대표 악기로, 웅장하고 신성한 느낌을 줍니다. 가스펠, 로큰롤, 재즈에서도 중요한 역할을 합니다.</div>
+                    <div class="term-item"><span class="term-title">🥁 Bongos (봉고):</span> 쿠바에서 유래한 작은 손 드럼으로, 경쾌하고 리드미컬한 소리를 냅니다. 라틴 음악과 월드뮤직에 필수입니다.</div>
+                    <div class="term-item"><span class="term-title">🥁 Congas (콩가):</span> 손으로 치는 큰 드럼으로, 깊고 공명하는 소리가 특징입니다. 살사, 룸바, 아프로-쿠반 음악의 핵심입니다.</div>
+                    <div class="term-item"><span class="term-title">🎵 Tambourine (탬버린):</span> 작은 심벌이 달린 타악기로, 경쾌한 '샤르르' 소리를 냅니다. 팝과 록에서 리듬감을 더하는데 사용됩니다.</div>
+                    <div class="term-item"><span class="term-title">🎸 Ukulele (우쿨렐레):</span> 하와이의 작은 기타로, 밝고 귀여운 소리가 특징입니다. 트로피칼하고 경쾌한 분위기를 만들어줍니다.</div>
+                    <div class="term-item"><span class="term-title">🇰🇷 Gayageum (가야금):</span> 한국 전통 현악기로, 섬세하고 애잔한 소리를 냅니다. K-퓨전 음악에서 현대적으로 재해석되어 사용됩니다.</div>
+                    <div class="term-item"><span class="term-title">🇰🇷 Daegeum (대금):</span> 한국 전통 대나무 플루트로, 맑으면서도 깊은 울림이 있습니다. 사극이나 명상음악에서 자주 들을 수 있습니다.</div>
+                    <div class="term-item"><span class="term-title">🇮🇳 Sitar (시타르):</span> 인도의 현악기로, 신비롭고 이국적인 소리가 특징입니다. 요가, 명상음악이나 사이키델릭 록에서 사용됩니다.</div>
+                    <div class="term-item"><span class="term-title">🏴 Bagpipes (백파이프):</span> 스코틀랜드의 관악기로, 웅장하고 독특한 드론 사운드가 특징입니다. 켈틱 음악과 군악대에서 주로 사용됩니다.</div>
+                    <div class="term-item"><span class="term-title">🤖 Vocoder (보코더):</span> 목소리를 전자적으로 변조하는 장치입니다. 다프트 펑크처럼 로봇 같은 보컬 효과를 만들어 미래적인 느낌을 줍니다.</div>
+                    <div class="term-item"><span class="term-title">👋 Theremin (테레민):</span> 손을 대지 않고 공중에서 연주하는 신비한 전자악기입니다. SF 영화나 공포 영화 배경음악에서 자주 들을 수 있는 으스스한 소리를 냅니다.</div>
+                    <div class="term-item"><span class="term-title">🎁 Music Box (오르골):</span> 태엽을 감아 연주하는 기계식 악기로, 작고 맑은 종소리가 특징입니다. 동화같고 향수를 불러일으키는 분위기를 만듭니다.</div>
+                    <div class="term-item"><span class="term-title">🎐 Wind Chimes (윈드차임):</span> 바람에 흔들려 소리나는 장식 악기로, 맑고 평화로운 소리가 특징입니다. 앰비언트나 명상음악에 자주 사용됩니다.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-[#1e1e1e] rounded-xl border border-[#333] overflow-hidden shadow-sm">
+            <div class="accordion-header p-5 flex justify-between items-center" onclick="toggleAccordion('acc-struct')">
+                <h3 class="font-bold text-cyan-400 text-lg flex items-center"><span class="w-8 h-8 rounded bg-cyan-900/50 flex items-center justify-center mr-3 text-sm">3</span> 곡 구조 (Structure)</h3>
+                <i class="fas fa-chevron-down text-gray-400 accordion-icon" id="icon-acc-struct"></i>
+            </div>
+            <div id="acc-struct" class="accordion-content">
+                <div class="p-5 pt-0 text-sm text-gray-300">
+                    <div class="term-item"><span class="term-title">▶️ Intro (인트로):</span> 노래의 시작 부분입니다. 분위기를 잡는 전주 구간으로, 듣는 이의 관심을 끌고 곡의 톤을 설정합니다. 보통 8~16마디 정도입니다.</div>
+                    <div class="term-item"><span class="term-title">🎤 Verse (벌스):</span> 노래의 '절' 부분입니다. (1절, 2절) 이야기를 풀어내는 구간이라 멜로디가 차분한 편입니다. 각 벌스마다 가사가 다르며 스토리를 전개합니다.</div>
+                    <div class="term-item"><span class="term-title">📈 Pre-Chorus (프리코러스):</span> Verse에서 Chorus로 넘어가기 전, 감정을 고조시키는 '빌드업' 구간입니다. 긴장감을 쌓아 후렴구의 폭발력을 극대화합니다.</div>
+                    <div class="term-item"><span class="term-title">💥 Chorus (코러스/후렴):</span> 노래의 하이라이트, '후렴'입니다. 가장 신나고 기억에 남는 멜로디가 나오며, 곡의 핵심 메시지가 담겨있습니다. 매번 같은 가사로 반복되어 곡의 중심을 잡아줍니다. (후렴 안에 아래의 Hook이 들어가는 경우가 많지만, 둘은 같은 말이 아닙니다.)</div>
+                    <div class="term-item"><span class="term-title">🎵 Post-Chorus (포스트코러스):</span> 후렴 직후에 오는 짧은 구간으로, 후렴의 여운을 이어가거나 중독적인 훅을 한 번 더 강조합니다. K-Pop에서 자주 사용됩니다.</div>
+                    <div class="term-item"><span class="term-title">🌉 Bridge (브릿지):</span> 노래 후반부에 분위기를 한번 바꿔주는 전환점입니다. 보통 2절 끝나고 나오며, 새로운 멜로디나 악기 편곡으로 신선함을 더합니다. 감정의 클라이맥스를 만들기도 합니다.</div>
+                    <div class="term-item"><span class="term-title">⏹️ Outro (아웃트로):</span> 노래가 끝나는 부분입니다. 서서히 작아지거나(Fade out) 깔끔하게 끝내며(Hard ending), 곡의 여운을 남깁니다.</div>
+                    <div class="term-item"><span class="term-title">🎹 Instrumental Break (악기 간주):</span> 보컬 없이 악기만 연주되는 구간입니다. 듣는 이에게 휴식을 주고, 악기 연주의 매력을 보여줍니다.</div>
+                    <div class="term-item"><span class="term-title">🎸 Guitar Solo (기타 솔로):</span> 기타 연주자가 단독으로 즉흥 연주하는 구간입니다. 록 음악의 하이라이트로, 기교와 감정을 폭발시키는 순간입니다.</div>
+                    <div class="term-item"><span class="term-title">🧢 Rap Section (랩 구간):</span> 노래 중간에 랩이 들어가는 부분입니다. K-Pop이나 팝송에서 분위기 전환과 다이나믹함을 위해 자주 사용됩니다.</div>
+                    <div class="term-item"><span class="term-title">⚡ Drop (드롭):</span> EDM에서 베이스가 강렬하게 터지는 순간입니다. 빌드업 후 오는 에너지 폭발 구간으로, 관객들이 가장 열광하는 부분입니다.</div>
+                    <div class="term-item"><span class="term-title">📊 Build-up (빌드업):</span> 드롭 전에 긴장감을 쌓아올리는 구간입니다. 점점 커지는 소리, 빨라지는 리듬으로 기대감을 극대화합니다.</div>
+                    <div class="term-item"><span class="term-title">💔 Breakdown (브레이크다운):</span> 곡의 강도를 갑자기 낮추는 구간입니다. 드럼이 빠지거나 악기가 줄어들어 대조를 만들며, 감정을 더 강하게 전달합니다.</div>
+                    <div class="term-item"><span class="term-title">🪝 Hook (훅):</span> 노래에서 가장 중독적이고 기억에 남는 짧은 조각입니다. "귀에 걸린다"는 뜻으로, 후렴 속 한 소절일 수도 있지만 인트로의 기타 리프나 짧은 신디사이저 멜로디처럼 <b>가사가 아닌 연주</b>가 훅이 되기도 합니다.</div>
+                    <div class="term-item"><span class="term-title">🎼 Interlude (인터루드):</span> 곡과 곡 사이, 또는 곡 중간의 짧은 막간입니다. 분위기 전환이나 휴식을 위한 구간으로, 보통 보컬 없이 악기나 효과음만 나옵니다.</div>
+                    <div class="term-item"><span class="term-title">🔁 Refrain (리프레인):</span> 벌스 끝에 반복되는 짧은 구절입니다. 후렴구와 비슷하지만 더 짧고 단순하며, 곡의 주제를 강조합니다.</div>
+                    <div class="term-item"><span class="term-title">🎤 Ad-lib (애드립):</span> 주선율 뒤에 가수가 즉흥적으로 얹는 보컬입니다. "Yeah!", "Ooh~", "Woo~" 같은 감탄사나 고음 기교로, 후렴 뒷배경이나 곡 마무리 등 <b>곡 전반</b>에 걸쳐 감정을 더합니다.</div>
+                    <div class="term-item"><span class="term-title">🌫️ Fade Out (페이드 아웃):</span> 노래가 점점 작아지면서 자연스럽게 끝나는 방식입니다. 70~80년대 팝송에서 많이 사용되었으며, 여운을 남기는 효과가 있습니다.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-[#1e1e1e] rounded-xl border border-[#333] overflow-hidden shadow-sm">
+            <div class="accordion-header p-5 flex justify-between items-center" onclick="toggleAccordion('acc-vocal')">
+                <h3 class="font-bold text-yellow-400 text-lg flex items-center"><span class="w-8 h-8 rounded bg-yellow-900/50 flex items-center justify-center mr-3 text-sm">4</span> 보컬 기법 (Vocal Techniques)</h3>
+                <i class="fas fa-chevron-down text-gray-400 accordion-icon" id="icon-acc-vocal"></i>
+            </div>
+            <div id="acc-vocal" class="accordion-content">
+                <div class="p-5 pt-0 text-sm text-gray-300">
+                    <div class="term-item"><span class="term-title">🎤 Falsetto (가성):</span> 진성(본래 목소리)보다 높은 음역을 얇고 가볍게 내는 창법입니다. 남녀 모두 사용하며, 부드럽고 공기가 섞인 듯한 소리로 감성적이고 몽환적인 분위기를 만듭니다.</div>
+                    <div class="term-item"><span class="term-title">🐦 Whistle Register (휘슬 음역):</span> 휘파람처럼 매우 높은 초고음입니다. 머라이어 캐리, 아리아나 그란데가 유명하며, 극적인 순간에 사용됩니다.</div>
+                    <div class="term-item"><span class="term-title">🤫 Whispering (속삭임):</span> 숨소리처럼 부드럽게 속삭이듯 부르는 방식입니다. 친밀하고 섹시한 분위기를 만들며, ASMR 효과가 있습니다.</div>
+                    <div class="term-item"><span class="term-title">💨 Breathy Voice (브리디 보이스):</span> 숨소리가 많이 섞인 보컬 스타일입니다. 부드럽고 감성적이며, R&B와 발라드에서 자주 사용됩니다.</div>
+                    <div class="term-item"><span class="term-title">🎸 Husky/Raspy (허스키/라스피):</span> 약간 쉰 듯한, 거친 음색의 보컬입니다. 섹시하고 카리스마 있으며, 록과 소울 음악에 잘 어울립니다.</div>
+                    <div class="term-item"><span class="term-title">🎭 Operatic (오페라틱):</span> 오페라처럼 강력하고 기교적인 성악 기법입니다. 심포닉 메탈이나 뮤지컬에서 웅장한 느낌을 줄 때 사용됩니다.</div>
+                    <div class="term-item"><span class="term-title">🤖 Auto-tune (오토튠):</span> 음정을 자동으로 보정해주는 효과로, 로봇 같은 독특한 사운드를 만듭니다. 현대 힙합과 팝의 특징적 사운드입니다.</div>
+                    <div class="term-item"><span class="term-title">🎵 Harmonies (하모니):</span> 주선율에 화음을 더하는 것입니다. 여러 명이 다른 음을 동시에 불러 풍성하고 아름다운 소리를 만듭니다.</div>
+                    <div class="term-item"><span class="term-title">✂️ Vocal Chops (보컬 찹):</span> 보컬을 잘게 잘라서 리듬감 있게 재배열하는 EDM 기법입니다. 미래적이고 독특한 효과를 냅니다.</div>
+                    <div class="term-item"><span class="term-title">🎶 Melisma (멜리스마):</span> 한 음절에 여러 음을 넣어 장식하는 기법입니다. 가스펠, R&B, 중동 음악에서 자주 사용되며, 화려하고 감정적입니다.</div>
+                    <div class="term-item"><span class="term-title">🧢 Rapping (랩):</span> 리듬에 맞춰 빠르게 말하는 보컬 스타일입니다. 힙합의 핵심으로, 라임(각운)과 플로우(흐름)가 중요합니다.</div>
+                    <div class="term-item"><span class="term-title">💨 Fast Rap (빠른 랩):</span> 초고속으로 가사를 전달하는 랩 스타일입니다. 에미넴, 트위스타 같은 래퍼들이 유명하며, 기술적 난이도가 높습니다.</div>
+                    <div class="term-item"><span class="term-title">📢 Spoken Word (스포큰 워드):</span> 시를 낭송하듯 말하는 보컬 스타일입니다. 멜로디보다 가사의 의미와 감정 전달에 집중합니다.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-[#1e1e1e] rounded-xl border border-[#333] overflow-hidden shadow-sm">
+            <div class="accordion-header p-5 flex justify-between items-center" onclick="toggleAccordion('acc-mood')">
+                <h3 class="font-bold text-indigo-400 text-lg flex items-center"><span class="w-8 h-8 rounded bg-indigo-900/50 flex items-center justify-center mr-3 text-sm">5</span> 음악 용어 & 분위기 (Terms & Mood)</h3>
+                <i class="fas fa-chevron-down text-gray-400 accordion-icon" id="icon-acc-mood"></i>
+            </div>
+            <div id="acc-mood" class="accordion-content">
+                <div class="p-5 pt-0 text-sm text-gray-300">
+                    <div class="term-item"><span class="term-title">⚡ BPM (Beats Per Minute):</span> 1분당 비트 수를 의미하며, 곡의 빠르기를 나타냅니다. 느린 발라드는 60-80, 댄스곡은 120-140 정도입니다.</div>
+                    <div class="term-item"><span class="term-title">🎵 Tempo (템포):</span> 곡의 빠르기를 말합니다. Largo(매우 느리게), Andante(걷는 속도), Allegro(빠르게), Presto(매우 빠르게) 등으로 표현합니다.</div>
+                    <div class="term-item"><span class="term-title">🎹 Key (조성):</span> 곡의 중심이 되는 음입니다. C Major(다장조)는 밝고 명랑하고, A Minor(가단조)는 슬프고 어둡습니다.</div>
+                    <div class="term-item"><span class="term-title">🔊 Dynamics (다이나믹스):</span> 소리의 강약을 조절하는 것입니다. pp(매우 약하게), mf(중간 강도), ff(매우 강하게) 등으로 표현합니다.</div>
+                    <div class="term-item"><span class="term-title">🎸 Riff (리프):</span> 곡 전체에서 반복되는 짧고 인상적인 연주 패턴입니다. 록의 기타 리프처럼 곡의 정체성을 만드는 핵심 재료입니다.</div>
+                    <div class="term-item"><span class="term-title">🕺 Groove (그루브):</span> 몸이 절로 움직여지는 리듬의 '맛'입니다. 펑크, R&B, 시티팝에서 특히 중요하며, 프롬프트에 "Groovy"를 넣으면 리듬감이 살아납니다.</div>
+                    <div class="term-item"><span class="term-title">🌊 Reverb (리버브):</span> 공간의 울림을 더하는 효과입니다. 많이 쓰면 몽환적·웅장해지고, 적게 쓰면 바싹 붙은 친밀한 소리가 됩니다.</div>
+                    <div class="term-item"><span class="term-title">🎚️ Mixing (믹싱):</span> 보컬·악기 등 각 소리의 크기와 위치, 음색 균형을 맞추는 작업입니다. Suno는 자동으로 처리하지만, 결과물이 너무 밋밋하거나 특정 악기가 묻힐 때 "Prominent vocals", "Punchy bass" 같은 표현으로 균형을 유도할 수 있습니다.</div>
+                    <div class="term-item"><span class="term-title">💽 Mastering (마스터링):</span> 완성된 곡의 전체 음량과 음질을 최종적으로 다듬는 후반 작업입니다. Suno의 <b>"Remaster"</b> 기능이 바로 이 과정을 최신 모델로 다시 적용해 음질을 높여줍니다.</div>
+                    <div class="term-item"><span class="term-title">☁️ Ethereal (몽환적):</span> 하늘을 떠다니는 듯한, 초현실적이고 신비로운 분위기입니다. 리버브를 많이 써서 공간감을 만듭니다.</div>
+                    <div class="term-item"><span class="term-title">🔮 Mysterious (신비로운):</span> 불안하면서도 호기심을 자극하는 분위기입니다. 단조, 불협화음, 낮은 음역이 자주 사용됩니다.</div>
+                    <div class="term-item"><span class="term-title">💔 Bittersweet (씁쓸달콤한):</span> 슬프면서도 아름다운, 복합적인 감정입니다. 장조와 단조를 오가며 감정의 층을 만듭니다.</div>
+                    <div class="term-item"><span class="term-title">🌹 Sensual (관능적):</span> 섹시하고 유혹적인 분위기입니다. 느린 템포, 부드러운 보컬, 깊은 베이스가 특징입니다.</div>
+                    <div class="term-item"><span class="term-title">😰 Tense (긴장감):</span> 불안하고 조마조마한 느낌입니다. 불협화음, 반복되는 리듬, 점점 커지는 소리로 만듭니다.</div>
+                    <div class="term-item"><span class="term-title">🏆 Triumphant (승리감):</span> 성취하고 이겨낸 듯한 웅장한 느낌입니다. 장조, 강한 관악기, 상승하는 멜로디가 사용됩니다.</div>
+                    <div class="term-item"><span class="term-title">🍂 Nostalgic (향수):</span> 과거를 그리워하는 감정입니다. 빈티지 사운드, 따뜻한 멜로디, 아날로그 느낌이 특징입니다.</div>
+                    <div class="term-item"><span class="term-title">🌀 Hypnotic (최면적):</span> 트랜스 상태에 빠진 듯한 반복적이고 몽롱한 느낌입니다. 단순한 패턴의 끝없는 반복이 특징입니다.</div>
+                </div>
+            </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <main id="view-guide" class="hidden scroll-container overflow-y-auto custom-scroll bg-[#121212] p-6 md:p-10">
+    <div class="max-w-4xl mx-auto bg-[#1e1e1e] rounded-2xl shadow-sm border border-[#333] p-8">
+      <div class="border-b border-[#333] pb-6 mb-6">
+        <h2 class="text-2xl font-black text-white mb-2 flex items-center">
+            <span class="w-10 h-10 bg-indigo-900/50 text-indigo-400 rounded-xl flex items-center justify-center mr-3 text-xl">📖</span>
+            사용 가이드
+        </h2>
+        <p class="text-gray-400 text-sm ml-14">이 빌더로 프롬프트를 만들고, Suno에 넣어 곡을 완성하는 법.</p>
+      </div>
+
+      <div class="space-y-10">
+
+        <div>
+            <h3 class="text-lg font-bold text-gray-200 mb-4 flex items-center"><span class="w-6 h-6 rounded-full bg-green-900/50 text-[#00ff7f] text-xs flex items-center justify-center mr-2">0</span> 먼저, 이 빌더 사용법</h3>
+
+            <div class="bg-[#121212] p-5 rounded-xl border-2 border-[#00ff7f]/40 mb-4">
+                <p class="font-bold text-[#00ff7f] text-sm mb-3">🎛️ 3단계면 끝납니다</p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="bg-[#1e1e1e] p-3 rounded-lg border border-[#333]">
+                        <p class="text-xs font-bold text-white mb-1">1. 칩을 눌러 담기</p>
+                        <p class="text-[11px] text-gray-400 leading-relaxed">한글 칩을 누르면 오른쪽 칸에 <b class="text-gray-300">영어 프롬프트</b>로 쌓입니다. 영어를 몰라도 됩니다.</p>
+                    </div>
+                    <div class="bg-[#1e1e1e] p-3 rounded-lg border border-[#333]">
+                        <p class="text-xs font-bold text-white mb-1">2. 생성 &amp; 복사</p>
+                        <p class="text-[11px] text-gray-400 leading-relaxed">아래 초록 버튼을 누르면 완성된 프롬프트가 나오고 <b class="text-gray-300">자동으로 복사</b>됩니다.</p>
+                    </div>
+                    <div class="bg-[#1e1e1e] p-3 rounded-lg border border-[#333]">
+                        <p class="text-xs font-bold text-white mb-1">3. Suno에 붙여넣기</p>
+                        <p class="text-[11px] text-gray-400 leading-relaxed">Style 칸에 붙여넣고 <b class="text-gray-300">[Create]</b>. 자세한 건 아래 1~6번을 보세요.</p>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-500 mt-3">📱 휴대폰에서는 칩이 <b>위쪽</b>, 입력 칸이 <b>아래쪽</b>에 있고 생성 버튼은 화면 맨 아래에 고정돼 있습니다.</p>
+            </div>
+
+            <div class="space-y-3">
+                <div class="bg-[#121212] p-4 rounded-xl border border-[#333]">
+                    <p class="font-bold text-[#00ff7f] text-sm mb-2">🔁 잘못 눌렀다면 한 번 더</p>
+                    <p class="text-xs text-gray-400">같은 칩을 <b>다시 누르면 선택이 해제</b>됩니다. 여러 개를 골라 조합하다가 마음에 안 드는 것만 빼면 됩니다.</p>
+                    <p class="text-xs text-gray-500 mt-1">단, <b>0번 곡 주제</b>는 하나만 고르는 항목이라 새로 누르면 이전 내용이 바뀝니다.</p>
+                </div>
+
+                <div class="bg-[#121212] p-4 rounded-xl border border-[#333]">
+                    <p class="font-bold text-cyan-400 text-sm mb-2">🧱 6번 곡 구조는 다르게 쌓입니다</p>
+                    <p class="text-xs text-gray-400">구조 태그는 쉼표가 아니라 <b>줄바꿈으로 쌓이고, 같은 태그를 여러 번</b> 넣을 수 있습니다. ([Verse] 두 번, [Chorus] 세 번처럼 곡의 진행 순서대로 눌러주세요.)</p>
+                    <p class="text-xs text-gray-500 mt-1">잘못 눌렀다면 <b>[마지막 태그 지우기]</b> 버튼으로 한 줄씩 되돌릴 수 있습니다.</p>
+                </div>
+
+                <div class="bg-[#121212] p-4 rounded-xl border border-[#333]">
+                    <p class="font-bold text-yellow-400 text-sm mb-2">📋 결과창은 두 칸으로 나뉩니다</p>
+                    <p class="text-xs text-gray-400">생성 버튼을 누르면 <b class="text-[#00ff7f]">Style</b>(장르·분위기·악기…)과 <b class="text-cyan-300">Lyrics</b>(곡 구조 태그)가 <b>따로</b> 표시됩니다. 각각의 복사 버튼을 눌러 Suno의 <b>서로 다른 칸</b>에 넣으세요.</p>
+                    <p class="text-xs text-gray-500 mt-1">Style은 창이 열릴 때 자동 복사되므로, 곡 구조를 안 쓴다면 바로 붙여넣으면 됩니다.</p>
+                </div>
+
+                <div class="bg-[#121212] p-4 rounded-xl border border-[#333]">
+                    <p class="font-bold text-orange-400 text-sm mb-2">💾 껐다 켜도 그대로 있습니다</p>
+                    <p class="text-xs text-gray-400">입력한 내용은 <b>이 브라우저에 자동 저장</b>돼서 새로고침하거나 나중에 다시 들어와도 남아 있습니다. 처음부터 다시 하려면 오른쪽 위 <b>[초기화]</b>를 누르세요.</p>
+                    <p class="text-xs text-gray-500 mt-1">* 기기·브라우저마다 따로 저장되며, 서버로 전송되지 않습니다.</p>
+                </div>
+
+                <div class="bg-[#121212] p-4 rounded-xl border border-[#333]">
+                    <p class="font-bold text-pink-400 text-sm mb-2">💿 고르기 귀찮다면 «명예의 전당»</p>
+                    <p class="text-xs text-gray-400">검증된 프롬프트 <b>20종</b>이 준비돼 있습니다. 카드를 누르면 바로 복사되니, 그대로 쓰거나 뒤에 원하는 악기·분위기만 덧붙이세요.</p>
+                    <p class="text-xs text-gray-500 mt-1">모르는 음악 용어가 나오면 <b>«음악 용어»</b> 탭에서 찾아볼 수 있습니다.</p>
+                </div>
+
+                <div class="bg-[#121212] p-4 rounded-xl border border-[#333]">
+                    <p class="font-bold text-gray-300 text-sm mb-2">⌨️ 마우스 없이도 가능</p>
+                    <p class="text-xs text-gray-400"><b>Tab</b>으로 칩 사이를 옮기고 <b>Enter</b>(또는 스페이스)로 선택할 수 있습니다. 결과창은 <b>ESC</b>나 바깥 배경을 눌러 닫습니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3 pt-2">
+            <div class="h-px flex-1 bg-[#333]"></div>
+            <p class="text-[11px] font-bold text-gray-500 tracking-wide shrink-0">여기서부터는 SUNO · UDIO 사용법</p>
+            <div class="h-px flex-1 bg-[#333]"></div>
+        </div>
+
+        <div>
+            <h3 class="text-lg font-bold text-gray-200 mb-4 flex items-center"><span class="w-6 h-6 rounded-full bg-gray-700 text-white text-xs flex items-center justify-center mr-2">1</span> 커스텀 모드 활성화 (필수!)</h3>
+            <div class="bg-[#121212] p-5 rounded-xl border border-[#333] text-gray-300 text-sm leading-relaxed space-y-3">
+                <p><b class="text-[#00ff7f]">✅ 반드시 Custom Mode를 켜세요!</b></p>
+                <p>Suno에서 <b>[Create]</b> 버튼을 누른 후, 상단의 <b>Custom Mode</b> 토글 스위치를 ON으로 바꿔주세요.</p>
+                <div class="bg-[#1e1e1e] p-3 rounded border border-[#444] mt-2">
+                    <p class="text-xs text-yellow-300">💡 <b>왜 Custom Mode가 중요한가요?</b></p>
+                    <p class="text-xs text-gray-400 mt-1">일반 모드는 AI가 임의로 스타일을 선택하지만, Custom Mode에서는 <b>가사</b>와 <b>스타일</b>을 분리해서 정확하게 제어할 수 있습니다. 원하는 결과물을 얻으려면 필수입니다!</p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-lg font-bold text-gray-200 mb-4 flex items-center"><span class="w-6 h-6 rounded-full bg-gray-700 text-white text-xs flex items-center justify-center mr-2">2</span> 프롬프트 입력 위치 (중요!)</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4 mb-4">
+                <div class="bg-[#121212] p-4 rounded-xl border border-[#333]">
+                    <h4 class="font-bold text-[#00ff7f] mb-2 text-sm flex items-center">🎵 Style of Music (스타일 칸)</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed mb-2">
+                        이 빌더에서 <b>[프롬프트 생성 & 복사]</b> 버튼을 눌러 생성된 텍스트를 여기에 붙여넣으세요.
+                    </p>
+                    <div class="bg-[#1e1e1e] p-2 rounded text-xs text-cyan-300 font-mono mt-2">
+                        예시:<br>
+                        K-Pop, Energetic, Female Vocals, Synth-pop, Piano
+                    </div>
+                </div>
+                <div class="bg-[#121212] p-4 rounded-xl border border-[#333]">
+                    <h4 class="font-bold text-cyan-400 mb-2 text-sm flex items-center">📝 Lyrics (가사 칸)</h4>
+                    <p class="text-xs text-gray-400 leading-relaxed mb-2">
+                        직접 가사를 쓰거나, AI가 쓰게 하되 반드시 <b>[Verse], [Chorus]</b> 같은 구조 태그를 넣으세요.
+                    </p>
+                    <div class="bg-[#1e1e1e] p-2 rounded text-xs text-cyan-300 font-mono mt-2">
+                        예시:<br>
+                        [Verse]<br>
+                        오늘은 맑은 날...<br>
+                        [Chorus]<br>
+                        소리 질러!...
+                    </div>
+                </div>
+            </div>
+            <div class="bg-red-900/20 border border-red-900/50 p-4 rounded-xl">
+                <p class="text-xs text-red-300"><b>⚠️ 주의:</b> 구조 태그 <b>[Intro], [Verse], [Chorus]</b> 등은 반드시 <b>가사(Lyrics)</b> 칸에 넣어야 합니다. Style 칸에 넣으면 작동하지 않습니다!</p>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-lg font-bold text-gray-200 mb-4 flex items-center"><span class="w-6 h-6 rounded-full bg-gray-700 text-white text-xs flex items-center justify-center mr-2">3</span> 가사 작성 방법</h3>
+            <div class="bg-[#121212] p-5 rounded-xl border border-[#333] text-gray-300 text-sm leading-relaxed space-y-4">
+                <div>
+                    <p class="font-bold text-yellow-400 mb-2">✍️ 방법 1: 직접 작성</p>
+                    <p class="text-xs text-gray-400">구조 태그를 사이사이에 넣어서 가사를 직접 쓰세요. AI가 어느 부분이 절이고 후렴인지 정확하게 알아듣습니다.</p>
+                    <div class="bg-[#1e1e1e] p-3 rounded border border-[#444] mt-2 font-mono text-xs text-cyan-300">
+[Intro]<br>
+(악기 연주)<br>
+<br>
+[Verse]<br>
+비 오는 날의 하늘은 잿빛<br>
+혼자 걷는 이 거리가 너무 외로워<br>
+<br>
+[Pre-Chorus]<br>
+그때 그 기억이 떠올라<br>
+<br>
+[Chorus]<br>
+다시 돌아갈 수 없어<br>
+우리의 그때로 (그때로)<br>
+<br>
+[Outro]<br>
+이제는... 안녕
+                    </div>
+                </div>
+                <div>
+                    <p class="font-bold text-yellow-400 mb-2">🤖 방법 2: AI에게 맡기기 (Suno 전용)</p>
+                    <p class="text-xs text-gray-400">Suno에서는 <b>"Generate Lyrics"</b> 버튼을 누르면 AI가 자동으로 가사를 작성해줍니다. 빌더에서 작성한 <b>곡 주제(Topic)</b>를 참고해서 쓰게 하면 더 좋습니다.</p>
+                </div>
+                <div>
+                    <p class="font-bold text-yellow-400 mb-2">🎹 방법 3: BGM (가사 없이 연주만)</p>
+                    <p class="text-xs text-gray-400">가사 칸을 <b>완전히 비워두고</b>, Style 칸에 <b>"Instrumental Only"</b>를 추가하거나 Suno의 <b>Instrumental</b> 스위치를 켜세요.</p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-lg font-bold text-gray-200 mb-4 flex items-center"><span class="w-6 h-6 rounded-full bg-gray-700 text-white text-xs flex items-center justify-center mr-2">4</span> 프로처럼 작곡하는 실전 팁</h3>
+            <div class="bg-[#121212] p-5 rounded-xl border-2 border-[#00ff7f]/40 mb-4">
+                <p class="font-bold text-[#00ff7f] text-sm mb-2">🏆 프롬프트 황금 공식</p>
+                <div class="bg-[#1e1e1e] p-3 rounded border border-[#444] font-mono text-xs text-cyan-300 mb-3">
+                    장르(1~3개) + 분위기(1~3개) + 핵심 악기(2~4개) + 보컬 + 템포/시대감
+                </div>
+                <p class="text-xs text-gray-400 mb-1">✅ 예시 1: <span class="text-gray-300 font-mono">K-Pop, Dance-pop, Energetic, Synthesizer, 808 Bass, Female Vocals, Upbeat 125 BPM</span></p>
+                <p class="text-xs text-gray-400">✅ 예시 2: <span class="text-gray-300 font-mono">Emotional Ballad, Nostalgic, Piano, Strings, Male Vocals, Slow tempo, 90s style</span></p>
+                <p class="text-xs text-gray-500 mt-2">→ 요소를 너무 많이 넣으면 오히려 뭉개집니다. <b>앞에 쓴 것일수록 더 세게 반영</b>되니 중요한 것부터 쓰고, <b>15개를 넘기면</b> 중간에 있는 것부터 무시될 수 있습니다.</p>
+                <p class="text-xs text-gray-500 mt-1">스타일 칸 글자 수는 최신 모델 기준 <b>1,000자</b>까지 들어가지만(구형 모델은 200자 안팎), 길게 쓴다고 좋아지지는 않습니다. 빌더 아래쪽에 현재 <b>요소 수와 글자 수</b>가 표시됩니다.</p>
+            </div>
+            <div class="space-y-3">
+                <div class="bg-gradient-to-r from-purple-900/20 to-blue-900/20 p-4 rounded-xl border border-purple-900/50">
+                    <p class="font-bold text-pink-400 text-sm mb-2">🎯 장르는 구체적으로!</p>
+                    <p class="text-xs text-gray-400">❌ 나쁜 예: "pop music"</p>
+                    <p class="text-xs text-gray-400">✅ 좋은 예: "K-Pop, Synth-pop, Dance-pop"</p>
+                    <p class="text-xs text-gray-500 mt-2">→ 구체적일수록 AI가 원하는 스타일을 정확하게 만듭니다.</p>
+                </div>
+                <div class="bg-gradient-to-r from-green-900/20 to-teal-900/20 p-4 rounded-xl border border-green-900/50">
+                    <p class="font-bold text-green-400 text-sm mb-2">🎸 악기를 명시하세요!</p>
+                    <p class="text-xs text-gray-400">악기를 지정하지 않으면 AI가 임의로 선택합니다. 원하는 사운드가 있다면 반드시 명시하세요.</p>
+                    <p class="text-xs text-gray-400 mt-1">예: "Piano, Acoustic Guitar, Strings, 808 Bass"</p>
+                </div>
+                <div class="bg-gradient-to-r from-orange-900/20 to-red-900/20 p-4 rounded-xl border border-orange-900/50">
+                    <p class="font-bold text-orange-400 text-sm mb-2">💥 후렴구는 짧고 강렬하게!</p>
+                    <p class="text-xs text-gray-400">후렴구([Chorus])는 2~4줄 정도로 짧게 쓰고, 같은 멜로디를 반복하면 중독성이 높아집니다.</p>
+                    <p class="text-xs text-gray-400 mt-1">절([Verse])은 길게, 후렴([Chorus])은 짧고 강렬하게!</p>
+                </div>
+                <div class="bg-gradient-to-r from-indigo-900/20 to-purple-900/20 p-4 rounded-xl border border-indigo-900/50">
+                    <p class="font-bold text-indigo-400 text-sm mb-2">🔄 여러 번 생성해보세요!</p>
+                    <p class="text-xs text-gray-400">같은 프롬프트로도 생성할 때마다 결과가 다릅니다. 마음에 드는 결과가 나올 때까지 2~5번 정도 시도해보세요.</p>
+                </div>
+                <div class="bg-gradient-to-r from-cyan-900/20 to-blue-900/20 p-4 rounded-xl border border-cyan-900/50">
+                    <p class="font-bold text-cyan-400 text-sm mb-2">⏱️ 곡 길이는 슬라이더로 정하세요</p>
+                    <p class="text-xs text-gray-400">최신 모델(v5.5)에서는 만들기 전에 <b>Duration 슬라이더</b>로 곡 길이를 <b>10초~6분</b> 사이에서 직접 정할 수 있습니다. 수업 도입 BGM 30초, 졸업식 노래 3분처럼 필요한 길이를 미리 지정하세요.</p>
+                    <p class="text-xs text-gray-400 mt-1">슬라이더가 없는 이전 모델이거나 곡이 짧게 끝났다면, 생성된 곡의 <b>"Extend"</b> 버튼으로 뒤를 이어 붙일 수 있습니다.</p>
+                </div>
+                <div class="bg-gradient-to-r from-rose-900/20 to-red-900/20 p-4 rounded-xl border border-rose-900/50">
+                    <p class="font-bold text-rose-400 text-sm mb-2">🚫 Exclude Styles로 빼고 싶은 것 지정하기</p>
+                    <p class="text-xs text-gray-400">Suno 커스텀 모드에는 <b>Exclude Styles</b>(제외할 스타일) 칸이 있습니다. 원치 않는 요소가 자꾸 섞여 나올 때 여기에 적으세요.</p>
+                    <p class="text-xs text-gray-400 mt-1">예: 잔잔한 발라드를 원하는데 자꾸 드럼이 나온다면 → <span class="font-mono text-gray-300">drums, heavy beat, electronic</span></p>
+                </div>
+                <div class="bg-gradient-to-r from-yellow-900/20 to-amber-900/20 p-4 rounded-xl border border-yellow-900/50">
+                    <p class="font-bold text-yellow-400 text-sm mb-2">🎤 괄호 ( )로 백킹보컬·추임새 넣기</p>
+                    <p class="text-xs text-gray-400">가사에서 <b>괄호 안 텍스트</b>는 코러스(백킹보컬)나 추임새로 처리되는 경향이 있습니다. K-Pop 스타일 떼창을 만들 때 유용합니다.</p>
+                    <div class="bg-[#1e1e1e] p-2 rounded text-xs text-cyan-300 font-mono mt-2">다시 만나 (만나!) 우리 함께 (함께!)</div>
+                </div>
+                <div class="bg-gradient-to-r from-teal-900/20 to-green-900/20 p-4 rounded-xl border border-teal-900/50">
+                    <p class="font-bold text-teal-400 text-sm mb-2">🔢 숫자·기호는 한글로 풀어 쓰기</p>
+                    <p class="text-xs text-gray-400">가사 속 숫자는 AI가 영어로 읽어버리는 경우가 많습니다. 발음까지 지정하려면 한글로 풀어 쓰세요.</p>
+                    <p class="text-xs text-gray-400 mt-1">예: "24시간" → <b>"스물네 시간"</b>, "3반" → <b>"삼반"</b>, "100%" → <b>"백 퍼센트"</b></p>
+                </div>
+                <div class="bg-gradient-to-r from-slate-800/40 to-gray-800/40 p-4 rounded-xl border border-slate-700/50">
+                    <p class="font-bold text-gray-300 text-sm mb-2">🏁 곡이 어색하게 끝난다면</p>
+                    <p class="text-xs text-gray-400">노래가 뚝 끊기거나 끝없이 늘어질 때는 가사 마지막에 <b>[Outro]</b>를 넣고 그 아래 <b>[End]</b> 태그로 확실하게 마침표를 찍어주세요.</p>
+                </div>
+                <div class="bg-gradient-to-r from-red-900/20 to-orange-900/20 p-4 rounded-xl border border-red-900/50">
+                    <p class="font-bold text-red-300 text-sm mb-2">⚠️ 실존 가수 이름은 넣지 마세요</p>
+                    <p class="text-xs text-gray-400">"~가수 스타일로"처럼 실존 아티스트 이름을 스타일 칸에 직접 넣는 건 피하세요. 저작권 정책상 제한되거나 결과가 불안정할 수 있습니다.</p>
+                    <p class="text-xs text-gray-400 mt-1">❌ "아이유 스타일" → ✅ <span class="font-mono text-gray-300">"Clear emotive female vocals, delicate acoustic ballad"</span>처럼 <b>목소리·창법의 특징을 풀어서</b> 묘사하세요.</p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-lg font-bold text-gray-200 mb-4 flex items-center"><span class="w-6 h-6 rounded-full bg-gray-700 text-white text-xs flex items-center justify-center mr-2">5</span> 자주 하는 실수 (FAQ)</h3>
+            <div class="space-y-3">
+                <div class="bg-[#121212] p-4 rounded-xl border border-red-900/50">
+                    <p class="font-bold text-red-400 text-sm mb-1">❌ 실수 1: 구조 태그를 Style 칸에 넣기</p>
+                    <p class="text-xs text-gray-400">[Intro], [Verse], [Chorus] 같은 태그는 반드시 <b>가사(Lyrics) 칸</b>에 넣어야 합니다.</p>
+                </div>
+                <div class="bg-[#121212] p-4 rounded-xl border border-red-900/50">
+                    <p class="font-bold text-red-400 text-sm mb-1">❌ 실수 2: 가사가 너무 김</p>
+                    <p class="text-xs text-gray-400">한 섹션에 가사를 너무 많이 넣으면 AI가 빠르게 읊조리듯 불러 어색합니다. 절과 후렴은 각각 4~8줄 정도가 적당합니다.</p>
+                </div>
+                <div class="bg-[#121212] p-4 rounded-xl border border-red-900/50">
+                    <p class="font-bold text-red-400 text-sm mb-1">❌ 실수 3: 모호한 장르 표현</p>
+                    <p class="text-xs text-gray-400">"좋은 음악", "감동적인 노래" 같은 추상적 표현은 AI가 이해하기 어렵습니다. 구체적인 장르명을 사용하세요.</p>
+                </div>
+                <div class="bg-[#121212] p-4 rounded-xl border border-red-900/50">
+                    <p class="font-bold text-red-400 text-sm mb-1">❌ 실수 4: 한국어 가사를 영어 발음으로 쓰기</p>
+                    <p class="text-xs text-gray-400">한국어 노래를 만들고 싶다면 한글로 그대로 쓰세요. "saranghae" 대신 "사랑해"로 써야 제대로 된 발음이 나옵니다.</p>
+                </div>
+                <div class="bg-[#121212] p-4 rounded-xl border border-red-900/50">
+                    <p class="font-bold text-red-400 text-sm mb-1">❌ 실수 5: 실존 가수 이름을 스타일에 그대로 쓰기</p>
+                    <p class="text-xs text-gray-400">특정 가수 이름을 넣으면 저작권 정책에 걸리거나 원치 않는 결과가 나올 수 있습니다. 목소리 특징(허스키한, 청량한 등)으로 풀어서 쓰세요.</p>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-lg font-bold text-gray-200 mb-4 flex items-center"><span class="w-6 h-6 rounded-full bg-gray-700 text-white text-xs flex items-center justify-center mr-2">6</span> 한 곡을 완성하는 Suno 부가 기능</h3>
+            <div class="bg-[#121212] p-5 rounded-xl border border-[#333] text-gray-300 text-sm leading-relaxed">
+                <p class="text-xs text-gray-500 mb-3">한 번에 완벽한 곡이 나오는 경우는 드뭅니다. 아래 기능들로 <b>다듬어서 완성</b>하세요. (요금제·버전에 따라 일부 기능은 제한될 수 있습니다)</p>
+                <div class="space-y-2">
+                    <div class="flex items-start gap-2 text-xs"><span class="shrink-0 w-20 font-bold text-[#00ff7f]">Extend</span><span class="text-gray-400">곡을 이어서 더 길게 만듭니다. 이어붙일 지점의 시간(초)을 지정할 수 있습니다.</span></div>
+                    <div class="flex items-start gap-2 text-xs"><span class="shrink-0 w-20 font-bold text-[#00ff7f]">Replace Section</span><span class="text-gray-400">마음에 안 드는 구간(예: 2절만)을 골라 그 부분만 다시 생성합니다.</span></div>
+                    <div class="flex items-start gap-2 text-xs"><span class="shrink-0 w-20 font-bold text-[#00ff7f]">Cover</span><span class="text-gray-400">같은 가사·멜로디를 완전히 다른 장르로 재해석합니다. 발라드를 록으로, 동요를 재즈로!</span></div>
+                    <div class="flex items-start gap-2 text-xs"><span class="shrink-0 w-20 font-bold text-[#00ff7f]">Voices</span><span class="text-gray-400">마음에 든 곡의 목소리·스타일을 저장해 다음 곡에도 같은 가수처럼 씁니다. 예전 <b>Persona</b>가 이 메뉴로 들어왔습니다.</span></div>
+                    <div class="flex items-start gap-2 text-xs"><span class="shrink-0 w-20 font-bold text-[#00ff7f]">Crop</span><span class="text-gray-400">곡의 앞뒤 불필요한 부분을 잘라냅니다.</span></div>
+                    <div class="flex items-start gap-2 text-xs"><span class="shrink-0 w-20 font-bold text-[#00ff7f]">Remaster</span><span class="text-gray-400">예전에 만든 곡을 최신 모델로 다시 렌더링해 음질을 올립니다.</span></div>
+                    <div class="flex items-start gap-2 text-xs"><span class="shrink-0 w-20 font-bold text-[#00ff7f]">Stems</span><span class="text-gray-400">보컬·드럼·베이스·반주를 갈래별로 분리해 내려받습니다. 노래방 반주나 영상 BGM 만들 때 유용합니다.</span></div>
+                </div>
+                <p class="text-[11px] text-gray-500 mt-3 pt-3 border-t border-[#333]">* Suno는 기능이 자주 바뀝니다. 메뉴 이름이 안 보이면 곡을 만든 뒤 곡 위에서 마우스 오른쪽 버튼(모바일은 길게 누르기)을 눌러보세요.</p>
+            </div>
+        </div>
+
+        <div>
+            <h3 class="text-lg font-bold text-gray-200 mb-4 flex items-center"><span class="w-6 h-6 rounded-full bg-gray-700 text-white text-xs flex items-center justify-center mr-2">7</span> 학교에서 쓰기 전 확인할 것</h3>
+            <div class="space-y-3">
+                <div class="bg-[#121212] p-4 rounded-xl border border-yellow-900/50">
+                    <p class="font-bold text-yellow-400 text-sm mb-2">📥 다운로드가 되는지 먼저 확인하세요</p>
+                    <p class="text-xs text-gray-400">수업에서 쓰려면 <b>음원 파일을 내려받을 수 있어야</b> 합니다. Suno는 요금제에 따라 mp3·wav 다운로드가 가능합니다.</p>
+                    <p class="text-xs text-gray-400 mt-1">한편 <b>Udio</b>는 음반사와의 저작권 합의 이후 <b>만든 곡의 다운로드가 막혀</b> 있습니다(2026년 8월 기준). 곡을 파일로 받아 행사에 틀어야 한다면 Suno를 쓰세요. 이 빌더의 프롬프트는 두 서비스 모두에 넣을 수 있지만, 안내는 Suno를 기준으로 합니다.</p>
+                </div>
+                <div class="bg-[#121212] p-4 rounded-xl border border-[#333]">
+                    <p class="font-bold text-[#00ff7f] text-sm mb-2">🏫 학생 창작물로 쓸 때</p>
+                    <p class="text-xs text-gray-400">상업적 이용 권리는 <b>유료 플랜</b>에서 열리는 경우가 많습니다. 교내 행사·수업 자료 수준을 넘어 외부 공개나 판매를 계획한다면 가입한 요금제의 약관을 먼저 확인하세요.</p>
+                    <p class="text-xs text-gray-400 mt-1">가입 연령은 <b>만 13세 이상</b>이고, <b>18세 미만은 보호자의 동의</b>가 있어야 이용할 수 있습니다(Suno 이용약관). 초등학생은 물론 중·고등학생도 학생 계정을 일괄로 만들게 하기보다 <b>교사 계정으로 시연</b>하거나 가정에 안내 후 진행하는 편이 안전합니다.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-yellow-900/20 to-orange-900/20 p-6 rounded-2xl border border-yellow-900/50">
+            <h3 class="font-bold text-white mb-4 flex items-center text-lg">
+                <i class="fas fa-lightbulb text-yellow-400 mr-2"></i> 최종 체크리스트
+            </h3>
+            <div class="space-y-2 text-sm text-gray-300">
+                <div class="flex items-start gap-2">
+                    <span class="text-green-400 mt-0.5">✓</span>
+                    <div><b>Custom Mode</b>를 켰나요?</div>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="text-green-400 mt-0.5">✓</span>
+                    <div><b>장르, 분위기, 악기, 보컬, 템포</b>를 Style of Music 칸에 넣었나요?</div>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="text-green-400 mt-0.5">✓</span>
+                    <div><b>[Verse], [Chorus]</b> 같은 구조 태그를 가사에 넣었나요?</div>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="text-green-400 mt-0.5">✓</span>
+                    <div>BGM을 만든다면 <b>Instrumental</b> 설정을 켰나요?</div>
+                </div>
+                <div class="flex items-start gap-2">
+                    <span class="text-green-400 mt-0.5">✓</span>
+                    <div>후렴구는 짧고 강렬하게 작성했나요?</div>
+                </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-yellow-900/50 text-center">
+                <p class="text-sm text-yellow-300">🎉 모두 체크했다면 이제 <b>[Create]</b> 버튼을 눌러보세요!</p>
+            </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- 모바일 전용 하단 고정 생성 바 (빌더 탭에서만 노출).
+       모바일은 1단 스택이라 데스크톱용 버튼이 5,000px 아래에 묻히기 때문. -->
+  <div id="mobileGenBar" class="md:hidden shrink-0 px-3 py-2 bg-[#181818] border-t border-[#333] z-40">
+    <p id="countMobile" class="text-[10px] text-center text-gray-500 mb-1.5"></p>
+    <button onclick="generateAndCopy()" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white text-sm font-bold py-3 px-6 rounded-full shadow-lg transition flex items-center justify-center gap-2">
+      <i class="fas fa-magic"></i>
+      프롬프트 생성 &amp; 복사
+    </button>
+  </div>
+
+  <footer style="text-align: center; padding: 15px 10px; color: #555; font-size: 11px; font-family: sans-serif; line-height: 1.5;" class="shrink-0 bg-[#1e1e1e] border-t border-[#333]">
+    <div class="text-xs sm:text-sm">
+        Developed by <strong>김주현(광평중)</strong> &nbsp;|&nbsp; 
+        <a href="https://instagram.com/kimju.zip" target="_blank" style="text-decoration: none; color: #E1306C; font-weight: bold;">
+            💟 @kimju.zip
+        </a>
+    </div>
+    <div style="font-size: 10px; opacity: 0.6;" class="text-[9px] sm:text-[10px]">
+        &copy; 2025-2026. AI Composer Studio. All Rights Reserved.
+    </div>
+  </footer>
+
+  <div id="copyModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm transition-opacity opacity-0">
+    <div class="bg-[#1e1e1e] rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-2xl transform scale-95 transition-transform duration-200 flex flex-col max-h-[85vh] border border-[#333]">
+      <div class="p-4 sm:p-5 border-b border-[#333] flex justify-between items-center bg-[#252525] rounded-t-2xl sm:rounded-t-3xl">
+        <h3 class="font-bold text-base sm:text-lg text-white flex items-center"><i class="fas fa-check-circle text-[#00ff7f] mr-2"></i> 프롬프트 생성 완료!</h3>
+        <button onclick="closeModal()" class="w-7 h-7 sm:w-8 sm:h-8 rounded-full hover:bg-[#333] flex items-center justify-center text-gray-400 transition"><i class="fas fa-times text-sm sm:text-base"></i></button>
+      </div>
+      <div class="overflow-y-auto custom-scroll bg-[#121212] border-b border-[#333]">
+        <div class="p-4 sm:p-6">
+          <div class="flex justify-between items-center mb-2">
+            <p class="text-xs font-bold text-gray-400"><i class="fas fa-music mr-1"></i>Style of Music 칸에 붙여넣기 <span id="styleCharCount" class="text-gray-600 font-normal"></span></p>
+            <button onclick="copyBlock('modalContent', this)" class="text-[10px] px-2 py-1 rounded bg-[#2a2a2a] hover:bg-[#333] text-gray-300 border border-[#444] transition shrink-0"><i class="fas fa-copy mr-1"></i>복사</button>
+          </div>
+          <div class="text-[#00ff7f] font-mono text-xs sm:text-sm leading-relaxed whitespace-pre-wrap break-all" id="modalContent"></div>
+        </div>
+        <div class="p-4 sm:p-6 pt-0 hidden" id="structureBlock">
+          <div class="flex justify-between items-center mb-2 border-t border-[#333] pt-4">
+            <p class="text-xs font-bold text-gray-400"><i class="fas fa-layer-group mr-1"></i>Lyrics(가사) 칸에 붙여넣기</p>
+            <button onclick="copyBlock('modalStructure', this)" class="text-[10px] px-2 py-1 rounded bg-[#2a2a2a] hover:bg-[#333] text-gray-300 border border-[#444] transition shrink-0"><i class="fas fa-copy mr-1"></i>복사</button>
+          </div>
+          <div class="text-cyan-300 font-mono text-xs sm:text-sm leading-relaxed whitespace-pre-wrap break-all" id="modalStructure"></div>
+        </div>
+      </div>
+      <div class="p-3 sm:p-4 bg-[#1e1e1e] rounded-b-2xl sm:rounded-b-3xl text-center">
+          <p class="text-xs sm:text-sm text-gray-400 mb-3"><span id="autoCopyNotice">Style 프롬프트는 <b>자동으로 클립보드에 복사</b>되었습니다.</span><br><span class="text-[10px] sm:text-xs text-gray-500">* 곡 구조 태그는 위의 복사 버튼을 눌러 가사(Lyrics) 칸에 붙여넣으세요.</span></p>
+          <button onclick="closeModal()" class="px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white text-sm sm:text-base font-bold rounded-xl transition shadow-lg shadow-green-900/50">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="resetModal" class="fixed inset-0 bg-black/80 z-[70] hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm transition-opacity opacity-0">
+    <div class="bg-[#1e1e1e] rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-sm transform scale-95 transition-transform duration-200 overflow-hidden border border-[#333]">
+        <div class="p-4 sm:p-6 pb-0 flex justify-center"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-[#333] text-gray-400 rounded-full flex items-center justify-center mb-2"><i class="fas fa-redo-alt text-lg sm:text-2xl"></i></div></div>
+        <div class="px-4 sm:px-6 py-2 text-center">
+            <h3 class="text-base sm:text-lg font-bold text-white mb-2">모두 지우고 새로 쓸까요?</h3>
+            <p class="text-xs sm:text-sm text-gray-400 leading-relaxed">입력하신 내용이 모두 사라집니다.<br>계속하시겠습니까?</p>
+        </div>
+        <div class="p-4 sm:p-6 pt-4 flex gap-2 sm:gap-3">
+            <button onclick="closeResetModal()" class="flex-1 py-2.5 sm:py-3 bg-[#333] hover:bg-[#444] text-gray-300 text-sm sm:text-base font-bold rounded-xl transition">취소</button>
+            <button onclick="confirmReset()" class="flex-1 py-2.5 sm:py-3 bg-red-600 hover:bg-red-500 text-white text-sm sm:text-base font-bold rounded-xl transition shadow-lg shadow-red-900/50">초기화</button>
+        </div>
+    </div>
+  </div>
+
+  <div id="alertModal" class="fixed inset-0 bg-black/80 z-[60] hidden flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm transition-opacity opacity-0">
+    <div class="bg-[#1e1e1e] rounded-xl sm:rounded-2xl shadow-2xl w-full max-w-sm transform scale-95 transition-transform duration-200 overflow-hidden border border-[#333]">
+      <div class="p-4 sm:p-6 pb-0 flex justify-center"><div class="w-12 h-12 sm:w-16 sm:h-16 bg-red-900/50 rounded-full flex items-center justify-center mb-2 animate-bounce border border-red-800"><span class="text-2xl sm:text-3xl">⚠️</span></div></div>
+      <div class="px-4 sm:px-6 py-2 text-center"><h3 class="text-base sm:text-lg font-bold text-white mb-2">필수 항목 누락</h3><p class="text-xs sm:text-sm text-gray-400 leading-relaxed" id="alertMessage">내용을 입력해주세요!</p></div>
+      <div class="p-4 sm:p-6 pt-4"><button onclick="closeAlert()" class="w-full py-2.5 sm:py-3 bg-[#333] hover:bg-[#444] text-white text-sm sm:text-base font-bold rounded-xl transition shadow-lg transform active:scale-95">확인</button></div>
+    </div>
+  </div>
+
+  <script>
+    function switchTab(tabName) {
+        const tabs = ['builder', 'templates', 'glossary', 'guide'];
+        tabs.forEach(t => {
+            document.getElementById('view-' + t).classList.add('hidden');
+            const btn = document.getElementById('btn-' + t);
+            btn.classList.remove('tab-active');
+            btn.classList.add('tab-inactive');
+        });
+        document.getElementById('view-' + tabName).classList.remove('hidden');
+        const activeBtn = document.getElementById('btn-' + tabName);
+        activeBtn.classList.remove('tab-inactive');
+        activeBtn.classList.add('tab-active');
+        // 모바일 생성 바는 빌더 탭에서만 (md 이상에서는 md:hidden이 계속 숨김)
+        document.getElementById('mobileGenBar').classList.toggle('hidden', tabName !== 'builder');
+    }
+
+    function toggleAccordion(id) {
+        const parent = document.getElementById(id).parentElement;
+        if (parent.classList.contains('accordion-open')) {
+            parent.classList.remove('accordion-open');
+        } else {
+            document.querySelectorAll('.accordion-open').forEach(item => item.classList.remove('accordion-open'));
+            parent.classList.add('accordion-open');
+        }
+    }
+
+    function setText(id, text) {
+        const input = document.getElementById(id);
+        input.value = text;
+        highlightInput(input);
+        saveState();
+    }
+
+    function addText(id, text) {
+        const input = document.getElementById(id);
+        if (id === 'in-structure') {
+            // 구조 태그는 가사 칸에 붙이기 좋게 줄바꿈으로 누적 (중복 허용)
+            input.value += (input.value ? '\n' : '') + text;
+        } else {
+            // 쉼표 단위로 끊어 '완전히 같은 항목'만 토글한다.
+            // (부분 문자열로 지우면 Harpsichord + Harp -> "sichord" 처럼 단어가 잘림)
+            // 칩 자체가 'Uplifting, Energetic'처럼 두 단어짜리인 경우가 있어
+            // 들어오는 값도 쪼갠 뒤 항목 단위로 넣고 뺀다.
+            const incoming = text.split(',').map(s => s.trim()).filter(Boolean);
+            const parts = input.value.split(',').map(s => s.trim()).filter(Boolean);
+            if (incoming.every(t => parts.includes(t))) {
+                incoming.forEach(t => { const i = parts.indexOf(t); if (i > -1) parts.splice(i, 1); });
+            } else {
+                incoming.forEach(t => { if (!parts.includes(t)) parts.push(t); });
+            }
+            input.value = parts.join(', ');
+        }
+        input.scrollTop = input.scrollHeight;
+        highlightInput(input);
+        saveState();
+    }
+
+    // 구조 태그 마지막 줄만 되돌리기 (전체 초기화 없이 오타 수습)
+    function undoStructure() {
+        const input = document.getElementById('in-structure');
+        const lines = input.value.split('\n').filter(l => l.trim());
+        lines.pop();
+        input.value = lines.join('\n');
+        highlightInput(input);
+        saveState();
+    }
+
+    function highlightInput(input) {
+        input.classList.add('ring-2', 'ring-[#00ff7f]', 'bg-[#2a2a2a]');
+        setTimeout(() => input.classList.remove('ring-2', 'ring-[#00ff7f]', 'bg-[#2a2a2a]'), 300);
+    }
+
+    // 모달 열고 닫기 공통 처리.
+    // 닫힘 애니메이션(200ms) 중에 같은 모달을 다시 열면 예약돼 있던 hidden 타이머가
+    // 새로 연 모달까지 숨겨버리므로, 열 때 반드시 타이머를 취소한다.
+    function openOverlay(id) {
+        const m = document.getElementById(id);
+        clearTimeout(m._hideTimer);
+        m.classList.remove('hidden');
+        setTimeout(() => { m.classList.remove('opacity-0'); m.firstElementChild.classList.remove('scale-95'); }, 10);
+    }
+
+    function closeOverlay(id) {
+        const m = document.getElementById(id);
+        m.classList.add('opacity-0'); m.firstElementChild.classList.add('scale-95');
+        clearTimeout(m._hideTimer);
+        m._hideTimer = setTimeout(() => m.classList.add('hidden'), 200);
+    }
+
+    function resetAll() { openOverlay('resetModal'); }
+
+    function confirmReset() {
+        FIELD_IDS.forEach(id => document.getElementById(id).value = '');
+        try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+        updateStyleCount();
+        closeResetModal();
+    }
+
+    function closeResetModal() { closeOverlay('resetModal'); }
+
+    async function copyText(text) {
+        try {
+            await navigator.clipboard.writeText(text);
+            return true;
+        } catch (e) {
+            // 구형 브라우저·비보안 컨텍스트 폴백
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.left = '-9999px';
+            document.body.appendChild(ta);
+            ta.focus();
+            ta.select();
+            let ok = false;
+            try { ok = document.execCommand('copy'); } catch (err) { console.error('복사 실패:', err); }
+            document.body.removeChild(ta);
+            return ok;
+        }
+    }
+
+    function copyBlock(contentId, btn) {
+        const text = document.getElementById(contentId).textContent;
+        // 연타해도 원래 라벨이 '복사됨!'으로 굳지 않도록 최초 1회만 보관
+        if (!btn.dataset.origLabel) btn.dataset.origLabel = btn.innerHTML;
+        copyText(text).then((ok) => {
+            btn.innerHTML = ok
+                ? '<i class="fas fa-check mr-1"></i>복사됨!'
+                : '<i class="fas fa-exclamation-triangle mr-1"></i>복사 실패';
+            clearTimeout(btn._resetTimer);
+            btn._resetTimer = setTimeout(() => { btn.innerHTML = btn.dataset.origLabel; }, 1400);
+        });
+    }
+
+    function showModal(styleTxt, structureTxt) {
+        const cleanText = styleTxt.trim();
+        copyText(cleanText).then((ok) => {
+            document.getElementById('autoCopyNotice').innerHTML = ok
+                ? 'Style 프롬프트는 <b>자동으로 클립보드에 복사</b>되었습니다.'
+                : '⚠️ 자동 복사에 실패했습니다. 위의 <b>복사 버튼</b>을 눌러주세요.';
+        });
+        document.getElementById('modalContent').textContent = cleanText;
+        document.getElementById('styleCharCount').textContent = '(' + cleanText.length + '자)';
+        const structureBlock = document.getElementById('structureBlock');
+        if (structureTxt && structureTxt.trim()) {
+            document.getElementById('modalStructure').textContent = structureTxt.trim();
+            structureBlock.classList.remove('hidden');
+        } else {
+            structureBlock.classList.add('hidden');
+        }
+        openOverlay('copyModal');
+    }
+
+    function showAlert(msg) {
+        document.getElementById('alertMessage').innerHTML = msg;
+        openOverlay('alertModal');
+    }
+    function closeAlert() { closeOverlay('alertModal'); }
+    function closeModal() { closeOverlay('copyModal'); }
+
+    function generateAndCopy() {
+        const topic = document.getElementById('in-topic').value.trim();
+        const genre = document.getElementById('in-genre').value.trim();
+        const structure = document.getElementById('in-structure').value.trim();
+
+        if (!topic && !genre) {
+            showAlert('😅 최소한 <b>곡 주제</b>나 <b>장르</b> 중 하나는 꼭 입력해주세요!');
+            return;
+        }
+
+        showModal(buildStylePrompt(), structure);
+    }
+
+    // Style 칸에 그대로 붙여넣는 값이므로 [라벨] 같은 대괄호는 넣지 않는다.
+    // (Suno는 대괄호를 메타태그로 해석해 스타일이 뭉개질 수 있음)
+    const templates = [
+        `K-Pop girl group song, Energetic, Catchy hook, Female Vocals, Dance-pop, Synth-pop`,
+        `Lo-Fi Hip Hop, Chill, Relaxing, Study beats, Vinyl crackle, Piano, Downtempo`,
+        `Cinematic Orchestral, Epic, Heroic, Building tension, Powerful film score, Big drums, Strings, Instrumental`,
+        `Emotional Ballad, Sad, Heartbreak, Piano, Male Vocals, Slow tempo, Rain sound`,
+        `EDM, Big Room House, High energy, Festival, Heavy bass drop, Synthesizer`,
+        `Smooth Jazz, Relaxing, Saxophone, Double bass, Piano, Cocktail bar atmosphere, Instrumental`,
+        `Hard Rock, Energetic, Electric Guitar, Distortion, Powerful Male Vocals, Drums`,
+        `8-bit Chiptune, Retro Video Game music, Cute, Bouncy, Upbeat, Classic arcade style`,
+        `Tropical House, Summer vibes, Beach, Pluck synth, Marimba, Upbeat, Female Vocals`,
+        `90s Boom Bap Hip Hop, Old school, Scratching, Heavy drums, Male Rap`,
+        `Gospel, Soulful, Choir, Hand claps, Uplifting, Organ, Powerful vocals`,
+        `R&B, Slow Jam, Sexy, Groovy bass, Smooth Female Vocals, Night vibe`,
+        `Korean Trot, Upbeat, Playful, Catchy chorus, Brass section, Electric organ, Festive party mood`,
+        `Korean traditional fusion, Gayageum, Daegeum, Janggu, Modern hip hop beat, Epic, Cinematic`,
+        `Children's song, Cute, Playful, Simple catchy melody, Xylophone, Ukulele, Children choir, Sing-along`,
+        `Stadium anthem, Energetic chant, Hand claps, Big drums, Group vocals, Sing-along chorus, Triumphant`,
+        `Christmas carol, Warm, Cozy, Sleigh bells, Choir harmonies, Joyful, Festive`,
+        `City Pop, 80s Japanese retro, Groovy bass, Smooth female vocals, Saxophone, Night drive vibe`,
+        `Synthwave, 80s retro futuristic, Analog synthesizer, Driving beat, Neon night, Nostalgic`,
+        `Ambient, Sleep music, Meditation, Soft synth pads, Gentle piano, Very slow, Calm, Instrumental Only`
+    ];
+
+    function copyTemplate(index) {
+        showModal(templates[index]);
+    }
+
+    // ===== 스타일 요소 개수·글자 수 표시 =====
+    // 근거로 삼은 건 여러 가이드가 일치하는 두 가지뿐이다.
+    //   (1) 태그가 15개를 넘으면 모델이 프롬프트 중간의 태그부터 버리기 시작한다
+    //   (2) 앞쪽에 쓴 단어가 더 세게 반영된다
+    // "몇 개까지"에 대한 Suno 공식 권장치는 없다. 글자 수 상한만 공식이다
+    // (v5·v5.5 1,000자 / v4 이하 약 200자).
+    // 곡 주제는 문장이고 곡 구조는 가사 칸으로 가므로 요소 수에는 세지 않는다.
+    const STYLE_FIELDS = ['in-genre', 'in-mood', 'in-instruments', 'in-vocals', 'in-tempo'];
+    const SOFT_LIMIT = 8;
+    const HARD_LIMIT = 15;
+
+    // 생성 버튼이 만드는 것과 똑같은 문자열. 카운터와 실제 결과가 어긋나지 않게 한 곳에서 만든다.
+    function buildStylePrompt() {
+        const topic = document.getElementById('in-topic').value.trim();
+        const parts = STYLE_FIELDS
+            .map(id => document.getElementById(id).value.trim())
+            .filter(Boolean);
+        let prompt = '';
+        if (topic) prompt += topic + '. ';
+        if (parts.length) prompt += parts.join(', ');
+        return prompt.trim();
+    }
+
+    function countStyleItems() {
+        return STYLE_FIELDS.reduce((sum, id) => {
+            const parts = document.getElementById(id).value.split(',').map(s => s.trim()).filter(Boolean);
+            return sum + parts.length;
+        }, 0);
+    }
+
+    function updateStyleCount() {
+        const n = countStyleItems();
+        const chars = buildStylePrompt().length;
+        let html, cls;
+        if (n === 0 && chars === 0) {
+            html = '칩을 눌러 스타일을 골라보세요';
+            cls = 'text-gray-500';
+        } else {
+            const base = `요소 <b class="text-[#00ff7f]">${n}</b>개 · ${chars}자`;
+            if (n <= SOFT_LIMIT) {
+                html = base;
+                cls = 'text-gray-500';
+            } else if (n <= HARD_LIMIT) {
+                html = `${base} — 요소가 많으면 앞쪽에 쓴 것 위주로 반영돼요`;
+                cls = 'text-gray-500';
+            } else {
+                html = `${base} — <b>15개</b>를 넘기면 중간 태그부터 무시될 수 있어요`;
+                cls = 'text-yellow-400';
+            }
+        }
+        ['countDesktop', 'countMobile'].forEach(id => {
+            const el = document.getElementById(id);
+            el.innerHTML = html;
+            el.className = el.className.replace(/text-(gray-500|yellow-400)/, cls);
+        });
+    }
+
+    // ===== 입력 내용 자동 저장/복원 (localStorage) =====
+    const FIELD_IDS = ['in-topic', 'in-genre', 'in-mood', 'in-instruments', 'in-vocals', 'in-tempo', 'in-structure'];
+    const STORAGE_KEY = 'aiComposerStudio.v2';
+
+    function saveState() {
+        const data = {};
+        FIELD_IDS.forEach(id => { data[id] = document.getElementById(id).value; });
+        try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) {}
+        updateStyleCount();
+    }
+
+    function loadState() {
+        try {
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            FIELD_IDS.forEach(id => { if (data[id]) document.getElementById(id).value = data[id]; });
+        } catch (e) {}
+    }
+
+    loadState();
+    updateStyleCount();
+    FIELD_IDS.forEach(id => document.getElementById(id).addEventListener('input', saveState));
+
+    // ===== 모달 닫기: ESC 키 / 바깥 배경 클릭 =====
+    // 위에 떠 있는 것부터 닫는다 (초기화 > 경고 > 결과)
+    const MODAL_STACK = [
+        { id: 'resetModal', close: closeResetModal },
+        { id: 'alertModal', close: closeAlert },
+        { id: 'copyModal',  close: closeModal }
+    ];
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key !== 'Escape') return;
+        const top = MODAL_STACK.find(m => !document.getElementById(m.id).classList.contains('hidden'));
+        if (top) top.close();
+    });
+
+    MODAL_STACK.forEach(m => {
+        const el = document.getElementById(m.id);
+        el.addEventListener('click', (e) => { if (e.target === el) m.close(); });
+    });
+
+    // ===== 칩·카드 키보드 접근 (Tab 이동 + Enter/Space 선택) =====
+    document.querySelectorAll('.chip, .template-card').forEach(el => {
+        el.setAttribute('tabindex', '0');
+        el.setAttribute('role', 'button');
+        el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); }
+        });
+    });
+  </script>
+</body>
+</html>

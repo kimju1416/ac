@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>특수교육 Prompt Studio V3</title>
+  <meta name="description" content="특수교육 수업 자료·개별화교육계획(IEP) 작성을 AI로 지원하는 특수교사 전용 프롬프트 앱">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="특수교육 Prompt Studio V3">
+  <meta property="og:description" content="특수교육 수업 자료·개별화교육계획(IEP) 작성을 AI로 지원하는 특수교사 전용 프롬프트 앱">
+  <meta property="og:url" content="https://kimju.kr/uni1/">
+  <meta property="og:image" content="https://kimju.kr/uni1/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <script>
+    const _cw = console.warn;
+    console.warn = (...a) => { if (typeof a[0] === 'string' && a[0].includes('cdn.tailwindcss.com')) return; _cw.apply(console, a); };
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Pretendard는 Google Fonts에 없다 — 공식 jsDelivr 서브셋 CDN 사용 -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* ── 기본 ── */
+    body { font-family:'Pretendard Variable','Pretendard',-apple-system,'Malgun Gothic',sans-serif; background:#f0f4ff; overflow:hidden; height:100vh; height:100dvh; }
+    .cs::-webkit-scrollbar{width:4px} .cs::-webkit-scrollbar-thumb{background:#c7d2fe;border-radius:3px}
+    .chip{cursor:pointer;transition:all .13s;font-size:.7rem;border-width:1px;user-select:none;display:inline-flex;align-items:center;gap:.2rem;line-height:1.3}
+    .chip:hover{transform:translateY(-2px);box-shadow:0 4px 8px -2px rgba(0,0,0,.12)}
+    .chip:active{transform:scale(.95)}
+    .chip:focus-visible{outline:2px solid #4338ca;outline-offset:2px}
+    .tab-on{border-bottom:3px solid #6366f1;color:#4338ca;font-weight:700}
+    .tab-off{color:#64748b;font-weight:500}
+    /* 데스크탑: 헤더56 + 푸터40 */
+    .sc{height:calc(100vh - 3.5rem - 2.5rem);height:calc(100dvh - 3.5rem - 2.5rem);overflow:hidden}
+    .la,.ra{height:100%;overflow-y:auto;overflow-x:hidden}
+    .sh{font-size:.75rem;font-weight:700;margin-bottom:.6rem;position:sticky;top:0;backdrop-filter:blur(8px);padding:.4rem 0;z-index:10;border-bottom-width:1px;display:flex;align-items:center}
+    .bdg{display:inline-flex;align-items:center;justify-content:center;width:1.3rem;height:1.3rem;border-radius:.3rem;font-size:.6rem;font-weight:700;margin-right:.35rem;flex-shrink:0}
+    .tr{display:flex;flex-wrap:wrap;gap:.35rem}
+    .pnl{background:white;padding:.65rem;border-radius:.8rem;border:1px solid #f1f5f9;box-shadow:0 1px 3px rgba(0,0,0,.04);margin-bottom:.5rem}
+    .slb{font-size:.58rem;font-weight:700;letter-spacing:.07em;margin-bottom:.35rem}
+    .ring{animation:rf .35s ease} @keyframes rf{0%,100%{box-shadow:none}50%{box-shadow:0 0 0 3px #818cf8}}
+    .new-badge{font-size:.5rem;background:#ef4444;color:white;padding:.1rem .3rem;border-radius:.2rem;font-weight:700;margin-left:.3rem;vertical-align:middle}
+
+    /* === [개선 1] 개인정보 경고 배지 === */
+    .privacy-alert{
+      background:linear-gradient(90deg, #fef3c7, #fef9c3);
+      border:1px solid #fbbf24;
+      border-radius:.5rem;
+      padding:.4rem .6rem;
+      font-size:.65rem;
+      color:#92400e;
+      display:flex;
+      align-items:center;
+      gap:.35rem;
+      margin-bottom:.3rem;
+      font-weight:600;
+    }
+
+    /* === [개선 11] 헤더 버튼들 === */
+    .hdr-btn{
+      display:inline-flex;
+      align-items:center;
+      gap:.25rem;
+      font-size:.7rem;
+      font-weight:600;
+      padding:.35rem .6rem;
+      border-radius:.5rem;
+      border:1px solid #e5e7eb;
+      cursor:pointer;
+      transition:all .15s;
+    }
+    .hdr-btn.save{background:#eef2ff;color:#4338ca;border-color:#c7d2fe}
+    .hdr-btn.save:hover{background:#e0e7ff}
+    .hdr-btn.reset{background:#f3f4f6;color:#64748b}
+    .hdr-btn.reset:hover{background:#fee2e2;color:#dc2626}
+
+    /* === [개선 5] 저장 슬롯 === */
+    .save-slot{
+      cursor:pointer;padding:.6rem;background:white;
+      border:1px solid #e5e7eb;border-radius:.6rem;
+      transition:all .15s;font-size:.7rem;
+    }
+    .save-slot:hover{border-color:#6366f1;background:#eef2ff}
+    .save-slot.empty{color:#9ca3af;font-style:italic;text-align:center}
+    .save-slot-label{font-weight:700;color:#4338ca;margin-bottom:.2rem}
+    .save-slot-info{color:#6b7280;font-size:.6rem}
+    .save-slot-actions{display:flex;gap:.3rem;margin-top:.4rem}
+    .save-slot-actions button{
+      flex:1;padding:.25rem;font-size:.6rem;border-radius:.35rem;
+      border:none;cursor:pointer;font-weight:600;
+    }
+
+    /* ── 모바일 전용 ── */
+    #mob-tab-bar{display:none}
+    @media(max-width:767px){
+      body{overflow:hidden}
+      footer{display:none}
+      .sc{height:calc(100dvh - 3.5rem - 2.75rem)}
+      #view-builder{flex-direction:column!important}
+      #panel-left,#panel-right{width:100%!important;height:100%;overflow:hidden}
+      #mob-tab-bar{display:flex;height:44px;background:white;border-bottom:1px solid #e0e7ff;flex-shrink:0;z-index:20}
+      #mob-tab-bar button{flex:1;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;gap:.35rem;transition:all .15s;border:none;background:transparent;cursor:pointer}
+      #mob-tab-bar button.mob-on{color:#4338ca;border-bottom:3px solid #6366f1;background:#eef2ff}
+      #mob-tab-bar button.mob-off{color:#64748b}
+      .chip{font-size:.72rem;padding:.35rem .6rem!important;min-height:30px}
+      textarea{font-size:.8rem!important}
+      #mob-hint{display:flex}
+      /* 헤더 버튼 라벨 숨김 */
+      .hdr-btn span{display:none}
+    }
+    @media(min-width:768px){
+      #mob-hint{display:none}
+      #panel-left{border-right:1px solid #e0e7ff}
+    }
+
+    /* === [개선 10] 모바일 생성 버튼 — 데스크탑 완전 숨김 === */
+    #mob-gen-btn{display:none!important}
+    @media(max-width:767px){
+      #mob-gen-btn{
+        display:flex!important;position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
+        z-index:100;width:calc(100% - 2rem);max-width:420px;
+        background:#4338ca;color:white;font-family:inherit;
+        font-size:.85rem;font-weight:900;padding:.9rem 1.5rem;
+        border-radius:2rem;border:none;cursor:pointer;
+        align-items:center;justify-content:center;gap:.5rem;
+        box-shadow:0 8px 24px rgba(67,56,202,.45);
+      }
+      #mob-gen-btn:active{transform:translateX(-50%) scale(.97)}
+    }
+    /* 빌더 탭이 아닐 때는 모바일에서도 숨긴다 (ID+클래스로 위 !important를 이긴다) */
+    #mob-gen-btn.gen-hidden{display:none!important}
+  </style>
+</head>
+<body class="flex flex-col text-gray-800">
+
+<!-- HEADER -->
+<header class="h-14 bg-white border-b border-indigo-100 flex items-center justify-between px-4 shadow-sm z-30 shrink-0">
+  <div class="flex items-center gap-3 overflow-x-auto">
+    <div class="flex items-center gap-2 flex-shrink-0">
+      <div class="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-700 font-bold shadow">🌈</div>
+      <div>
+        <h1 class="text-sm font-black text-gray-900 leading-tight whitespace-nowrap">특수교육 Prompt Studio <span class="text-[10px] text-indigo-400 font-semibold">V3</span></h1>
+        <p class="text-[9px] text-indigo-400 font-medium tracking-wide">2022 개정 기본 교육과정 · 6대 핵심역량 연계</p>
+      </div>
+    </div>
+    <nav class="flex space-x-1 h-14 flex-shrink-0">
+      <button onclick="sw('builder')"   id="btn-builder"   class="tab-on   h-full flex items-center gap-1 text-xs px-2 transition whitespace-nowrap"><i class="fas fa-edit text-[10px]"></i><span class="hidden sm:inline">빌더</span></button>
+      <button onclick="sw('templates')" id="btn-templates" class="tab-off  h-full flex items-center gap-1 text-xs px-2 transition whitespace-nowrap"><i class="fas fa-star text-[10px]"></i><span class="hidden sm:inline">추천</span></button>
+      <button onclick="sw('guide')"     id="btn-guide"     class="tab-off  h-full flex items-center gap-1 text-xs px-2 transition whitespace-nowrap"><i class="fas fa-book text-[10px]"></i><span class="hidden sm:inline">가이드</span></button>
+    </nav>
+  </div>
+  <div class="flex items-center gap-1.5 flex-shrink-0">
+    <button onclick="openSaveModal()" class="hdr-btn save" title="학생 프로파일 저장/불러오기">
+      <i class="fas fa-bookmark text-[10px]"></i><span> 저장</span>
+    </button>
+    <button onclick="doReset()" class="hdr-btn reset">
+      <i class="fas fa-redo-alt text-[10px]"></i><span> 초기화</span>
+    </button>
+  </div>
+</header>
+
+<!-- BUILDER -->
+<main id="view-builder" class="sc flex flex-row">
+
+  <!-- 모바일 패널 탭바 -->
+  <div id="mob-tab-bar">
+    <button id="mob-btn-left" class="mob-on" onclick="mobTab('left')">
+      <i class="fas fa-th-list text-xs"></i> 옵션 선택
+    </button>
+    <button id="mob-btn-right" class="mob-off" onclick="mobTab('right')">
+      <i class="fas fa-pencil-alt text-xs"></i> 입력 & 생성
+    </button>
+  </div>
+
+  <!-- LEFT: 칩 선택 -->
+  <section id="panel-left" class="w-1/2 bg-slate-50 flex flex-col">
+   <div class="la cs p-3 lg:p-4">
+    <div class="max-w-3xl mx-auto space-y-5 pb-20">
+
+      <!-- S0: 학생 프로파일 -->
+      <div>
+        <div class="sh bg-slate-50/95 border-slate-200 text-rose-700"><span class="bdg bg-rose-100 text-rose-700">0</span>학생 프로파일 (Student Profile)</div>
+        <div class="pnl">
+          <p class="slb text-rose-500">🩺 장애 유형</p>
+          <div class="tr mb-2">
+            <div onclick="st('p-profile','장애유형: 지적장애(Intellectual Disability)')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded-lg">🧠 지적장애</div>
+            <div onclick="st('p-profile','장애유형: 자폐스펙트럼장애(ASD) — 감각처리 차이, 사회적 상호작용, 반복행동 특성 고려')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded-lg">🔵 자폐스펙트럼</div>
+            <div onclick="st('p-profile','장애유형: 지체장애(Physical Disability) — 보조기기·자세 지원 고려')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded-lg">♿ 지체장애</div>
+            <div onclick="st('p-profile','장애유형: 청각장애(Hearing Impairment) — 시각 중심·자막·수어 지원')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded-lg">👂 청각장애</div>
+            <div onclick="st('p-profile','장애유형: 시각장애(Visual Impairment) — 고대비·큰 글씨·촉각 자료')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded-lg">👁 시각장애</div>
+            <div onclick="st('p-profile','장애유형: 정서·행동장애(EBD) — 예측 가능한 구조, 안전한 환경')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded-lg">💛 정서행동장애</div>
+            <div onclick="st('p-profile','장애유형: 학습장애(LD) — 강점 기반, 다양한 표현 방식 제공, 시지각 처리 지원')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded-lg">📖 학습장애</div>
+            <div onclick="st('p-profile','장애유형: ADHD — 짧은 활동 단위, 즉각 피드백, 움직임 통합, 작업기억 지원')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded-lg">⚡ ADHD</div>
+            <div onclick="st('p-profile','장애유형: 발달지연 — 개별 발달 속도 존중')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded-lg">🌱 발달지연</div>
+            <div onclick="st('p-profile','장애유형: 중복·중증장애 — 다감각 접근, 최소제한환경')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded-lg">🤝 중복중증</div>
+            <div onclick="st('p-profile','장애유형: 의사소통장애 — 언어치료 연계, AAC 활용 고려')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded-lg">💬 의사소통장애</div>
+          </div>
+          <p class="slb text-indigo-500">📊 기능 수준</p>
+          <div class="tr mb-2">
+            <div onclick="at('p-profile','\n기능수준: 입문(Pre-academic) — 모방·인식, 신체 반응 가능, 언어 이전 단계')" class="chip bg-indigo-50 border-indigo-200 text-indigo-800 px-2 py-1 rounded">🟢 입문</div>
+            <div onclick="at('p-profile','\n기능수준: 기초(Basic) — 1단계 지시, 기초 개념, 단어·사진 반응')" class="chip bg-indigo-50 border-indigo-200 text-indigo-800 px-2 py-1 rounded">🟡 기초</div>
+            <div onclick="at('p-profile','\n기능수준: 중급(Intermediate) — 2~3단계 지시, 단문 읽기·쓰기, 기초 연산')" class="chip bg-indigo-50 border-indigo-200 text-indigo-800 px-2 py-1 rounded">🟠 중급</div>
+            <div onclick="at('p-profile','\n기능수준: 기능적(Functional) — 실생활 기술, 지역사회 참여 수준')" class="chip bg-indigo-50 border-indigo-200 text-indigo-800 px-2 py-1 rounded">🔴 기능적</div>
+            <div onclick="at('p-profile','\n기능수준: 심화(Advanced) — 보조 지원 하 학년 수준 교육과정 근접')" class="chip bg-indigo-50 border-indigo-200 text-indigo-800 px-2 py-1 rounded">🔵 심화</div>
+          </div>
+          <p class="slb text-teal-500">🏫 학급 환경</p>
+          <div class="tr">
+            <div onclick="at('p-profile','\n환경: 특수학급(Resource Room) — 소그룹 분리 수업')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">🏠 특수학급</div>
+            <div onclick="at('p-profile','\n환경: 통합학급(Inclusive) — 일반학급 내 수정·지원 필요')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">🌐 통합학급</div>
+            <div onclick="at('p-profile','\n환경: 특수학교 — 개별화 교육과정 전면 적용')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">🎒 특수학교</div>
+            <div onclick="at('p-profile','\n환경: 순회·재가 — 이동 가능 콘텐츠, 보호자 안내 포함')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">🏡 순회재가</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S1: 결과물 형태 -->
+      <div>
+        <div class="sh bg-slate-50/95 border-slate-200 text-blue-700"><span class="bdg bg-blue-100 text-blue-700">1</span>결과물 형태 <span class="text-red-400 font-bold text-xs ml-1">★필수</span></div>
+        <div class="pnl">
+          <p class="slb text-blue-500">🖥️ 인터랙티브 웹 앱 (HTML 단일 파일)</p>
+          <div class="tr mb-2">
+            <div onclick="st('p-type','접근성 강화 학습 웹 게임 — 큰 버튼·TTS 음성·즉각 강화 포함 HTML5')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded-lg">🎮 학습 게임</div>
+            <div onclick="st('p-type','그림 선택형 퀴즈 앱 — 이미지 중심·음성 낭독·큰 터치 버튼')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded-lg">🖼 그림 퀴즈</div>
+            <div onclick="st('p-type','AAC 디지털 의사소통 보드 — 터치 시 TTS 음성 출력, 범주별 그림 심볼')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded-lg">💬 AAC 보드</div>
+            <div onclick="st('p-type','사회적 이야기(Social Story) 인터랙티브 슬라이드 — 그림+텍스트, 다음 버튼')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded-lg">📖 사회적 이야기</div>
+            <div onclick="st('p-type','시각적 일과표(Visual Schedule) 웹앱 — 픽토그램, 완료 체크, TTS')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded-lg">📅 시각 일과표</div>
+            <div onclick="st('p-type','감정 온도계 & 대처 전략 앱 — 감정 선택 → 진정 전략 카드 안내')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded-lg">😊 감정 조절</div>
+            <div onclick="st('p-type','토큰 경제 디지털 보드 — 토큰 적립·강화제 잠금 해제 시스템')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded-lg">🪙 토큰 경제</div>
+            <div onclick="st('p-type','매칭·분류 학습 게임 — 그림-단어 연결, 드래그앤드롭, TTS')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded-lg">🔗 매칭 게임</div>
+            <div onclick="st('p-type','수 개념 조작 도구 — 텐프레임·수직선·구체물 시뮬레이션')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded-lg">🔢 수 개념</div>
+            <div onclick="st('p-type','기능적 수학 시각자료 — 돈 세기·시계 읽기·달력 활용 웹앱')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded-lg">💰 기능적 수학<span class="new-badge">NEW</span></div>
+            <div onclick="st('p-type','지역사회 기능 시뮬레이션 — 마트·버스·은행 롤플레이 인터랙티브 앱')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded-lg">🏪 지역사회 시뮬</div>
+            <div onclick="st('p-type','과제 분석 체크리스트 앱 — 단계별 완료·데이터 기록·교사 모드')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded-lg">✅ 과제분석 앱</div>
+            <div onclick="st('p-type','감각 통합 활동 웹 도구 — 시각·청각·촉각 자극 탐색 인터랙티브')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded-lg">🌀 감각통합 도구<span class="new-badge">NEW</span></div>
+            <div onclick="st('p-type','TEACCH 구조화 워크박스 디지털 버전 — 독립과제 스테이션형')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded-lg">📦 TEACCH 워크박스<span class="new-badge">NEW</span></div>
+          </div>
+          <p class="slb text-violet-500">📄 문서·양식 (Markdown / 인쇄 가능)</p>
+          <div class="tr mb-2">
+            <div onclick="st('p-type','특수교육 수업 지도안 — 기본 교육과정 기반, UDL 설계 원리 적용, 교수-보조 역할 분담 포함')" class="chip bg-violet-50 border-violet-200 text-violet-800 px-2 py-1 rounded-lg">📜 특수교육 지도안</div>
+            <div onclick="st('p-type','협력교수 수업 계획안 — 일반교사·특수교사 역할·학생 지원 방법 포함')" class="chip bg-violet-50 border-violet-200 text-violet-800 px-2 py-1 rounded-lg">👩‍🏫 협력교수 계획안</div>
+            <div onclick="st('p-type','수정·보완 학습 활동지(Modified Worksheet) — 원본 교육과정 수준을 학생 수준으로 재구성, 인쇄용')" class="chip bg-violet-50 border-violet-200 text-violet-800 px-2 py-1 rounded-lg">✏️ 수정 활동지</div>
+            <div onclick="st('p-type','IEP 개별화교육프로그램 목표 초안 — 현재 수행 수준·연간 목표·단기 목표')" class="chip bg-violet-50 border-violet-200 text-violet-800 px-2 py-1 rounded-lg">📋 IEP 목표 초안</div>
+            <div onclick="st('p-type','행동지원계획(PBS) — 행동 기능 분석, 예방·대체행동·후속결과 전략')" class="chip bg-violet-50 border-violet-200 text-violet-800 px-2 py-1 rounded-lg">📊 행동지원계획</div>
+            <div onclick="st('p-type','가정-학교 연계 통신문 — 오늘의 수업·가정 일반화 전략·칭찬 포인트')" class="chip bg-violet-50 border-violet-200 text-violet-800 px-2 py-1 rounded-lg">📬 가정연계 통신문</div>
+            <div onclick="st('p-type','행동·학습 데이터 수집 양식 — ABC 기록지·시간 샘플링·간격 기록 시트')" class="chip bg-violet-50 border-violet-200 text-violet-800 px-2 py-1 rounded-lg">📈 데이터 양식</div>
+            <div onclick="st('p-type','보호자 교육 자료 — 가정 일반화 전략, 강화 방법 쉬운 언어 안내')" class="chip bg-violet-50 border-violet-200 text-violet-800 px-2 py-1 rounded-lg">👨‍👩‍👧 보호자 안내</div>
+            <div onclick="st('p-type','전환평가(Transition Assessment) 계획서 — 고등 학생 진로·자립 준비도 평가')" class="chip bg-violet-50 border-violet-200 text-violet-800 px-2 py-1 rounded-lg">🎓 전환평가 계획<span class="new-badge">NEW</span></div>
+          </div>
+          <p class="slb text-emerald-500">🖼️ 시각 지원 자료 (인쇄용 HTML)</p>
+          <div class="tr">
+            <div onclick="st('p-type','PECS 카드 세트 — 범주별 그림교환의사소통 카드, 인쇄용 HTML')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded-lg">🃏 PECS 카드</div>
+            <div onclick="st('p-type','픽토그램 시각 규칙판 — 학급 규칙 그림·아이콘 HTML 포스터')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded-lg">🚦 시각 규칙판</div>
+            <div onclick="st('p-type','전환 지원 시각 자료 — 다음 활동 안내 픽토그램 슬라이드')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded-lg">⏳ 전환 지원</div>
+            <div onclick="st('p-type','과제 분석 시각 카드 세트 — 단계별 그림+텍스트 인쇄용 카드')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded-lg">🗂 과제분석 카드</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S2: 교육과정 & 수업 내용 -->
+      <div>
+        <div class="sh bg-slate-50/95 border-slate-200 text-amber-700"><span class="bdg bg-amber-100 text-amber-700">2</span>교육과정 & 수업 내용</div>
+
+        <!-- 2-A: 교육과정 유형 -->
+        <div class="pnl" style="border-color:#fcd34d;background:#fffbeb;">
+          <p class="slb text-amber-600">📘 2-A 교육과정 유형 (2022 개정)</p>
+          <div class="tr mb-2">
+            <div onclick="st('p-curriculum','교육과정: 특수교육 기본 교육과정(2022 개정) — 지적장애·자폐 등 기본 교육과정 적용 학생')" class="chip bg-amber-50 border-amber-300 text-amber-900 px-2 py-1 rounded-lg font-bold">📗 기본 교육과정</div>
+            <div onclick="st('p-curriculum','교육과정: 공통 교육과정 — 통합학급에서 일반 교육과정 기반, 수정·보완 적용')" class="chip bg-amber-50 border-amber-300 text-amber-900 px-2 py-1 rounded-lg">📘 공통 교육과정</div>
+            <div onclick="st('p-curriculum','교육과정: 선택 중심 교육과정(고등학교) — 진로·직업 중심 과목 선택')" class="chip bg-amber-50 border-amber-300 text-amber-900 px-2 py-1 rounded-lg">📙 선택 중심</div>
+            <div onclick="st('p-curriculum','교육과정: 개별화 교육과정(IEP 기반) — 학생 고유 교육과정, 성취기준 재구성')" class="chip bg-amber-50 border-amber-300 text-amber-900 px-2 py-1 rounded-lg">📒 IEP 기반</div>
+          </div>
+
+          <!-- [개선 6] 2022 개정 특수교육 6대 핵심역량 -->
+          <p class="slb text-rose-600">🇰🇷 2022 개정 특수교육 6대 핵심역량 <span class="new-badge">NEW</span></p>
+          <div class="tr mb-2">
+            <div onclick="at('p-curriculum','\n핵심역량: 자기관리 역량 — 자아존중·일상생활 자립·건강관리')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded">🎯 자기관리</div>
+            <div onclick="at('p-curriculum','\n핵심역량: 협력적 소통 역량 — 다른 사람의 관점을 존중하고 자신의 생각과 감정을 효과적으로 표현(AAC 활용 포함)')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded">💬 협력적 소통</div>
+            <div onclick="at('p-curriculum','\n핵심역량: 지식정보처리 역량 — 정보 수집·분석·활용으로 문제 해결')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded">🧠 지식정보처리</div>
+            <div onclick="at('p-curriculum','\n핵심역량: 창의적 사고 역량 — 새로운 아이디어·표현 방법 탐색')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded">💡 창의적 사고</div>
+            <div onclick="at('p-curriculum','\n핵심역량: 심미적 감성 역량 — 아름다움·문화 체험으로 삶의 질 향상')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded">🎨 심미적 감성</div>
+            <div onclick="at('p-curriculum','\n핵심역량: 공동체 역량 — 가정·학교·지역사회 참여와 협력')" class="chip bg-rose-50 border-rose-200 text-rose-800 px-2 py-1 rounded">🌍 공동체</div>
+          </div>
+
+          <p class="slb text-amber-600">🏫 학년군</p>
+          <div class="tr mb-2">
+            <div onclick="at('p-curriculum','\n학년군: 유치원 (누리과정 연계)')" class="chip bg-amber-50 border-amber-200 text-amber-800 px-2 py-1 rounded">🧡 유치원</div>
+            <div onclick="at('p-curriculum','\n학년군: 초등학교 1~2학년군 (기본: 바른생활·슬기로운생활·즐거운생활 통합교과)')" class="chip bg-amber-50 border-amber-200 text-amber-800 px-2 py-1 rounded">1~2학년</div>
+            <div onclick="at('p-curriculum','\n학년군: 초등학교 3~4학년군')" class="chip bg-amber-50 border-amber-200 text-amber-800 px-2 py-1 rounded">3~4학년</div>
+            <div onclick="at('p-curriculum','\n학년군: 초등학교 5~6학년군')" class="chip bg-amber-50 border-amber-200 text-amber-800 px-2 py-1 rounded">5~6학년</div>
+            <div onclick="at('p-curriculum','\n학년군: 중학교 1~3학년')" class="chip bg-amber-50 border-amber-200 text-amber-800 px-2 py-1 rounded">중학교</div>
+            <div onclick="at('p-curriculum','\n학년군: 고등학교 1~3학년')" class="chip bg-amber-50 border-amber-200 text-amber-800 px-2 py-1 rounded">고등학교</div>
+          </div>
+          <p class="slb text-amber-600">📚 교과</p>
+          <div class="tr mb-2">
+            <div onclick="at('p-curriculum','\n교과: 국어')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">📗 국어</div>
+            <div onclick="at('p-curriculum','\n교과: 수학')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">📘 수학</div>
+            <div onclick="at('p-curriculum','\n교과: 사회')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">📙 사회</div>
+            <div onclick="at('p-curriculum','\n교과: 과학')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🔬 과학</div>
+            <div onclick="at('p-curriculum','\n교과: 체육')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🏃 체육</div>
+            <div onclick="at('p-curriculum','\n교과: 음악')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🎵 음악</div>
+            <div onclick="at('p-curriculum','\n교과: 미술')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🎨 미술</div>
+            <div onclick="at('p-curriculum','\n교과: 실과')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🔧 실과</div>
+            <div onclick="at('p-curriculum','\n교과: 진로와 직업')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">💼 진로와직업</div>
+            <div onclick="at('p-curriculum','\n교과: 정보통신활용')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">💻 정보통신</div>
+            <div onclick="at('p-curriculum','\n교과: 생활영어')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🌍 생활영어</div>
+            <div onclick="at('p-curriculum','\n교과: 보건')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🏥 보건</div>
+            <div onclick="at('p-curriculum','\n교과: 도덕·사회성')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">💚 도덕</div>
+            <div onclick="at('p-curriculum','\n교과: 창의적 체험활동')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🌟 창체</div>
+            <div onclick="at('p-curriculum','\n편성 영역: 일상생활 활동 — 2022 개정 기본 교육과정 신설, 중도중복장애 학생의 생활 기능 중심 활동')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🧺 일상생활 활동<span class="new-badge">NEW</span></div>
+            <div onclick="at('p-curriculum','\n교과: 재활(기본 교육과정 고등학교 선택 교과)')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🩹 재활</div>
+            <div onclick="at('p-curriculum','\n교과: 여가활용(기본 교육과정 고등학교 선택 교과)')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🎳 여가활용</div>
+          </div>
+          <p class="slb text-amber-600">🎯 기능적 생활 영역</p>
+          <div class="tr">
+            <div onclick="at('p-curriculum','\n기능영역: 의사소통 — 요구·거부·주의끌기·정보교환')" class="chip bg-yellow-50 border-yellow-200 text-yellow-800 px-2 py-1 rounded">🗣 의사소통</div>
+            <div onclick="at('p-curriculum','\n기능영역: 일상생활기술(ADL) — 식사·위생·옷입기·이동')" class="chip bg-yellow-50 border-yellow-200 text-yellow-800 px-2 py-1 rounded">🏠 ADL</div>
+            <div onclick="at('p-curriculum','\n기능영역: 사회성 — 눈맞춤·순서기다리기·나눔·갈등해결')" class="chip bg-yellow-50 border-yellow-200 text-yellow-800 px-2 py-1 rounded">🤝 사회성</div>
+            <div onclick="at('p-curriculum','\n기능영역: 지역사회 참여 — 마트·대중교통·공공장소')" class="chip bg-yellow-50 border-yellow-200 text-yellow-800 px-2 py-1 rounded">🏙 지역사회</div>
+            <div onclick="at('p-curriculum','\n기능영역: 자기결정 — 선택·자기옹호·문제해결')" class="chip bg-yellow-50 border-yellow-200 text-yellow-800 px-2 py-1 rounded">✊ 자기결정</div>
+            <div onclick="at('p-curriculum','\n기능영역: 여가·취미 활동')" class="chip bg-yellow-50 border-yellow-200 text-yellow-800 px-2 py-1 rounded">🎲 여가</div>
+          </div>
+        </div>
+
+        <!-- 2-B: 수업 주제 & 내용 -->
+        <div class="pnl" style="border-color:#6366f1;background:#eef2ff;">
+          <p class="slb text-indigo-600">✏️ 2-B 수업 주제 & 학습 내용</p>
+          <div class="tr mb-1">
+            <div onclick="st('p-content','단원명: \n학습 주제: \n학습 목표: ~할 수 있다\n핵심 어휘(5~10개): ')" class="chip bg-indigo-50 border-indigo-300 text-indigo-900 px-2 py-1 rounded-lg font-bold">📌 기본 틀</div>
+            <div onclick="st('p-content','단원명: \n성취기준 코드: \n성취기준 내용: \n이 학생을 위한 재구성 성취기준: ')" class="chip bg-indigo-50 border-indigo-300 text-indigo-900 px-2 py-1 rounded-lg">🎯 성취기준 연계</div>
+            <div onclick="st('p-content','학습 내용 범위:\n- 이번 차시: \n- 전 차시(이미 아는 것): \n- 다음 차시: \n수업 시간: 분\n수업 인원: 명')" class="chip bg-indigo-50 border-indigo-300 text-indigo-900 px-2 py-1 rounded-lg">🗂 차시·범위</div>
+            <div onclick="st('p-content','학생 현재 수행 수준:\n- 독립적으로 할 수 있는 것: \n- 도움 받아 할 수 있는 것: \n- 아직 못 하는 것: ')" class="chip bg-indigo-50 border-indigo-300 text-indigo-900 px-2 py-1 rounded-lg">📊 현재 수준</div>
+            <div onclick="at('p-content','\n교과서/자료 내용 붙여넣기:\n[여기에 붙여넣기]')" class="chip bg-indigo-50 border-indigo-300 text-indigo-900 px-2 py-1 rounded-lg">📋 자료 붙여넣기</div>
+            <div onclick="st('p-content','학생 관심사/강점을 활용한 소재:\n- 좋아하는 것: \n- 이것을 수업에 연결: ')" class="chip bg-indigo-50 border-indigo-300 text-indigo-900 px-2 py-1 rounded-lg">💡 관심사 연계</div>
+          </div>
+          <p class="text-[10px] text-indigo-500 leading-relaxed">💬 예: "손씻기 6단계" / "1~5 수세기" / "마트에서 물건 사기" — 자세할수록 맞춤형!</p>
+        </div>
+      </div>
+
+      <!-- S3: 수업 수정 & 설계 -->
+      <div>
+        <div class="sh bg-slate-50/95 border-slate-200 text-purple-700"><span class="bdg bg-purple-100 text-purple-700">3</span>수업 수정 & 설계</div>
+        <div class="pnl">
+          <p class="slb text-purple-500">✂️ 3-A 교육과정 수정 유형</p>
+          <div class="tr mb-2">
+            <div onclick="at('p-lessondesign','교육과정 수정: 확대(Augmentation) — 학생 강점 살려 내용 추가')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-2 py-1 rounded-lg">⬆️ 확대</div>
+            <div onclick="at('p-lessondesign','교육과정 수정: 축소(Reduction) — 학습 내용·분량·복잡도를 학생 수준으로 줄임')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-2 py-1 rounded-lg">⬇️ 축소</div>
+            <div onclick="at('p-lessondesign','교육과정 수정: 대체(Alternative) — 일반 목표를 기능적 목표로 대체')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-2 py-1 rounded-lg">🔄 대체</div>
+            <div onclick="at('p-lessondesign','교육과정 수정: 간소화(Simplification) — 동일 주제, 더 단순한 수준')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-2 py-1 rounded-lg">✂️ 간소화</div>
+            <div onclick="at('p-lessondesign','교육과정 수정: 병행(Parallel) — 같은 주제, 다른 수준 목표 동시 참여')" class="chip bg-purple-50 border-purple-200 text-purple-800 px-2 py-1 rounded-lg">↔️ 병행</div>
+          </div>
+          <p class="slb text-purple-500">🔧 교수·환경·평가 수정</p>
+          <div class="tr mb-2">
+            <div onclick="at('p-lessondesign','\n교수법 수정: 시각·청각·촉각·다감각 제시, 자료 형태, 시간 조정')" class="chip bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 px-2 py-1 rounded">🎓 교수법 수정</div>
+            <div onclick="at('p-lessondesign','\n환경 수정: 좌석 배치, 소음 조절, 시각 자극 감소, 개인 작업 공간')" class="chip bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 px-2 py-1 rounded">🏫 환경 수정</div>
+            <div onclick="at('p-lessondesign','\n평가 수정: 구두/실기/포트폴리오, 시간 연장, 보조도구 허용')" class="chip bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 px-2 py-1 rounded">📝 평가 수정</div>
+            <div onclick="at('p-lessondesign','\n보조공학 수정: AAC, 스위치, 스크린리더, 태블릿 등 활용 계획')" class="chip bg-fuchsia-50 border-fuchsia-200 text-fuchsia-800 px-2 py-1 rounded">📱 보조공학</div>
+          </div>
+          <p class="slb text-purple-500">🏗️ 3-B 수업 설계 구조</p>
+          <div class="tr mb-2">
+            <div onclick="at('p-lessondesign','\n수업 형태: 1:1 개별 수업')" class="chip bg-gray-100 border-gray-200 text-gray-700 px-2 py-1 rounded">👤 1:1 개별</div>
+            <div onclick="at('p-lessondesign','\n수업 형태: 소그룹(2~5명)')" class="chip bg-gray-100 border-gray-200 text-gray-700 px-2 py-1 rounded">👥 소그룹</div>
+            <div onclick="at('p-lessondesign','\n수업 형태: 학급 전체(통합 참여)')" class="chip bg-gray-100 border-gray-200 text-gray-700 px-2 py-1 rounded">🏫 학급 전체</div>
+            <div onclick="at('p-lessondesign','\n수업 시간: 20분(단축 차시)')" class="chip bg-gray-100 border-gray-200 text-gray-700 px-2 py-1 rounded">⏱ 20분</div>
+            <div onclick="at('p-lessondesign','\n수업 시간: 40분')" class="chip bg-gray-100 border-gray-200 text-gray-700 px-2 py-1 rounded">⏱ 40분</div>
+            <div onclick="at('p-lessondesign','\n수업 시간: 45분')" class="chip bg-gray-100 border-gray-200 text-gray-700 px-2 py-1 rounded">⏱ 45분</div>
+          </div>
+          <p class="slb text-purple-500">🤝 협력교수 유형 (Cook & Friend 6가지 모델)</p>
+          <div class="tr mb-2">
+            <div onclick="at('p-lessondesign','\n협력교수: 교수-관찰(One Teach, One Observe) — 한 교사는 수업, 한 교사는 데이터 수집·관찰')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded">교수-관찰</div>
+            <div onclick="at('p-lessondesign','\n협력교수: 교수-보조(One Teach, One Assist) — 특수교사가 개별 학생 보조')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded">교수-보조</div>
+            <div onclick="at('p-lessondesign','\n협력교수: 평행교수(Parallel Teaching) — 같은 내용 두 그룹 동시 진행')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded">평행교수</div>
+            <div onclick="at('p-lessondesign','\n협력교수: 스테이션교수(Station Teaching) — 순환식 소그룹')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded">스테이션</div>
+            <div onclick="at('p-lessondesign','\n협력교수: 대안교수(Alternative Teaching) — 한 교사는 대다수 학생, 한 교사는 소집단(재교수/심화)')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded">대안교수</div>
+            <div onclick="at('p-lessondesign','\n협력교수: 팀티칭(Team Teaching) — 두 교사가 함께 공동 수업')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 py-1 rounded">팀티칭</div>
+          </div>
+          <p class="slb text-purple-500">📐 수업 단계별 지원 전략</p>
+          <div class="tr">
+            <div onclick="at('p-lessondesign','\n도입: 선행지식 활성화 · 학습 목표 시각적 제시 · 동기 유발 활동')" class="chip bg-indigo-50 border-indigo-200 text-indigo-800 px-2 py-1 rounded">🚪 도입 전략</div>
+            <div onclick="at('p-lessondesign','\n전개: 단계별 시범(I Do-We Do-You Do) · 촉진 위계 · 충분한 연습')" class="chip bg-indigo-50 border-indigo-200 text-indigo-800 px-2 py-1 rounded">📖 전개 전략</div>
+            <div onclick="at('p-lessondesign','\n정리: 배운 내용 복습(3가지) · 형성 평가 · 다음 수업 예고 · 강화')" class="chip bg-indigo-50 border-indigo-200 text-indigo-800 px-2 py-1 rounded">🎯 정리 전략</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S4: IEP & 평가 -->
+      <div>
+        <div class="sh bg-slate-50/95 border-slate-200 text-green-700"><span class="bdg bg-green-100 text-green-700">4</span>IEP 목표 & 평가 계획</div>
+        <div class="pnl">
+          <p class="slb text-green-500">📋 IEP 목표 형식</p>
+          <div class="tr mb-2">
+            <div onclick="at('p-assessment','IEP 목표: 조건(When/Given) + 행동(Will) + 기준(Criterion) 형식\n예) 그림 카드 제시 시(조건), 학생은 해당 음식 이름을 말할 수 있다(행동), 5회 중 4회 이상 정반응으로(기준)')" class="chip bg-green-50 border-green-200 text-green-800 px-2 py-1 rounded-lg font-bold">📐 조건-행동-기준</div>
+            <div onclick="at('p-assessment','\nSMART 목표: Specific·Measurable·Achievable·Relevant·Time-bound')" class="chip bg-green-50 border-green-200 text-green-800 px-2 py-1 rounded-lg">🎯 SMART</div>
+            <div onclick="at('p-assessment','\n연간 목표 1개 + 단기 목표(월별) 3~4개 구분')" class="chip bg-green-50 border-green-200 text-green-800 px-2 py-1 rounded-lg">📆 연간·단기</div>
+            <div onclick="at('p-assessment','\n현재 수행 수준(Present Level): 독립·촉진 수준 별 현재 가능 행동 구체 기술')" class="chip bg-green-50 border-green-200 text-green-800 px-2 py-1 rounded-lg">📋 현재 수행 수준</div>
+          </div>
+          <p class="slb text-green-500">📊 평가 방법</p>
+          <div class="tr mb-2">
+            <div onclick="at('p-assessment','\n평가방법: 관찰 기록 — 행동 관찰 체크리스트 + 일화 기록')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded">👁 관찰 기록</div>
+            <div onclick="at('p-assessment','\n평가방법: 수행 기반 평가 — 독립/언어촉진/신체촉진/불가 수준 측정')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded">✅ 수행 기반</div>
+            <div onclick="at('p-assessment','\n평가방법: 포트폴리오 — 학생 작품·사진·영상 누적 기록')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded">📂 포트폴리오</div>
+            <div onclick="at('p-assessment','\n평가방법: 과정 중심 평가 — 학습 과정·참여·변화 초점')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded">🔄 과정 중심</div>
+            <div onclick="at('p-assessment','\n평가방법: 데이터 수집 — 정반응률(%), ABC 기록, 시간 샘플링')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded">📈 데이터 수집</div>
+            <div onclick="at('p-assessment','\n평가방법: 교육과정중심측정(CBM) — 단기 반복 측정으로 진전도 추적')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded">📏 CBM<span class="new-badge">NEW</span></div>
+            <div onclick="at('p-assessment','\n평가방법: 적응행동 평가(K-SIB-R / K-ABAS) — 일상생활·사회성 기능 수준 측정')" class="chip bg-emerald-50 border-emerald-200 text-emerald-800 px-2 py-1 rounded">🧩 적응행동 평가<span class="new-badge">NEW</span></div>
+          </div>
+          <p class="slb text-green-500">🌐 일반화 계획</p>
+          <div class="tr">
+            <div onclick="at('p-assessment','\n일반화: 다른 장소(학교→가정→지역사회) 전략 포함')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">🏠 장소 일반화</div>
+            <div onclick="at('p-assessment','\n일반화: 다른 사람(교사→부모→또래) 상호작용 확장')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">👥 사람 일반화</div>
+            <div onclick="at('p-assessment','\n일반화: 다른 자료(교구→실물→디지털) 전이 계획')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">📦 자료 일반화</div>
+            <div onclick="at('p-assessment','\n가정 일반화: 보호자 지도 방법 안내, 가정 연습 활동 제안')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">👨‍👩‍👧 가정 연계</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S5: 교수법 -->
+      <div>
+        <div class="sh bg-slate-50/95 border-slate-200 text-pink-700"><span class="bdg bg-pink-100 text-pink-700">5</span>특수교육 교수법 (EBP)</div>
+        <div class="pnl">
+          <p class="slb text-pink-500">🔬 근거기반 교수법</p>
+          <div class="tr mb-2">
+            <div onclick="at('p-pedagogy','- ABA: 선행사건-행동-결과 분석, 긍정적 강화 체계')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1 rounded-lg">🔬 ABA</div>
+            <div onclick="at('p-pedagogy','- DTT: 변별자극-반응-결과 단위 반복, 오류 교정')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1 rounded-lg">🔁 DTT</div>
+            <div onclick="at('p-pedagogy','- UDL: 다양한 표현·행동·참여 수단 제공')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1 rounded-lg">🌈 UDL</div>
+            <div onclick="at('p-pedagogy','- TEACCH: 구조화된 교수·시각적 스케줄·작업 시스템')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1 rounded-lg">📦 TEACCH<span class="new-badge">NEW</span></div>
+            <div onclick="at('p-pedagogy','- Social Story: 사회적 상황을 이야기 형식으로 미리 학습')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1 rounded-lg">📖 Social Story</div>
+            <div onclick="at('p-pedagogy','- 과제분석: 목표 행동을 소단계로 분해, 연쇄 교수')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1 rounded-lg">🔗 과제분석</div>
+            <div onclick="at('p-pedagogy','- PECS: 그림 카드로 요구하기·논평하기 단계 학습')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1 rounded-lg">🃏 PECS</div>
+            <div onclick="at('p-pedagogy','- PBS: 기능적 행동 평가 기반 예방·대체행동 교수')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1 rounded-lg">💚 PBS</div>
+            <div onclick="at('p-pedagogy','- 감각통합: 전정·고유·촉각 감각 자극 활동 통합')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1 rounded-lg">🌀 감각통합</div>
+            <div onclick="at('p-pedagogy','- 비디오 모델링: 목표 행동 영상 시청 후 모방')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1 rounded-lg">🎥 비디오모델링</div>
+            <div onclick="at('p-pedagogy','- 자기관리: 목표설정·자기점검·자기강화')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1 rounded-lg">📊 자기관리</div>
+            <div onclick="at('p-pedagogy','- 또래지원: 또래 튜터·버디 시스템')" class="chip bg-pink-50 border-pink-200 text-pink-900 px-2 py-1 rounded-lg">👫 또래지원</div>
+          </div>
+          <p class="slb text-gray-400">🪜 촉진 & 강화 전략</p>
+          <div class="tr">
+            <div onclick="at('p-pedagogy','\n촉진: 신체→부분신체→몸짓→시각→언어 촉진 위계, 점진적 소거')" class="chip bg-gray-100 border-gray-200 text-gray-700 px-2 py-1 rounded">🪜 촉진 위계</div>
+            <div onclick="at('p-pedagogy','\n촉진: 시간 지연(0초→3초→5초) — 자발 반응 유도')" class="chip bg-gray-100 border-gray-200 text-gray-700 px-2 py-1 rounded">⏱ 시간 지연</div>
+            <div onclick="at('p-pedagogy','\n강화: 연속강화(CRF) — 초기 학습, 매 반응 즉각 강화')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🎁 연속 강화</div>
+            <div onclick="at('p-pedagogy','\n강화: 토큰 경제 — 포인트 적립 후 강화제 교환')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🪙 토큰경제</div>
+            <div onclick="at('p-pedagogy','\n강화: Premack 원리 — 낮은 선호 활동 후 높은 선호 활동')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">➡️ Premack</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S6: 접근성 -->
+      <div>
+        <div class="sh bg-slate-50/95 border-slate-200 text-teal-700"><span class="bdg bg-teal-100 text-teal-700">6</span>접근성 & 보조공학 (AT)</div>
+        <div class="pnl">
+          <div class="tr mb-2">
+            <div onclick="at('p-access','- 버튼·클릭 영역 최소 48×48px')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">👆 큰 터치</div>
+            <div onclick="at('p-access','- 텍스트 최소 18pt, 굵은 글씨')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">🔤 큰 글씨</div>
+            <div onclick="at('p-access','- 고대비(4.5:1 이상)')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">🎨 고대비</div>
+            <div onclick="at('p-access','- TTS(ko-KR, rate 0.8) 음성 낭독 버튼')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">🔊 TTS</div>
+            <div onclick="at('p-access','- 텍스트+픽토그램 이모지 병행')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">🖼 픽토그램</div>
+            <div onclick="at('p-access','- 자기 속도 진행(타이머 없이 학생이 직접 다음)')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">⏸ 자기속도</div>
+            <div onclick="at('p-access','- 오류 시 긍정적 재시도(부정어 금지, 힌트 제공)')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">💚 긍정 오류</div>
+            <div onclick="at('p-access','- 정답 시 시각+청각 다감각 강화 피드백')" class="chip bg-teal-50 border-teal-200 text-teal-800 px-2 py-1 rounded">🎉 다감각 피드백</div>
+            <div onclick="at('p-access','- 태블릿(iPad) 터치 최적화')" class="chip bg-violet-50 border-violet-200 text-violet-800 px-2 py-1 rounded">📲 태블릿</div>
+            <div onclick="at('p-access','- 전자칠판 대형 화면 최적화')" class="chip bg-violet-50 border-violet-200 text-violet-800 px-2 py-1 rounded">🖥 전자칠판</div>
+            <div onclick="at('p-access','- AAC 심볼 연계 어휘 사용')" class="chip bg-violet-50 border-violet-200 text-violet-800 px-2 py-1 rounded">📱 AAC연계</div>
+            <div onclick="at('p-access','- 스위치 접근/키보드 단독 탐색 가능 구조')" class="chip bg-violet-50 border-violet-200 text-violet-800 px-2 py-1 rounded">🕹 스위치접근</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S7: 디자인 & 형식 -->
+      <div>
+        <div class="sh bg-slate-50/95 border-slate-200 text-orange-600"><span class="bdg bg-orange-100 text-orange-600">7</span>디자인 & 형식</div>
+        <div class="pnl">
+          <p class="slb text-orange-500">🎨 UI 스타일</p>
+          <div class="tr mb-2">
+            <div onclick="at('p-design','- 파스텔 진정 톤: 자극 적은 연한 파란·초록·노랑')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🌿 파스텔</div>
+            <div onclick="at('p-design','- 고대비 명확: 흰 배경+검정 글씨, 선명한 버튼 테두리')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">⬛ 고대비</div>
+            <div onclick="at('p-design','- 밝고 따뜻한 톤: 주황·노랑 포인트')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">☀️ 밝은 따뜻</div>
+            <div onclick="at('p-design','- 심플 미니멀: 한 화면 1개 과제, 불필요 요소 제거')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">⬜ 미니멀</div>
+            <div onclick="at('p-design','- 친근한 동물 캐릭터 안내 UI')" class="chip bg-orange-50 border-orange-200 text-orange-800 px-2 py-1 rounded">🐻 캐릭터</div>
+          </div>
+          <p class="slb text-gray-400">✍️ 언어 & 형식</p>
+          <div class="tr">
+            <div onclick="at('p-design','\n언어: 짧고 단순한 문장(10자 이내), 어려운 단어 배제')" class="chip bg-gray-100 border-gray-200 text-gray-700 px-2 py-1 rounded">🟢 쉬운 말</div>
+            <div onclick="at('p-design','\n칭찬: 잘했어요/최고예요/맞아요 + 이모지 즉각 제공')" class="chip bg-gray-100 border-gray-200 text-gray-700 px-2 py-1 rounded">🎉 즉각 칭찬</div>
+            <div onclick="at('p-design','\n오류: 다시 해봐요/힌트 볼까요 — 부정어 완전 제거')" class="chip bg-gray-100 border-gray-200 text-gray-700 px-2 py-1 rounded">💛 부드러운 재시도</div>
+            <div onclick="at('p-design','\n코드: HTML·CSS·JS 단일 파일, 오프라인 작동, LocalStorage 저장')" class="chip bg-green-50 border-green-200 text-green-800 px-2 py-1 rounded">💾 단일파일·오프라인</div>
+            <div onclick="at('p-design','\n코드: TTS(ko-KR, rate 0.8) 반드시 포함')" class="chip bg-green-50 border-green-200 text-green-800 px-2 py-1 rounded">🔊 TTS코드</div>
+            <div onclick="at('p-design','\n문서: 마크다운, 교사 지도 메모, 데이터 수집 시트 포함')" class="chip bg-green-50 border-green-200 text-green-800 px-2 py-1 rounded">📝 마크다운+교사메모</div>
+            <div onclick="at('p-design','\n출력: 플레이스홀더 없이 완성형, 10개 이상 충분한 예시')" class="chip bg-green-50 border-green-200 text-green-800 px-2 py-1 rounded">✅ 완성형</div>
+            <div onclick="at('p-design','\n윤리: 강점 중심(Strengths-based) 언어, 낙인·차별 표현 금지')" class="chip bg-green-50 border-green-200 text-green-800 px-2 py-1 rounded">💜 특수교육 윤리</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+   </div>
+  </section>
+
+  <!-- RIGHT: INPUT -->
+  <section id="panel-right" class="w-1/2 bg-white flex flex-col">
+   <div class="ra cs p-3 lg:p-5">
+    <div class="max-w-2xl mx-auto space-y-3">
+
+      <!-- [개선 1] 개인정보 경고 배지 - 맨 위 눈에 띄게 -->
+      <div class="privacy-alert">
+        <i class="fas fa-shield-alt text-amber-600"></i>
+        <span><b>개인정보 보호:</b> 학생 이름·생년월일·학번을 절대 입력하지 마세요. "A학생" "대상 학생"으로 표기하세요.</span>
+      </div>
+
+      <!-- 모바일 안내 배너 -->
+      <div id="mob-hint" class="bg-blue-50 border border-blue-200 rounded-xl p-2.5 text-[11px] text-blue-700 items-center gap-2 mb-0">
+        <span class="text-base flex-shrink-0">👈</span>
+        <div><b>옵션 선택</b> 탭에서 칩을 누르면 여기에 자동 입력돼요.</div>
+      </div>
+      <div class="bg-indigo-50 border border-indigo-200 rounded-xl p-2.5 text-[11px] text-indigo-700 flex gap-2">
+        <span class="text-base flex-shrink-0">💡</span>
+        <div><b>사용법:</b> 왼쪽 칩 클릭 → 자동 입력. <b>1번 결과물 형태</b>만 선택해도 생성 가능! 수업 자료를 만들려면 2번(교육과정·수업내용)과 3번(수업 수정)을 꼭 채워주세요.</div>
+      </div>
+
+      <!-- 0 -->
+      <div>
+        <label class="flex items-center text-[11px] font-bold text-rose-600 mb-1"><i class="fas fa-user-circle mr-1.5"></i>0. 학생 프로파일</label>
+        <textarea id="p-profile" rows="2" class="w-full p-2.5 bg-rose-50 border border-rose-100 rounded-xl focus:ring-2 focus:ring-rose-300 focus:outline-none resize-none text-[11px] text-gray-800" placeholder="장애유형·기능수준·학급환경 선택 또는 직접 입력"></textarea>
+      </div>
+
+      <!-- 1 -->
+      <div>
+        <label class="flex items-center text-[11px] font-bold text-blue-700 mb-1"><i class="fas fa-cube mr-1.5"></i>1. 결과물 형태 <span class="text-red-500 ml-1">★ 필수</span></label>
+        <textarea id="p-type" rows="2" class="w-full p-2.5 bg-blue-50 border border-blue-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none text-[11px] text-gray-800" placeholder="무엇을 만들 건지 선택하세요 (필수)"></textarea>
+      </div>
+
+      <!-- 2-A -->
+      <div>
+        <label class="flex items-center text-[11px] font-bold text-amber-700 mb-1"><i class="fas fa-book-open mr-1.5"></i>2-A. 교육과정 · 6대 핵심역량 · 학년군 · 교과</label>
+        <textarea id="p-curriculum" rows="2" class="w-full p-2.5 border-2 rounded-xl focus:outline-none resize-none text-[11px] text-gray-800" style="background:#fffbeb;border-color:#fcd34d;" placeholder="예) 기본 교육과정 / 6대 역량: 자기관리 / 초등 3~4학년군 / 국어"></textarea>
+      </div>
+
+      <!-- 2-B -->
+      <div>
+        <label class="flex items-center text-[11px] font-bold text-indigo-700 mb-1">
+          <i class="fas fa-pencil-alt mr-1.5"></i>2-B. 수업 주제 & 학습 내용 ★★
+          <span class="ml-1.5 text-[9px] font-normal bg-indigo-100 text-indigo-600 px-1.5 py-0.5 rounded">핵심</span>
+        </label>
+        <textarea id="p-content" rows="4" class="w-full p-2.5 border-2 rounded-xl focus:outline-none resize-none text-[11px] text-gray-800" style="background:#eef2ff;border-color:#6366f1;" placeholder="예시)&#10;단원명: 기본생활 - 손씻기&#10;학습목표: 손씻기 6단계를 순서대로 수행할 수 있다&#10;핵심어휘: 물, 비누, 거품, 헹구기, 닦기&#10;현재수준: 교사 시범 후 2~3단계 모방 가능"></textarea>
+      </div>
+
+      <!-- 3 -->
+      <div>
+        <label class="flex items-center text-[11px] font-bold text-purple-700 mb-1"><i class="fas fa-tools mr-1.5"></i>3. 수업 수정 & 설계 구조 ★</label>
+        <textarea id="p-lessondesign" rows="3" class="w-full p-2.5 bg-purple-50 border border-purple-200 rounded-xl focus:ring-2 focus:ring-purple-400 focus:outline-none resize-none text-[11px] text-gray-800" placeholder="수정유형·수업형태·협력교수·도입-전개-정리 전략"></textarea>
+      </div>
+
+      <!-- 4 -->
+      <div>
+        <label class="flex items-center text-[11px] font-bold text-green-700 mb-1"><i class="fas fa-clipboard-check mr-1.5"></i>4. IEP 목표 형식 & 평가 계획</label>
+        <textarea id="p-assessment" rows="2" class="w-full p-2.5 bg-green-50 border border-green-100 rounded-xl focus:ring-2 focus:ring-green-400 focus:outline-none resize-none text-[11px] text-gray-800" placeholder="IEP 목표 형식·평가방법(관찰·수행·CBM·적응행동)·일반화"></textarea>
+      </div>
+
+      <!-- 5 -->
+      <div>
+        <label class="flex items-center text-[11px] font-bold text-pink-700 mb-1"><i class="fas fa-chalkboard-teacher mr-1.5"></i>5. 교수법 (ABA·DTT·UDL·TEACCH 등)</label>
+        <textarea id="p-pedagogy" rows="2" class="w-full p-2.5 bg-pink-50 border border-pink-100 rounded-xl focus:ring-2 focus:ring-pink-400 focus:outline-none resize-none text-[11px] text-gray-800" placeholder="근거기반 교수법·촉진·강화 전략 선택"></textarea>
+      </div>
+
+      <!-- 6 + 7 -->
+      <div class="flex gap-2">
+        <div class="w-1/2">
+          <label class="flex items-center text-[11px] font-bold text-teal-700 mb-1"><i class="fas fa-universal-access mr-1.5"></i>6. 접근성</label>
+          <textarea id="p-access" rows="3" class="w-full p-2.5 bg-teal-50 border border-teal-100 rounded-xl focus:outline-none resize-none text-[11px] text-gray-800" placeholder="TTS·큰버튼·고대비·AAC연계"></textarea>
+        </div>
+        <div class="w-1/2">
+          <label class="flex items-center text-[11px] font-bold text-orange-700 mb-1"><i class="fas fa-palette mr-1.5"></i>7. 디자인 & 형식</label>
+          <textarea id="p-design" rows="3" class="w-full p-2.5 bg-orange-50 border border-orange-100 rounded-xl focus:outline-none resize-none text-[11px] text-gray-800" placeholder="UI스타일·언어톤·코드·문서 형식"></textarea>
+        </div>
+      </div>
+
+      <div class="pt-1 pb-8">
+        <button onclick="generate()" class="w-full bg-indigo-700 hover:bg-indigo-800 text-white text-sm font-black py-3.5 rounded-2xl shadow-lg shadow-indigo-200 transform hover:-translate-y-0.5 transition flex items-center justify-center gap-2">
+          <i class="fas fa-magic"></i>특수교육 프롬프트 생성 & 복사
+        </button>
+        <p class="text-center text-[10px] text-gray-400 mt-1.5">Ctrl+Enter 단축키 사용 가능</p>
+      </div>
+    </div>
+   </div>
+  </section>
+</main>
+
+<!-- TEMPLATES -->
+<main id="view-templates" class="hidden sc overflow-y-auto cs bg-gray-50 p-4 md:p-7">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-6">
+      <h2 class="text-lg font-black text-gray-800 mb-1">🌈 특수교육 바로 쓰는 추천 프롬프트 <span id="tcount">21</span>선</h2>
+      <p class="text-gray-500 text-xs">현장 특수교사를 위한 완성형 프롬프트 · <b class="text-indigo-600">카드 클릭 시 빌더로 자동 입력</b></p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 pb-12" id="tgrid"></div>
+  </div>
+</main>
+
+<!-- GUIDE -->
+<main id="view-guide" class="hidden sc overflow-y-auto cs bg-gray-50 p-4 md:p-6">
+<div class="max-w-4xl mx-auto space-y-5 pb-12">
+
+<!-- 헤더 -->
+<div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+  <h2 class="text-base font-black text-gray-900 mb-1 flex items-center gap-2">
+    <span class="w-8 h-8 bg-indigo-100 text-indigo-700 rounded-xl flex items-center justify-center text-sm">📖</span>
+    특수교육 Prompt Studio V3 — 완전 활용 가이드
+  </h2>
+  <p class="text-xs text-gray-500">처음 쓰시는 분도 5분이면 수업 자료 완성 · 2022 개정 특수교육 기본 교육과정 6대 핵심역량 완벽 반영</p>
+</div>
+
+<!-- V3 업데이트 이력 -->
+<div class="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl border border-indigo-200 p-5">
+  <h3 class="font-black text-sm text-indigo-900 mb-3 flex items-center gap-2"><i class="fas fa-sparkles"></i>업데이트 내역 <span class="text-[10px] font-semibold bg-white/70 text-indigo-600 px-1.5 py-0.5 rounded">최근 점검 2026. 8.</span></h3>
+  <p class="text-[11px] font-bold text-indigo-800 mb-1.5">2026. 8. — 점검 &amp; 보완</p>
+  <ul class="text-[11px] text-indigo-900 space-y-1.5 list-disc list-inside mb-3">
+    <li><b>결과물 형식 판별 오류 수정</b> — 인쇄용 시각자료(과제분석 카드·데이터 기록 양식)가 웹앱 코드로 잘못 생성되던 문제 해결</li>
+    <li><b>한글 폰트 정상화</b> — Pretendard가 실제로 적용되도록 CDN 교체</li>
+    <li><b>화면 크기 전환 대응</b> — 태블릿 회전·창 크기 조절 시 입력 패널이 사라지던 문제 해결</li>
+    <li><b>교육과정 최신화</b> — 6대 핵심역량 명칭 정정(협력적 소통), 기본 교육과정 <b>일상생활 활동</b>·선택 교과(재활·여가활용) 추가, 연차 적용 현황 안내</li>
+  </ul>
+  <p class="text-[11px] font-bold text-indigo-800 mb-1.5">V3 — 주요 기능</p>
+  <ul class="text-[11px] text-indigo-900 space-y-1.5 list-disc list-inside">
+    <li><b>🔒 개인정보 경고 배지</b> — 입력 칸 상단에 항상 표시</li>
+    <li><b>🤖 프롬프트 현대화</b> — ROLE/ARTIFACT 명령어 제거, 자연어 기반으로 Claude Artifacts·ChatGPT Canvas 자동 활성화</li>
+    <li><b>📋 다시 복사 버튼</b> — 생성된 프롬프트를 여러 AI에 돌려볼 때 편리</li>
+    <li><b>💾 학생 프로파일 저장/불러오기</b> — 같은 학생 여러 차시 수업 만들 때 1초만에 재사용 (3슬롯)</li>
+    <li><b>⚡ 추천 → 빌더 자동 입력</b> — <span id="tcount2">21</span>개 추천 카드 클릭 시 빌더로 이동해서 수정 가능</li>
+    <li><b>🇰🇷 2022 개정 특수교육 6대 핵심역량 반영</b> — 자기관리·협력적 소통·지식정보처리·창의적사고·심미적감성·공동체</li>
+    <li><b>📦 TEACCH·감각통합·기능적 수학·전환평가</b> 결과물 추가</li>
+    <li><b>📏 CBM·적응행동평가</b> 평가 방법 추가</li>
+    <li><b>🏃 특수체육 프롬프트 5종</b> 추가 (체육 교사 특화)</li>
+    <li><b>🤝 협력교수 6개 모델 완비</b> — Cook & Friend 이론 기준(교수-관찰/교수-보조/평행/스테이션/대안/팀티칭)</li>
+  </ul>
+</div>
+
+<!-- STEP 빠른 시작 -->
+<div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+  <h3 class="font-black text-sm text-gray-900 mb-4 flex items-center gap-2">
+    <span class="bg-indigo-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">QUICK START</span>
+    3단계로 바로 시작
+  </h3>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <div class="bg-blue-50 border border-blue-100 rounded-xl p-3">
+      <div class="text-2xl mb-1">①</div>
+      <h4 class="font-bold text-blue-800 text-xs mb-1">결과물 형태 선택 (1번)</h4>
+      <p class="text-[11px] text-blue-700 leading-relaxed">웹 게임? 수업 지도안? AAC 보드?<br><b>이것만 선택해도 생성 가능!</b></p>
+    </div>
+    <div class="bg-amber-50 border border-amber-100 rounded-xl p-3">
+      <div class="text-2xl mb-1">②</div>
+      <h4 class="font-bold text-amber-800 text-xs mb-1">학생 정보 + 수업 내용</h4>
+      <p class="text-[11px] text-amber-700 leading-relaxed">0번·2-A·2-B를 채워요.<br><b>주제만 간단히 적어도 OK</b></p>
+    </div>
+    <div class="bg-green-50 border border-green-100 rounded-xl p-3">
+      <div class="text-2xl mb-1">③</div>
+      <h4 class="font-bold text-green-800 text-xs mb-1">생성 & 붙여넣기</h4>
+      <p class="text-[11px] text-green-700 leading-relaxed">Claude/ChatGPT/Gemini에<br><b>Ctrl+V 하면 끝!</b></p>
+    </div>
+  </div>
+  <div class="mt-3 bg-gray-50 rounded-lg p-2.5 text-[11px] text-gray-600">
+    💡 <b>Ctrl+Enter</b>로 더 빠르게 · 생성 후 AI에게 "더 쉽게", "문항 늘려줘" 추가 요청 가능
+  </div>
+</div>
+
+<!-- 💾 저장/불러오기 활용 -->
+<div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+  <h3 class="font-black text-sm text-gray-900 mb-3">💾 학생 프로파일 저장 활용법</h3>
+  <div class="bg-indigo-50 border border-indigo-100 rounded-xl p-3 text-[11px] text-indigo-800 leading-relaxed">
+    <p class="mb-2"><b>왜 저장이 필요할까요?</b></p>
+    <ul class="list-disc list-inside space-y-1 mb-3">
+      <li>같은 학생 수업을 여러 차시 만들 때 매번 다시 입력 불필요</li>
+      <li>"A학생 수학용", "B학생 사회성용"처럼 슬롯별로 관리 가능</li>
+      <li>학생 이름은 절대 저장하지 말고 <b>별명·코드</b>로 구분 (예: "수학반-1", "감각통합-A")</li>
+    </ul>
+    <p><b>사용법:</b> 헤더의 💾 <b>저장</b> 버튼 클릭 → 3슬롯 중 선택 → 별명 입력 → 저장. 다음에 같은 버튼으로 불러오기.</p>
+  </div>
+</div>
+
+<!-- 🇰🇷 6대 핵심역량 -->
+<div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+  <h3 class="font-black text-sm text-gray-900 mb-3">🇰🇷 2022 개정 특수교육 6대 핵심역량</h3>
+  <p class="text-[11px] text-gray-500 mb-3">교과계획서·IEP 작성 시 반드시 반영해야 하는 역량입니다. 2-A 교육과정에서 선택하세요.</p>
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-[11px]">
+    <div class="bg-rose-50 border border-rose-100 rounded-lg p-2.5"><b class="text-rose-800">🎯 자기관리</b><p class="text-rose-700 mt-0.5">자아존중·일상생활 자립·건강관리</p></div>
+    <div class="bg-rose-50 border border-rose-100 rounded-lg p-2.5"><b class="text-rose-800">💬 협력적 소통</b><p class="text-rose-700 mt-0.5">관점 존중·생각/감정 효과적 표현(AAC 포함)</p></div>
+    <div class="bg-rose-50 border border-rose-100 rounded-lg p-2.5"><b class="text-rose-800">🧠 지식정보처리</b><p class="text-rose-700 mt-0.5">정보 수집·분석·활용으로 문제해결</p></div>
+    <div class="bg-rose-50 border border-rose-100 rounded-lg p-2.5"><b class="text-rose-800">💡 창의적 사고</b><p class="text-rose-700 mt-0.5">새로운 아이디어·표현 방법 탐색</p></div>
+    <div class="bg-rose-50 border border-rose-100 rounded-lg p-2.5"><b class="text-rose-800">🎨 심미적 감성</b><p class="text-rose-700 mt-0.5">아름다움·문화 체험으로 삶의 질</p></div>
+    <div class="bg-rose-50 border border-rose-100 rounded-lg p-2.5"><b class="text-rose-800">🌍 공동체</b><p class="text-rose-700 mt-0.5">가정·학교·지역사회 참여와 협력</p></div>
+  </div>
+  <p class="text-[10px] text-gray-500 mt-3 italic">💡 2022 개정 교육과정에서는 2015 개정의 "의사소통 역량"이 <b>"협력적 소통 역량"으로 변경</b>되었으며, 특수교육에서도 같은 6대 핵심역량 체계를 공유합니다.</p>
+
+  <div class="mt-3 bg-slate-50 border border-slate-200 rounded-xl p-3">
+    <p class="text-[11px] font-bold text-slate-700 mb-1.5">📅 2022 개정 특수교육 교육과정 연차 적용 (교육부 고시 제2022-34호)</p>
+    <ul class="text-[11px] text-slate-600 space-y-0.5 list-disc list-inside">
+      <li>2024. 3. 1. — 유치원, 초등 1~2학년</li>
+      <li>2025. 3. 1. — 초등 3~4학년, 중1, 고1</li>
+      <li><b class="text-indigo-700">2026. 3. 1. — 초등 5~6학년, 중2, 고2</b> (현재)</li>
+      <li>2027. 3. 1. — 중3, 고3 (전 학년 적용 완료)</li>
+    </ul>
+    <p class="text-[10px] text-slate-500 mt-1.5">아직 2015 개정이 적용되는 학년은 교과명·성취기준이 다를 수 있으니 확인하세요.</p>
+  </div>
+</div>
+
+<!-- 섹션별 설명 -->
+<div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+  <h3 class="font-black text-sm text-gray-900 mb-4">📋 각 입력 칸 활용법</h3>
+  <div class="space-y-3">
+    <div class="flex gap-3 p-3 bg-rose-50 border border-rose-100 rounded-xl">
+      <div class="w-6 h-6 bg-rose-200 text-rose-800 rounded-full flex items-center justify-center font-black text-xs flex-shrink-0">0</div>
+      <div>
+        <h4 class="font-bold text-xs text-rose-800 mb-1">학생 프로파일 — AI 언어·수준 기준점</h4>
+        <p class="text-[11px] text-rose-700 leading-relaxed">장애 유형 + 기능 수준을 선택하면 AI가 어휘·문장·시각 지원을 자동 조정. <b>같은 "수세기" 수업도 지적장애 입문 vs 자폐 중급은 완전히 다른 자료</b>가 나와요.</p>
+      </div>
+    </div>
+    <div class="flex gap-3 p-3 bg-blue-50 border border-blue-100 rounded-xl">
+      <div class="w-6 h-6 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center font-black text-xs flex-shrink-0">1</div>
+      <div>
+        <h4 class="font-bold text-xs text-blue-800 mb-1">결과물 형태 ★필수</h4>
+        <p class="text-[11px] text-blue-700 leading-relaxed">웹 앱 계열은 HTML로, 문서 계열은 마크다운으로 자동 전환. <b>한 가지만 선택하세요.</b> 두 개 이상 고르면 결과가 뭉개져요.</p>
+      </div>
+    </div>
+    <div class="flex gap-3 p-3 bg-amber-50 border border-amber-100 rounded-xl">
+      <div class="w-6 h-6 bg-amber-200 text-amber-800 rounded-full flex items-center justify-center font-black text-xs flex-shrink-0">2A</div>
+      <div>
+        <h4 class="font-bold text-xs text-amber-800 mb-1">교육과정·핵심역량·학년군·교과</h4>
+        <p class="text-[11px] text-amber-700 leading-relaxed"><b>기본 교육과정</b>과 <b>공통 교육과정</b>은 교과명·성취기준이 달라요. 초 1~2학년 기본은 바른생활·슬기로운생활·즐거운생활(통합)을 써요. <b>6대 핵심역량</b>도 반드시 선택하세요.</p>
+      </div>
+    </div>
+    <div class="flex gap-3 p-3 bg-indigo-50 border border-indigo-100 rounded-xl">
+      <div class="w-6 h-6 bg-indigo-200 text-indigo-800 rounded-full flex items-center justify-center font-black text-xs flex-shrink-0">2B</div>
+      <div>
+        <h4 class="font-bold text-xs text-indigo-800 mb-1">수업 주제 & 학습 내용 ★★</h4>
+        <p class="text-[11px] text-indigo-700 leading-relaxed">단원명·학습목표·핵심어휘·현재수준을 적어주세요. 교과서 내용을 <b>그대로 붙여넣어도</b> 됩니다. 학생 관심사(공룡·기차·버스 번호 등)를 추가하면 동기 유발이 확 좋아져요.</p>
+      </div>
+    </div>
+    <div class="flex gap-3 p-3 bg-purple-50 border border-purple-100 rounded-xl">
+      <div class="w-6 h-6 bg-purple-200 text-purple-800 rounded-full flex items-center justify-center font-black text-xs flex-shrink-0">3</div>
+      <div>
+        <h4 class="font-bold text-xs text-purple-800 mb-1">수업 수정 & 설계 — 특수교육 핵심</h4>
+        <p class="text-[11px] text-purple-700 leading-relaxed"><b>확대·축소·대체·간소화·병행</b>에서 선택. 일반 교육과정을 학생 수준으로 수정하는 핵심 기술이에요. 수업형태+협력교수+도입-전개-정리 전략 추가하면 지도안 품질이 크게 올라가요.</p>
+      </div>
+    </div>
+    <div class="flex gap-3 p-3 bg-green-50 border border-green-100 rounded-xl">
+      <div class="w-6 h-6 bg-green-200 text-green-800 rounded-full flex items-center justify-center font-black text-xs flex-shrink-0">4</div>
+      <div>
+        <h4 class="font-bold text-xs text-green-800 mb-1">IEP & 평가 계획</h4>
+        <p class="text-[11px] text-green-700 leading-relaxed">지도안·IEP 작성 시 평가 체크리스트와 데이터 수집 시트가 자동 추가돼요. <b>CBM(교육과정중심측정)</b>으로 진전도 추적, <b>적응행동 평가(K-SIB-R/K-ABAS)</b>로 일상생활 기능 측정 가능.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 학생 유형별 예시 -->
+<div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+  <h3 class="font-black text-sm text-gray-900 mb-1">🎯 학생 유형별 선택 예시</h3>
+  <p class="text-[11px] text-gray-500 mb-4">실제 수업 상황을 그대로 옮겼어요.</p>
+
+  <div class="border border-gray-200 rounded-xl overflow-hidden mb-3">
+    <div class="bg-rose-50 px-3 py-2 flex items-center gap-2">
+      <span class="text-base">🧠</span>
+      <div>
+        <span class="font-black text-xs text-rose-800">예시 1</span>
+        <span class="text-[11px] text-rose-700 ml-1">— 지적장애 초등 3학년, 기초, 특수학급, 수 개념</span>
+      </div>
+    </div>
+    <div class="p-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
+      <div class="space-y-1.5">
+        <div class="flex gap-2"><span class="bg-rose-100 text-rose-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">0번</span><span class="text-gray-700">지적장애 / 기초 / 특수학급</span></div>
+        <div class="flex gap-2"><span class="bg-blue-100 text-blue-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">1번</span><span class="text-gray-700">수 개념 조작 도구</span></div>
+        <div class="flex gap-2"><span class="bg-amber-100 text-amber-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">2-A</span><span class="text-gray-700">기본 교육과정 / 6대역량:지식정보처리 / 초등 3~4학년군 / 수학</span></div>
+        <div class="flex gap-2"><span class="bg-indigo-100 text-indigo-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">2-B</span><span class="text-gray-700">1~5까지 수 세기 / 현재: 3까지 손가락 세기 가능</span></div>
+      </div>
+      <div class="space-y-1.5">
+        <div class="flex gap-2"><span class="bg-purple-100 text-purple-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">3번</span><span class="text-gray-700">간소화 수정 / 1:1 / 20분</span></div>
+        <div class="flex gap-2"><span class="bg-green-100 text-green-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">4번</span><span class="text-gray-700">수행 평가 / 데이터 수집 / CBM</span></div>
+        <div class="flex gap-2"><span class="bg-pink-100 text-pink-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">5번</span><span class="text-gray-700">DTT / 연속 강화 / 최소 촉진</span></div>
+        <div class="flex gap-2"><span class="bg-teal-100 text-teal-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">6번</span><span class="text-gray-700">큰 터치·TTS·픽토그램</span></div>
+      </div>
+    </div>
+    <div class="bg-gray-50 px-3 py-2 text-[10px] text-gray-500">
+      💬 <b>결과:</b> 1~5 숫자를 구체물(과일)로 표현, TTS 낭독, 맞추면 별 폭죽 + "잘했어요!" 음성
+    </div>
+  </div>
+
+  <div class="border border-gray-200 rounded-xl overflow-hidden mb-3">
+    <div class="bg-blue-50 px-3 py-2 flex items-center gap-2">
+      <span class="text-base">🏃</span>
+      <div>
+        <span class="font-black text-xs text-blue-800">예시 2 (특수체육)</span>
+        <span class="text-[11px] text-blue-700 ml-1">— 자폐 초등 4학년, 중급, 통합학급 체육</span>
+      </div>
+    </div>
+    <div class="p-3 grid grid-cols-1 md:grid-cols-2 gap-2 text-[11px]">
+      <div class="space-y-1.5">
+        <div class="flex gap-2"><span class="bg-rose-100 text-rose-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">0번</span><span class="text-gray-700">자폐 / 중급 / 통합학급</span></div>
+        <div class="flex gap-2"><span class="bg-blue-100 text-blue-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">1번</span><span class="text-gray-700">과제분석 카드 세트</span></div>
+        <div class="flex gap-2"><span class="bg-amber-100 text-amber-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">2-A</span><span class="text-gray-700">공통 교육과정 / 자기관리·공동체 / 3~4학년 / 체육</span></div>
+        <div class="flex gap-2"><span class="bg-indigo-100 text-indigo-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">2-B</span><span class="text-gray-700">주제: 플라잉디스크 던지기 / 현재: 그립은 잡음, 방향 어려움</span></div>
+      </div>
+      <div class="space-y-1.5">
+        <div class="flex gap-2"><span class="bg-purple-100 text-purple-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">3번</span><span class="text-gray-700">병행 수정 / 팀티칭 / 스테이션</span></div>
+        <div class="flex gap-2"><span class="bg-green-100 text-green-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">4번</span><span class="text-gray-700">수행 평가 / 또래 일반화</span></div>
+        <div class="flex gap-2"><span class="bg-pink-100 text-pink-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">5번</span><span class="text-gray-700">과제분석 / 비디오모델링 / 또래지원</span></div>
+        <div class="flex gap-2"><span class="bg-teal-100 text-teal-700 px-1.5 rounded font-bold text-[10px] flex-shrink-0">7번</span><span class="text-gray-700">마크다운+인쇄용 카드</span></div>
+      </div>
+    </div>
+    <div class="bg-gray-50 px-3 py-2 text-[10px] text-gray-500">
+      💬 <b>결과:</b> 6단계 던지기 분석 카드. 그립→자세→팔스윙→릴리즈→팔로우스루. 각 단계 사진·모델링 영상 링크 포함
+    </div>
+  </div>
+</div>
+
+<!-- AI 활용 팁 -->
+<div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-5">
+  <h3 class="font-black text-sm text-gray-900 mb-3">💡 AI 200% 활용 팁</h3>
+  <div class="space-y-2 text-[11px]">
+    <div class="flex gap-2.5 p-2.5 bg-indigo-50 rounded-lg">
+      <span class="text-base flex-shrink-0">🔁</span>
+      <div><b class="text-indigo-800">한 번에 완벽하지 않아도 돼요.</b><span class="text-indigo-700"> AI 결과를 보고 "버튼 더 크게", "문항 10개로", "더 쉬운 말로" 추가 요청. 3~5회 주거니 받거니면 완성도 확 올라갑니다.</span></div>
+    </div>
+    <div class="flex gap-2.5 p-2.5 bg-amber-50 rounded-lg">
+      <span class="text-base flex-shrink-0">📋</span>
+      <div><b class="text-amber-800">교과서를 그대로 붙여넣으세요.</b><span class="text-amber-700"> 2-B 칸에 교과서 본문·기존 활동지를 붙여넣으면 AI가 학생 수준으로 수정해 만들어줍니다.</span></div>
+    </div>
+    <div class="flex gap-2.5 p-2.5 bg-green-50 rounded-lg">
+      <span class="text-base flex-shrink-0">💬</span>
+      <div><b class="text-green-800">학생 관심사를 꼭 넣으세요.</b><span class="text-green-700"> "공룡 좋아함", "버스 번호 관심" 추가하면 그 소재로 수업을 연결해 몰입도가 훨씬 높아져요.</span></div>
+    </div>
+    <div class="flex gap-2.5 p-2.5 bg-purple-50 rounded-lg">
+      <span class="text-base flex-shrink-0">🖥️</span>
+      <div><b class="text-purple-800">Claude Artifacts가 제일 잘 됩니다.</b><span class="text-purple-700"> 웹 앱은 Claude Artifacts에서 즉시 실행. ChatGPT·Gemini는 Canvas 모드 켜야 해요.</span></div>
+    </div>
+    <div class="flex gap-2.5 p-2.5 bg-rose-50 rounded-lg">
+      <span class="text-base flex-shrink-0">💾</span>
+      <div><b class="text-rose-800">HTML 파일로 저장해 오프라인 사용.</b><span class="text-rose-700"> AI가 만든 HTML 코드를 메모장에 붙여넣고 .html로 저장 → 인터넷 없이 학교 PC·태블릿에서 바로 실행.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- 주의사항 -->
+<div class="bg-amber-50 border border-amber-200 rounded-2xl p-4">
+  <h4 class="font-bold text-amber-800 text-xs mb-2 flex items-center gap-1.5"><i class="fas fa-exclamation-triangle"></i>반드시 알아두세요</h4>
+  <div class="space-y-1.5 text-[11px] text-amber-800">
+    <p>⚠️ <b>AI는 보조 도구.</b> 생성 자료는 특수교사가 반드시 검토·수정 후 사용. IEP·PBS는 전문가 판단 필수.</p>
+    <p>🔒 <b>학생 개인정보 절대 입력 금지.</b> 이름·생년월일·학번 대신 "A학생"으로 표기. 저장 시에도 마찬가지.</p>
+    <p>📋 <b>성취기준 코드 항상 확인.</b> AI 제시 코드는 오류 가능. <a href="https://ncic.re.kr" target="_blank" rel="noopener" class="underline font-bold">국가교육과정정보센터(ncic.re.kr)</a>에서 대조.</p>
+    <p>🎨 <b>저작권.</b> 상업적 배포·대외 공개 시 주의. 교실 내 사용은 자유.</p>
+  </div>
+</div>
+
+<!-- 개발자 정보 -->
+<div class="p-4 bg-gradient-to-br from-purple-50 to-pink-50 rounded-xl border border-purple-200 text-center">
+  <p class="text-[11px] text-purple-900 font-medium mb-1">💌 피드백과 개선 아이디어 환영해요!</p>
+  <p class="text-[10px] text-purple-800">
+    Developed by <b>김주현(광평중)</b> · 
+    <a href="https://instagram.com/kimju.zip" target="_blank" class="text-pink-600 font-bold">💟 @kimju.zip</a>
+  </p>
+</div>
+
+</div>
+</main>
+
+<footer class="h-10 bg-white border-t border-gray-100 flex items-center justify-center text-xs text-gray-400 shrink-0 gap-3">
+  <span>Developed by <b class="text-gray-600">김주현(광평중)</b></span>|
+  <a href="https://instagram.com/kimju.zip" target="_blank" class="text-pink-500 font-bold">💟 @kimju.zip</a>|
+  <span class="text-indigo-400 font-semibold">Special Ed. V3 · 2022 개정 · 6대 핵심역량</span>
+</footer>
+
+<!-- 모바일 생성 버튼 -->
+<button id="mob-gen-btn" onclick="generate()">
+  <i class="fas fa-magic"></i> 프롬프트 생성 & 복사
+</button>
+
+<!-- COPY MODAL -->
+<div id="copyModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[88vh] transform scale-95 transition-transform duration-200">
+    <div class="p-4 border-b flex justify-between items-center bg-indigo-50 rounded-t-2xl">
+      <h3 class="font-bold text-gray-800 flex items-center gap-2 text-sm"><i class="fas fa-check-circle text-green-500"></i>프롬프트 생성 완료!</h3>
+      <button onclick="cm('copyModal')" class="w-7 h-7 rounded-full hover:bg-gray-200 flex items-center justify-center text-gray-400 text-xs"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="p-4 overflow-y-auto cs bg-gray-900 text-gray-300 font-mono text-[11px] leading-relaxed whitespace-pre-wrap" id="mContent"></div>
+    <div class="p-3 bg-white border-t rounded-b-2xl">
+      <p class="text-xs text-gray-500 mb-2 text-center">ChatGPT·Claude·Gemini에 <b>Ctrl+V</b>로 붙여넣기</p>
+      <div class="flex gap-2">
+        <button onclick="copyAgain()" class="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-sm transition flex items-center justify-center gap-1.5">
+          <i class="fas fa-copy text-xs"></i> 다시 복사
+        </button>
+        <button onclick="cm('copyModal')" class="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm transition">확인</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ALERT MODAL -->
+<div id="alertModal" class="fixed inset-0 bg-black/60 z-[60] hidden flex items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xs overflow-hidden transform scale-95 transition-transform">
+    <div class="p-5 text-center"><div class="text-3xl mb-2">💡</div><h3 class="font-bold text-gray-900 text-sm mb-1">확인 필요</h3><p class="text-xs text-gray-500" id="alertMsg"></p></div>
+    <div class="px-5 pb-4"><button onclick="cm('alertModal')" class="w-full py-2.5 bg-indigo-700 text-white font-bold rounded-xl text-sm">확인</button></div>
+  </div>
+</div>
+
+<!-- RESET MODAL -->
+<div id="resetModal" class="fixed inset-0 bg-black/60 z-[70] hidden flex items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-xs overflow-hidden transform scale-95 transition-transform">
+    <div class="p-5 text-center"><div class="text-3xl mb-2">🔄</div><h3 class="font-bold text-gray-900 text-sm mb-1">모두 지우고 새로 시작?</h3></div>
+    <div class="px-5 pb-4 flex gap-2">
+      <button onclick="cm('resetModal')" class="flex-1 py-2 bg-gray-200 text-gray-700 font-bold rounded-xl text-sm">취소</button>
+      <button onclick="confirmReset()" class="flex-1 py-2 bg-red-500 text-white font-bold rounded-xl text-sm">초기화</button>
+    </div>
+  </div>
+</div>
+
+<!-- [개선 5] SAVE MODAL -->
+<div id="saveModal" class="fixed inset-0 bg-black/60 z-[75] hidden flex items-center justify-center p-4 backdrop-blur-sm opacity-0 transition-opacity">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform scale-95 transition-transform">
+    <div class="p-4 border-b bg-indigo-50 flex justify-between items-center">
+      <h3 class="font-bold text-gray-800 text-sm flex items-center gap-2"><i class="fas fa-bookmark text-indigo-600"></i> 학생 프로파일 저장·불러오기</h3>
+      <button onclick="cm('saveModal')" class="w-7 h-7 rounded-full hover:bg-gray-200 flex items-center justify-center text-gray-400 text-xs"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="p-4">
+      <p class="text-[11px] text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-2 mb-3">
+        ⚠️ <b>개인정보 금지:</b> 학생 이름·생년월일 대신 별명·코드로 저장하세요 (예: "수학반-A", "감각통합-1")
+      </p>
+      <div id="save-slots" class="space-y-2"></div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+// ============ 탭 전환 ============
+let curView = 'builder';
+function sw(t){
+  ['builder','templates','guide'].forEach(v=>{
+    document.getElementById('view-'+v).classList.add('hidden');
+    document.getElementById('btn-'+v).className='tab-off h-full flex items-center gap-1 text-xs px-2 transition whitespace-nowrap';
+  });
+  document.getElementById('view-'+t).classList.remove('hidden');
+  document.getElementById('btn-'+t).className='tab-on h-full flex items-center gap-1 text-xs px-2 transition whitespace-nowrap';
+  curView = t;
+  applyLayout();
+}
+
+// ============ 칩 → 입력 ============
+function st(id,v){const e=document.getElementById(id);e.value=v;e.classList.add('ring');setTimeout(()=>e.classList.remove('ring'),400);}
+function at(id,v){const e=document.getElementById(id);if(e.value&&!e.value.endsWith('\n'))e.value+='\n';e.value+=v;e.scrollTop=e.scrollHeight;e.classList.add('ring');setTimeout(()=>e.classList.remove('ring'),400);}
+
+// ============ 모달 ============
+function om(id){const m=document.getElementById(id);m.classList.remove('hidden');setTimeout(()=>{m.classList.remove('opacity-0');m.firstElementChild.classList.remove('scale-95');},10);}
+function cm(id){const m=document.getElementById(id);m.classList.add('opacity-0');m.firstElementChild.classList.add('scale-95');setTimeout(()=>m.classList.add('hidden'),200);}
+function doReset(){om('resetModal');}
+function confirmReset(){
+  ['p-profile','p-type','p-curriculum','p-content','p-lessondesign','p-assessment','p-pedagogy','p-access','p-design'].forEach(id=>document.getElementById(id).value='');
+  cm('resetModal');
+  toast('초기화 완료');
+}
+function toast(msg){
+  const t=document.createElement('div');
+  t.className='fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-xl shadow-lg z-[100] flex items-center gap-2 text-xs font-semibold';
+  t.innerHTML='<i class="fas fa-check-circle"></i>'+msg;
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .3s';setTimeout(()=>t.remove(),300);},2200);
+}
+
+// ============ [개선 2] 프롬프트 생성 — V5.1 스타일 자연어 ============
+let __lastPrompt = '';
+
+async function generate(){
+  const v={
+    profile:      document.getElementById('p-profile').value.trim(),
+    type:         document.getElementById('p-type').value.trim(),
+    curriculum:   document.getElementById('p-curriculum').value.trim(),
+    content:      document.getElementById('p-content').value.trim(),
+    lessondesign: document.getElementById('p-lessondesign').value.trim(),
+    assessment:   document.getElementById('p-assessment').value.trim(),
+    pedagogy:     document.getElementById('p-pedagogy').value.trim(),
+    access:       document.getElementById('p-access').value.trim(),
+    design:       document.getElementById('p-design').value.trim(),
+  };
+  if(!v.type){
+    document.getElementById('alertMsg').textContent='결과물 형태(1번)를 먼저 선택해 주세요!';
+    om('alertModal');
+    return;
+  }
+
+  // 결과물 유형은 '1번 결과물 형태'만으로 판별한다.
+  // (디자인 칸의 '인쇄용'·'수정' 같은 단어가 섞이면 엉뚱한 형식으로 잡힌다)
+  const c = v.type.toLowerCase();
+  let intro, tail;
+
+  // 결과물 유형 판별 — 인쇄용 시각자료를 웹앱보다 먼저 판별해야 한다
+  if(c.includes('지도안') || c.includes('계획안')){
+    intro = '당신은 2022 개정 특수교육 기본 교육과정에 정통한 교수설계 전문가입니다. 특수학급·통합학급·특수학교 현장에서 바로 활용 가능한 수업 지도안을 작성해주세요.';
+    tail = `\n📋 지도안 구성 방식\n- 단원명·학습목표·성취기준(2022 개정 기본 교육과정)을 명확히 제시\n- 학생 현재 수행 수준을 독립·촉진 수준으로 구체적으로 기술\n- 교육과정 수정 방법(간소화·축소·대체 등)을 선택하고 이유 명시\n- 수업 단계(도입-전개-정리)별로 시간 배분과 교사(T)-학생(S) 대화 예시 포함\n- 교수·학습 자료 목록과 평가 체크리스트(독립/언어촉진/신체촉진/미수행) 포함\n- 가정 일반화 방법 안내\n- 마크다운 표와 헤더로 한눈에 보기 좋게 정리`;
+  }
+  else if(c.includes('pecs') || c.includes('시각 규칙') || c.includes('전환 지원') || c.includes('카드 세트') || c.includes('수집 양식') || c.includes('기록지')){
+    intro = '당신은 특수교육 시각 지원 자료 디자이너입니다. 교실에서 바로 인쇄해 사용할 수 있는 HTML 기반 시각 자료를 만들어주세요.';
+    tail = `\n📋 시각 자료 구성 방식\n- 단일 HTML 파일, 인쇄 친화적 A4 레이아웃\n- 카드형 자료: 큰 이모지/아이콘 + 짧은 한국어 라벨, 잘라 쓸 수 있도록 절단선 포함\n- 기록·체크 양식: 교사가 손으로 적을 수 있는 넉넉한 칸의 표, 날짜·회기·관찰자 기입란 포함\n- 고대비 색상, 큰 글씨(최소 24pt · 표 안 글씨는 12pt 이상)\n- @media print CSS로 깔끔한 프린트 최적화`;
+  }
+  else if(c.includes('사회적 이야기') || c.includes('social story')){
+    intro = '당신은 Carol Gray의 Social Story 방법론을 정확히 따르는 전문 작가이자 웹 개발자입니다. 학생이 사회적 상황을 이해하고 대처할 수 있는 인터랙티브 Social Story를 single HTML file로 만들어주세요.';
+    tail = `\n📋 Social Story 작성 방식\n- Carol Gray 가이드라인 준수: 지시적 문장 1개 당 서술·조망·긍정 문장 2~5개 비율\n- 1인칭 한국어 작성 ("나는 ~합니다")\n- 각 슬라이드: 큰 이모지 + 1~2문장\n- 슬라이드 수 5~7장 권장\n- 단일 HTML 파일, 큰 NEXT 버튼(60px+)\n- 각 슬라이드 TTS 자동 낭독 (ko-KR, rate:0.8)\n- 부드럽고 진정되는 파스텔 배경\n- 학생이 직접 진행 속도 조절 가능`;
+  }
+  else if(c.includes('게임') || c.includes('퀴즈') || c.includes('시뮬') || c.includes('매칭') || c.includes('수 개념') || c.includes('보드') || c.includes('일과표') || c.includes('감정') || c.includes('토큰') || c.includes('aac') || c.includes('과제분석') || c.includes('과제 분석') || c.includes('체크리스트 앱') || c.includes('감각 통합') || c.includes('감각통합') || c.includes('teacch') || c.includes('기능적 수학') || c.includes('자기소개') || c.includes('사회성 퀴즈') || c.includes('웹앱') || c.includes('웹 앱') || c.includes('기록 앱') || c.includes('abc')){
+    intro = '당신은 특수교육 학습자를 위한 접근성 전문 웹 개발자입니다. 학생들이 바로 사용할 수 있는 완성도 높은 인터랙티브 학습 콘텐츠를 single HTML file로 만들어주세요.';
+    tail = `\n📋 코드 작성 방식\n- 단일 HTML 파일로 완성 (HTML + CSS + JavaScript 통합, self-contained)\n- 외부 파일 의존성 없이 즉시 브라우저에서 실행 가능한 production-ready 결과물\n- placeholder·TODO 없이 한 번에 완성된 코드 작성\n- 버튼·클릭 영역 최소 48×48px 이상, 텍스트 최소 18pt 굵은 글씨\n- 고대비 색상 (WCAG 4.5:1 이상)\n- 모든 지시문·피드백에 TTS(Web Speech API, ko-KR, rate:0.8) 적용\n- 모든 버튼에 이모지+텍스트 병행 표시\n- 피드백은 100% 긍정("잘했어요!", "다시 해봐요!" — "틀렸어요" 절대 금지)\n- 자기 속도 진행 (자동 타이머 없음, 학생이 직접 다음 버튼)\n- 성공 시 시각+청각 다감각 축하 애니메이션\n- 교사용 데이터 기록 옵션 포함 (해당 시)\n- 모바일 태블릿 반응형 디자인\n- 한글 폰트(Pretendard 또는 Noto Sans KR) 사용`;
+  }
+  else if(c.includes('iep') || c.includes('행동지원') || c.includes('pbs')){
+    intro = '당신은 특수교육 IEP 작성과 긍정적 행동지원(PBS) 전문가입니다. 한국 특수교육 현장 실정에 맞는 전문적인 문서를 작성해주세요.';
+    tail = `\n📋 IEP·PBS 작성 방식\n- SMART 목표 형식(조건+행동+기준)으로 구체적이고 측정 가능하게\n- 강점 중심(Strengths-based) 언어만 사용 — "~할 수 있다" 긍정 표현\n- 현재 수행 수준을 독립·촉진 수준으로 구체적으로 기술\n- 연간 목표 1개 + 단기 목표(월별) 3~4개로 분리\n- 평가 방법·빈도·담당자 명시\n- 마지막에 데이터 수집 시트 포함 (정반응률, ABC 기록 양식)\n- 마크다운 표 형식으로 작성\n- 교사가 그대로 사용할 수 있도록 완성형으로 출력`;
+  }
+  else if(c.includes('활동지') || c.includes('워크시트') || c.includes('수정')){
+    intro = '당신은 UDL(보편적 학습 설계)과 교육과정 수정에 정통한 특수교육 전문가입니다. 학생 수준에 맞게 수정된 학습 활동지를 만들어주세요.';
+    tail = `\n📋 활동지 구성 방식\n- 지정된 교육과정 수정 유형(간소화/축소/대체/병행)에 정확히 맞춰 재구성\n- 학생용 활동지: 최대 시각 지원 (이모지+짧은 문장), 선택지 형태 위주\n- 교사용 답안지: 정답·지도 메모·촉진 수준 제안·데이터 수집 칸 포함\n- 학생용과 교사용을 명확히 분리하여 2개 버전 작성\n- 인쇄하기 좋은 A4 1~2쪽 분량\n- 마크다운 형식으로 작성하되 표·체크박스 활용`;
+  }
+  else if(c.includes('통신문') || c.includes('보호자')){
+    intro = '당신은 가정-학교 파트너십 전문가입니다. 보호자가 쉽게 이해하고 가정에서 실천할 수 있는 따뜻한 어조의 통신문을 작성해주세요.';
+    tail = `\n📋 통신문 구성 방식\n- 전문 용어 없는 쉬운 한국어\n- 오늘의 수업 하이라이트 (이모지 bullet)\n- 학생 강점·칭찬 포인트 (구체적, 강점 중심)\n- 가정에서 연습하는 방법 (step-by-step, 보호자 눈높이)\n- 이번 주 IEP 목표 진전도 (이모지 그래프)\n- 소통 요청사항\n- 마크다운 형식, 따뜻하고 친근한 어조`;
+  }
+  else if(c.includes('전환평가') || c.includes('전환 평가')){
+    intro = '당신은 특수교육 전환교육(Transition) 전문가입니다. 고등 특수교육 학생의 진로·자립·성인 삶 준비도를 평가하는 체계적인 문서를 작성해주세요.';
+    tail = `\n📋 전환평가 구성 방식\n- 영역별 평가: 진로·직업 기술 / 자립생활 / 지역사회 / 여가·대인관계\n- 각 영역 체크리스트 (독립/부분지원/전면지원)\n- 학생 선호도·강점 조사\n- 전환 목표 도출 가이드\n- 필요 서비스·지원 연결 정보\n- 마크다운 표 형식`;
+  }
+  else {
+    intro = '당신은 2022 개정 특수교육 기본 교육과정에 정통한 전문가입니다. 학생 수준에 맞는 고품질 특수교육 콘텐츠를 만들어주세요.';
+    tail = `\n📋 출력 방식\n- 상황에 가장 적절한 형식으로 (HTML 또는 마크다운) 완성형 출력\n- placeholder 없이 바로 사용 가능한 자료\n- 시각 지원(이모지+텍스트) 필수`;
+  }
+
+  const prompt = `${intro}
+
+## 👤 학생 프로파일
+${v.profile || '(미지정 — UDL 원칙 적용, 다양한 학습자 고려)'}
+
+## 🎯 만들 결과물
+${v.type}
+
+## 📘 교육과정 · 6대 핵심역량 · 학년군 · 교과
+${v.curriculum || '(미지정 — 기본 교육과정 원칙 적용)'}
+
+## 📚 수업 주제 & 학습 내용
+${v.content || '(미지정 — 학생 프로파일에 적합한 내용으로 구성)'}
+
+## ✂️ 수업 수정 & 설계
+${v.lessondesign || '(미지정 — 간소화 수정, 1:1 또는 소그룹, 도입-전개-정리 구조)'}
+
+## 📋 IEP 목표 & 평가 계획
+${v.assessment || '(미지정 — 관찰기록 + SMART 목표 형식)'}
+
+## 🎓 적용할 교수법
+${v.pedagogy || '(미지정 — UDL + 긍정적 강화 + 스캐폴딩)'}
+
+## ♿ 접근성 & 보조공학
+${v.access || '(필수: 큰 터치 영역·TTS·고대비·픽토그램·긍정 피드백)'}
+
+## 🎨 디자인 & 형식
+${v.design || '(파스텔 진정 톤, 짧고 쉬운 한국어, 완성형 출력)'}
+
+${tail}
+
+⚠️ 특수교육 필수 원칙 (절대 준수)
+- 강점 중심 언어만 사용 — "장애학생" 금지, "학생"으로 통일
+- 모든 시각 요소에 이모지+텍스트 병행
+- 피드백은 100% 긍정 — "틀렸어요" 절대 금지 ("다시 해봐요!" 사용)
+- 웹앱은 TTS(ko-KR, rate:0.8) 반드시 포함
+- 한국 학교 문화·교육 맥락 반영
+- 위 명세 중 비어있는 항목은 가장 적절하다고 판단되는 방향으로 자연스럽게 처리
+- 한 번에 완성된 결과물 제공 (단계별 설명 없이 바로 결과물부터)`;
+
+  const clean = prompt.trim();
+  __lastPrompt = clean;
+
+  try {
+    await navigator.clipboard.writeText(clean);
+    toast('클립보드에 복사됐어요! 🎉');
+  } catch {
+    const ta = document.createElement('textarea');
+    ta.value = clean;
+    ta.style.cssText = 'position:fixed;left:-9999px';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); toast('복사 완료!'); } catch(e) {}
+    document.body.removeChild(ta);
+  }
+  document.getElementById('mContent').textContent = clean;
+  om('copyModal');
+}
+
+// ============ [개선 3] 다시 복사 ============
+async function copyAgain(){
+  if(!__lastPrompt) return;
+  try {
+    await navigator.clipboard.writeText(__lastPrompt);
+    toast('다시 복사됨!');
+  } catch {
+    const ta = document.createElement('textarea');
+    ta.value = __lastPrompt;
+    ta.style.cssText = 'position:fixed;left:-9999px';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try { document.execCommand('copy'); toast('다시 복사됨!'); } catch(e) {}
+    document.body.removeChild(ta);
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if(e.ctrlKey && e.key === 'Enter'){ e.preventDefault(); generate(); }
+});
+
+// ============ [개선 5] 학생 프로파일 저장·불러오기 (3슬롯) ============
+const SLOT_KEY = 'sped-prompt-slots-v3';
+
+function getSlots(){
+  try { return JSON.parse(localStorage.getItem(SLOT_KEY) || '[null,null,null]'); }
+  catch { return [null, null, null]; }
+}
+function setSlots(slots){ localStorage.setItem(SLOT_KEY, JSON.stringify(slots)); }
+
+function openSaveModal(){
+  renderSlots();
+  om('saveModal');
+}
+
+function renderSlots(){
+  const slots = getSlots();
+  const container = document.getElementById('save-slots');
+  container.innerHTML = '';
+  slots.forEach((slot, i) => {
+    const div = document.createElement('div');
+    div.className = 'save-slot';
+    if(slot){
+      div.innerHTML = `
+        <div class="save-slot-label">💾 슬롯 ${i+1}: ${slot.name}</div>
+        <div class="save-slot-info">저장: ${slot.date}</div>
+        <div class="save-slot-actions">
+          <button onclick="loadSlot(${i})" style="background:#4338ca;color:white;">📂 불러오기</button>
+          <button onclick="saveSlot(${i})" style="background:#f59e0b;color:white;">💾 덮어쓰기</button>
+          <button onclick="deleteSlot(${i})" style="background:#ef4444;color:white;">🗑 삭제</button>
+        </div>
+      `;
+    } else {
+      div.className = 'save-slot empty';
+      div.innerHTML = `
+        <div>빈 슬롯 ${i+1}</div>
+        <div class="save-slot-actions">
+          <button onclick="saveSlot(${i})" style="background:#4338ca;color:white;">💾 현재 입력 저장</button>
+        </div>
+      `;
+    }
+    container.appendChild(div);
+  });
+}
+
+function saveSlot(i){
+  const name = prompt('별명 입력 (예: 수학반-A, 감각통합-1)\n⚠️ 학생 이름·생년월일 금지');
+  if(!name || !name.trim()) return;
+  const slots = getSlots();
+  slots[i] = {
+    name: name.trim(),
+    date: new Date().toLocaleDateString('ko-KR'),
+    data: {
+      profile: document.getElementById('p-profile').value,
+      type: document.getElementById('p-type').value,
+      curriculum: document.getElementById('p-curriculum').value,
+      content: document.getElementById('p-content').value,
+      lessondesign: document.getElementById('p-lessondesign').value,
+      assessment: document.getElementById('p-assessment').value,
+      pedagogy: document.getElementById('p-pedagogy').value,
+      access: document.getElementById('p-access').value,
+      design: document.getElementById('p-design').value,
+    }
+  };
+  setSlots(slots);
+  renderSlots();
+  toast('슬롯 ' + (i+1) + '에 저장 완료!');
+}
+
+function loadSlot(i){
+  const slots = getSlots();
+  const slot = slots[i];
+  if(!slot) return;
+  const d = slot.data;
+  document.getElementById('p-profile').value = d.profile || '';
+  document.getElementById('p-type').value = d.type || '';
+  document.getElementById('p-curriculum').value = d.curriculum || '';
+  document.getElementById('p-content').value = d.content || '';
+  document.getElementById('p-lessondesign').value = d.lessondesign || '';
+  document.getElementById('p-assessment').value = d.assessment || '';
+  document.getElementById('p-pedagogy').value = d.pedagogy || '';
+  document.getElementById('p-access').value = d.access || '';
+  document.getElementById('p-design').value = d.design || '';
+  cm('saveModal');
+  toast('"' + slot.name + '" 불러옴');
+}
+
+function deleteSlot(i){
+  if(!confirm('슬롯 ' + (i+1) + ' 삭제할까요?')) return;
+  const slots = getSlots();
+  slots[i] = null;
+  setSlots(slots);
+  renderSlots();
+  toast('슬롯 ' + (i+1) + ' 삭제됨');
+}
+
+// ============ 추천 프롬프트 (20개, 특수체육 5종 포함) ============
+const tdata = [
+  // 기본 생활 / ADL
+  {i:'fas fa-soap',c:'teal',t:'손씻기 과제분석 앱',d:'6단계 손씻기 TTS+체크리스트+데이터 기록',tags:['#ADL','#과제분석'],
+   b:{profile:'장애유형: 지적장애\n기능수준: 기초\n환경: 특수학급',type:'과제 분석 체크리스트 앱 — 단계별 완료·데이터 기록·교사 모드',curriculum:'교육과정: 특수교육 기본 교육과정(2022 개정)\n핵심역량: 자기관리 역량\n기능영역: 일상생활기술(ADL)',content:'단원: 위생생활 - 손씻기 6단계\n학습목표: 손씻기 6단계를 순서대로 수행할 수 있다\n핵심어휘: 물, 비누, 거품, 헹구기, 닦기',lessondesign:'간소화 수정\n수업 형태: 1:1\n수업 시간: 20분',assessment:'수행 기반 평가\n데이터 수집(정반응%)\n가정 일반화',pedagogy:'- 과제분석: 목표 행동을 소단계로 분해\n- 촉진: 신체→시각→언어 위계',access:'- 큰 터치\n- TTS\n- 픽토그램',design:'- 파스텔 진정 톤\n- TTS 코드\n- 완성형'}},
+  
+  // AAC
+  {i:'fas fa-comment-dots',c:'violet',t:'AAC 의사소통 보드',d:'터치→TTS 출력, 5범주 심볼',tags:['#AAC','#의사소통'],
+   b:{profile:'장애유형: 의사소통장애\n기능수준: 기초',type:'AAC 디지털 의사소통 보드 — 터치 시 TTS 음성 출력',curriculum:'핵심역량: 협력적 소통 역량\n기능영역: 의사소통',content:'주제: 기본 요구 표현 5범주(먹고싶어요/감정/하고싶어요/화장실/도움)',lessondesign:'대체 수정\n수업 형태: 1:1',assessment:'관찰 기록',pedagogy:'- PECS\n- UDL',access:'- 큰 터치\n- TTS\n- AAC연계',design:'- 파스텔 진정 톤\n- TTS 코드'}},
+  
+  {i:'fas fa-calendar-day',c:'teal',t:'시각적 일과표',d:'픽토그램 일과·완료 체크·TTS',tags:['#스케줄','#자폐'],
+   b:{profile:'장애유형: 자폐스펙트럼\n기능수준: 중급',type:'시각적 일과표(Visual Schedule) 웹앱',curriculum:'핵심역량: 자기관리 역량',content:'주제: 오전 일과 8개 활동 스케줄',lessondesign:'대체 수정',assessment:'관찰 기록',pedagogy:'- TEACCH\n- Social Story',access:'- TTS\n- 픽토그램',design:'- 파스텔 진정 톤'}},
+  
+  {i:'fas fa-thermometer-half',c:'rose',t:'감정 온도계 & 대처',d:'5단계 감정→진정 전략 카드',tags:['#정서조절','#PBS'],
+   b:{profile:'장애유형: 정서행동장애\n기능수준: 중급',type:'감정 온도계 & 대처 전략 앱',curriculum:'핵심역량: 자기관리 역량\n기능영역: 사회성',content:'주제: 감정 조절 5단계 인식과 단계별 대처 전략',lessondesign:'대체 수정',assessment:'관찰 기록',pedagogy:'- PBS\n- 자기관리',access:'- TTS\n- 자기속도',design:'- 파스텔 진정 톤'}},
+  
+  // Social Story
+  {i:'fas fa-book-reader',c:'amber',t:'사회적 이야기 (학교생활)',d:'수업시간 앉아있기 Carol Gray 방식',tags:['#SocialStory','#자폐'],
+   b:{profile:'장애유형: 자폐스펙트럼\n기능수준: 기초',type:'사회적 이야기(Social Story) 인터랙티브 슬라이드',curriculum:'핵심역량: 공동체 역량',content:'주제: 나는 수업 시간에 앉아 있어요 (7장 슬라이드)',lessondesign:'대체 수정',assessment:'관찰 기록',pedagogy:'- Social Story\n- 감각통합',access:'- TTS\n- 자기속도',design:'- 파스텔 진정 톤'}},
+  
+  // 토큰 경제
+  {i:'fas fa-coins',c:'yellow',t:'토큰 경제 보드',d:'토큰 적립→강화제 잠금 해제',tags:['#ABA','#강화'],
+   b:{profile:'장애유형: 자폐스펙트럼\n기능수준: 기초',type:'토큰 경제 디지털 보드',curriculum:'핵심역량: 자기관리 역량',content:'주제: 5×2 토큰 그리드, 3가지 강화제 옵션',lessondesign:'대체 수정',assessment:'데이터 수집',pedagogy:'- ABA\n- 토큰경제',access:'- 큰 터치\n- TTS',design:'- 밝고 따뜻한 톤'}},
+  
+  // 수 개념
+  {i:'fas fa-sort-numeric-up',c:'blue',t:'수세기 조작 도구',d:'텐프레임·수직선·구체물 TTS',tags:['#수학','#수개념'],
+   b:{profile:'장애유형: 지적장애\n기능수준: 기초',type:'수 개념 조작 도구 — 텐프레임·수직선·구체물 시뮬레이션',curriculum:'교육과정: 특수교육 기본 교육과정\n핵심역량: 지식정보처리\n교과: 수학\n학년군: 3~4학년',content:'주제: 1~10 수 세기, 텐프레임 활용',lessondesign:'간소화 수정\n1:1',assessment:'수행 기반\nCBM',pedagogy:'- DTT\n- 시범수업',access:'- 큰 터치\n- TTS',design:'- 파스텔 진정 톤'}},
+  
+  // 기능적 수학 (신규)
+  {i:'fas fa-won-sign',c:'green',t:'기능적 수학 앱',d:'돈 세기·시계 읽기·달력 활용',tags:['#수학','#기능적수학'],
+   b:{profile:'장애유형: 지적장애\n기능수준: 기능적',type:'기능적 수학 시각자료 — 돈 세기·시계 읽기·달력 활용 웹앱',curriculum:'핵심역량: 자기관리\n기능영역: 지역사회 참여',content:'주제: 500원·1000원으로 물건 사기, 30분 단위 시각 읽기',lessondesign:'대체 수정',assessment:'수행 기반\n지역사회 일반화',pedagogy:'- 과제분석\n- 지역사회 기반 교수',access:'- 큰 터치\n- TTS',design:'- 밝고 따뜻한 톤'}},
+  
+  // 지역사회
+  {i:'fas fa-shopping-cart',c:'green',t:'마트 지역사회 시뮬',d:'물건 고르기→계산→거스름돈',tags:['#지역사회','#전환교육'],
+   b:{profile:'장애유형: 지적장애\n기능수준: 기능적',type:'지역사회 기능 시뮬레이션',curriculum:'핵심역량: 공동체\n기능영역: 지역사회',content:'주제: 마트 4단계 — 물건고르기→계산대→돈내기→거스름돈',lessondesign:'대체 수정',assessment:'수행 기반\n지역사회 일반화',pedagogy:'- 과제분석\n- 비디오모델링',access:'- 큰 터치\n- TTS',design:'- 밝고 따뜻한 톤'}},
+  
+  // 특수교육 지도안
+  {i:'fas fa-file-alt',c:'purple',t:'특수교육 수업 지도안',d:'기본 교육과정 UDL 지도안+평가체크',tags:['#지도안','#특수교육'],
+   b:{profile:'장애유형: 지적장애\n기능수준: 기초\n환경: 특수학급',type:'특수교육 수업 지도안',curriculum:'교육과정: 특수교육 기본 교육과정(2022 개정)\n핵심역량: 자기관리·지식정보처리 (주제에 맞게 수정)',content:'단원: (원하는 주제로 변경)\n학습목표: ~할 수 있다\n현재수준: ',lessondesign:'간소화 수정\n수업 형태: 소그룹\n수업 시간: 40분\n도입-전개-정리',assessment:'수행 기반\n데이터 수집',pedagogy:'- UDL\n- 과제분석',access:'- 큰 터치\n- TTS',design:'- 마크다운+교사메모\n- 완성형'}},
+  
+  // 협력교수
+  {i:'fas fa-hands-helping',c:'slate',t:'협력교수 수업 계획안',d:'일반·특수교사 역할+스테이션',tags:['#협력교수','#통합학급'],
+   b:{profile:'환경: 통합학급',type:'협력교수 수업 계획안',curriculum:'교육과정: 공통 교육과정\n핵심역량: 협력적 소통·공동체 (주제에 맞게 수정)',content:'단원: (원하는 주제)\n일반학급 수업 내용 포함',lessondesign:'간소화 수정\n학급 전체\n협력교수: 스테이션교수(3 stations)',assessment:'과정 중심',pedagogy:'- UDL\n- 또래지원',design:'- 마크다운+교사메모'}},
+  
+  // ═══ 특수체육 5종 (주현쌤 특화!) ═══
+  {i:'fas fa-running',c:'lime',t:'[특수체육] 적응 체육 과제분석',d:'장애유형별 운동 기술 단계 지도안',tags:['#체육','#특수체육'],
+   b:{profile:'장애유형: 지적장애\n기능수준: 중급',type:'과제 분석 시각 카드 세트',curriculum:'교육과정: 공통 교육과정(수정)\n핵심역량: 자기관리\n교과: 체육',content:'주제: 공 받기 8단계 과제분석\n현재수준: 시범 보면 부분 모방 가능',lessondesign:'간소화 수정\n수업 형태: 소그룹',assessment:'수행 기반\n데이터 수집',pedagogy:'- 과제분석\n- 비디오모델링\n- 시범수업',access:'- 큰 터치\n- 픽토그램',design:'- 마크다운+인쇄용\n- 완성형'}},
+  
+  {i:'fas fa-futbol',c:'lime',t:'[특수체육] 플라잉디스크 수업',d:'통합학급 병행 수정 체육 지도안',tags:['#체육','#통합학급'],
+   b:{profile:'장애유형: 자폐스펙트럼\n기능수준: 중급\n환경: 통합학급',type:'특수교육 수업 지도안',curriculum:'교육과정: 공통 교육과정(수정)\n핵심역량: 자기관리·공동체\n학년군: 3~4학년\n교과: 체육',content:'단원: 뉴스포츠 - 플라잉디스크\n학습목표: 디스크를 바르게 그립하고 목표 방향으로 던질 수 있다\n현재수준: 그립은 가능, 방향 통제 어려움',lessondesign:'병행 수정\n학급 전체\n협력교수: 팀티칭\n수업 시간: 45분',assessment:'수행 기반\n또래 일반화',pedagogy:'- 과제분석\n- 비디오모델링\n- 또래지원',access:'- 픽토그램\n- 다감각 피드백',design:'- 마크다운+교사메모'}},
+  
+  {i:'fas fa-dumbbell',c:'lime',t:'[특수체육] PAPS 체력 측정 앱',d:'특수교육 학생용 체력 기록 웹앱',tags:['#체육','#PAPS','#데이터'],
+   b:{profile:'장애유형: 지적장애\n기능수준: 기능적',type:'과제 분석 체크리스트 앱',curriculum:'교육과정: 특수교육 기본 교육과정\n핵심역량: 자기관리\n교과: 체육',content:'주제: PAPS 5종목 기록 입력 — 50m 달리기, 앉아윗몸앞으로굽히기, 제자리멀리뛰기, 윗몸말아올리기, 왕복오래달리기',lessondesign:'대체 수정\n수업 형태: 1:1 개별',assessment:'수행 기반\n데이터 수집\n포트폴리오',pedagogy:'- 자기관리\n- 과제분석',access:'- 큰 터치\n- TTS',design:'- 단일파일·오프라인\n- 밝고 따뜻한 톤'}},
+  
+  {i:'fas fa-child',c:'lime',t:'[특수체육] 감각통합 대근육 활동',d:'전정·고유감각 자극 놀이 카드',tags:['#체육','#감각통합'],
+   b:{profile:'장애유형: 자폐스펙트럼\n기능수준: 기초',type:'감각 통합 활동 웹 도구',curriculum:'교육과정: 특수교육 기본 교육과정\n핵심역량: 자기관리·심미적 감성\n교과: 체육',content:'주제: 대근육 감각통합 활동 10가지 — 점프, 구르기, 스윙, 균형잡기 등',lessondesign:'대체 수정\n소그룹',assessment:'관찰 기록',pedagogy:'- 감각통합\n- UDL',access:'- 픽토그램\n- 다감각 피드백',design:'- 파스텔 진정 톤\n- 캐릭터'}},
+  
+  {i:'fas fa-medal',c:'lime',t:'[특수체육] 학교스포츠클럽 지도안',d:'통합 스포츠클럽 운영 계획',tags:['#체육','#스포츠클럽'],
+   b:{profile:'장애유형: 중복중증\n환경: 통합학급',type:'협력교수 수업 계획안',curriculum:'교육과정: 공통 교육과정(수정)\n핵심역량: 공동체·협력적 소통\n교과: 체육',content:'단원: 학교스포츠클럽 - 뉴스포츠 한마당\n일반학생과 특수교육 대상 학생이 함께 참여\n짝 활동 중심',lessondesign:'병행 수정\n학급 전체\n협력교수: 평행교수',assessment:'과정 중심\n또래 일반화',pedagogy:'- UDL\n- 또래지원\n- 협동학습',access:'- 픽토그램\n- 자기속도',design:'- 마크다운+교사메모'}},
+  
+  // 사회성
+  {i:'fas fa-handshake',c:'purple',t:'또래 관계 사회성 퀴즈',d:'상황별 올바른 행동 선택',tags:['#사회성','#자폐'],
+   b:{profile:'장애유형: 자폐스펙트럼\n기능수준: 중급',type:'그림 선택형 퀴즈 앱',curriculum:'핵심역량: 협력적 소통·공동체\n기능영역: 사회성',content:'주제: 또래 상호작용 10가지 상황 — 나누기, 순서 기다리기, 인사',lessondesign:'대체 수정',assessment:'관찰 기록',pedagogy:'- Social Story\n- 또래지원',access:'- TTS\n- 픽토그램',design:'- 밝고 따뜻한 톤'}},
+  
+  // ABC 데이터
+  {i:'fas fa-chart-bar',c:'slate',t:'ABC 행동 기록 앱',d:'선행-행동-결과 입력·CSV',tags:['#ABA','#데이터수집'],
+   b:{profile:'장애유형: 정서행동장애',type:'행동 데이터 기록 웹앱 — ABC 기록·실시간 입력·CSV 다운로드 기능',curriculum:'기능영역: 행동 관찰',content:'주제: ABC 기록 — 선행·행동·결과·강도·지속시간 입력 필드',lessondesign:'',assessment:'데이터 수집\nABC 기록',pedagogy:'- ABA\n- PBS',access:'- 큰 터치',design:'- 단일파일·오프라인\n- 완성형'}},
+  
+  // 가정연계
+  {i:'fas fa-envelope',c:'rose',t:'가정연계 통신문',d:'오늘의 수업·칭찬·가정 연습',tags:['#가정연계','#보호자'],
+   b:{profile:'',type:'가정-학교 연계 통신문',curriculum:'',content:'주제: 오늘 수업 내용 간단 요약, 가정에서 5분 연습 방법',lessondesign:'',assessment:'가정 일반화',pedagogy:'',design:'- 마크다운\n- 완성형'}},
+  
+  // IEP
+  {i:'fas fa-user-check',c:'teal',t:'IEP 목표 초안 생성기',d:'현재수준→SMART 연간목표→단기목표',tags:['#IEP','#목표설정'],
+   b:{profile:'장애유형: 지적장애\n기능수준: 기초',type:'IEP 개별화교육프로그램 목표 초안',curriculum:'교육과정: 개별화 교육과정(IEP 기반)\n기능영역: 의사소통/ADL/사회성/지역사회 (선택)',content:'영역: (교과 또는 기능영역)\n현재수준: 구체적으로',lessondesign:'',assessment:'SMART\n조건-행동-기준\n연간·단기',pedagogy:'',design:'- 마크다운+교사메모\n- 완성형'}},
+  
+  // TEACCH (신규)
+  {i:'fas fa-box',c:'indigo',t:'TEACCH 워크박스',d:'독립과제 스테이션 디지털 버전',tags:['#TEACCH','#자폐'],
+   b:{profile:'장애유형: 자폐스펙트럼\n기능수준: 기초',type:'TEACCH 구조화 워크박스 디지털 버전',curriculum:'핵심역량: 자기관리\n기능영역: 일상생활기술(ADL)',content:'주제: 독립 과제 5개 스테이션 — 분류·매칭·순서·쓰기·조작',lessondesign:'대체 수정\n1:1 → 독립 과제',assessment:'수행 기반',pedagogy:'- TEACCH\n- 과제분석',access:'- 픽토그램\n- 자기속도',design:'- 미니멀\n- 단일파일·오프라인'}},
+];
+
+// ============ [개선 13] 추천 → 빌더 자동 입력 ============
+function loadTemplateToBuilder(idx){
+  const t = tdata[idx];
+  const b = t.b;
+  document.getElementById('p-profile').value = b.profile || '';
+  document.getElementById('p-type').value = b.type || '';
+  document.getElementById('p-curriculum').value = b.curriculum || '';
+  document.getElementById('p-content').value = b.content || '';
+  document.getElementById('p-lessondesign').value = b.lessondesign || '';
+  document.getElementById('p-assessment').value = b.assessment || '';
+  document.getElementById('p-pedagogy').value = b.pedagogy || '';
+  document.getElementById('p-access').value = b.access || '';
+  document.getElementById('p-design').value = b.design || '';
+  sw('builder');
+  toast('"' + t.t + '" 빌더에 로드됨!');
+  if(window.innerWidth < 768) setTimeout(()=>mobTab('right'), 300);
+}
+
+const cmap = {teal:'bg-teal-100 text-teal-700',violet:'bg-violet-100 text-violet-700',rose:'bg-rose-100 text-rose-700',amber:'bg-amber-100 text-amber-700',yellow:'bg-yellow-100 text-yellow-700',blue:'bg-blue-100 text-blue-700',green:'bg-green-100 text-green-700',purple:'bg-purple-100 text-purple-700',slate:'bg-slate-100 text-slate-600',lime:'bg-lime-100 text-lime-700',pink:'bg-pink-100 text-pink-700',orange:'bg-orange-100 text-orange-700',indigo:'bg-indigo-100 text-indigo-700'};
+
+const g = document.getElementById('tgrid');
+tdata.forEach((t, i) => {
+  const d = document.createElement('div');
+  d.className = 'bg-white p-3.5 rounded-2xl cursor-pointer';
+  d.style = 'transition:all .2s;border:1px solid #e5e7eb;';
+  d.onmouseover = () => { d.style.transform='translateY(-4px)'; d.style.boxShadow='0 12px 20px -5px rgba(99,102,241,.15)'; d.style.borderColor='#a5b4fc'; };
+  d.onmouseout = () => { d.style.transform=''; d.style.boxShadow=''; d.style.borderColor='#e5e7eb'; };
+  d.innerHTML = `<div class="flex items-center gap-2 mb-2"><div class="w-8 h-8 rounded-full ${cmap[t.c]||'bg-gray-100 text-gray-600'} flex items-center justify-center flex-shrink-0 text-xs"><i class="${t.i}"></i></div><h3 class="font-bold text-gray-800 text-xs leading-tight">${t.t}</h3></div><p class="text-[10px] text-gray-500 mb-2 leading-relaxed">${t.d}</p><div class="flex flex-wrap gap-1">${t.tags.map(tg=>`<span class="text-[9px] bg-gray-50 text-gray-500 border border-gray-200 px-1.5 py-0.5 rounded">${tg}</span>`).join('')}</div>`;
+  d.onclick = () => loadTemplateToBuilder(i);
+  g.appendChild(d);
+});
+
+// ============ 모바일 탭 전환 & 레이아웃 ============
+let mobPanel = 'left';
+function mobTab(panel){
+  mobPanel = panel;
+  applyLayout();
+}
+
+// 화면 폭이 바뀌어도(태블릿 회전·창 크기 조절) 패널 상태가 어긋나지 않게 매번 다시 계산한다
+function applyLayout(){
+  const L  = document.getElementById('panel-left');
+  const R  = document.getElementById('panel-right');
+  const bL = document.getElementById('mob-btn-left');
+  const bR = document.getElementById('mob-btn-right');
+  const gb = document.getElementById('mob-gen-btn');
+  const isMobile = window.innerWidth < 768;
+
+  if(isMobile){
+    L.style.display = (mobPanel === 'left')  ? '' : 'none';
+    R.style.display = (mobPanel === 'right') ? '' : 'none';
+    bL.className = (mobPanel === 'left')  ? 'mob-on' : 'mob-off';
+    bR.className = (mobPanel === 'right') ? 'mob-on' : 'mob-off';
+  } else {
+    // 데스크탑은 두 패널을 항상 나란히 — 모바일에서 남은 inline 스타일을 지운다
+    L.style.display = '';
+    R.style.display = '';
+  }
+  // 모바일 하단 생성 버튼은 빌더 탭에서만
+  gb.classList.toggle('gen-hidden', curView !== 'builder');
+}
+
+window.addEventListener('resize', applyLayout);
+applyLayout();
+
+// 추천 카드 개수는 데이터에서 자동 반영 (숫자 하드코딩 어긋남 방지)
+document.getElementById('tcount').textContent  = tdata.length;
+document.getElementById('tcount2').textContent = tdata.length;
+
+// 칩 키보드 접근성 — Tab 이동 + Enter/Space 선택
+document.querySelectorAll('.chip').forEach(ch => {
+  ch.setAttribute('role', 'button');
+  ch.setAttribute('tabindex', '0');
+  ch.addEventListener('keydown', e => {
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); ch.click(); }
+  });
+});
+
+// 칩 클릭 후 모바일 자동 탭 전환
+document.addEventListener('click', function(e){
+  if(window.innerWidth < 768 && e.target.closest('.chip')){
+    setTimeout(()=>mobTab('right'), 180);
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>체육 플레이북</title>
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --orange: #E8590C;
+  --orange-light: #FFF4F0;
+  --black: #111;
+  --gray-dark: #333;
+  --gray-mid: #666;
+  --gray-light: #e5e5e5;
+  --white: #fff;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--black);
+  background: var(--white);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url('assets/img/hero-bg.jpg') center/cover no-repeat;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.75) 100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: var(--white);
+  padding: 0 24px;
+}
+
+.hero-tag {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 24px;
+  border: 1px solid var(--orange);
+  padding: 6px 16px;
+}
+
+.hero-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: clamp(42px, 7vw, 80px);
+  font-weight: 900;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+
+.hero-title span {
+  color: var(--orange);
+}
+
+.hero-sub {
+  font-size: 16px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 40px;
+}
+
+.hero-scroll {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255,255,255,0.6);
+  font-size: 13px;
+  letter-spacing: 1px;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* Navigation Bar */
+.nav-bar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255,255,255,0.97);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--gray-light);
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.nav-brand span { color: var(--orange); }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--gray-mid);
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--orange); }
+
+.nav-info {
+  font-size: 12px;
+  color: var(--gray-mid);
+}
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--black);
+  transition: all 0.3s;
+}
+.hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(2.5px, 2.5px); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(2.5px, -2.5px); }
+
+/* Mobile Menu */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 99;
+  background: rgba(255,255,255,0.98);
+  backdrop-filter: blur(10px);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+}
+.mobile-menu.open { display: flex; }
+.mobile-menu a {
+  display: block;
+  padding: 20px 40px;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--black);
+  text-decoration: none;
+  transition: color 0.2s;
+  text-align: center;
+}
+.mobile-menu a:hover { color: var(--orange); }
+.mobile-menu a .menu-sub {
+  display: block;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--gray-mid);
+  margin-top: 4px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* Sections */
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 40px;
+}
+
+.section-header {
+  margin-bottom: 48px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  border-bottom: 1px solid var(--gray-light);
+  padding-bottom: 20px;
+}
+
+.section-number {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--orange);
+  line-height: 1;
+}
+
+.section-title-group {
+  flex: 1;
+}
+
+.section-tag {
+  display: inline-block;
+  background: var(--orange);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.section-title {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--black);
+}
+
+.section-count {
+  font-size: 13px;
+  color: var(--gray-mid);
+  align-self: flex-end;
+}
+
+/* Card Grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  border: 1px solid var(--gray-light);
+  padding: 28px 24px;
+  position: relative;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  background: var(--white);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--orange);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.card:hover::before {
+  transform: scaleX(1);
+}
+
+.card:hover {
+  border-color: var(--orange);
+  transform: translateY(-2px);
+}
+
+.card-emoji {
+  font-size: 36px;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.card-name {
+  font-family: 'Noto Serif KR', serif;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.card-type {
+  font-size: 12px;
+  color: var(--gray-mid);
+  letter-spacing: 0.5px;
+}
+
+.card-status {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--orange);
+}
+
+/* Soon cards */
+.card.soon {
+  opacity: 0.5;
+  border-style: dashed;
+}
+
+.card.soon:hover {
+  opacity: 0.7;
+  border-color: var(--gray-light);
+  transform: none;
+}
+
+/* Card share button */
+.card-share {
+  position: absolute;
+  bottom: 14px;
+  right: 14px;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--gray-light);
+  background: var(--white);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+.card-share:hover {
+  background: var(--orange);
+  border-color: var(--orange);
+}
+
+/* Share modal (main page) */
+.share-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,.6);
+  opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s;
+  display: flex; align-items: center; justify-content: center;
+}
+.share-overlay.open { opacity: 1; visibility: visible; }
+.share-modal {
+  background: var(--white); max-width: 320px; width: 90%;
+  padding: 28px 24px; text-align: center; position: relative;
+  transform: translateY(10px); transition: transform .3s ease;
+  box-shadow: 0 8px 40px rgba(0,0,0,.2);
+}
+.share-overlay.open .share-modal { transform: none; }
+.share-modal h3 {
+  font-family: 'Noto Serif KR', serif; font-size: 18px; font-weight: 900;
+  color: var(--black); margin-bottom: 16px;
+}
+.share-modal .share-qr { width: 180px; height: 180px; margin: 0 auto 16px; display: block; border: 1px solid var(--gray-light); }
+.share-modal .share-url {
+  font-size: 12px; color: var(--gray-mid); word-break: break-all;
+  padding: 10px; background: var(--orange-light); border: 1px solid var(--gray-light);
+  margin-bottom: 14px;
+}
+.share-modal .share-actions { display: flex; gap: 8px; }
+.share-modal button.share-action {
+  flex: 1; padding: 10px; border: 1px solid var(--black); background: var(--white);
+  cursor: pointer; font-weight: 700; font-size: 13px; color: var(--black);
+  transition: background .15s, color .15s;
+}
+.share-modal button.share-action:hover { background: var(--black); color: var(--white); }
+.share-modal .share-close {
+  position: absolute; top: 8px; right: 8px; width: 28px; height: 28px;
+  border: none; background: none; cursor: pointer; font-size: 16px; color: var(--gray-mid);
+}
+
+.card.soon::before { display: none; }
+
+.card.soon .card-status {
+  background: var(--gray-light);
+}
+
+/* Level Tabs */
+.level-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin: 0 auto 0;
+  max-width: 400px;
+  padding: 24px 20px;
+  position: sticky;
+  background: rgba(255,255,255,0.97);
+  top: 60px;
+  z-index: 50;
+}
+.level-tab {
+  flex: 1;
+  padding: 14px 0;
+  text-align: center;
+  font-family: 'Noto Serif KR', serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 2px solid var(--gray-light);
+  background: var(--white);
+  color: var(--gray-mid);
+  transition: all 0.2s;
+}
+.level-tab:first-child { border-right: none; }
+.level-tab.active {
+  background: var(--orange);
+  color: var(--white);
+  border-color: var(--orange);
+}
+.level-tab:hover:not(.active) {
+  background: var(--orange-light);
+  color: var(--orange);
+}
+
+.lang-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 10px auto 0;
+  max-width: 560px;
+  padding: 0 20px 4px;
+  overflow-x: auto;
+}
+.level-tab.lang-tab {
+  flex: 0 0 auto;
+  padding: 8px 18px;
+  font-size: 13px;
+  border-radius: 20px;
+  border-right: 2px solid var(--gray-light);
+  white-space: nowrap;
+}
+
+/* Footer */
+.footer {
+  border-top: 1px solid var(--gray-light);
+  padding: 40px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--gray-mid);
+}
+
+.footer-brand {
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--black);
+  margin-bottom: 8px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-bar { padding: 14px 20px; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .section { padding: 60px 20px; }
+  .section-number { font-size: 36px; }
+  .section-title { font-size: 22px; }
+  .card-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+  .card { padding: 20px 16px; }
+  .hero { min-height: 500px; }
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-tag">Physical Education</div>
+    <h1 class="hero-title">체육 <span>플레이북</span></h1>
+    <div class="hero-scroll">아래로 스크롤 &darr;</div>
+  </div>
+</section>
+
+<nav class="nav-bar">
+  <div class="nav-brand">체육<span>.</span>플레이북</div>
+  <ul class="nav-links">
+    <li><a href="#ball">구기 종목</a></li>
+    <li><a href="#track">육상 &middot; 체조</a></li>
+    <li><a href="#new">뉴스포츠</a></li>
+    <li><a href="#expression">표현 &middot; 기타</a></li>
+    <li><a href="#health">건강 &middot; 안전</a></li>
+  </ul>
+  <span class="nav-info">30종목</span>
+  <button class="hamburger" id="hamburger" aria-label="메뉴">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#ball" class="mm-link">구기 종목<span class="menu-sub">Ball Sports · 11종목</span></a>
+  <a href="#track" class="mm-link">육상 · 체조<span class="menu-sub">Track & Gymnastics · 7종목</span></a>
+  <a href="#new" class="mm-link">뉴스포츠<span class="menu-sub">New Sports · 6종목</span></a>
+  <a href="#expression" class="mm-link">표현 · 기타<span class="menu-sub">Expression & More · 3종목</span></a>
+  <a href="#health" class="mm-link">건강 · 안전<span class="menu-sub">Health & Safety · 3종목</span></a>
+</div>
+
+<div class="level-tabs" id="levelTabs">
+  <div class="level-tab active" data-level="ms">중학교</div>
+  <div class="level-tab" data-level="hs">고등학교 심화</div>
+</div>
+<div class="lang-tabs" id="langTabs">
+  <div class="level-tab lang-tab" data-level="en">English</div>
+  <div class="level-tab lang-tab" data-level="zh">中文</div>
+  <div class="level-tab lang-tab" data-level="vi">Tiếng Việt</div>
+  <div class="level-tab lang-tab" data-level="fil">Filipino</div>
+</div>
+
+<!-- 구기 종목 -->
+<div class="section" id="ball">
+  <div class="section-header">
+    <div class="section-number">01</div>
+    <div class="section-title-group">
+      <div class="section-tag">BALL SPORTS</div>
+      <h2 class="section-title">구기 종목</h2>
+    </div>
+    <span class="section-count">11종목</span>
+  </div>
+  <div class="card-grid">
+    <a href="sports/basketball.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏀</span>
+      <div class="card-name">농구</div>
+      <div class="card-type">영역형</div>
+    </a>
+    <a href="sports/soccer.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">⚽</span>
+      <div class="card-name">축구</div>
+      <div class="card-type">영역형</div>
+    </a>
+    <a href="sports/handball.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🤾</span>
+      <div class="card-name">핸드볼</div>
+      <div class="card-type">영역형</div>
+    </a>
+    <a href="sports/futsal.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🥅</span>
+      <div class="card-name">풋살</div>
+      <div class="card-type">영역형</div>
+    </a>
+    <a href="sports/volleyball.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏐</span>
+      <div class="card-name">배구</div>
+      <div class="card-type">네트형</div>
+    </a>
+    <a href="sports/badminton.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏸</span>
+      <div class="card-name">배드민턴</div>
+      <div class="card-type">네트형</div>
+    </a>
+    <a href="sports/tabletennis.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏓</span>
+      <div class="card-name">탁구</div>
+      <div class="card-type">네트형</div>
+    </a>
+    <a href="sports/tennis.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🎾</span>
+      <div class="card-name">테니스</div>
+      <div class="card-type">네트형</div>
+    </a>
+    <a href="sports/baseball.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">⚾</span>
+      <div class="card-name">야구</div>
+      <div class="card-type">필드형</div>
+    </a>
+    <a href="sports/tball.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🥎</span>
+      <div class="card-name">티볼</div>
+      <div class="card-type">필드형</div>
+    </a>
+    <a href="sports/softball.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🥎</span>
+      <div class="card-name">소프트볼</div>
+      <div class="card-type">필드형</div>
+    </a>
+  </div>
+</div>
+
+<!-- 육상·체조 -->
+<div class="section" id="track">
+  <div class="section-header">
+    <div class="section-number">02</div>
+    <div class="section-title-group">
+      <div class="section-tag">TRACK & GYMNASTICS</div>
+      <h2 class="section-title">육상 &middot; 체조</h2>
+    </div>
+    <span class="section-count">7종목</span>
+  </div>
+  <div class="card-grid">
+    <a href="sports/sprint.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏃</span>
+      <div class="card-name">단거리</div>
+      <div class="card-type">육상</div>
+    </a>
+    <a href="sports/relay.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏃‍♀️</span>
+      <div class="card-name">이어달리기</div>
+      <div class="card-type">육상</div>
+    </a>
+    <a href="sports/longjump.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏃‍♂️</span>
+      <div class="card-name">멀리뛰기</div>
+      <div class="card-type">육상</div>
+    </a>
+    <a href="sports/highjump.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🦘</span>
+      <div class="card-name">높이뛰기</div>
+      <div class="card-type">육상</div>
+    </a>
+    <a href="sports/vault.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🤸</span>
+      <div class="card-name">뜀틀</div>
+      <div class="card-type">체조</div>
+    </a>
+    <a href="sports/mat.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🤸‍♂️</span>
+      <div class="card-name">매트운동</div>
+      <div class="card-type">체조</div>
+    </a>
+    <a href="sports/paps.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">📊</span>
+      <div class="card-name">PAPS</div>
+      <div class="card-type">건강체력</div>
+    </a>
+  </div>
+</div>
+
+<!-- 뉴스포츠 -->
+<div class="section" id="new">
+  <div class="section-header">
+    <div class="section-number">03</div>
+    <div class="section-title-group">
+      <div class="section-tag">NEW SPORTS</div>
+      <h2 class="section-title">뉴스포츠</h2>
+    </div>
+    <span class="section-count">6종목</span>
+  </div>
+  <div class="card-grid">
+    <a href="sports/floorball.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏑</span>
+      <div class="card-name">플로어볼</div>
+      <div class="card-type">뉴스포츠</div>
+    </a>
+    <a href="sports/tchoukball.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🎯</span>
+      <div class="card-name">츄크볼</div>
+      <div class="card-type">뉴스포츠</div>
+    </a>
+    <a href="sports/pickleball.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏓</span>
+      <div class="card-name">피클볼</div>
+      <div class="card-type">뉴스포츠</div>
+    </a>
+    <a href="sports/netball.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🧺</span>
+      <div class="card-name">넷볼</div>
+      <div class="card-type">뉴스포츠</div>
+    </a>
+    <a href="sports/kinball.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🟣</span>
+      <div class="card-name">킨볼</div>
+      <div class="card-type">뉴스포츠</div>
+    </a>
+    <a href="sports/flying-disc.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🥏</span>
+      <div class="card-name">플라잉디스크</div>
+      <div class="card-type">뉴스포츠</div>
+    </a>
+  </div>
+</div>
+
+<!-- 표현·기타 -->
+<div class="section" id="expression">
+  <div class="section-header">
+    <div class="section-number">04</div>
+    <div class="section-title-group">
+      <div class="section-tag">EXPRESSION & MORE</div>
+      <h2 class="section-title">표현 &middot; 기타</h2>
+    </div>
+    <span class="section-count">3종목</span>
+  </div>
+  <div class="card-grid">
+    <a href="sports/dance.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">💃</span>
+      <div class="card-name">창작댄스</div>
+      <div class="card-type">표현</div>
+    </a>
+    <a href="sports/rhythm.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🎵</span>
+      <div class="card-name">리듬운동</div>
+      <div class="card-type">표현</div>
+    </a>
+    <a href="sports/jumprope.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🪢</span>
+      <div class="card-name">줄넘기</div>
+      <div class="card-type">도전</div>
+    </a>
+  </div>
+</div>
+
+<!-- 건강·안전 -->
+<div class="section" id="health">
+  <div class="section-header">
+    <div class="section-number">05</div>
+    <div class="section-title-group">
+      <div class="section-tag">HEALTH & SAFETY</div>
+      <h2 class="section-title">건강 &middot; 안전</h2>
+    </div>
+    <span class="section-count">3종목</span>
+  </div>
+  <div class="card-grid">
+    <a href="sports/cpr.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">❤️</span>
+      <div class="card-name">심폐소생술</div>
+      <div class="card-type">응급처치</div>
+    </a>
+    <a href="sports/firstaid.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🏥</span>
+      <div class="card-name">응급처치</div>
+      <div class="card-type">응급처치</div>
+    </a>
+    <a href="sports/safety.html" class="card">
+      <span class="card-status"></span>
+      <span class="card-emoji">🛡️</span>
+      <div class="card-name">수업 안전 가이드</div>
+      <div class="card-type">안전</div>
+    </a>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="footer-brand">체육.플레이북</div>
+  <p>광평중학교 &middot; 김주현 &middot; 2026</p>
+  <p><a href="https://www.instagram.com/kimju.zip" target="_blank" style="color:var(--orange);font-weight:600;">@kimju.zip</a></p>
+</footer>
+
+<script>
+(function(){
+  var tabs = document.querySelectorAll('.level-tab');
+  var cards = document.querySelectorAll('.card-grid a.card');
+
+  // 종목 카드 공유(링크/QR) 버튼
+  (function initCardShare(){
+    var overlay = document.createElement('div');
+    overlay.className = 'share-overlay';
+    var modal = document.createElement('div');
+    modal.className = 'share-modal';
+    modal.innerHTML =
+      '<button class="share-close" aria-label="닫기">✕</button>' +
+      '<h3>📤 공유하기</h3>' +
+      '<img class="share-qr" alt="QR 코드">' +
+      '<div class="share-url"></div>' +
+      '<div class="share-actions">' +
+        '<button class="share-action share-copy">🔗 링크 복사</button>' +
+        '<button class="share-action share-native" style="display:none">📤 공유하기</button>' +
+      '</div>';
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+
+    var qrImg = modal.querySelector('.share-qr');
+    var urlBox = modal.querySelector('.share-url');
+    var copyBtn = modal.querySelector('.share-copy');
+    var nativeBtn = modal.querySelector('.share-native');
+    var closeBtn = modal.querySelector('.share-close');
+    if (navigator.share) nativeBtn.style.display = '';
+
+    function openShare(url, title){
+      urlBox.textContent = url;
+      qrImg.src = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(url);
+      overlay.classList.add('open');
+      copyBtn.textContent = '🔗 링크 복사';
+      nativeBtn.onclick = function(){
+        navigator.share({ title: title, url: url }).catch(function(){});
+      };
+    }
+    function closeShare(){ overlay.classList.remove('open'); }
+    copyBtn.addEventListener('click', function(){
+      navigator.clipboard.writeText(urlBox.textContent).then(function(){
+        copyBtn.textContent = '✅ 복사됨!';
+        setTimeout(function(){ copyBtn.textContent = '🔗 링크 복사'; }, 1500);
+      });
+    });
+    closeBtn.addEventListener('click', closeShare);
+    overlay.addEventListener('click', function(e){ if(e.target===overlay) closeShare(); });
+    document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeShare(); });
+
+    cards.forEach(function(card){
+      var btn = document.createElement('button');
+      btn.className = 'card-share';
+      btn.setAttribute('aria-label', '공유');
+      btn.innerHTML = '🔗';
+      btn.addEventListener('click', function(e){
+        e.preventDefault();
+        e.stopPropagation();
+        var href = card.getAttribute('href');
+        var full = new URL(href, location.href).href;
+        var name = card.querySelector('.card-name');
+        openShare(full, name ? name.textContent + ' · 체육 플레이북' : document.title);
+      });
+      card.appendChild(btn);
+    });
+  })();
+
+  // 햄버거 메뉴
+  var hamburger = document.getElementById('hamburger');
+  var mobileMenu = document.getElementById('mobileMenu');
+  if(hamburger && mobileMenu){
+    hamburger.addEventListener('click', function(){
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    });
+    mobileMenu.querySelectorAll('a').forEach(function(link){
+      link.addEventListener('click', function(){
+        hamburger.classList.remove('open');
+        mobileMenu.classList.remove('open');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  var msTab = tabs[0]; // 중학교 탭 참조
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      var level = tab.getAttribute('data-level');
+      // 같은 탭 다시 누르면 중학교로 복귀
+      if(tab.classList.contains('active') && level !== 'ms'){
+        tabs.forEach(function(t){ t.classList.remove('active'); });
+        msTab.classList.add('active');
+        level = 'ms';
+      } else {
+        tabs.forEach(function(t){ t.classList.remove('active'); });
+        tab.classList.add('active');
+      }
+
+      var enNames = {
+        '농구':'Basketball','축구':'Soccer','핸드볼':'Handball','풋살':'Futsal',
+        '배구':'Volleyball','배드민턴':'Badminton','탁구':'Table Tennis',
+        '테니스':'Tennis','야구':'Baseball','티볼':'T-Ball','소프트볼':'Softball',
+        '단거리':'Sprint','이어달리기':'Relay','멀리뛰기':'Long Jump',
+        '높이뛰기':'High Jump','뜀틀':'Vault','매트운동':'Mat Exercise',
+        'PAPS':'PAPS','플로어볼':'Floorball','츄크볼':'Tchoukball',
+        '피클볼':'Pickleball','넷볼':'Netball','킨볼':'Kin-Ball',
+        '플라잉디스크':'Flying Disc','창작댄스':'Creative Dance',
+        '리듬운동':'Rhythmic Movement','줄넘기':'Jump Rope',
+        '심폐소생술':'CPR','응급처치':'First Aid','수업 안전 가이드':'Safety Guide'
+      };
+      var enTypes = {
+        '영역형':'Territory','네트형':'Net','필드형':'Field','육상':'Track',
+        '체조':'Gymnastics','건강체력':'Fitness','뉴스포츠':'New Sport',
+        '표현':'Expression','도전':'Challenge','응급처치':'First Aid','안전':'Safety'
+      };
+      var zhNames = {
+        '농구':'篮球','축구':'足球','핸드볼':'手球','풋살':'五人制足球',
+        '배구':'排球','배드민턴':'羽毛球','탁구':'乒乓球',
+        '테니스':'网球','야구':'棒球','티볼':'T球','소프트볼':'垒球',
+        '단거리':'短跑','이어달리기':'接力赛','멀리뛰기':'跳远',
+        '높이뛰기':'跳高','뜀틀':'跳箱','매트운동':'垫上运动',
+        'PAPS':'PAPS','플로어볼':'地板球','츄크볼':'楚克球',
+        '피클볼':'匹克球','넷볼':'无板篮球','킨볼':'键球',
+        '플라잉디스크':'飞盘','창작댄스':'创意舞蹈',
+        '리듬운동':'韵律活动','줄넘기':'跳绳',
+        '심폐소생술':'心肺复苏','응급처치':'急救','수업 안전 가이드':'课堂安全指南'
+      };
+      var zhTypes = {
+        '영역형':'侵入型','네트형':'网类','필드형':'场地类','육상':'田径',
+        '체조':'体操','건강체력':'体适能','뉴스포츠':'新兴运动',
+        '표현':'表现','도전':'挑战','응급처치':'急救','안전':'安全'
+      };
+      var viNames = {
+        '농구':'Bóng rổ','축구':'Bóng đá','핸드볼':'Bóng ném','풋살':'Futsal',
+        '배구':'Bóng chuyền','배드민턴':'Cầu lông','탁구':'Bóng bàn',
+        '테니스':'Quần vợt','야구':'Bóng chày','티볼':'T-ball','소프트볼':'Bóng mềm',
+        '단거리':'Chạy cự ly ngắn','이어달리기':'Chạy tiếp sức','멀리뛰기':'Nhảy xa',
+        '높이뛰기':'Nhảy cao','뜀틀':'Nhảy ngựa','매트운동':'Thể dục thảm',
+        'PAPS':'PAPS','플로어볼':'Bóng sàn','츄크볼':'Tchoukball',
+        '피클볼':'Pickleball','넷볼':'Netball','킨볼':'Kin-Ball',
+        '플라잉디스크':'Đĩa bay','창작댄스':'Múa sáng tạo',
+        '리듬운동':'Vận động nhịp điệu','줄넘기':'Nhảy dây',
+        '심폐소생술':'Hồi sức tim phổi','응급처치':'Sơ cứu','수업 안전 가이드':'Hướng dẫn an toàn trong giờ học'
+      };
+      var viTypes = {
+        '영역형':'Đối kháng','네트형':'Lưới','필드형':'Sân','육상':'Điền kinh',
+        '체조':'Thể dục','건강체력':'Thể lực','뉴스포츠':'Thể thao mới',
+        '표현':'Biểu diễn','도전':'Thử thách','응급처치':'Sơ cứu','안전':'An toàn'
+      };
+      var filNames = {
+        '농구':'Basketbol','축구':'Soccer','핸드볼':'Handball','풋살':'Futsal',
+        '배구':'Volleyball','배드민턴':'Badminton','탁구':'Table Tennis',
+        '테니스':'Tennis','야구':'Baseball','티볼':'T-Ball','소프트볼':'Softball',
+        '단거리':'Sprint','이어달리기':'Relay','멀리뛰기':'Pagtalon sa Layo',
+        '높이뛰기':'Pagtalon sa Taas','뜀틀':'Vaulting','매트운동':'Ehersisyo sa Banig',
+        'PAPS':'PAPS','플로어볼':'Floorball','츄크볼':'Tchoukball',
+        '피클볼':'Pickleball','넷볼':'Netball','킨볼':'Kin-Ball',
+        '플라잉디스크':'Flying Disc','창작댄스':'Malikhaing Sayaw',
+        '리듬운동':'Ritmikong Galaw','줄넘기':'Luksong Lubid',
+        '심폐소생술':'CPR','응급처치':'Unang Lunas','수업 안전 가이드':'Gabay sa Kaligtasan'
+      };
+      var filTypes = {
+        '영역형':'Pagsalakay','네트형':'Lambat','필드형':'Larangan','육상':'Atletiko',
+        '체조':'Gymnastics','건강체력':'Kalusugan','뉴스포츠':'Bagong Palakasan',
+        '표현':'Pagpapahayag','도전':'Hamon','응급처치':'Unang Lunas','안전':'Kaligtasan'
+      };
+
+      cards.forEach(function(card){
+        if(!card.getAttribute('data-ms-href')){
+          card.setAttribute('data-ms-href', card.getAttribute('href'));
+          var nameEl = card.querySelector('.card-name');
+          var typeEl = card.querySelector('.card-type');
+          if(nameEl) card.setAttribute('data-kr-name', nameEl.textContent);
+          if(typeEl) card.setAttribute('data-kr-type', typeEl.textContent);
+        }
+        var base = card.getAttribute('data-ms-href');
+        var nameEl = card.querySelector('.card-name');
+        var typeEl = card.querySelector('.card-type');
+
+        if(level === 'hs'){
+          card.setAttribute('href', base.replace('.html', '-adv.html'));
+          if(nameEl) nameEl.textContent = card.getAttribute('data-kr-name');
+          if(typeEl) typeEl.textContent = card.getAttribute('data-kr-type');
+        } else if(level === 'en'){
+          card.setAttribute('href', base.replace('.html', '-en.html'));
+          var krName = card.getAttribute('data-kr-name');
+          if(nameEl && enNames[krName]) nameEl.textContent = enNames[krName];
+          var krType = card.getAttribute('data-kr-type');
+          if(typeEl && enTypes[krType]) typeEl.textContent = enTypes[krType];
+        } else if(level === 'zh'){
+          card.setAttribute('href', base.replace('.html', '-zh.html'));
+          var krName = card.getAttribute('data-kr-name');
+          if(nameEl && zhNames[krName]) nameEl.textContent = zhNames[krName];
+          var krType = card.getAttribute('data-kr-type');
+          if(typeEl && zhTypes[krType]) typeEl.textContent = zhTypes[krType];
+        } else if(level === 'vi'){
+          card.setAttribute('href', base.replace('.html', '-vi.html'));
+          var krName = card.getAttribute('data-kr-name');
+          if(nameEl && viNames[krName]) nameEl.textContent = viNames[krName];
+          var krType = card.getAttribute('data-kr-type');
+          if(typeEl && viTypes[krType]) typeEl.textContent = viTypes[krType];
+        } else if(level === 'fil'){
+          card.setAttribute('href', base.replace('.html', '-fil.html'));
+          var krName = card.getAttribute('data-kr-name');
+          if(nameEl && filNames[krName]) nameEl.textContent = filNames[krName];
+          var krType = card.getAttribute('data-kr-type');
+          if(typeEl && filTypes[krType]) typeEl.textContent = filTypes[krType];
+        } else {
+          card.setAttribute('href', base);
+          if(nameEl) nameEl.textContent = card.getAttribute('data-kr-name');
+          if(typeEl) typeEl.textContent = card.getAttribute('data-kr-type');
+        }
+      });
+    });
+  });
+})();
+</script>
+</body>
+</html>

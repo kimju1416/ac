@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>카드뉴스 & 인포그래픽 스튜디오 V1.5</title>
+  <meta name="description" content="AI 프롬프트로 교육용 카드뉴스와 인포그래픽을 빠르고 쉽게 제작할 수 있는 앱">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="카드뉴스 &amp; 인포그래픽 스튜디오 V1.5">
+  <meta property="og:description" content="AI 프롬프트로 교육용 카드뉴스와 인포그래픽을 빠르고 쉽게 제작할 수 있는 앱">
+  <meta property="og:url" content="https://kimju.kr/card/">
+  <meta property="og:image" content="https://kimju.kr/card/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { 
+      font-family: 'Pretendard', sans-serif; 
+      background-color: #f0f9ff; 
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+    /* 스크롤바 디자인 */
+    .custom-scroll::-webkit-scrollbar { width: 6px; }
+    .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #38bdf8; border-radius: 3px; }
+    .custom-scroll::-webkit-scrollbar-thumb:hover { background: #0ea5e9; }
+    
+    .chip { 
+      cursor: pointer; 
+      transition: all 0.2s ease-out; 
+      font-size: 0.75rem; 
+      border-width: 1px; 
+      user-select: none; 
+      display: inline-flex; 
+      align-items: center; 
+      gap: 0.3rem; 
+      font-weight: 600; 
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05); 
+    }
+    .chip:hover { transform: translateY(-2px); box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.1); }
+    .chip:active { transform: scale(0.95); }
+    
+    .tab-active { border-bottom: 3px solid #0284c7; color: #0c4a6e; font-weight: 800; background-color: #e0f2fe; }
+    .tab-inactive { color: #9ca3af; font-weight: 600; }
+    
+    .section-title { 
+      position: sticky; 
+      top: 0; 
+      background: rgba(240, 249, 255, 0.98); 
+      backdrop-filter: blur(8px); 
+      padding: 0.75rem 0; 
+      z-index: 10; 
+      border-bottom: 1px solid #bae6fd; 
+      margin-bottom: 1rem; 
+      display: flex; 
+      align-items: center; 
+      color: #0c4a6e; 
+    }
+    
+    .example-card { transition: all 0.3s; border: 1px solid #bae6fd; }
+    .example-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px -5px rgba(14, 165, 233, 0.3); border-color: #0ea5e9; }
+    
+    /* 제작 유형 버튼 스타일 */
+    .type-btn { transition: all 0.2s; border: 2px solid transparent; }
+    .type-btn-active { border-color: #0ea5e9; background-color: #e0f2fe; color: #0284c7; font-weight: 800; }
+    .type-btn-inactive { border-color: transparent; background-color: #f3f4f6; color: #6b7280; }
+
+    @media (max-width: 768px) {
+      .chip { font-size: 0.7rem; padding: 0.375rem 0.75rem; }
+      .section-title { font-size: 0.75rem; }
+    }
+    
+    @media (min-width: 769px) {
+      .pc-left-scroll {
+        height: 100%;
+        overflow-y: auto;
+      }
+      .pc-right-fixed {
+        height: 100%;
+        overflow-y: auto !important; 
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-gray-800">
+
+  <header class="h-14 md:h-16 bg-white border-b border-sky-200 flex items-center justify-between px-4 md:px-6 shadow-sm z-30 shrink-0">
+    <div class="flex items-center gap-3 md:gap-6">
+      <div class="flex items-center gap-2 md:gap-3">
+        <div class="w-8 h-8 md:w-10 md:h-10 bg-sky-400 rounded-xl flex items-center justify-center text-white text-xl md:text-2xl shadow-sky-200 shadow-lg animate-pulse">📊</div>
+        <div>
+            <h1 class="text-base md:text-xl font-black text-gray-900 tracking-tight leading-none">카드뉴스 & 인포그래픽 스튜디오</h1>
+            <p class="text-[10px] md:text-11px text-sky-600 font-bold mt-0.5 md:mt-1">AI Prompt Builder V1.5</p>
+        </div>
+      </div>
+      <nav class="hidden md:flex space-x-2 h-16 items-end pb-0.5">
+        <button onclick="switchTab('builder')" id="btn-builder" class="tab-active px-4 py-3 rounded-t-lg transition-colors"><i class="fas fa-edit mr-2"></i>주문서 작성</button>
+        <button onclick="switchTab('cardnews')" id="btn-cardnews" class="tab-inactive px-4 py-3 rounded-t-lg transition-colors"><i class="fas fa-images mr-2"></i>카드뉴스 예시</button>
+        <button onclick="switchTab('infographic')" id="btn-infographic" class="tab-inactive px-4 py-3 rounded-t-lg transition-colors"><i class="fas fa-chart-pie mr-2"></i>인포그래픽 예시</button>
+        <button onclick="switchTab('guide')" id="btn-guide" class="tab-inactive px-4 py-3 rounded-t-lg transition-colors"><i class="fas fa-book-open mr-2"></i>사용 설명서</button>
+      </nav>
+    </div>
+    <div class="flex items-center gap-2 md:gap-3">
+        <button onclick="openResetModal()" class="bg-gray-50 hover:bg-red-50 text-gray-500 hover:text-red-500 text-[10px] md:text-xs font-bold px-2 md:px-4 py-1.5 md:py-2 rounded-xl border border-gray-200 transition-colors flex items-center gap-1 md:gap-2">
+            <i class="fas fa-rotate-left"></i> <span class="hidden md:inline">초기화</span>
+        </button>
+    </div>
+  </header>
+
+  <nav class="md:hidden flex border-b border-sky-200 bg-white sticky top-0 z-20">
+    <button onclick="switchTab('builder')" id="btn-builder-mobile" class="tab-active flex-1 py-2.5 text-xs transition-colors"><i class="fas fa-edit mr-1"></i>주문서</button>
+    <button onclick="switchTab('cardnews')" id="btn-cardnews-mobile" class="tab-inactive flex-1 py-2.5 text-xs transition-colors"><i class="fas fa-images mr-1"></i>카드뉴스</button>
+    <button onclick="switchTab('infographic')" id="btn-infographic-mobile" class="tab-inactive flex-1 py-2.5 text-xs transition-colors"><i class="fas fa-chart-pie mr-1"></i>인포그래픽</button>
+    <button onclick="switchTab('guide')" id="btn-guide-mobile" class="tab-inactive flex-1 py-2.5 text-xs transition-colors"><i class="fas fa-book-open mr-1"></i>설명서</button>
+  </nav>
+
+  <main id="view-builder" class="flex-1 flex flex-row relative" style="height: calc(100vh - 4rem);">
+    <section id="mobile-style-panel" class="w-1/2 bg-[#f0f9ff] border-r border-sky-200 flex flex-col md:relative inset-0 z-40 md:z-auto custom-scroll pc-left-scroll" style="height: 100vh;">
+      
+      <div class="flex-1 overflow-y-auto custom-scroll p-3 md:p-6">
+        <div class="max-w-3xl mx-auto space-y-6 md:space-y-12 pb-32 md:pb-40">
+        
+        <div>
+          <h2 class="section-title text-xs md:text-sm font-bold">
+            <span class="w-5 h-5 md:w-6 md:h-6 rounded-lg bg-purple-500 text-white flex items-center justify-center mr-2 text-[10px] md:text-xs shadow-sm">
+              <i class="fas fa-palette"></i>
+            </span> 
+            디자인 스타일 (Design Style)
+          </h2>
+          <div class="bg-white/60 p-3 md:p-5 rounded-2xl border border-purple-100 shadow-sm hover:bg-white/80 transition-colors">
+              
+              <p class="text-[9px] md:text-[10px] text-purple-700 font-extrabold mb-2 md:mb-3 tracking-widest uppercase">
+                🧩 Manga & Webtoon (만화/웹툰)
+              </p>
+              <div class="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
+                 <div onclick="addText('in-style', '굵은 외곽선과 단순한 채색의 친근한 2D 학습만화 사람 캐릭터')" class="chip bg-purple-50 border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full font-bold">📘 캐주얼 학습만화</div>
+                 
+                 <div onclick="addText('in-style', 'K-웹툰 일상툰 스타일, 귀여운 그림체와 공감가는 표정')" class="chip bg-purple-50 border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🇰🇷 K-일상툰</div>
+                 <div onclick="addText('in-style', '로맨스 웹툰 스타일, 화려한 작화와 반짝이는 효과')" class="chip bg-purple-50 border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">💖 로맨스 웹툰</div>
+                 <div onclick="addText('in-style', '지브리 스튜디오 스타일, 따뜻한 수채화 감성과 힐링 분위기')" class="chip bg-purple-50 border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🌿 지브리 감성</div>
+                 <div onclick="addText('in-style', '90년대 레트로 애니메이션, 셀화 느낌과 시티팝 감성')" class="chip bg-purple-50 border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📼 90s 레트로 애니</div>
+                 <div onclick="addText('in-style', '미국 코믹북 스타일, 굵은 선과 강렬한 말풍선 효과')" class="chip bg-purple-50 border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🦸 미국 코믹북</div>
+                 <div onclick="addText('in-style', '디즈니/픽사 3D 애니메이션 스타일, 입체적이고 풍부한 표정')" class="chip bg-purple-50 border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🧸 디즈니/픽사 3D</div>
+                 <div onclick="addText('in-style', '인스타툰 스타일, 대충 그린 듯한 하찮고 귀여운 낙서 느낌')" class="chip bg-purple-50 border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🖍️ 낙서/인스타툰</div>
+                 <div onclick="addText('in-style', '일본 소년만화 스타일, 역동적인 펜 터치와 집중선')" class="chip bg-purple-50 border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🔥 소년만화</div>
+                 <div onclick="addText('in-style', '흑백 만화(Manga) 스타일, 스크린톤과 펜 선 느낌')" class="chip bg-purple-50 border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">✒️ 흑백 만화</div>
+              </div>
+
+              <p class="text-[9px] md:text-[10px] text-purple-700 font-extrabold mb-2 md:mb-3 tracking-widest uppercase">
+                ✨ Minimal & Modern
+              </p>
+              <div class="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
+                 <div onclick="addText('in-style', '깔끔한 미니멀 디자인, 여백이 많고 심플한 레이아웃')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">⚪ 미니멀</div>
+                 <div onclick="addText('in-style', '모던한 플랫 디자인, 단순한 도형과 아이콘 사용')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📱 플랫 디자인</div>
+                 <div onclick="addText('in-style', '깔끔한 라인 아트 스타일, 단색 선으로 표현')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📏 라인 아트</div>
+                 <div onclick="addText('in-style', '뉴모피즘 디자인, 부드러운 그림자와 입체감')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🔘 뉴모피즘</div>
+                 <div onclick="addText('in-style', '글라스모피즘, 반투명 유리 질감의 세련된 느낌')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">💎 글라스모피즘</div>
+                 <div onclick="addText('in-style', '심플한 아이소메트릭 디자인, 45도 각도의 입체 뷰')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📐 아이소메트릭</div>
+                 <div onclick="addText('in-style', '기하학적 패턴, 도형이 규칙적으로 배치된 디자인')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🔷 기하학적</div>
+                 <div onclick="addText('in-style', '모노톤 흑백 디자인, 검정과 흰색만 사용')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">⬛ 모노톤</div>
+                 <div onclick="addText('in-style', '스위스 국제 스타일, 그리드 기반의 깔끔한 타이포그래피')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🇨🇭 스위스 스타일</div>
+                 <div onclick="addText('in-style', '바우하우스 스타일, 기능미와 원색적인 도형')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🏗️ 바우하우스</div>
+              </div>
+
+              <p class="text-[9px] md:text-[10px] text-purple-700 font-extrabold mb-2 md:mb-3 tracking-widest uppercase">
+                🎨 Illustration & Art
+              </p>
+              <div class="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
+                 <div onclick="addText('in-style', '귀여운 캐릭터 일러스트, 동글동글한 SD 캐릭터')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🐻 캐릭터</div>
+                 <div onclick="addText('in-style', '손그림 스케치 느낌, 연필 질감이 살아있는 드로잉')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">✏️ 스케치</div>
+                 <div onclick="addText('in-style', '수채화 일러스트, 물이 번진 듯한 부드러운 느낌')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🎨 수채화</div>
+                 <div onclick="addText('in-style', '웹툰 스타일, 만화 같은 선화와 채색')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">💬 웹툰</div>
+                 <div onclick="addText('in-style', '미국 코믹북 스타일, 히어로물 같은 강렬한 느낌')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🦸 코믹북</div>
+                 <div onclick="addText('in-style', '팝 아트 스타일, 앤디 워홀 풍의 강렬한 색감')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🥫 팝 아트</div>
+                 <div onclick="addText('in-style', '픽셀 아트, 8비트 레트로 게임 감성')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">👾 픽셀 아트</div>
+                 <div onclick="addText('in-style', '종이 컷아웃(Paper Cutout), 종이를 오려 붙인 듯한 느낌')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">✂️ 페이퍼 컷</div>
+                 <div onclick="addText('in-style', '콜라주 아트, 사진과 텍스트를 오려 붙인 힙한 느낌')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🖼️ 콜라주</div>
+                 <div onclick="addText('in-style', '초현실주의(Surrealism), 꿈속 같은 몽환적인 이미지')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🌫️ 초현실주의</div>
+                 <div onclick="addText('in-style', '아르누보, 곡선미가 돋보이는 우아한 장식')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">⚜️ 아르누보</div>
+                 <div onclick="addText('in-style', '아르데코, 화려하고 기하학적인 고전미')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🏛️ 아르데코</div>
+              </div>
+
+              <p class="text-[9px] md:text-[10px] text-purple-700 font-extrabold mb-2 md:mb-3 tracking-widest uppercase">
+                🚀 Trendy & 3D
+              </p>
+              <div class="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
+                 <div onclick="addText('in-style', '인스타그램 감성, 파스텔톤과 세련된 레이아웃')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📸 인스타 감성</div>
+                 <div onclick="addText('in-style', 'Y2K 레트로, 2000년대 사이버틱 감성')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">💿 Y2K</div>
+                 <div onclick="addText('in-style', '사이버펑크, 네온 사인과 어두운 도시 배경')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🤖 사이버펑크</div>
+                 <div onclick="addText('in-style', '베이퍼웨이브, 80년대 레트로와 네온의 조화')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🌴 베이퍼웨이브</div>
+                 <div onclick="addText('in-style', '3D 렌더링, 매끄럽고 입체적인 질감')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🧊 3D 렌더</div>
+                 <div onclick="addText('in-style', '클레이모피즘, 찰흙으로 빚은 듯한 귀여운 3D')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🧸 클레이 3D</div>
+                 <div onclick="addText('in-style', '홀로그램 효과, 무지개빛 반사 재질')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">✨ 홀로그램</div>
+              </div>
+              
+              <p class="text-[9px] md:text-[10px] text-purple-700 font-extrabold mb-2 md:mb-3 tracking-widest uppercase">
+                🔤 Typography (텍스트 스타일)
+              </p>
+              <div class="flex flex-wrap gap-1.5 md:gap-2">
+                 <div onclick="addText('in-style', '굵은 고딕체(San-serif), 가독성 높고 힘있는 폰트')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">𝐓 굵은 고딕</div>
+                 <div onclick="addText('in-style', '세리프(Serif)체, 우아하고 클래식한 명조 느낌')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">T 세리프/명조</div>
+                 <div onclick="addText('in-style', '손글씨(Handwriting) 폰트, 친근하고 감성적인 느낌')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">✍️ 손글씨</div>
+                 <div onclick="addText('in-style', '캘리그라피, 붓으로 쓴 듯한 역동적인 서체')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🖌️ 캘리그라피</div>
+                 <div onclick="addText('in-style', '타이포그래피 아트, 글자 자체가 디자인 요소가 됨')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🎨 타이포 아트</div>
+                 <div onclick="addText('in-style', '레트로 픽셀 폰트, 게임 같은 글씨체')" class="chip bg-white border-purple-300 text-purple-900 px-2 md:px-3 py-1 md:py-1.5 rounded-full">👾 픽셀 폰트</div>
+              </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 class="section-title text-xs md:text-sm font-bold">
+            <span class="w-5 h-5 md:w-6 md:h-6 rounded-lg bg-blue-500 text-white flex items-center justify-center mr-2 text-[10px] md:text-xs shadow-sm">
+              <i class="fas fa-th-large"></i>
+            </span> 
+            레이아웃 구조 (Layout Structure)
+          </h2>
+          <div class="bg-white/60 p-3 md:p-5 rounded-2xl border border-blue-100 shadow-sm hover:bg-white/80 transition-colors">
+              
+              <p class="w-full text-[9px] md:text-[10px] text-blue-700 font-extrabold mb-1 mt-1 tracking-widest uppercase">
+                📱 Card News Layout
+              </p>
+              <div class="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
+                 <div onclick="addText('in-layout', '표지 카드: 제목과 핵심 메시지가 크게 들어간 첫 장')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📄 표지형</div>
+                 <div onclick="addText('in-layout', '카드뉴스 캐러셀(Carousel): 옆으로 넘기며 이어지는 파노라마 구성')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🎞️ 캐러셀/파노라마</div>
+                 <div onclick="addText('in-layout', '단계별 카드: 1단계, 2단계, 3단계로 순서대로 설명')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🔢 단계별</div>
+                 <div onclick="addText('in-layout', '타임라인 카드: 시간 순서대로 흐르는 구성')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📅 타임라인</div>
+                 <div onclick="addText('in-layout', 'Before & After 비교: 왼쪽 전, 오른쪽 후로 나뉜 구성')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">⚖️ 전후 비교</div>
+                 <div onclick="addText('in-layout', 'VS 대결 구도: 두 가지를 비교 분석하는 레이아웃')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">⚔️ VS 대결</div>
+                 <div onclick="addText('in-layout', '리스트형 카드: 체크리스트나 목록이 나열된 구성')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">✅ 리스트형</div>
+                 <div onclick="addText('in-layout', '퀴즈형 카드: 질문과 답변이 있는 인터랙티브한 구성')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">❓ 퀴즈형</div>
+                 <div onclick="addText('in-layout', 'Q&A 카드: 궁금증을 풀어주는 질문답변 형식')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">💬 Q&A</div>
+                 <div onclick="addText('in-layout', '스토리텔링 카드: 이야기가 흘러가는 연속성 있는 구성')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📖 스토리텔링</div>
+                 <div onclick="addText('in-layout', '인용구 카드: 명언이나 핵심 메시지가 크게 강조된 구성')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">💭 인용구</div>
+                 <div onclick="addText('in-layout', 'Top 5/Top 10 랭킹: 순위가 매겨진 리스트 형식')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🏆 랭킹형</div>
+              </div>
+              <p class="w-full text-[9px] md:text-[10px] text-blue-700 font-extrabold mb-1 mt-4 tracking-widest uppercase">
+                📊 Infographic Layout
+              </p>
+              <div class="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
+                 <div onclick="addText('in-layout', '플로우차트: 화살표로 흐름을 보여주는 순서도')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">➡️ 플로우차트</div>
+                 <div onclick="addText('in-layout', '파이 차트/도넛 차트: 비율을 표현하는 원형 그래프')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🍰 파이/도넛</div>
+                 <div onclick="addText('in-layout', '막대 그래프: 수치를 비교하는 세로/가로 막대')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📊 막대 그래프</div>
+                 <div onclick="addText('in-layout', 'SWOT 분석: 강점, 약점, 기회, 위협 4분면 구조')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">⊞ SWOT 분석</div>
+                 <div onclick="addText('in-layout', '벤 다이어그램: 겹치는 원으로 집합 관계 표현')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">⭕ 벤 다이어그램</div>
+                 <div onclick="addText('in-layout', '피라미드 구조: 계층이나 단계를 삼각형으로 표현')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🔺 피라미드</div>
+                 <div onclick="addText('in-layout', '깔때기(퍼널) 차트: 단계별 감소를 표현하는 구조')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🔽 깔때기(퍼널)</div>
+                 <div onclick="addText('in-layout', '지도 인포그래픽: 지역별 데이터를 지도에 표시')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🗺️ 지도형</div>
+                 <div onclick="addText('in-layout', '로드맵: 목표 달성까지의 과정을 굽이진 길로 표현')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🛣️ 로드맵</div>
+                 <div onclick="addText('in-layout', '마인드맵: 중심에서 가지치듯 퍼지는 구조')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🧠 마인드맵</div>
+                 <div onclick="addText('in-layout', '사이클/순환 구조: 반복되는 과정을 원형으로 표현')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🔄 사이클</div>
+                 <div onclick="addText('in-layout', '매트릭스 그리드: 2x2 또는 3x3 격자 구조')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">⬜ 매트릭스</div>
+                 <div onclick="addText('in-layout', '비교 테이블: 여러 항목을 표로 비교')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📋 비교표</div>
+                 <div onclick="addText('in-layout', '아이콘 배열(Isotype): 아이콘 개수로 통계 표현')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🔢 아이콘 통계</div>
+                 <div onclick="addText('in-layout', '레이더 차트: 여러 항목의 점수를 다각형으로 표현')" class="chip bg-blue-50 border-blue-200 text-blue-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🕸️ 레이더 차트</div>
+              </div>
+          </div>
+        </div>
+
+        <div>
+            <h2 class="section-title text-xs md:text-sm font-bold">
+              <span class="w-5 h-5 md:w-6 md:h-6 rounded-lg bg-pink-500 text-white flex items-center justify-center mr-2 text-[10px] md:text-xs shadow-sm">
+                <i class="fas fa-fill-drip"></i>
+              </span> 
+              색상 & 분위기 (Color & Mood)
+            </h2>
+            <div class="bg-white/60 p-3 md:p-5 rounded-2xl border border-pink-100 shadow-sm hover:bg-white/80 transition-colors">
+                
+                <p class="w-full text-[9px] md:text-[10px] text-pink-700 font-extrabold mb-1 mt-1 tracking-widest uppercase">
+                    🗓️ Theme & Season (테마/시즌)
+                </p>
+                <div class="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
+                   <div onclick="addText('in-color', '봄 테마: 벚꽃 핑크와 새싹 그린, 화사한 느낌')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🌸 봄</div>
+                   <div onclick="addText('in-color', '여름 테마: 시원한 바다 블루와 쨍한 옐로우')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🏖️ 여름</div>
+                   <div onclick="addText('in-color', '가을 테마: 낙엽 브라운과 깊은 오렌지')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🍁 가을</div>
+                   <div onclick="addText('in-color', '겨울 테마: 눈 결정 화이트와 차가운 블루')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">❄️ 겨울</div>
+                   <div onclick="addText('in-color', '크리스마스: 레드, 그린, 골드 조합')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🎄 크리스마스</div>
+                   <div onclick="addText('in-color', '새해/설날: 전통적인 오방색 또는 고급스러운 골드')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🧧 새해/명절</div>
+                   <div onclick="addText('in-color', '할로윈: 호박 오렌지와 다크 퍼플, 검정')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🎃 할로윈</div>
+                   <div onclick="addText('in-color', '학교 시험 기간: 집중력을 높이는 블루/민트')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📝 시험 기간</div>
+                   <div onclick="addText('in-color', '학교 축제: 형광 네온과 폭죽 같은 화려함')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🎉 축제</div>
+                   <div onclick="addText('in-color', '가정통신문: 차분하고 신뢰감 있는 베이지/그레이')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📨 가정통신문</div>
+                </div>
+
+                <p class="w-full text-[9px] md:text-[10px] text-pink-700 font-extrabold mb-1 mt-4 tracking-widest uppercase">
+                   🎨 Color Palette (색상 조합)
+                </p>
+                <div class="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
+                   <div onclick="addText('in-color', '파스텔톤 색상: 부드럽고 연한 색감')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🌸 파스텔</div>
+                   <div onclick="addText('in-color', '비비드 컬러: 강렬하고 선명한 원색')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🔴 비비드</div>
+                   <div onclick="addText('in-color', '모노톤: 흑백 또는 단색 계열')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">⚫⚪ 모노톤</div>
+                   <div onclick="addText('in-color', '네온 컬러: 형광색의 강렬한 느낌')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">💡 네온</div>
+                   <div onclick="addText('in-color', '어스톤: 자연스러운 갈색/베이지 계열')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🌿 어스톤</div>
+                   <div onclick="addText('in-color', '쿨톤: 파랑/보라/청록 계열의 차가운 색')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">❄️ 쿨톤</div>
+                   <div onclick="addText('in-color', '웜톤: 빨강/주황/노랑 계열의 따뜻한 색')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🔥 웜톤</div>
+                   <div onclick="addText('in-color', '듀오톤: 두 가지 색상만 사용')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🔵🟡 듀오톤</div>
+                   <div onclick="addText('in-color', '그라데이션: 색이 자연스럽게 변하는 효과')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🌈 그라데이션</div>
+                   <div onclick="addText('in-color', '메탈릭: 금속 광택이 있는 색감')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">✨ 메탈릭</div>
+                   <div onclick="addText('in-color', '빈티지 톤: 바랜 듯한 레트로 색감')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📼 빈티지</div>
+                </div>
+
+                <p class="w-full text-[9px] md:text-[10px] text-pink-700 font-extrabold mb-1 mt-4 tracking-widest uppercase">
+                   ✨ Mood & Tone (분위기/톤)
+                </p>
+                <div class="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
+                   <div onclick="addText('in-color', '밝고 경쾌한 분위기, 활기찬 느낌')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">☀️ 밝고 경쾌함</div>
+                   <div onclick="addText('in-color', '차분하고 고급스러운 분위기')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🎩 고급스러움</div>
+                   <div onclick="addText('in-color', '귀엽고 사랑스러운 분위기')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🐰 귀여움</div>
+                   <div onclick="addText('in-color', '프로페셔널하고 신뢰감 있는 분위기')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">💼 프로페셔널</div>
+                   <div onclick="addText('in-color', '트렌디하고 힙한 분위기')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">😎 트렌디/힙</div>
+                   <div onclick="addText('in-color', '감성적이고 몽환적인 분위기')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🌙 몽환적</div>
+                   <div onclick="addText('in-color', '역동적이고 에너지 넘치는 분위기')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">⚡ 역동적</div>
+                   <div onclick="addText('in-color', '긴박하고 긴장감 있는 분위기')" class="chip bg-pink-50 border-pink-200 text-pink-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🚨 긴장감</div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+          <h2 class="section-title text-xs md:text-sm font-bold">
+            <span class="w-5 h-5 md:w-6 md:h-6 rounded-lg bg-green-500 text-white flex items-center justify-center mr-2 text-[10px] md:text-xs shadow-sm">
+              <i class="fas fa-bullseye"></i>
+            </span> 
+            용도별 설정 (Purpose & Target)
+          </h2>
+          <div class="bg-white/60 p-3 md:p-5 rounded-2xl border border-green-100 shadow-sm hover:bg-white/80 transition-colors">
+             <p class="w-full text-[9px] md:text-[10px] text-green-700 font-extrabold mb-1 mt-1 tracking-widest uppercase">
+                🚀 Platform (플랫폼)
+             </p>
+             <div class="flex flex-wrap gap-1.5 md:gap-2 mb-4">
+                <div onclick="addText('in-purpose', '인스타그램 피드용: 1:1 정사각형 비율')" class="chip bg-green-50 border-green-200 text-green-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📸 인스타 피드</div>
+                <div onclick="addText('in-purpose', '인스타그램 스토리용: 9:16 세로 비율')" class="chip bg-green-50 border-green-200 text-green-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📱 인스타 스토리</div>
+                <div onclick="addText('in-purpose', '페이스북 포스트용: 1200x630px 가로형')" class="chip bg-green-50 border-green-200 text-green-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">👍 페이스북</div>
+                <div onclick="addText('in-purpose', '유튜브 커뮤니티용: 16:9 가로 비율')" class="chip bg-green-50 border-green-200 text-green-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">▶️ 유튜브</div>
+                <div onclick="addText('in-purpose', '블로그 썸네일용: 800x400px 가로형')" class="chip bg-green-50 border-green-200 text-green-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📝 블로그</div>
+                <div onclick="addText('in-purpose', '프레젠테이션용: 16:9 슬라이드 비율')" class="chip bg-green-50 border-green-200 text-green-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">💼 PPT</div>
+                <div onclick="addText('in-purpose', '교육 자료용: 명확하고 읽기 쉬운 구성')" class="chip bg-green-50 border-green-200 text-green-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📚 교육용</div>
+                <div onclick="addText('in-purpose', '마케팅 광고용: 눈길을 끄는 강렬한 디자인')" class="chip bg-green-50 border-green-200 text-green-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📢 마케팅</div>
+                <div onclick="addText('in-purpose', '포스터 인쇄용: A4 세로 비율, 고해상도')" class="chip bg-green-50 border-green-200 text-green-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">🖼️ 포스터 인쇄</div>
+             </div>
+
+             <p class="w-full text-[9px] md:text-[10px] text-green-700 font-extrabold mb-1 mt-4 tracking-widest uppercase">
+                📏 Size Selection (사이즈 선택)
+             </p>
+             <div class="flex flex-wrap gap-1.5 md:gap-2">
+                <div onclick="addText('in-size', '정사각형 (1:1 비율)')" class="chip bg-green-50 border-green-200 text-green-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">⬜ 정사각형(1:1)</div>
+                <div onclick="addText('in-size', '가로형 (16:9 비율)')" class="chip bg-green-50 border-green-200 text-green-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">↔️ 가로형(16:9)</div>
+                <div onclick="addText('in-size', '세로형 (9:16 비율)')" class="chip bg-green-50 border-green-200 text-green-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">↕️ 세로형(9:16)</div>
+                <div onclick="addText('in-size', 'A4 세로 비율')" class="chip bg-green-50 border-green-200 text-green-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📄 A4 세로</div>
+                <div onclick="addText('in-size', 'A4 가로 비율')" class="chip bg-green-50 border-green-200 text-green-800 px-2 md:px-3 py-1 md:py-1.5 rounded-full">📑 A4 가로</div>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      </div>
+    </section>
+
+    <section class="w-1/2 md:fixed md:right-0 md:top-16 bg-[#f0f9ff] flex flex-col relative pc-right-fixed custom-scroll" style="height: calc(100vh - 4rem);">
+      
+      <div class="flex-1 p-3 md:p-4 pb-20"> <div class="max-w-xl mx-auto space-y-2 md:space-y-3">
+            
+          <div class="group bg-white p-3 md:p-4 rounded-2xl border border-sky-100 shadow-sm mb-2">
+             <label class="flex items-center text-sm md:text-base font-black text-gray-800 mb-2">
+                 <span class="w-6 h-6 md:w-7 md:h-7 bg-gray-900 text-white rounded-lg flex items-center justify-center text-xs md:text-sm mr-2 shadow-sm">0</span>
+                 제작 유형 (Type) <span class="text-xs text-red-500 ml-2 font-normal">*필수</span>
+             </label>
+             <div class="flex gap-2 mb-3">
+                 <button onclick="setType('cardnews')" id="btn-type-cardnews" class="type-btn type-btn-inactive flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm shadow-sm flex items-center justify-center gap-2">
+                     <i class="fas fa-images"></i> 카드뉴스
+                 </button>
+                 <button onclick="setType('infographic')" id="btn-type-infographic" class="type-btn type-btn-inactive flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm shadow-sm flex items-center justify-center gap-2">
+                     <i class="fas fa-chart-pie"></i> 인포그래픽
+                 </button>
+             </div>
+             
+             <div id="slide-count-area" class="hidden animate-fade-in-down border-t border-dashed border-gray-200 pt-3">
+                 <label class="flex items-center text-xs md:text-sm font-bold text-gray-700 mb-2">
+                     <i class="fas fa-layer-group text-sky-500 mr-1.5"></i> 몇 장으로 만들까요?
+                 </label>
+                 <div class="flex items-center gap-2">
+                     <input type="number" id="in-page-count" placeholder="6" class="w-20 p-2 bg-gray-50 border border-gray-200 rounded-lg text-center font-bold text-gray-800 focus:ring-2 focus:ring-sky-400 focus:outline-none" min="1" max="30">
+                     <span class="text-sm text-gray-500">장 (Slides)</span>
+                     <div class="flex gap-1 ml-auto">
+                        <button onclick="setPageCount(4)" class="px-2 py-1 bg-white border border-gray-200 rounded text-xs text-gray-500 hover:bg-sky-50 hover:text-sky-600 transition">4장</button>
+                        <button onclick="setPageCount(6)" class="px-2 py-1 bg-white border border-gray-200 rounded text-xs text-gray-500 hover:bg-sky-50 hover:text-sky-600 transition">6장</button>
+                        <button onclick="setPageCount(10)" class="px-2 py-1 bg-white border border-gray-200 rounded text-xs text-gray-500 hover:bg-sky-50 hover:text-sky-600 transition">10장</button>
+                     </div>
+                 </div>
+             </div>
+             <input type="hidden" id="in-type" value="">
+          </div>
+
+          <div class="group">
+             <label class="flex items-center text-sm md:text-base font-black text-gray-800 mb-1 md:mb-1.5">
+                 <span class="w-6 h-6 md:w-7 md:h-7 bg-gray-900 text-white rounded-lg flex items-center justify-center text-xs md:text-sm mr-2 shadow-sm">1</span>
+                 주제와 내용
+             </label>
+             <textarea id="in-subject" rows="2" class="w-full p-2 md:p-3 bg-white border border-gray-200 rounded-2xl focus:ring-2 focus:ring-sky-400 focus:outline-none resize-none transition text-sm md:text-base text-gray-800 placeholder-gray-400 shadow-sm" placeholder="예: 건강한 아침 루틴 5가지"></textarea>
+          </div>
+
+          <div class="group">
+            <label class="flex items-center text-sm md:text-base font-black text-purple-700 mb-1 md:mb-1.5">
+                <span class="w-6 h-6 md:w-7 md:h-7 bg-purple-600 text-white rounded-lg flex items-center justify-center text-xs md:text-sm mr-2 shadow-sm">2</span>
+                디자인 스타일
+            </label>
+            <textarea id="in-style" rows="2" class="w-full p-2 md:p-3 bg-purple-50/50 border border-purple-100 rounded-2xl focus:ring-2 focus:ring-purple-400 focus:outline-none resize-none transition text-xs md:text-sm text-gray-800 shadow-sm" placeholder="미니멀, 웹툰 스타일, 3D 렌더 등..."></textarea>
+          </div>
+          
+          <div class="group">
+             <label class="flex items-center text-sm md:text-base font-black text-blue-700 mb-1 md:mb-1.5">
+                 <span class="w-6 h-6 md:w-7 md:h-7 bg-blue-600 text-white rounded-lg flex items-center justify-center text-xs md:text-sm mr-2 shadow-sm">3</span>
+                 레이아웃 구조
+             </label>
+             <textarea id="in-layout" rows="2" class="w-full p-2 md:p-3 bg-blue-50/50 border border-blue-100 rounded-2xl focus:ring-2 focus:ring-blue-400 focus:outline-none resize-none transition text-xs md:text-sm text-gray-800 shadow-sm" placeholder="타임라인, 단계별, 비교형 등"></textarea>
+          </div>
+
+          <div class="group">
+            <label class="flex items-center text-sm md:text-base font-black text-pink-700 mb-1 md:mb-1.5">
+                <span class="w-6 h-6 md:w-7 md:h-7 bg-pink-600 text-white rounded-lg flex items-center justify-center text-xs md:text-sm mr-2 shadow-sm">4</span>
+                색상 & 분위기
+            </label>
+            <textarea id="in-color" rows="2" class="w-full p-2 md:p-3 bg-pink-50/50 border border-pink-100 rounded-2xl focus:ring-2 focus:ring-pink-400 focus:outline-none resize-none transition text-xs md:text-sm text-gray-800 shadow-sm" placeholder="파스텔톤, 밝고 경쾌한 분위기 등"></textarea>
+          </div>
+
+          <div class="group">
+            <label class="flex items-center text-sm md:text-base font-black text-green-700 mb-1 md:mb-1.5">
+                <span class="w-6 h-6 md:w-7 md:h-7 bg-green-600 text-white rounded-lg flex items-center justify-center text-xs md:text-sm mr-2 shadow-sm">5</span>
+                용도 및 플랫폼
+            </label>
+            <input type="text" id="in-purpose" class="w-full p-2 md:p-3 bg-green-50/50 border border-green-100 rounded-2xl focus:ring-2 focus:ring-green-400 focus:outline-none transition text-xs md:text-sm text-gray-800 shadow-sm" placeholder="인스타그램 피드용, 1:1 비율">
+          </div>
+
+          <div class="group">
+            <label class="flex items-center text-sm md:text-base font-black text-green-700 mb-1 md:mb-1.5">
+                <span class="w-6 h-6 md:w-7 md:h-7 bg-green-600 text-white rounded-lg flex items-center justify-center text-xs md:text-sm mr-2 shadow-sm">6</span>
+                캔버스 사이즈
+            </label>
+            <input type="text" id="in-size" class="w-full p-2 md:p-3 bg-green-50/50 border border-green-100 rounded-2xl focus:ring-2 focus:ring-green-400 focus:outline-none transition text-xs md:text-sm text-gray-800 shadow-sm" placeholder="정사각형, 가로형, 세로형 등">
+          </div>
+
+          <div class="group">
+             <label class="flex items-center text-xs md:text-sm font-bold text-red-500 mb-1.5 mt-2 md:mt-3">
+                 <i class="fas fa-ban mr-2"></i>제외할 요소 (선택)
+             </label>
+             <input type="text" id="in-negative" class="w-full p-2.5 md:p-3 bg-red-50/50 border border-red-100 rounded-xl focus:ring-2 focus:ring-red-400 focus:outline-none transition text-xs md:text-sm text-gray-800 shadow-sm" placeholder="복잡한 배경, 과한 장식 등...">
+          </div>
+
+        </div>
+        
+        <div class="mt-4 md:mt-6 flex flex-col items-center pb-10">
+          <button onclick="generateAndCopy()" class="w-full max-w-sm bg-gradient-to-r from-sky-400 to-blue-500 hover:from-sky-500 hover:to-blue-600 text-white text-sm md:text-base font-black py-2.5 md:py-3 px-5 md:px-6 rounded-full shadow-lg shadow-blue-200 transform hover:-translate-y-1 transition flex items-center justify-center gap-2">
+            <i class="fas fa-comment-dots"></i>
+            <span>AI에게 주문하기</span>
+          </button>
+          <p class="text-[10px] md:text-xs text-gray-400 mt-1.5 md:mt-2 font-medium animate-pulse text-center">✨ 버튼을 누르면 '대화 문장'이 복사됩니다. 제미나이에 붙여넣으세요!</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <main id="view-cardnews" class="hidden flex-1 overflow-y-auto custom-scroll bg-[#f0f9ff] p-4 md:p-10">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-6 md:mb-10">
+            <h2 class="text-2xl md:text-3xl font-black text-gray-800 mb-2 md:mb-3">📱 카드뉴스 예시 갤러리</h2>
+            <p class="text-gray-500 text-xs md:text-sm leading-relaxed">다양한 카드뉴스 프롬프트 예시입니다.<br><b>클릭하면 바로 복사</b>됩니다!</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-12 md:pb-20">
+            <div onclick="copyExample('카드뉴스 6장 제작해줘. 주제: 건강한 아침 루틴 5가지. 미니멀 디자인 스타일. 단계별 카드 레이아웃. 파스텔 그린 색상 팔레트.\n\n🛑 [필수 엄수]: 한 장의 이미지로 합치지 말고, 반드시 6장의 개별 이미지를 생성해 주세요. 각각의 독립된 이미지 파일로 6장을 만들어 주세요.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">🌅☕</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">건강한 아침 루틴</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">단계별로 아침 습관을 소개하는 미니멀 카드뉴스</p>
+            </div>
+            
+            <div onclick="copyExample('카드뉴스 5장 제작해줘. 주제: 스마트폰 vs DSLR 카메라 비교. 플랫 디자인 스타일. VS 대결 구도 레이아웃. 블루/그린 색상 조합.\n\n🛑 [필수 엄수]: 한 장의 이미지로 합치지 말고, 반드시 5장의 개별 이미지를 생성해 주세요. 각각의 독립된 이미지 파일로 5장을 만들어 주세요.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">📱⚔️📷</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">스마트폰 VS DSLR</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">두 제품을 비교하는 VS 대결 구도</p>
+            </div>
+
+            <div onclick="copyExample('카드뉴스 7장 제작해줘. 주제: 2024 AI 트렌드 타임라인. 모던한 그라데이션 메시 스타일. 타임라인 카드 레이아웃. 보라/파랑 그라데이션 색상.\n\n🛑 [필수 엄수]: 한 장의 이미지로 합치지 말고, 반드시 7장의 개별 이미지를 생성해 주세요. 각각의 독립된 이미지 파일로 7장을 만들어 주세요.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">🤖📅</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">AI 트렌드 타임라인</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">시간 순서로 트렌드를 보여주는 타임라인형</p>
+            </div>
+
+            <div onclick="copyExample('카드뉴스 10장 제작해줘. 주제: 집에서 할 수 있는 운동 10가지. 귀여운 캐릭터 일러스트 스타일. 리스트형 카드로 체크리스트 구성. 비비드 컬러 사용.\n\n🛑 [필수 엄수]: 한 장의 이미지로 합치지 말고, 반드시 10장의 개별 이미지를 생성해 주세요. 각각의 독립된 이미지 파일로 10장을 만들어 주세요.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">💪🏠</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">홈트레이닝 10가지</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">체크리스트 형식의 운동 가이드</p>
+            </div>
+
+            <div onclick="copyExample('카드뉴스 4장 제작해줘. 주제: 커피 vs 녹차 건강 효과 비교. 수채화 일러스트 스타일. Before & After 비교 레이아웃. 어스톤 색상 팔레트.\n\n🛑 [필수 엄수]: 한 장의 이미지로 합치지 말고, 반드시 4장의 개별 이미지를 생성해 주세요. 각각의 독립된 이미지 파일로 4장을 만들어 주세요.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">☕🆚🍵</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">커피 VS 녹차</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">건강 효과를 비교하는 수채화 스타일</p>
+            </div>
+
+            <div onclick="copyExample('카드뉴스 8장 제작해줘. 주제: 당신은 어떤 MBTI? 성격 유형 퀴즈. 웹툰 스타일. 퀴즈형 카드로 질문과 선택지 구성. 파스텔 핑크/퍼플 색상.\n\n🛑 [필수 엄수]: 한 장의 이미지로 합치지 말고, 반드시 8장의 개별 이미지를 생성해 주세요. 각각의 독립된 이미지 파일로 8장을 만들어 주세요.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">❓🧠</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">MBTI 성격 퀴즈</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">재미있는 퀴즈형 웹툰 카드뉴스</p>
+            </div>
+            
+            <div onclick="copyExample('카드뉴스 5장 제작해줘. 주제: 스마트폰 중독 탈출 방법. 멤피스 디자인 스타일. 단계별 카드 레이아웃. 알록달록한 비비드 컬러.\n\n🛑 [필수 엄수]: 한 장의 이미지로 합치지 말고, 반드시 5장의 개별 이미지를 생성해 주세요. 각각의 독립된 이미지 파일로 5장을 만들어 주세요.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">📱❌</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">스마트폰 중독 탈출</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">멤피스 디자인의 솔루션 제시형</p>
+            </div>
+
+            <div onclick="copyExample('카드뉴스 6장 제작해줘. 주제: 여름 휴가 준비물 체크리스트. 손그림 스케치 느낌. 리스트형 카드. 코랄/피치 색상.\n\n🛑 [필수 엄수]: 한 장의 이미지로 합치지 말고, 반드시 6장의 개별 이미지를 생성해 주세요. 각각의 독립된 이미지 파일로 6장을 만들어 주세요.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">🏖️✅</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">여름 휴가 준비물</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">손그림 스케치 체크리스트</p>
+            </div>
+
+            <div onclick="copyExample('카드뉴스 10장 제작해줘. 주제: 환경 보호를 위한 작은 실천 10가지. 벡터 일러스트 스타일. 단계별 카드로 10가지 실천 방법 나열. 민트/라벤더 색상.\n\n🛑 [필수 엄수]: 한 장의 이미지로 합치지 말고, 반드시 10장의 개별 이미지를 생성해 주세요. 각각의 독립된 이미지 파일로 10장을 만들어 주세요.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">🌍♻️</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">환경 보호 실천</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">친환경 감성의 실천 가이드</p>
+            </div>
+
+            <div onclick="copyExample('카드뉴스 5장 제작해줘. 주제: 직장인 점심 메뉴 추천 Top 5. 3D 렌더링 스타일. Top 5 랭킹형 레이아웃. 웜톤 색상.\n\n🛑 [필수 엄수]: 한 장의 이미지로 합치지 말고, 반드시 5장의 개별 이미지를 생성해 주세요. 각각의 독립된 이미지 파일로 5장을 만들어 주세요.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">🍱🏆</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">점심 메뉴 Top 5</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">3D 렌더링의 랭킹 카드뉴스</p>
+            </div>
+        </div>
+    </div>
+  </main>
+
+  <main id="view-infographic" class="hidden flex-1 overflow-y-auto custom-scroll bg-[#f0f9ff] p-4 md:p-10">
+    <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-6 md:mb-10">
+            <h2 class="text-2xl md:text-3xl font-black text-gray-800 mb-2 md:mb-3">📊 인포그래픽 예시 갤러리</h2>
+            <p class="text-gray-500 text-xs md:text-sm leading-relaxed">다양한 인포그래픽 프롬프트 예시입니다.<br><b>클릭하면 바로 복사</b>됩니다!</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 pb-12 md:pb-20">
+            <div onclick="copyExample('인포그래픽 제작해줘. 주제: 2024년 글로벌 기후변화 통계. 기업용 스타일. 파이 차트와 막대 그래프 조합. 쿨톤 블루/그린 색상.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">🌍📊</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">기후변화 통계</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">파이 차트와 막대 그래프로 표현한 통계</p>
+            </div>
+
+            <div onclick="copyExample('인포그래픽 제작해줘. 주제: 온라인 쇼핑 구매 프로세스. 미니멀 디자인. 화살표로 연결된 플로우차트 구조. 파스텔 색상 팔레트.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">🛒➡️</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">쇼핑 프로세스</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">플로우차트로 표현한 구매 과정</p>
+            </div>
+
+            <div onclick="copyExample('인포그래픽 제작해줘. 주제: SNS 사용 시간 비교. 플랫 디자인 스타일. 도넛 차트 구성. 비비드 컬러로 각 SNS 구분.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">📱🍩</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">SNS 사용 시간</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">도넛 차트로 표현한 비율 비교</p>
+            </div>
+
+            <div onclick="copyExample('인포그래픽 제작해줘. 주제: 커리어 발전 로드맵. 아이소메트릭 디자인 스타일. 길과 이정표로 표현된 로드맵 구조. 그라데이션 색상.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">🛣️📈</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">커리어 로드맵</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">길과 이정표로 표현한 성장 과정</p>
+            </div>
+            
+            <div onclick="copyExample('인포그래픽 제작해줘. 주제: 건강한 식단 피라미드. 수채화 일러스트 스타일. 피라미드 구조. 어스톤 색상.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">🥗🔺</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">식단 피라미드</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">피라미드로 표현한 식품군 계층</p>
+            </div>
+
+            <div onclick="copyExample('인포그래픽 제작해줘. 주제: 마케팅 퍼널(깔때기). 3D 렌더링 스타일. 깔때기형 구조. 그라데이션 메시 색상.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">📊🔽</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">마케팅 퍼널</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">깔때기로 표현한 전환율 분석</p>
+            </div>
+
+            <div onclick="copyExample('인포그래픽 제작해줘. 주제: 세계 인구 분포 지도. 플랫 디자인. 세계 지도에 국가별 인구 수를 색상 밀도로 표현. 쿨톤 색상.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">🗺️👥</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">세계 인구 분포</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">지도에 표시한 국가별 데이터</p>
+            </div>
+            
+            <div onclick="copyExample('인포그래픽 제작해줘. 주제: 학습 사이클(순환 구조). 벡터 일러스트 스타일. 원형으로 반복되는 4단계 학습 과정. 민트/라벤더 색상.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">🔄📚</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">학습 사이클</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">원형으로 표현한 반복 학습 과정</p>
+            </div>
+
+            <div onclick="copyExample('인포그래픽 제작해줘. 주제: 제품 비교 테이블. 스위스 국제 스타일. 깔끔한 그리드 구조의 비교표. 모노톤 색상.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">📋✓</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">제품 비교표</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">그리드로 정리한 스펙 비교</p>
+            </div>
+            
+             <div onclick="copyExample('인포그래픽 제작해줘. 주제: 월별 매출 추이 꺾은선 그래프. 기업용 스타일. 시간에 따른 매출 변화를 선으로 표현. 블루/그린 색상.')" class="example-card bg-white p-4 md:p-6 rounded-2xl cursor-pointer hover:bg-sky-50 shadow-sm">
+                <div class="text-3xl md:text-4xl mb-3 md:mb-4">📈💰</div>
+                <h3 class="font-bold text-sm md:text-base text-gray-900 mb-1 md:mb-2">매출 추이 그래프</h3>
+                <p class="text-[10px] md:text-xs text-gray-500 leading-relaxed">꺾은선으로 표현한 시간별 변화</p>
+            </div>
+        </div>
+    </div>
+  </main>
+
+  <main id="view-guide" class="hidden flex-1 overflow-y-auto custom-scroll bg-[#f0f9ff] p-4 md:p-12">
+    <div class="max-w-3xl mx-auto pb-12">
+      <h2 class="text-2xl md:text-3xl font-black text-gray-800 mb-6 md:mb-8 border-b-4 border-sky-300 inline-block pb-1">📊 완벽 사용 설명서</h2>
+      
+      <div class="space-y-6 md:space-y-8">
+        <div class="bg-white p-4 md:p-6 rounded-2xl border border-sky-200 shadow-sm">
+            <h3 class="text-lg md:text-xl font-bold text-sky-800 mb-3 flex items-center"><span class="text-2xl mr-2">🎯</span> 이게 뭔가요?</h3>
+            <p class="text-sm md:text-base text-gray-700 leading-relaxed mb-4">
+                <b class="text-sky-700">카드뉴스 & 인포그래픽 스튜디오</b>는 <b>구글 제미나이 AI</b>에게 카드뉴스나 인포그래픽을 만들어달라고 요청할 때, 전문 디자이너처럼 구체적으로 주문할 수 있도록 도와주는 <b>"AI 디자인 주문서 작성 도구"</b>입니다.
+            </p>
+            <div class="bg-sky-50 p-4 rounded-xl border border-sky-200">
+                <p class="text-xs md:text-sm text-gray-600 leading-relaxed"><i class="fas fa-lightbulb text-sky-500 mr-2"></i><b>왜 필요한가요?</b> AI는 "카드뉴스 만들어줘"라는 막연한 요청보다, <b>"미니멀 디자인 + 단계별 레이아웃 + 파스텔톤 + 인스타 피드용"</b>처럼 구체적인 요청에 훨씬 더 정확한 결과를 만들어냅니다!</p>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 md:p-6 rounded-2xl border border-blue-200 shadow-sm">
+            <h3 class="text-lg md:text-xl font-bold text-blue-800 mb-4 flex items-center"><span class="text-2xl mr-2">📝</span> 사용 방법 (5단계)</h3>
+            <div class="space-y-4">
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm md:text-base shadow-lg">0</div>
+                    <div>
+                        <h4 class="font-bold text-sm md:text-base text-gray-900 mb-1">제작 유형 선택 (필수)</h4>
+                        <p class="text-xs md:text-sm text-gray-600 leading-relaxed">가장 먼저 <b>카드뉴스</b>를 만들지 <b>인포그래픽</b>을 만들지 선택하세요. 카드뉴스는 '몇 장' 만들지도 정할 수 있습니다.</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm md:text-base shadow-lg">1</div>
+                    <div>
+                        <h4 class="font-bold text-sm md:text-base text-gray-900 mb-1">주제 입력하기</h4>
+                        <p class="text-xs md:text-sm text-gray-600 leading-relaxed">오른쪽 화면의 <b>[주제와 내용]</b> 칸에 만들고 싶은 콘텐츠 주제를 적어주세요.<br>예: "건강한 아침 루틴 5가지", "스마트폰 중독 탈출법"</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm md:text-base shadow-lg">2</div>
+                    <div>
+                        <h4 class="font-bold text-sm md:text-base text-gray-900 mb-1">왼쪽 메뉴에서 옵션 선택하기</h4>
+                        <p class="text-xs md:text-sm text-gray-600 leading-relaxed mb-2">왼쪽 화면을 스크롤하면서 원하는 옵션을 <b>클릭</b>하세요. 클릭하면 자동으로 오른쪽 칸에 추가됩니다!</p>
+                        <ul class="text-[11px] md:text-xs text-gray-500 space-y-1 ml-4">
+                            <li>• <b class="text-purple-700">디자인 스타일</b>: 미니멀, 웹툰, 3D 렌더 등</li>
+                            <li>• <b class="text-blue-700">레이아웃 구조</b>: 타임라인, 단계별, VS 대결 등</li>
+                            <li>• <b class="text-pink-700">색상 & 분위기</b>: 파스텔톤, 비비드, 밝고 경쾌함 등</li>
+                            <li>• <b class="text-green-700">용도별 설정</b>: 인스타 피드, 유튜브, PPT 등</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm md:text-base shadow-lg">3</div>
+                    <div>
+                        <h4 class="font-bold text-sm md:text-base text-gray-900 mb-1">여러 개 조합하기</h4>
+                        <p class="text-xs md:text-sm text-gray-600 leading-relaxed">하나만 선택하지 말고 <b>각 섹션에서 원하는 만큼</b> 선택하세요. 더 구체적일수록 더 정확한 결과가 나옵니다!</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm md:text-base shadow-lg">4</div>
+                    <div>
+                        <h4 class="font-bold text-sm md:text-base text-gray-900 mb-1">주문서 생성 및 복사</h4>
+                        <p class="text-xs md:text-sm text-gray-600 leading-relaxed">화면 하단의 <b class="text-sky-600">[AI에게 주문하기]</b> 버튼을 누르면, AI가 이해하기 쉬운 완벽한 주문서가 자동으로 <b>클립보드에 복사</b>됩니다!</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <div class="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm md:text-base shadow-lg">5</div>
+                    <div>
+                        <h4 class="font-bold text-sm md:text-base text-gray-900 mb-1">제미나이에 붙여넣기</h4>
+                        <p class="text-xs md:text-sm text-gray-600 leading-relaxed"><b class="text-purple-600">구글 제미나이</b> 채팅창에 가서 <b>Ctrl+V (맥: Cmd+V)</b>로 붙여넣고 엔터를 치면 끝! 🎉</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-4 md:p-6 rounded-2xl border border-green-200 shadow-sm">
+            <h3 class="text-lg md:text-xl font-bold text-green-800 mb-4 flex items-center"><span class="text-2xl mr-2">💡</span> 꿀팁 모음</h3>
+            <div class="space-y-3">
+                <div class="bg-green-50 p-3 md:p-4 rounded-xl border border-green-200">
+                    <h4 class="text-sm md:text-base font-bold text-green-700 mb-2">📱 Tip 1. 용도에 맞는 비율 선택하기</h4>
+                    <p class="text-xs md:text-sm text-gray-600 leading-relaxed">
+                        인스타그램 피드는 1:1, 스토리는 9:16, 유튜브는 16:9처럼 <b>플랫폼별 최적 비율</b>을 꼭 선택하세요!
+                    </p>
+                </div>
+                <div class="bg-green-50 p-3 md:p-4 rounded-xl border border-green-200">
+                    <h4 class="text-sm md:text-base font-bold text-green-700 mb-2">🎨 Tip 2. 스타일 조합의 힘</h4>
+                    <p class="text-xs md:text-sm text-gray-600 leading-relaxed">
+                        "미니멀 + 파스텔톤 + 단계별 레이아웃"처럼 여러 스타일을 조합하면 더욱 독특하고 세련된 결과가 나옵니다!
+                    </p>
+                </div>
+                <div class="bg-green-50 p-3 md:p-4 rounded-xl border border-green-200">
+                    <h4 class="text-sm md:text-base font-bold text-green-700 mb-2">📊 Tip 3. 인포그래픽은 차트 선택이 중요</h4>
+                    <p class="text-xs md:text-sm text-gray-600 leading-relaxed">
+                        비율 비교는 파이/도넛 차트, 추세는 꺾은선 그래프, 단계별 과정은 플로우차트처럼 <b>내용에 맞는 차트</b>를 선택하세요!
+                    </p>
+                </div>
+                <div class="bg-green-50 p-3 md:p-4 rounded-xl border border-green-200">
+                    <h4 class="text-sm md:text-base font-bold text-green-700 mb-2">🎯 Tip 4. 예시 갤러리 활용하기</h4>
+                    <p class="text-xs md:text-sm text-gray-600 leading-relaxed">
+                        위 탭에서 <b>[카드뉴스 예시]</b>와 <b>[인포그래픽 예시]</b>를 보면서 영감을 얻으세요. 클릭하면 바로 복사됩니다!
+                    </p>
+                </div>
+                <div class="bg-green-50 p-3 md:p-4 rounded-xl border border-green-200">
+                    <h4 class="text-sm md:text-base font-bold text-green-700 mb-2">🔄 Tip 5. 마음에 안 들면 수정해서 다시!</h4>
+                    <p class="text-xs md:text-sm text-gray-600 leading-relaxed">
+                        AI는 매번 다르게 만듭니다. 옵션을 조금씩 바꿔가며 <b>여러 번 시도</b>해보세요!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-r from-sky-50 to-blue-50 p-4 md:p-6 rounded-2xl border-2 border-sky-300 shadow-lg">
+            <h3 class="text-lg md:text-xl font-bold text-gray-900 mb-3 flex items-center"><span class="text-2xl mr-2">🎓</span> 마지막 당부</h3>
+            <p class="text-xs md:text-sm text-gray-700 leading-relaxed mb-3">
+                이 도구는 여러분의 <b>창의력을 도와주는 보조 도구</b>일 뿐입니다. <b>상상력</b>과 <b>실험 정신</b>을 가지고 자유롭게 사용해보세요!
+            </p>
+            <p class="text-xs md:text-sm font-bold text-sky-700">
+                📊 즐거운 디자인 여행 되세요!
+            </p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="copyModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity opacity-0">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-2xl transform scale-95 transition-transform duration-200 flex flex-col max-h-[85vh]">
+      <div class="p-4 md:p-5 border-b border-gray-100 flex justify-between items-center bg-sky-50 rounded-t-3xl">
+        <h3 class="font-bold text-base md:text-lg text-gray-800 flex items-center"><i class="fas fa-check-circle text-green-500 mr-2"></i> 주문서 작성 완료!</h3>
+        <button onclick="closeModal()" class="w-7 h-7 md:w-8 md:h-8 rounded-full hover:bg-gray-200 flex items-center justify-center text-gray-400 transition"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="p-4 md:p-6 overflow-y-auto custom-scroll bg-gray-50 text-gray-800 text-sm md:text-base leading-relaxed whitespace-pre-wrap break-all border-b border-gray-100" id="modalContent"></div>
+      <div class="p-4 md:p-6 bg-white rounded-b-3xl text-center">
+          <p class="text-xs md:text-sm text-gray-500 mb-3 md:mb-4 font-bold bg-sky-100 inline-block px-3 py-1 rounded-full text-sky-700">👇 이제 이렇게 하세요!</p>
+          <div class="text-left text-xs md:text-sm text-gray-600 space-y-2 mb-4 md:mb-6 bg-gray-50 p-3 md:p-4 rounded-xl">
+            <p>1. <b>구글 제미나이</b> 채팅창을 여세요.</p>
+            <p>2. 복사된 이 주문서를 <b>붙여넣기(Ctrl+V)</b> 하고 엔터를 치세요!</p>
+            <p>3. AI가 멋진 카드뉴스/인포그래픽을 만들어줄 거예요! 🎨</p>
+          </div>
+          <button onclick="closeModal()" class="w-full py-3 md:py-4 bg-gray-900 hover:bg-black text-white font-bold rounded-xl transition shadow-lg text-sm md:text-base">확인했습니다</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="alertModal" class="fixed inset-0 bg-black/60 z- hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity opacity-0">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm transform scale-95 transition-transform duration-200 overflow-hidden">
+      <div class="p-4 md:p-6 pb-0 flex justify-center"><div class="w-14 h-14 md:w-16 md:h-16 bg-sky-100 rounded-full flex items-center justify-center mb-2 animate-bounce"><span class="text-2xl md:text-3xl">📊</span></div></div>
+      <div class="px-4 md:px-6 py-2 text-center"><h3 class="text-base md:text-lg font-bold text-gray-900 mb-2">필수 입력 누락</h3><p class="text-xs md:text-sm text-gray-500 leading-relaxed" id="alertMessage">무엇을 만들지 알려주세요!</p></div>
+      <div class="p-4 md:p-6 pt-4"><button onclick="closeAlert()" class="w-full py-2.5 md:py-3 bg-gray-900 hover:bg-black text-white font-bold rounded-xl transition shadow-lg text-sm md:text-base">확인</button></div>
+    </div>
+  </div>
+
+  <div id="resetModal" class="fixed inset-0 bg-black/60 z- hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity opacity-0">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm transform scale-95 transition-transform duration-200 overflow-hidden">
+        <div class="p-4 md:p-6 pb-0 flex justify-center"><div class="w-14 h-14 md:w-16 md:h-16 bg-gray-100 text-gray-500 rounded-full flex items-center justify-center mb-2"><i class="fas fa-trash-alt text-xl md:text-2xl"></i></div></div>
+        <div class="px-4 md:px-6 py-2 text-center">
+            <h3 class="text-base md:text-lg font-bold text-gray-900 mb-2">정말 지우시겠습니까?</h3>
+            <p class="text-xs md:text-sm text-gray-500 leading-relaxed">작성 중인 내용이 모두 사라집니다.</p>
+        </div>
+        <div class="p-4 md:p-6 pt-4 flex gap-3">
+            <button onclick="closeResetModal()" class="flex-1 py-2.5 md:py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-xl transition text-sm md:text-base">취소</button>
+            <button onclick="confirmReset()" class="flex-1 py-2.5 md:py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition shadow-lg shadow-red-200 text-sm md:text-base">네, 지울게요</button>
+        </div>
+    </div>
+  </div>
+
+  <footer style="position: fixed; bottom: 0; left: 0; width: 100%; background-color: #fff; border-top: 1px solid #eee; z-index: 1000; text-align: center; padding: 12px 0; color: #888; font-size: 11px; font-family: sans-serif; line-height: 1.6;" class="shrink-0">
+    <div>
+        Developed by <strong>김주현(광평중)</strong> &nbsp;|&nbsp; 
+        <a href="https://instagram.com/kimju.zip" target="_blank" style="text-decoration: none; color: #0ea5e9; font-weight: bold;">
+            💙 @kimju.zip
+        </a>
+    </div>
+    <div style="font-size: 10px; opacity: 0.8;">
+        &copy; 2025. Card News & Infographic Studio V1.5. All Rights Reserved.
+    </div>
+</footer>
+
+  <script>
+    function switchTab(tabName) {
+        // 뷰 전환
+        ['view-builder', 'view-cardnews', 'view-infographic', 'view-guide'].forEach(id => document.getElementById(id).classList.add('hidden'));
+        document.getElementById('view-' + tabName).classList.remove('hidden');
+        
+        // PC 탭 전환
+        ['btn-builder', 'btn-cardnews', 'btn-infographic', 'btn-guide'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.className = 'tab-inactive px-4 py-3 rounded-t-lg transition-colors';
+        });
+        const activeBtn = document.getElementById('btn-' + tabName);
+        if(activeBtn) activeBtn.className = 'tab-active px-4 py-3 rounded-t-lg transition-colors';
+        
+        // 모바일 탭 전환
+        ['btn-builder-mobile', 'btn-cardnews-mobile', 'btn-infographic-mobile', 'btn-guide-mobile'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.className = 'tab-inactive flex-1 py-2.5 text-xs transition-colors';
+        });
+        const activeMobileBtn = document.getElementById('btn-' + tabName + '-mobile');
+        if(activeMobileBtn) activeMobileBtn.className = 'tab-active flex-1 py-2.5 text-xs transition-colors';
+    }
+
+    function addText(id, text) {
+        const input = document.getElementById(id);
+        if(input.value && !input.value.endsWith(', ')) input.value += ', ';
+        input.value += text;
+        input.scrollTop = input.scrollHeight;
+        
+        // 시각적 효과
+        input.classList.add('ring-2', 'ring-sky-400', 'bg-sky-50');
+        setTimeout(() => input.classList.remove('ring-2', 'ring-sky-400', 'bg-sky-50'), 300);
+    }
+
+    function setType(type) {
+        // 값 저장
+        document.getElementById('in-type').value = type;
+        
+        // 버튼 엘리먼트
+        const btnCard = document.getElementById('btn-type-cardnews');
+        const btnInfo = document.getElementById('btn-type-infographic');
+        const slideArea = document.getElementById('slide-count-area');
+        
+        // 스타일 리셋
+        btnCard.className = 'type-btn type-btn-inactive flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm shadow-sm flex items-center justify-center gap-2';
+        btnInfo.className = 'type-btn type-btn-inactive flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm shadow-sm flex items-center justify-center gap-2';
+
+        // 선택된 버튼 활성화 및 UI 변경
+        if (type === 'cardnews') {
+            btnCard.className = 'type-btn type-btn-active flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm shadow-sm flex items-center justify-center gap-2';
+            slideArea.classList.remove('hidden'); // 카드뉴스면 장수 선택 보이기
+        } else {
+            btnInfo.className = 'type-btn type-btn-active flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm shadow-sm flex items-center justify-center gap-2';
+            slideArea.classList.add('hidden'); // 인포그래픽이면 숨기기
+            document.getElementById('in-page-count').value = ''; // 장수 초기화
+        }
+    }
+
+    function setPageCount(count) {
+        document.getElementById('in-page-count').value = count;
+    }
+
+    // 초기화 모달 로직
+    function openResetModal() {
+        const m = document.getElementById('resetModal');
+        m.classList.remove('hidden');
+        setTimeout(()=> { m.classList.remove('opacity-0'); m.firstElementChild.classList.remove('scale-95'); }, 10);
+    }
+
+    function closeResetModal() {
+        const m = document.getElementById('resetModal');
+        m.classList.add('opacity-0'); m.firstElementChild.classList.add('scale-95');
+        setTimeout(()=> m.classList.add('hidden'), 200);
+    }
+
+    function confirmReset() {
+        ['in-subject', 'in-style', 'in-layout', 'in-color', 'in-purpose', 'in-size', 'in-negative', 'in-type', 'in-page-count'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.value = '';
+        });
+        // 버튼 UI 초기화
+        const btnCard = document.getElementById('btn-type-cardnews');
+        const btnInfo = document.getElementById('btn-type-infographic');
+        btnCard.className = 'type-btn type-btn-inactive flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm shadow-sm flex items-center justify-center gap-2';
+        btnInfo.className = 'type-btn type-btn-inactive flex-1 py-2 md:py-3 rounded-xl font-bold text-xs md:text-sm shadow-sm flex items-center justify-center gap-2';
+        document.getElementById('slide-count-area').classList.add('hidden');
+
+        closeResetModal();
+    }
+
+    function showModal(txt) {
+        const modal = document.getElementById('copyModal');
+        const content = document.getElementById('modalContent');
+        
+        const textArea = document.createElement("textarea");
+        textArea.value = txt;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        content.textContent = txt;
+        
+        modal.classList.remove('hidden');
+        setTimeout(() => { modal.classList.remove('opacity-0'); modal.firstElementChild.classList.remove('scale-95'); }, 10);
+    }
+
+    function closeModal() {
+        const m = document.getElementById('copyModal');
+        m.classList.add('opacity-0'); m.firstElementChild.classList.add('scale-95');
+        setTimeout(()=> m.classList.add('hidden'), 200);
+    }
+    
+    function showAlert(msg) {
+        document.getElementById('alertMessage').textContent = msg;
+        const m = document.getElementById('alertModal');
+        m.classList.remove('hidden');
+        setTimeout(()=> { m.classList.remove('opacity-0'); m.firstElementChild.classList.remove('scale-95'); }, 10);
+    }
+    
+    function closeAlert() {
+        const m = document.getElementById('alertModal');
+        m.classList.add('opacity-0'); m.firstElementChild.classList.add('scale-95');
+        setTimeout(()=> m.classList.add('hidden'), 200);
+    }
+
+    function generateAndCopy() {
+        const type = document.getElementById('in-type').value; 
+        const pageCount = document.getElementById('in-page-count').value; 
+        const subject = document.getElementById('in-subject').value.trim();
+        const style = document.getElementById('in-style').value.trim();
+        const layout = document.getElementById('in-layout').value.trim();
+        const color = document.getElementById('in-color').value.trim();
+        const purpose = document.getElementById('in-purpose').value.trim();
+        const size = document.getElementById('in-size').value.trim();
+        const negative = document.getElementById('in-negative').value.trim();
+
+        // 0번 필수 선택 체크
+        if (!type) { showAlert('0번에서 제작 유형(카드뉴스/인포그래픽)을 꼭 선택해주세요!'); return; }
+        if (type === 'cardnews' && !pageCount) { showAlert('카드뉴스를 몇 장으로 만들지 입력해주세요!'); return; }
+        
+        if (!subject) { showAlert('가장 중요한 주제가 빠졌어요! 😅'); return; }
+
+        let prompt = "다음 내용을 바탕으로 디자인해줘.\n\n";
+
+        // 유형과 장수 (요청하신 강력한 명령어 추가 부분!)
+        if (type === 'cardnews') {
+            prompt += `✅ 제작 유형: 카드뉴스 (총 ${pageCount}장 구성)\n`;
+            prompt += `🛑 [필수 엄수]: 한 장의 이미지로 합치지 말고, 반드시 ${pageCount}장의 개별 이미지를 생성해 주세요. 각각의 독립된 이미지 파일로 ${pageCount}장을 만들어 주세요.\n`;
+        } else {
+            prompt += `✅ 제작 유형: 인포그래픽 (한 장으로 구성)\n`;
+        }
+
+        prompt += `✅ 주제: ${subject}\n`;
+        
+        if(style) prompt += `✅ 디자인 스타일: ${style}\n`;
+        if(layout) prompt += `✅ 레이아웃 구조: ${layout}\n`;
+        if(color) prompt += `✅ 색상 & 분위기: ${color}\n`;
+        if(purpose) prompt += `✅ 용도 및 플랫폼: ${purpose}\n`;
+        if(size) prompt += `✅ 캔버스 사이즈: ${size}\n`;
+        if(negative) prompt += `🚫 제외할 요소: ${negative}\n`;
+        
+        prompt += "\n위의 조건들을 모두 반영해서 최고 퀄리티로 부탁해! 📊";
+
+        showModal(prompt);
+    }
+
+    function copyExample(text) {
+        let prompt = `다음 내용을 바탕으로 디자인해줘.\n\n${text}\n\n최고 퀄리티로 부탁해! 📊`;
+        showModal(prompt);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>排球 · PE Playbook</title>
+<meta name="description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:title" content="체육 플레이북">
+<meta property="og:description" content="30개 종목을 한눈에 — 체육 플레이북">
+<meta property="og:image" content="https://kimju.kr/pe-textbook/og.png">
+<meta property="og:url" content="https://kimju.kr/pe-textbook/">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body style="--accent:var(--c-gugi);--accent-ink:#c2410c">
+
+<div class="topbar">
+  <a class="home" href="../index.html">📖 目录</a>
+  <span class="title">🏐 排球</span>
+  <span class="counter"></span>
+</div>
+<div class="progress"></div>
+
+<div class="deck">
+
+  <!-- 1. 封面 -->
+  <section class="slide cover active">
+    <img class="cover-bg" src="../assets/img/vb-cover.jpg" alt="排球比赛动作">
+    <div class="cover-shade"></div>
+    <div class="kicker">网类竞技 · 球类运动</div>
+    <div class="emoji">🏐</div>
+    <h1>排球</h1>
+    <p class="lead">隔网对抗，6名队员的完美配合</p>
+  </section>
+
+  <!-- 2. 什么是排球？ -->
+  <section class="slide">
+    <div class="content" data-num="02">
+      <span class="tag">项目介绍</span>
+      <h2>什么是排球？</h2>
+      <p class="desc">6人制网类竞技运动 — 在球落地前用不超过3次触球将球送到对方场地的比赛</p>
+      <ul>
+        <li><span class="n">1</span><div><b>目标</b> — 让球越过球网落在对方场地得分！对方无法回球时，我方得分</div></li>
+        <li><span class="n">2</span><div><b>人数</b> — 每队场上6人 + 自由人在内的替补队员，共14人名单</div></li>
+        <li><span class="n">3</span><div><b>方式</b> — 一传 → 二传 → 扣球！用不超过3次触球完成一次进攻</div></li>
+        <li><span class="n">4</span><div><b>特点</b> — 奥运会正式项目，在韩国女子排球V联赛非常受欢迎的国民运动</div></li>
+      </ul>
+      <div class="chips">
+        <span class="chip"><b>1895年</b> 诞生于美国基督教青年会（YMCA）</span>
+        <span class="chip">奥运会正式项目（1964年～）</span>
+        <span class="chip">全球超过8亿人参与的运动</span>
+        <span class="chip">🇰🇷 韩国V联赛每年热度不减</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 历史 -->
+  <section class="slide">
+    <div class="content" data-num="03">
+      <span class="tag">历史</span>
+      <h2>排球的历史</h2>
+      <p class="desc">从Mintonette到Volleyball — 130年的演变</p>
+      <ul>
+        <li><span class="n">1895</span><div><b>排球诞生</b> — 美国马萨诸塞州霍利奥克基督教青年会体育教师威廉·G·摩根（William G. Morgan）发明。最初名字是"迷你网球（Mintonette）"！他想创造一项比篮球运动强度更低的室内运动。</div></li>
+        <li><span class="n">1896</span><div><b>更名</b> — 看过示范比赛的阿尔弗雷德·霍尔斯特德教授看到球越过球网被"volley"（凌空回击）的样子，建议将其改名为"Volleyball"。</div></li>
+        <li><span class="n">1964</span><div><b>成为奥运会正式项目</b> — 东京奥运会上男女排球同时被列为正式比赛项目。日本女排以"东洋魔女"的绰号夺得金牌！</div></li>
+        <li><span class="n">2005</span><div><b>韩国V联赛创立</b> — 韩国职业排球V联赛正式开始。此后金软景、李在英等明星选手诞生，引领排球热潮。</div></li>
+        <li><span class="n">2021</span><div><b>排球热潮</b> — 东京奥运会上韩国女排闯入四强，掀起全国性的排球热潮！金软景选手成为世界级明星。</div></li>
+      </ul>
+      <p class="note"><b>趣味小知识！</b> 摩根是发明篮球的奈史密斯的后辈。两人都出身于基督教青年会（YMCA）！</p>
+    </div>
+  </section>
+
+  <!-- 4. 场地结构（SVG） -->
+  <section class="slide">
+    <div class="content" data-num="04">
+      <span class="tag">规则 · 场地</span>
+      <h2>场地结构</h2>
+      <p class="desc">了解球场的主要线条和区域</p>
+      <div class="figure">
+        <svg viewBox="0 0 620 380" role="img" aria-label="排球场地图">
+          <!-- 整个场地 (18m x 9m) -->
+          <rect x="40" y="40" width="540" height="300" fill="#f0e8d8" stroke="#8a7a5a" stroke-width="2.5"/>
+          <!-- 中线 + 球网 -->
+          <line x1="310" y1="40" x2="310" y2="340" stroke="#333" stroke-width="3"/>
+          <line x1="310" y1="25" x2="310" y2="355" stroke="#c2410c" stroke-width="1.5" stroke-dasharray="6,4"/>
+          <text x="310" y="18" font-size="12" fill="#c2410c" text-anchor="middle" font-weight="700">球网</text>
+          <!-- 进攻线 (3m) 左侧 -->
+          <line x1="220" y1="40" x2="220" y2="340" stroke="#2563eb" stroke-width="2" stroke-dasharray="8,4"/>
+          <text x="220" y="362" font-size="11" fill="#2563eb" text-anchor="middle">进攻线（3m）</text>
+          <!-- 进攻线 (3m) 右侧 -->
+          <line x1="400" y1="40" x2="400" y2="340" stroke="#2563eb" stroke-width="2" stroke-dasharray="8,4"/>
+          <text x="400" y="362" font-size="11" fill="#2563eb" text-anchor="middle">进攻线（3m）</text>
+          <!-- 前排区域标记 -->
+          <rect x="220" y="40" width="90" height="300" fill="rgba(37,99,235,.06)"/>
+          <rect x="310" y="40" width="90" height="300" fill="rgba(37,99,235,.06)"/>
+          <!-- 区域标签 -->
+          <text x="130" y="185" font-size="13" fill="#666" text-anchor="middle">后排区域</text>
+          <text x="130" y="202" font-size="11" fill="#999" text-anchor="middle">（后排）</text>
+          <text x="265" y="185" font-size="13" fill="#2563eb" text-anchor="middle">前排区域</text>
+          <text x="265" y="202" font-size="11" fill="#2563eb" text-anchor="middle">（前排）</text>
+          <text x="355" y="185" font-size="13" fill="#2563eb" text-anchor="middle">前排区域</text>
+          <text x="490" y="185" font-size="13" fill="#666" text-anchor="middle">后排区域</text>
+          <!-- 发球区 -->
+          <rect x="40" y="340" width="90" height="28" fill="rgba(232,89,12,.08)" stroke="#c2410c" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="85" y="358" font-size="10" fill="#c2410c" text-anchor="middle">发球区</text>
+          <rect x="490" y="340" width="90" height="28" fill="rgba(232,89,12,.08)" stroke="#c2410c" stroke-width="1.5" stroke-dasharray="4,3"/>
+          <text x="535" y="358" font-size="10" fill="#c2410c" text-anchor="middle">发球区</text>
+          <!-- 轮转方向标记（左侧场地） -->
+          <circle cx="130" cy="90" r="6" fill="#E8590C"/>
+          <text x="130" y="110" font-size="10" fill="#333" text-anchor="middle">5</text>
+          <circle cx="265" cy="90" r="6" fill="#2563eb"/>
+          <text x="265" y="110" font-size="10" fill="#333" text-anchor="middle">4</text>
+          <circle cx="130" cy="190" r="6" fill="#E8590C"/>
+          <text x="130" y="210" font-size="10" fill="#333" text-anchor="middle">6</text>
+          <circle cx="265" cy="190" r="6" fill="#2563eb"/>
+          <text x="265" y="210" font-size="10" fill="#333" text-anchor="middle">3</text>
+          <circle cx="130" cy="290" r="6" fill="#E8590C"/>
+          <text x="130" y="310" font-size="10" fill="#333" text-anchor="middle">1</text>
+          <circle cx="265" cy="290" r="6" fill="#2563eb"/>
+          <text x="265" y="310" font-size="10" fill="#333" text-anchor="middle">2</text>
+          <!-- 轮转箭头（顺时针） -->
+          <path d="M250,290 L145,290" fill="none" stroke="#999" stroke-width="1.2" marker-end="url(#arrow)"/>
+          <path d="M130,278 L130,102" fill="none" stroke="#999" stroke-width="1.2" marker-end="url(#arrow)"/>
+          <path d="M145,90 L250,90" fill="none" stroke="#999" stroke-width="1.2" marker-end="url(#arrow)"/>
+          <path d="M265,102 L265,278" fill="none" stroke="#999" stroke-width="1.2" marker-end="url(#arrow)"/>
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#999"/>
+            </marker>
+          </defs>
+          <!-- 尺寸标记 -->
+          <text x="310" y="375" font-size="11" fill="#8a7a5a" text-anchor="middle">18m</text>
+          <text x="25" y="190" font-size="11" fill="#8a7a5a" text-anchor="middle" transform="rotate(-90,25,190)">9m</text>
+        </svg>
+        <figcaption>排球场地（18m x 9m） · 球网高度：男子2.43m / 女子2.24m / 学校可调整 · 轮转方向：顺时针</figcaption>
+      </div>
+      <div class="chips">
+        <span class="chip"><b>场地</b> 18m x 9m</span>
+        <span class="chip"><b>球网高度</b> 男 2.43m / 女 2.24m</span>
+        <span class="chip"><b>进攻线</b> 距球网3m</span>
+        <span class="chip"><b>轮转</b> 顺时针旋转</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 比赛规则 -->
+  <section class="slide">
+    <div class="content" data-num="05">
+      <span class="tag">规则 · 比赛进行</span>
+      <h2>比赛规则</h2>
+      <p class="desc">局分制 + 每球得分制 — 扣人心弦的激烈对决</p>
+      <div class="two">
+        <div class="box"><h3>🏆 五局三胜</h3><p>正式比赛五局中先胜三局者获胜。每局先得25分（须领先2分以上）获胜。仅第5局（决胜局）打15分。</p></div>
+        <div class="box"><h3>⚡ 每球得分制</h3><p>每一回合都会产生得分！无论发球权在谁，赢得回合的队伍都获得1分。以前只有发球方才能得分。</p></div>
+        <div class="box"><h3>🔄 6人轮转</h3><p>重新获得发球权时，全体队员顺时针轮换一个位置！所有队员都会轮流经历前排和后排。</p></div>
+        <div class="box"><h3>✋ 3次触球</h3><p>一支球队触球次数最多3次！通常按一传（1）→二传（2）→扣球（3）的流程完成进攻。拦网触球不计入次数。</p></div>
+        <div class="box"><h3>🚫 连续触球犯规</h3><p>同一名队员连续触球两次即犯规！但拦网后同一队员再次触球是被允许的。</p></div>
+        <div class="box"><h3>⚠️ 触网犯规</h3><p>比赛中触碰球网即犯规！扣球或拦网时要注意不要碰到球网。持球（held ball）也属于犯规。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. 6个位置 -->
+  <section class="slide">
+    <div class="content" data-num="06">
+      <span class="tag">位置</span>
+      <h2>主要位置</h2>
+      <p class="desc">各自的角色合在一起才成为一支球队</p>
+      <ul>
+        <li><span class="n">S</span><div><b>二传手（Setter）</b> — 球队的司令塔！举球给攻手创造最佳进攻球。快速判断力和精准手法是关键，被称为排球的"控卫"。</div></li>
+        <li><span class="n">OH</span><div><b>主攻（Outside Hitter）</b> — 球队的主要攻击手！在左侧发动强力扣球，也需参与一传的全能型位置。金软景选手正是主攻！</div></li>
+        <li><span class="n">OP</span><div><b>副攻对角/接应（Opposite）</b> — 位于二传手对角线位置的辅助攻击手。在右侧进攻，也经常尝试后排攻。</div></li>
+        <li><span class="n">MB</span><div><b>副攻（Middle Blocker）</b> — 球网中央的守护者！主要任务是快攻（速攻）和拦网，需要快速反应和出色的弹跳力。</div></li>
+        <li><span class="n">L</span><div><b>自由人（Libero）</b> — 防守专职位置！穿着不同颜色球衣，只能在后排活动。可自由替换上场，但不能进攻（在进攻线前扣球）也不能发球。</div></li>
+      </ul>
+      <p class="note"><b>轮转规则：</b>队员按发球顺序顺时针轮转，但发球后会各自回到专属位置，这被称为"位置轮换"！</p>
+    </div>
+  </section>
+
+  <!-- 7. 核心技术1：发球 -->
+  <section class="slide">
+    <div class="content" data-num="07">
+      <div class="media">
+        <figure class="photo">
+          <img src="../assets/img/vb-serve.jpg" alt="排球发球动作">
+          <figcaption>发球 — 比赛的开始，也是第一次进攻</figcaption>
+        </figure>
+        <div>
+          <span class="tag">核心技术①</span>
+          <h2>发球</h2>
+          <p class="desc">每一回合都从发球开始</p>
+          <ul>
+            <li><span class="n">1</span><div><b>下手发球</b> — 用握拳的手从下往上击球的发球方式，是初学者最容易上手的基本发球。</div></li>
+            <li><span class="n">2</span><div><b>上手发球</b> — 在头顶上方用手掌击球的基本发球方式，方向和力度相对容易控制。</div></li>
+            <li><span class="n">3</span><div><b>飘球</b> — 无旋转发球，使球在空中飘忽不定地下落，接发球难度大，职业选手常用。</div></li>
+            <li><span class="n">4</span><div><b>跳发球</b> — 助跑后起跳，像扣球一样猛力扣下的强力发球，威力最强但失误率也高！</div></li>
+          </ul>
+          <p class="note"><b>发球得分（Ace）</b> — 发球直接得分的情况！最强的发球员能改变比赛节奏。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. 核心技术2：一传（垫球/传球） -->
+  <section class="slide">
+    <div class="content" data-num="08">
+      <div class="media flip">
+        <div>
+          <span class="tag">核心技术②</span>
+          <h2>一传（垫球）</h2>
+          <p class="desc">好的进攻始于精准的一传</p>
+          <ul>
+            <li><span class="n">1</span><div><b>下手垫球（Bump）</b> — 双臂合拢形成平台接球的基本一传方式，是接强力发球或扣球时的必备技术！</div></li>
+            <li><span class="n">2</span><div><b>上手传球（二传）</b> — 在额头上方用双手手指将球推出的技术，二传手用它为攻手举出精准的进攻球。</div></li>
+            <li><span class="n">3</span><div><b>救球（Dig）</b> — 以较低姿势接住对方扣球的防守技术，需要快速反应和果断的身体动作！</div></li>
+          </ul>
+          <p class="note"><b>一传核心三步骤：</b>移动脚步（到来球位置）→调整姿势（放低重心，形成手臂平台）→触球瞬间（用手臂角度控制方向）</p>
+        </div>
+        <figure class="photo">
+          <img src="../assets/img/vb-receive.jpg" alt="排球一传动作">
+          <figcaption>一传 — 防守的开始，进攻的基础</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. 核心技术3：扣球（进攻） -->
+  <section class="slide">
+    <div class="content" data-num="09">
+      <div class="media">
+        <figure class="photo">
+          <img src="../assets/img/vb-spike.jpg" alt="排球扣球动作">
+          <figcaption>扣球 — 排球的精华，最华丽的进攻</figcaption>
+        </figure>
+        <div>
+          <span class="tag">核心技术③</span>
+          <h2>扣球（进攻）</h2>
+          <p class="desc">排球中最刺激的瞬间！</p>
+          <ul>
+            <li><span class="n">1</span><div><b>助跑</b> — 用3~4步快速助跑冲向球网，最后两步要跨大步准备起跳！</div></li>
+            <li><span class="n">2</span><div><b>起跳</b> — 双脚用力蹬地起跳！大幅摆动双臂以最大化滞空时间和高度。</div></li>
+            <li><span class="n">3</span><div><b>击球</b> — 在最高点用手掌用力将球扣下！手臂像拉弓一样后引再快速挥动。</div></li>
+            <li><span class="n">4</span><div><b>随挥</b> — 挥臂后自然放下手臂，稳定落地。为防止受伤，双脚落地非常重要。</div></li>
+          </ul>
+          <div class="chips">
+            <span class="chip"><b>高球强攻</b> 高举球，全力挥臂</span>
+            <span class="chip"><b>快攻</b> 低平快速的进攻</span>
+            <span class="chip"><b>后排攻</b> 后排队员的跳跃进攻</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. 拦网与防守 -->
+  <section class="slide">
+    <div class="content" data-num="10">
+      <span class="tag">技术 · 防守</span>
+      <h2>拦网与防守</h2>
+      <p class="desc">球网前的高墙 + 场上的盾牌</p>
+      <div class="two">
+        <div class="box"><h3>🧱 拦网</h3><p>在球网前起跳阻挡对方扣球的技术！2~3人同时跳起形成一道墙，时机判断和位置感是关键。拦网触球不计入本队触球次数。</p></div>
+        <div class="box"><h3>🏊 救球（Dig）</h3><p>以低姿势接住对方强力扣球的防守技术，是自由人的核心能力！球落地前无论用身体哪个部位都要设法救起。</p></div>
+        <div class="box"><h3>🦸 鱼跃救球（Diving Save）</h3><p>飞身扑向远处来球进行极限救球！单手贴地让球弹起的"煎饼救球（Pancake）"也属于此类。</p></div>
+        <div class="box"><h3>🤝 保护（Cover）</h3><p>队友进攻时，为防止球被拦回而在后方接应支援。攻手周围有队友采取低姿势待命就是良好的保护。</p></div>
+      </div>
+      <p class="note"><b>防守阵型：</b>关键在于其余队员要补上拦网手身后的空当，不留空档！预判对方进攻方向的"读防守"非常重要。</p>
+    </div>
+  </section>
+
+  <!-- 11. 战术 -->
+  <section class="slide">
+    <div class="content" data-num="11">
+      <span class="tag">战术</span>
+      <h2>战术与策略</h2>
+      <p class="desc">排球也是一场脑力较量</p>
+      <div class="two">
+        <div class="box"><h3>🧠 五一配备（5-1阵容）</h3><p>由1名二传手负责全部举球的最普遍阵容。二传手在前排时也参与进攻，在后排时则专注于举球。二传手的能力左右整支球队的实力！</p></div>
+        <div class="box"><h3>⚡ 快攻</h3><p><b>A快球：</b>在二传手正前方快速扣击的快攻。<b>B快球：</b>距二传手2m处的快攻。<b>C快球：</b>在二传手身后打的背快攻，是副攻的主要武器！</p></div>
+        <div class="box"><h3>🎭 时间差进攻</h3><p>副攻假装要打快攻而起跳，实际由其他攻手完成扣球的佯攻战术，借此打乱对方拦网手的节奏，制造一对一或无人盯防的局面。</p></div>
+        <div class="box"><h3>🚀 后排强攻（Pipe）</h3><p>后排队员在进攻线后方起跳进攻的战术。当对方拦网手只专注前排攻手时，从后方突然杀出进攻会很难防守！</p></div>
+        <div class="box"><h3>📋 接发球阵型</h3><p>为高效接住对方发球而安排的队员站位。有W型（5人接）、3人接等多种阵型，核心是保护一传较弱的队员。</p></div>
+        <div class="box"><h3>🛡️ 拦网体系</h3><p><b>盯球拦网（Read Blocking）：</b>看二传手举球后再反应的方式（准确）。<b>盯人拦网（Commit Blocking）：</b>预判特定攻手提前起跳的方式（快但风险高）。根据球队战略选择！</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12. 安全守则 -->
+  <section class="slide">
+    <div class="content" data-num="12">
+      <span class="tag">安全守则</span>
+      <h2>安全地运动</h2>
+      <p class="desc">无伤病地享受运动才是最重要的！</p>
+      <div class="two">
+        <div class="box warn"><h3>🦶 脚踝受伤（最常见！）</h3><p>扣球和拦网落地时最容易受伤的部位！踩到对方队员的脚或落地不稳都有扭伤风险。养成佩戴护踝和双脚落地的习惯。</p></div>
+        <div class="box warn"><h3>🖐️ 手指受伤</h3><p>拦网时手指可能被顶弯，二传或一传时手指也可能受到冲击。用贴布固定手指，拦网时手指要张开！</p></div>
+        <div class="box warn"><h3>💪 肩部受伤</h3><p>反复扣球会给肩部旋转肌群带来负担。充分的肩部拉伸和力量训练必不可少！若感到疼痛请立即休息，切勿勉强。</p></div>
+        <div class="box warn"><h3>🦵 膝盖受伤</h3><p>鱼跃救球和反复跳跃会给膝盖带来负担。建议佩戴护膝，在坚硬地面上尤其要小心。</p></div>
+      </div>
+      <p class="note"><b>请务必牢记！</b>赛前进行10分钟以上热身（尤其是脚踝、肩部、手指拉伸），建议贴扎，充分补充水分！</p>
+    </div>
+  </section>
+
+  <!-- 13. 排球的魅力 -->
+  <section class="slide">
+    <div class="content" data-num="13">
+      <span class="tag">排球的魅力</span>
+      <h2>为什么是排球？</h2>
+      <p class="desc">只有排球才拥有的特别魅力</p>
+      <ul>
+        <li><span class="n">1</span><div><b>完美的团队运动</b> — 一个人绝对无法得分！一传→二传→扣球，至少需要2~3人的连续配合。用团队来弥补一个人的失误，正是排球的本质。</div></li>
+        <li><span class="n">2</span><div><b>没有身体接触</b> — 因为隔网比赛，不会与对方发生碰撞。体格差异并非绝对因素，技术与战术更为重要！</div></li>
+        <li><span class="n">3</span><div><b>节奏转换迅速</b> — 每球得分制让每一分都很重要！一瞬间的专注力就能扭转整场比赛，局点上的逆转是排球最精彩的戏剧性时刻。</div></li>
+        <li><span class="n">4</span><div><b>多样的位置</b> — 个子高可以打副攻，身手敏捷可以当自由人，头脑聪明可以做二传手！可以找到适合自己优势的位置。</div></li>
+        <li><span class="n">5</span><div><b>男女老少皆宜</b> — 调整球网高度后任何人都能享受这项运动，从学校到社团、职业联赛，都是广受欢迎的大众运动！</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 对/错 测验 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">测验</span>
+      <h2>对/错 测验</h2>
+      <p class="desc">来确认一下学到的内容吧！</p>
+      <ul>
+        <li><span class="n">Q1</span><div><b>排球比赛中一支球队最多可以触球4次。</b> — 错。最多只能触球3次，但拦网触球不计入次数。</div></li>
+        <li><span class="n">Q2</span><div><b>排球最初的名字是"迷你网球（Mintonette）"。</b> — 对。这是1895年威廉·摩根最初发明时的名字，后来改名为Volleyball。</div></li>
+        <li><span class="n">Q3</span><div><b>自由人可以在进攻线前扣球。</b> — 错。自由人是专职后排防守的位置，禁止在进攻线前进攻。</div></li>
+        <li><span class="n">Q4</span><div><b>排球的轮转方向是顺时针。</b> — 对。重新获得发球权时，全体队员顺时针轮换一个位置。</div></li>
+        <li><span class="n">Q5</span><div><b>排球正式比赛中所有局都打25分。</b> — 错。第1~4局打25分，但第5局（决胜局）打15分。</div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 核心整理 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">核心整理</span>
+      <h2>这些请务必记住！</h2>
+      <p class="desc">整理今天学到的核心内容</p>
+      <div class="two">
+        <div class="box"><h3>📌 核心规则</h3><p>• 五局三胜，每球得分制（每回合都得分）<br>• 3次触球以内将球送过对方场地<br>• 6人轮转：顺时针旋转<br>• 触网、连续触球、持球 = 犯规</p></div>
+        <div class="box"><h3>⭐ 核心技术</h3><p>• 发球：下手发球→上手发球→飘球→跳发球<br>• 一传：用下手垫球（Bump）精准举起<br>• 扣球：助跑→起跳→击球→随挥<br>• 拦网：2~3人组成墙壁阻挡对方进攻</p></div>
+        <div class="box"><h3>🏆 值得了解的小知识</h3><p>• 排球发明者摩根是篮球发明者奈史密斯的后辈<br>• 2021东京奥运会韩国女排闯入四强<br>• 全球超过8亿人喜爱的热门运动</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 探讨问题 -->
+  <section class="slide">
+    <div class="content">
+      <span class="tag">探讨问题</span>
+      <h2>一起来思考</h2>
+      <p class="desc">让我们一起讨论来结束这堂课</p>
+      <ul>
+        <li><span class="n">1</span><div><b>排球为什么需要轮转规则？如果没有会产生什么问题？</b></div></li>
+        <li><span class="n">2</span><div><b>自由人位置给排球比赛带来了怎样的变化？</b></div></li>
+        <li><span class="n">3</span><div><b>为什么排球中团队内的沟通交流特别重要？</b></div></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 14. 结尾 -->
+  <section class="slide cover">
+    <img class="cover-bg" src="../assets/img/vb-team.jpg" alt="排球团队精神">
+    <div class="cover-shade"></div>
+    <div class="kicker">有问题吗？</div>
+    <div class="emoji">🏐</div>
+    <h1>谢谢！</h1>
+    <p class="lead">排球是一项由团队共同弥补个人失误的真正的团队运动。</p>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev" aria-label="上一页">‹</button>
+  <div class="dots"></div>
+  <button id="next" aria-label="下一页">›</button>
+</div>
+
+<script src="../assets/slides.js"></script>
+</body>
+</html>
