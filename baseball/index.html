@@ -1294,7 +1294,7 @@ async function installApp(){
 }
 function goFullscreen(){ document.documentElement.requestFullscreen?.({navigationUI:'hide'}).then(refreshAppBtns,()=>{}); }
 document.addEventListener('fullscreenchange',refreshAppBtns);
-if('serviceWorker' in navigator) navigator.serviceWorker.register(new URL('sw.js',location.href).href,{scope:new URL('./',location.href).pathname}).catch(()=>{});
+if('serviceWorker' in navigator) navigator.serviceWorker.register(new URL('sw.js',location.href).href,{scope:new URL('./',location.href).href}).catch(()=>{});
 
 // 수업 중 폰 화면이 꺼지지 않게 (지원 안 하는 브라우저는 그냥 넘어감)
 let wakeLock=null;
