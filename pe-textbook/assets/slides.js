@@ -54,6 +54,31 @@
     }
   });
 
+  // 학습지 모드 (body[data-lesson]이 있는 종목만): 같은 화면 위에 학습지를 겹쳐 열어 전체화면을 유지한다
+  (function(){
+    var href = document.body.getAttribute('data-lesson');
+    if (!href) return;
+    var btn = document.createElement('button');
+    btn.className = 'lesson-btn';
+    btn.setAttribute('aria-label', '학습지');
+    btn.textContent = '학습지';
+    document.body.appendChild(btn);
+    var wrap = null;
+    function open(){
+      if (wrap) return;
+      wrap = document.createElement('div');
+      wrap.className = 'lesson-overlay';
+      var f = document.createElement('iframe');
+      f.src = href; f.title = '학습지';
+      f.setAttribute('allow', 'fullscreen'); f.setAttribute('allowfullscreen', '');
+      wrap.appendChild(f); document.body.appendChild(wrap);
+      f.addEventListener('load', function(){ try { f.contentWindow.focus(); } catch (e) {} });
+    }
+    function close(){ if (!wrap) return; wrap.remove(); wrap = null; }
+    btn.addEventListener('click', open);
+    window.addEventListener('message', function(e){ if (e.data === 'pe-lesson-close') close(); });
+  })();
+
   // 테이블 자동 래퍼 (가로 스크롤 지원)
   document.querySelectorAll('.slide table').forEach(function(t){
     if(!t.parentElement.classList.contains('table-wrap')){
