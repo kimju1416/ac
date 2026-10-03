@@ -482,6 +482,57 @@
     });
   })();
 
+  // 도면 SVG 맞춤: 여백을 잘라 도면을 키우고, 너무 작은 글자는 읽을 크기로 키운다
+  function fitFigures() {
+    Array.prototype.forEach.call(document.querySelectorAll('.figure svg[viewBox]'), function (svg) {
+      if (svg.getAttribute('data-fit')) return;
+      try {
+        var vb = svg.viewBox.baseVal;
+        if (!vb || !vb.width || !svg.getScreenCTM()) return;
+        // 화면 좌표로 잰 각 요소의 범위를 도면 좌표로 되돌려 합친다 (전체를 덮는 배경은 제외)
+        function content() {
+          var m = svg.getScreenCTM().inverse(), x0 = 1e9, y0 = 1e9, x1 = -1e9, y1 = -1e9;
+          Array.prototype.forEach.call(svg.children, function (c) {
+            if (/^(defs|title|desc|style|linearGradient|radialGradient|clipPath|mask|pattern|marker)$/i.test(c.tagName)) return;
+            var r = c.getBoundingClientRect();
+            if (!r.width && !r.height) return;
+            var p1 = svg.createSVGPoint(), p2 = svg.createSVGPoint();
+            p1.x = r.left; p1.y = r.top; p2.x = r.right; p2.y = r.bottom;
+            p1 = p1.matrixTransform(m); p2 = p2.matrixTransform(m);
+            if (p2.x - p1.x >= vb.width * 0.9 && p2.y - p1.y >= vb.height * 0.9) return;
+            x0 = Math.min(x0, p1.x); y0 = Math.min(y0, p1.y); x1 = Math.max(x1, p2.x); y1 = Math.max(y1, p2.y);
+          });
+          return x1 > x0 ? { x: x0, y: y0, width: x1 - x0, height: y1 - y0 } : null;
+        }
+        var texts = svg.querySelectorAll('text'), minPx = 1e9;
+        Array.prototype.forEach.call(texts, function (t) {
+          var fs = parseFloat(getComputedStyle(t).fontSize) || 0;
+          if (fs && fs < minPx) minPx = fs;
+        });
+        var b = content();
+        if (!b) return;
+        var pad = Math.max(b.width, b.height) * 0.03, w = b.width + pad * 2;
+        var rw = svg.getBoundingClientRect().width, sl = svg.closest('.slide'), sw = sl ? sl.getBoundingClientRect().width : 1280;
+        var wide = (w / (b.height + pad * 2)) > 1.3;
+        var need = rw ? 11 * (w / (rw * (wide ? 1.35 : 1))) * (1280 / sw) : 0;   // 슬라이드 폭 1280 기준으로 글자 11px 이상
+        if (minPx < 1e9 && minPx < need) {
+          var f = Math.min(1.6, need / minPx);
+          Array.prototype.forEach.call(texts, function (t) {
+            t.style.fontSize = (parseFloat(getComputedStyle(t).fontSize) * f) + 'px';
+          });
+          b = content() || b;
+          pad = Math.max(b.width, b.height) * 0.03; w = b.width + pad * 2;
+        }
+        svg.setAttribute('viewBox', [b.x - pad, b.y - pad, w, b.height + pad * 2].join(' '));
+        svg.setAttribute('data-fit', '1');
+        var sp = svg.closest('.split');
+        if (sp && (w / (b.height + pad * 2)) > 1.3) sp.classList.add('wide-fig');   // 가로로 긴 도면은 칸을 넓게
+      } catch (e) {}
+    });
+  }
+  fitFigures();
+  window.addEventListener('load', fitFigures);
+
   // 시작 슬라이드 (해시 지원)
   var start = parseInt((location.hash || '').replace('#', ''), 10);
   show(start >= 1 && start <= total ? start - 1 : 0);
