@@ -631,3 +631,4 @@ body.presenting .lesson-btn:hover{opacity:1}
 .media-fig img{display:block;width:100%;aspect-ratio:3/2;height:auto;object-fit:cover;box-shadow:var(--shadow-lg)}
 .media-fig .caption{display:block;margin-top:10px;font-size:13px;line-height:1.5;color:var(--muted);text-align:center}
 @media(min-width:721px){.split.wide-fig{grid-template-columns:1.5fr 1fr}}
+.figure svg.tall-fig{max-height:calc(min(100vh,56.25vw) - 340px);width:auto;max-width:100%;margin:0 auto}

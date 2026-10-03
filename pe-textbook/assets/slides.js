@@ -513,10 +513,12 @@
         if (!b) return;
         var pad = Math.max(b.width, b.height) * 0.03, w = b.width + pad * 2;
         var rw = svg.getBoundingClientRect().width, sl = svg.closest('.slide'), sw = sl ? sl.getBoundingClientRect().width : 1280;
-        var wide = (w / (b.height + pad * 2)) > 1.3;
-        var need = rw ? 11 * (w / (rw * (wide ? 1.35 : 1))) * (1280 / sw) : 0;   // 슬라이드 폭 1280 기준으로 글자 11px 이상
+        var asp = w / (b.height + pad * 2), wide = asp > 1.15, tall = asp < 0.9;
+        var shh = sl ? sl.getBoundingClientRect().height : 720;
+        if (tall && rw) rw = Math.min(rw, (shh - 340) * asp);   // 세로로 긴 도면은 슬라이드 높이에 맞춰 줄어든다
+        var need = rw ? 14 * (w / (rw * (wide ? 1.35 : 1))) * (1280 / sw) : 0;   // 슬라이드 폭 1280 기준으로 글자 11px 이상
         if (minPx < 1e9 && minPx < need) {
-          var f = Math.min(1.6, need / minPx);
+          var f = Math.min(tall ? 2.6 : 2.2, need / minPx);
           Array.prototype.forEach.call(texts, function (t) {
             t.style.fontSize = (parseFloat(getComputedStyle(t).fontSize) * f) + 'px';
           });
@@ -525,8 +527,9 @@
         }
         svg.setAttribute('viewBox', [b.x - pad, b.y - pad, w, b.height + pad * 2].join(' '));
         svg.setAttribute('data-fit', '1');
+        if (tall) svg.classList.add('tall-fig');
         var sp = svg.closest('.split');
-        if (sp && (w / (b.height + pad * 2)) > 1.3) sp.classList.add('wide-fig');   // 가로로 긴 도면은 칸을 넓게
+        if (sp && (w / (b.height + pad * 2)) > 1.15) sp.classList.add('wide-fig');   // 가로로 긴 도면은 칸을 넓게
       } catch (e) {}
     });
   }
