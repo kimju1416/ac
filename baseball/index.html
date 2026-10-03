@@ -376,6 +376,12 @@ input[type=range].vol-slider::-webkit-slider-thumb {
 .cm-hd { display: flex; align-items: center; margin-bottom: 6px; font-size: 15px; font-weight: 600; }
 .cm-x { margin-left: auto; width: 34px; height: 34px; border: none; border-radius: 50%; background: var(--surface2); color: var(--text); font-size: 14px; cursor: pointer; }
 .cm-warn { font-size: 11px; color: var(--yellow); margin-bottom: 8px; }
+/* 카톡 안 브라우저 안내 띠 — 카톡 웹뷰는 소리 내어 읽기(음성 합성)가 없어 이름을 못 불러 준다 */
+.kakao-bar { display: flex; align-items: center; gap: 10px; margin: 0 0 10px; padding: 10px 12px; border-radius: 12px;
+  background: rgba(251,191,36,.10); border: 1px solid rgba(251,191,36,.45); font-size: 13px; line-height: 1.45; color: #fde68a; word-break: keep-all; }
+.kakao-bar[hidden] { display: none; }
+.kakao-bar span { flex: 1; }
+.kakao-bar button { flex-shrink: 0; padding: 8px 12px; border: none; border-radius: 9px; background: var(--yellow); color: #0a0e14; font: 600 13px 'Noto Sans KR', sans-serif; cursor: pointer; }
 .cm-warn:empty { display: none; }
 .cm-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px 6px; margin-bottom: 12px; }
 .cm-club {
@@ -598,6 +604,7 @@ body:not(.on-game) { padding-bottom: calc(66px + var(--safe)); }
 <main class="content">
 
   <section class="tab-pane on" id="tab-game">
+    <div class="kakao-bar" id="kakaoBar" hidden><span>카톡 안에서는 <b>이름 불러 주기</b>가 안 돼요. 브라우저로 열면 돼요.</span><button onclick="openOutside()" id="kakaoBtn">브라우저로 열기</button></div>
     <div class="bat-tools">
       <span class="bt-k">공격</span>
       <div class="seg" id="teamSeg"><button onclick="setActiveTeam(0)"></button><button onclick="setActiveTeam(1)"></button></div>
@@ -1212,7 +1219,14 @@ function pickClub(k){
   if(document.getElementById('lineupEdit').classList.contains('open')) renderEdit();
 }
 const loadClub=pickClub;
+// 카톡 안 브라우저(웹뷰)는 음성 합성이 없다 → 안내 띠를 띄우고, 카톡의 「외부 브라우저로 열기」 주소로 연다
+const inKakao=/KAKAOTALK/i.test(navigator.userAgent);
+function openOutside(){ location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href); }
 function testVoice(){
+  if(inKakao||!('speechSynthesis' in window)){
+    askSheet('여기서는 목소리가 안 나와요', inKakao?'카톡 안에서 연 화면은 소리 내어 읽기를 못 해요. 아래 단추로 '+(isIOS?'사파리':'브라우저(크롬·삼성 인터넷)')+'에서 열면 이름을 불러 줘요.':'이 브라우저는 소리 내어 읽기를 못 해요. 크롬·엣지·사파리에서 열어 주세요.', inKakao?(isIOS?'사파리로 열기':'브라우저로 열기'):'확인', inKakao?openOutside:()=>{});
+    return;
+  }
   const T=LU.teams[LU.active], n=T.next||0, nm=T.slots[n].name.trim()||'김민준';
   speak((n+1)+'번 타자, '+nm+'!',()=>{});
 }
@@ -1329,6 +1343,8 @@ async function keepAwake(){
 ['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,keepAwake,{passive:true}));
 document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') keepAwake(); });
 renderPads(); renderBatters(); renderMatchup(); updateSub(); updateBadges(); refreshAppBtns();
+// isIOS(아래쪽 const) 뒤에서 — 앞에서 부르면 선언 전 접근으로 스크립트가 멈춘다
+if(inKakao){ document.getElementById('kakaoBar').hidden=false; if(isIOS) document.getElementById('kakaoBtn').textContent='사파리로 열기'; }
 (()=>{ let t='game'; try{ t=sessionStorage.getItem('bb_tab')||'game'; }catch{} document.body.classList.add('on-game'); if(t!=='game') showTab(t); })();
 </script>
 </body>
