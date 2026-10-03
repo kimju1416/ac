@@ -339,6 +339,12 @@ input[type=range].vol-slider::-webkit-slider-thumb {
 .le-title { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
 .le-row { display: grid; grid-template-columns: 24px minmax(0,1fr) minmax(0,1.2fr); gap: 6px; align-items: center; margin-bottom: 6px; }
 .le-row .no { font-family: 'Oswald', sans-serif; font-size: 15px; color: var(--green); text-align: center; }
+/* 타자 수(9~15명) 늘리기·줄이기 */
+.le-count { display: flex; align-items: center; gap: 8px; margin: 4px 0 2px; }
+.le-count .tool-btn { flex: 1; }
+.le-count .tool-btn:disabled { opacity: .35; cursor: default; }
+.le-count .lc-n { min-width: 74px; text-align: center; font-size: 13px; color: var(--muted); }
+.le-count .lc-n b { font-family: 'Oswald', sans-serif; font-size: 18px; color: var(--text); margin-right: 2px; }
 .lineup-edit input[type=text], .lineup-edit select {
   width: 100%; min-width: 0; height: 38px; padding: 0 9px;
   background: var(--bg); color: var(--text); border: 1px solid var(--border2); border-radius: 8px;
@@ -650,7 +656,7 @@ body:not(.on-game) { padding-bottom: calc(66px + var(--safe)); }
       <strong>경기 탭</strong><br>
       <strong>공격</strong>에서 지금 공격하는 팀을 고릅니다. 처음엔 청팀·백팀이고, <strong>구단 고르기</strong>를 누르면 그 팀이 KBO 구단 주전 9명(이름·곡)으로 바뀝니다.<br>
       <strong>응원가 / 등장곡</strong>으로 구단 선수 곡을 그 선수 응원가로 틀지 등장곡으로 틀지 고릅니다.<br>
-      <strong>다음 타자</strong>를 누르면 「3번 타자, 김민준!」 하고 불러 준 뒤 곡이 나오고, 정한 길이가 지나면 저절로 줄어듭니다. <strong>지금 타자</strong>를 누르면 그 타자 곡을 처음부터 다시 틉니다. 9명 버튼을 눌러 아무 타자나 바로 불러도 됩니다.<br>
+      <strong>다음 타자</strong>를 누르면 「3번 타자, 김민준!」 하고 불러 준 뒤 곡이 나오고, 정한 길이가 지나면 저절로 줄어듭니다. <strong>지금 타자</strong>를 누르면 그 타자 곡을 처음부터 다시 틉니다. 타자 버튼을 눌러 아무 타자나 바로 불러도 됩니다.<br>
       화면 아래 <strong>홈런·안타·삼진·아웃·공수교대</strong>는 늘 떠 있습니다. 홈런은 공격 팀 구단의 홈런송(삼성·한화·롯데·KT·LG·SSG·두산·키움)이 나오고, 그 밖의 팀은 삼성 홈런송입니다. 공수교대를 누르면 상대 팀으로 바뀌고, 팀마다 자기 타순을 따로 기억합니다.<br><br>
       <strong>재생 줄 (맨 위)</strong><br>
       지금 나오는 곡과 시간이 보입니다. 타자 곡은 설정한 곡 길이 기준으로 보입니다(20초로 정하면 「0:05 / 0:20」). <strong>정지</strong>는 바로 끄고, <strong>페이드</strong>는 소리를 천천히 줄이며 끕니다.<br>
@@ -658,7 +664,7 @@ body:not(.on-game) { padding-bottom: calc(66px + var(--safe)); }
       <strong>구단 응원가 탭</strong><br>
       구단마다 라인업송과 팀 응원가가 약 20분 들어 있습니다. 다른 곡을 틀었다가 같은 구단을 다시 누르면 멈췄던 곳부터 이어서 나오고, 「이어 듣기 위치 모두 처음으로」로 처음부터 틀 수 있습니다.<br><br>
       <strong>라인업·설정 탭</strong><br>
-      전체 음량, 팀 이름, 9명의 이름과 곡(기본 9곡·구단 선수 90명·구단 응원가 중에서)을 바꿉니다. 이름 불러 주기, 곡 길이(10초~끝까지, 처음엔 끝까지), 목소리도 여기서 정합니다. 곡이 정한 길이보다 짧으면 처음부터 다시 이어서 그 길이를 채웁니다.<br><br>
+      전체 음량, 팀 이름, 타자(9명, 「+ 타자 추가」로 15명까지)의 이름과 곡(기본 9곡·구단 선수 90명·구단 응원가 중에서)을 바꿉니다. 이름 불러 주기, 곡 길이(10초~끝까지, 처음엔 끝까지), 목소리도 여기서 정합니다. 곡이 정한 길이보다 짧으면 처음부터 다시 이어서 그 길이를 채웁니다.<br><br>
       이름은 이 기기에만 저장됩니다. 앱을 켜 둔 동안은 화면이 꺼지지 않습니다. 엣지 브라우저로 열면 더 자연스러운 목소리(선히)가 나옵니다.
     </div>
   </details>
@@ -1078,7 +1084,7 @@ function speak(text,done){
 }
 if('speechSynthesis' in window) speechSynthesis.onvoiceschanged=()=>{ if(document.getElementById('lineupEdit').classList.contains('open')) renderEdit(); };
 
-// ── 라인업: 두 팀 × 9명, 이 기기에만 저장 ──
+// ── 라인업: 두 팀 × 9~15명, 이 기기에만 저장 ──
 const LU_KEY='bb_lineup_v1';
 function luDefault(){
   const mk=n=>({name:n,next:0,slots:Array.from({length:9},(_,i)=>({name:'',song:'player'+(i+1)}))});
@@ -1153,7 +1159,7 @@ function renderBatters(){
 let playingTeam=-1;
 function callBatter(i){
   const T=LU.teams[LU.active], s=T.slots[i], nm=s.name.trim(), info=songInfo(s.song);
-  T.next=(i+1)%9; T.cur=i; saveLU(); playingTeam=LU.active;
+  T.next=(i+1)%T.slots.length; T.cur=i; saveLU(); playingTeam=LU.active;
   const title=(i+1)+'번 '+(nm||'타자');
   playAudio(title+' · '+info.label+(info.club?' '+modeWord():''),info.src,false,{
     start:info.start, clip:LU.clip||0, padId:'bat_'+i, walk:true,
@@ -1231,11 +1237,37 @@ function testVoice(){
   speak((n+1)+'번 타자, '+nm+'!',()=>{});
 }
 function clearTeam(){
-  askSheet('이 팀을 비울까요?','9명의 이름과 곡이 모두 지워지고 기본 등장곡 1~9로 돌아갑니다.','비우기',doClearTeam);
+  askSheet('이 팀을 비울까요?','이 팀 타자의 이름과 곡이 모두 지워지고 기본 등장곡으로 돌아갑니다(타자 수는 그대로).','비우기',doClearTeam);
 }
 function doClearTeam(){
-  const d=luDefault().teams[LU.active]; d.name=LU.teams[LU.active].name; LU.teams[LU.active]=d;
+  // 타자 수(9~15명)는 그대로 두고 이름·곡만 기본으로
+  const n=LU.teams[LU.active].slots.length;
+  const d=luDefault().teams[LU.active]; d.name=LU.teams[LU.active].name;
+  d.slots=Array.from({length:n},(_,i)=>({name:'',song:basicSong(i)}));
+  LU.teams[LU.active]=d;
   saveLU(); renderBatters(); renderEdit();
+}
+// ── 타자 수: 기본 9명, 15명까지 늘릴 수 있다(10번부터 기본 곡은 1~6번 곡을 다시 쓴다) ──
+const BAT_MIN=9, BAT_MAX=15;
+function basicSong(i){ return 'player'+((i%9)+1); }
+function addBatter(){
+  const T=LU.teams[LU.active]; if(T.slots.length>=BAT_MAX)return;
+  T.slots.push({name:'',song:basicSong(T.slots.length)});
+  saveLU(); renderBatters(); renderEdit();
+  // 새로 생긴 이름 칸으로 바로
+  const rows=document.querySelectorAll('#lineupEdit .le-row'); const inp=rows[rows.length-1]?.querySelector('input');
+  if(inp){ inp.focus({preventScroll:true}); inp.scrollIntoView({block:'center',behavior:'smooth'}); }
+}
+function removeBatter(){
+  const T=LU.teams[LU.active], last=T.slots[T.slots.length-1];
+  if(T.slots.length<=BAT_MIN)return;
+  const go=()=>{
+    T.slots.pop();
+    if((T.next||0)>=T.slots.length) T.next=0;
+    if(T.cur!=null&&T.cur>=T.slots.length) T.cur=null;
+    saveLU(); renderBatters(); renderEdit();
+  };
+  if(last.name.trim()) askSheet(`${T.slots.length}번 타자를 뺄까요?`,`「${last.name.trim()}」의 이름과 곡이 지워집니다.`,'빼기',go); else go();
 }
 // ── 곡 고르기 창: 위에서 묶음(기본 / 10개 구단) 고르고, 아래 목록에서 한 곡 ──
 function songChip(id){
@@ -1291,6 +1323,11 @@ function renderEdit(){
     ${T.slots.map((s,i)=>`<div class="le-row"><span class="no">${i+1}</span>
       <input type="text" maxlength="10" placeholder="${i+1}번 타자 이름" value="${esc(s.name)}" oninput="LU.teams[LU.active].slots[${i}].name=this.value; saveLU(); renderBatters()">
       <button class="le-song" onclick="openSongPicker(${i})">${songChip(s.song)}<span class="le-song-ch">▾</span></button></div>`).join('')}
+    <div class="le-count">
+      <button class="tool-btn" onclick="removeBatter()"${T.slots.length<=BAT_MIN?' disabled':''}>− 타자 빼기</button>
+      <span class="lc-n"><b>${T.slots.length}</b>명</span>
+      <button class="tool-btn" onclick="addBatter()"${T.slots.length>=BAT_MAX?' disabled':''}>+ 타자 추가</button>
+    </div>
     <div class="le-set">
       <label class="le-line"><span>이름 불러 주기</span><input type="checkbox" ${LU.call?'checked':''} onchange="LU.call=this.checked; saveLU()"></label>
       <div class="le-line"><span>곡 길이</span><div class="seg seg-clip">
