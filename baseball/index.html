@@ -489,7 +489,12 @@ body { padding-bottom: calc(146px + var(--safe)); }
 }
 .hero::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(5,9,15,.92) 0%, rgba(5,9,15,.55) 55%, rgba(5,9,15,.15) 100%), linear-gradient(0deg, rgba(10,14,20,1) 0%, rgba(10,14,20,0) 40%); }
 .hero-in { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 16px 14px; }
-.hero-acts { position: absolute; top: calc(10px + env(safe-area-inset-top, 0px)); right: 10px; z-index: 2; display: flex; gap: 6px; }
+.hero-acts { position: absolute; top: calc(10px + env(safe-area-inset-top, 0px)); right: 10px; z-index: 2; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.ha-row { display: flex; gap: 6px; }
+/* 만든 사람 인스타 — 설치 단추 밑에 작게 */
+.ha-insta { display: flex; align-items: center; gap: 4px; padding: 2px 4px; color: rgba(255,255,255,.72); font-size: 11px; font-weight: 500; text-decoration: none; text-shadow: 0 1px 3px rgba(0,0,0,.8); }
+.ha-insta svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.9; }
+.ha-insta:hover { color: #fff; }
 .ha-btn {
   display: flex; align-items: center; gap: 4px; height: 30px; padding: 0 10px; border-radius: 15px; cursor: pointer; touch-action: manipulation;
   background: rgba(6,10,16,.55); border: 1px solid rgba(255,255,255,.25); color: #fff; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
@@ -581,8 +586,11 @@ body:not(.on-game) { padding-bottom: calc(66px + var(--safe)); }
 <!-- 경기 화면: 헤더(사진) → 지금 재생 줄(따라 붙음) → 탭 내용 → 아래 고정 효과음 줄 + 탭 -->
 <header class="hero">
   <div class="hero-acts" id="heroActs">
+    <div class="ha-row">
     <button class="ha-btn" id="fsBtn" onclick="goFullscreen()" hidden><svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>전체화면</button>
     <button class="ha-btn ha-main" id="installBtn" onclick="installApp()"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>홈 화면에 추가</button>
+    </div>
+    <a class="ha-insta" href="https://www.instagram.com/kimju.zip/" target="_blank" rel="noopener" aria-label="만든 사람 인스타그램 kimju.zip"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>kimju.zip</a>
   </div>
   <div class="hero-in">
     <div class="hero-kicker">PLAY BALL</div>
