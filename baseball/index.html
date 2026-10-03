@@ -646,7 +646,7 @@ body:not(.on-game) { padding-bottom: calc(66px + var(--safe)); }
       <strong>다음 타자</strong>를 누르면 「3번 타자, 김민준!」 하고 불러 준 뒤 곡이 나오고, 정한 길이가 지나면 저절로 줄어듭니다. <strong>지금 타자</strong>를 누르면 그 타자 곡을 처음부터 다시 틉니다. 9명 버튼을 눌러 아무 타자나 바로 불러도 됩니다.<br>
       화면 아래 <strong>홈런·안타·삼진·아웃·공수교대</strong>는 늘 떠 있습니다. 홈런은 공격 팀 구단의 홈런송(삼성·한화·롯데·KT·LG)이 나오고, 그 밖의 팀은 삼성 홈런송입니다. 공수교대를 누르면 상대 팀으로 바뀌고, 팀마다 자기 타순을 따로 기억합니다.<br><br>
       <strong>재생 줄 (맨 위)</strong><br>
-      지금 나오는 곡과 시간이 보입니다. <strong>정지</strong>는 바로 끄고, <strong>페이드</strong>는 소리를 천천히 줄이며 끕니다.<br>
+      지금 나오는 곡과 시간이 보입니다. 타자 곡은 설정한 곡 길이 기준으로 보입니다(20초로 정하면 「0:05 / 0:20」). <strong>정지</strong>는 바로 끄고, <strong>페이드</strong>는 소리를 천천히 줄이며 끕니다.<br>
       막대를 누르거나 끌면 그 위치로 가고, 양옆 버튼으로 건너뜁니다. 타자 곡은 10초, 구단 응원가는 곡 단위(이전 곡/다음 곡), 나머지는 30초씩.<br><br>
       <strong>구단 응원가 탭</strong><br>
       구단마다 라인업송과 팀 응원가가 약 20분 들어 있습니다. 다른 곡을 틀었다가 같은 구단을 다시 누르면 멈췄던 곳부터 이어서 나오고, 「이어 듣기 위치 모두 처음으로」로 처음부터 틀 수 있습니다.<br><br>
@@ -851,7 +851,9 @@ function startProg(){
     if(seekDragging) return;
     const d=cur.duration,c=cur.currentTime;
     if(d&&!isNaN(d)) document.getElementById('progFill').style.width=(c/d*100)+'%';
-    document.getElementById('nowTime').textContent=fmt(c)+(d&&!isNaN(d)?' / '+fmt(d):'');
+    // 곡 길이를 정해 둔 타자 곡은 그 길이 기준으로 「흐른 시간 / 정한 길이」를 보여 준다
+    document.getElementById('nowTime').textContent=cur._clip?fmt(Math.min(cur._played,cur._clip))+' / '+fmt(cur._clip)
+      :fmt(c)+(d&&!isNaN(d)?' / '+fmt(d):'');
     updateSub(); updateBadges();
   },300);
 }
@@ -960,7 +962,7 @@ function playAudio(name,src,isTeam,opt={}){
   // 등장곡 길이는 시계가 아니라 실제로 나온 재생 시간으로 잰다(불러오는 동안 멈춘 시간은 빼고)
   // 곡이 정한 길이보다 짧으면 처음부터 되풀이해서라도 정한 길이를 채운다(등장곡은 7~16초짜리가 많다)
   if(opt.clip){
-    a.loop=true;
+    a.loop=true; a._clip=opt.clip; a._played=0;
     let played=0, last=start;
     a.addEventListener('timeupdate',()=>{
       if(clipped||cur!==a)return;
@@ -969,7 +971,7 @@ function playAudio(name,src,isTeam,opt={}){
       let d=t-last; last=t;
       if(d<0) d=isFinite(a.duration)&&a.duration-(t-d)<1.5?t:0;  // 끝에서 처음으로 돌아감 / 뒤로 옮김
       if(d>1.5) d=0;                                                // 막대로 앞으로 옮긴 건 안 센다
-      played+=d;
+      played+=d; a._played=played;
       if(played>=opt.clip){ clipped=true; fadeOut('등장 끝 · '+name); }
     });
   }
