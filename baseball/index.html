@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-title" content="야구 DJ">
 <meta name="theme-color" content="#060a10">
 <link rel="manifest" href="https://kimju.kr/baseball/manifest.webmanifest">
@@ -1293,7 +1293,7 @@ function renderEdit(){
 }
 
 // ── 홈 화면에 추가 · 전체화면 ──
-// 홈 화면 아이콘으로 열면 주소창 없이 전체화면(앱 정보 display: fullscreen). 브라우저 안에서는 안드로이드만 전체화면 버튼
+// 홈 화면 아이콘으로 열면 주소창 없이 앱 화면(앱 정보 display: standalone — 위쪽 시계·안테나 상태바는 보인다). 브라우저 안에서는 안드로이드만 전체화면 버튼
 const isStandalone=()=>matchMedia('(display-mode: fullscreen)').matches||matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
 const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
 let installEvt=null;
