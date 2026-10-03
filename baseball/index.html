@@ -747,12 +747,13 @@ const TEAM_SONGS={
   team_kiwoom:[[0,"경기 개시 음악"],[95,"라인업송"],[160,"New heroes come here"],[270,"꿈이여 하나가 되자"],[359,"기를 높여라"],[388,"승리가"],[417,"우리가 승리한다"],[519,"히어로즈 만만세"],[621,"오 키움, 키움 히어로즈"],[697,"사랑한다 키움"],[798,"Let's go together hero"],[843,"영웅출정가"],[926,"히어로"],[1016,"외쳐라 히어로즈"],[1097,"승리를 위하여"]],
 };
 // 구단 홈런송 — 유튜브에 올라온 각 구단 홈런 응원가 원음(무음 자르고 -14 LUFS). 홈런송이 따로 있는 구단만.
-// SSG는 홈런 때 울리는 뱃고동(배경음악판), 두산은 홈런 뒤 트는 「승리를 위하여」, 키움은 「승리를 위한 함성」
+// 삼성은 팀 응원가 「환희」(놀맘댈 2026.09 삼성 영상 챕터 111~163초), SSG는 홈런 때 울리는 뱃고동(배경음악판),
+// 두산은 홈런 뒤 트는 「승리를 위하여」, 키움은 「승리를 위한 함성」
 // 공격 팀이 이 구단 라인업이면 그 구단 홈런송, 아니면(청팀·백팀·홈런송 없는 구단) 삼성 홈런송
 const HOMERUN={team_samsung:'samsung',team_hanwha:'hanwha',team_lotte:'lotte',team_kt:'kt',team_lg:'lg',team_ssg:'ssg',team_doosan:'doosan',team_kiwoom:'kiwoom'};
 function homerunSong(){
   const c=teamClub(LU.teams[LU.active]), k=c&&HOMERUN[c.key]?c.key:'team_samsung';
-  return {src:'music/homerun/'+HOMERUN[k]+'.mp3', name:'홈런 · '+clubShort(k)+' 홈런송'};
+  return {src:'music/homerun/'+HOMERUN[k]+'.mp3'+(k==='team_samsung'?'?v=2':''), name:'홈런 · '+clubShort(k)+(k==='team_samsung'?' 「환희」':' 홈런송')};
 }
 const ALL=[...PLAYERS,...EVENTS,...OPS,...TEAMS];
 const TEAM_SRCS=TEAMS.map(t=>t.src);
